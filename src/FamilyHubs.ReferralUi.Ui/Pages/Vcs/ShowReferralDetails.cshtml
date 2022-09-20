@@ -1,0 +1,58 @@
+﻿@page
+@model FamilyHubs.ServiceDirectory.Ui.Pages.Vcs.ShowReferralDetailsModel
+@{
+}
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <fieldset class="govuk-fieldset">
+      <h1 class="govuk-fieldset__heading-l">
+          Referral Details
+      </h1>
+
+      <dl class="govuk-summary-list govuk-!-margin-bottom-9" id="replace-commas">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Full name
+          </dt>
+          <dd class="govuk-summary-list__value">
+            @Model.Referral.FullName
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Does the person have any special educational needs, disabilities or health conditions?
+          </dt>
+          <dd class="govuk-summary-list__value">
+            @Model.Referral.HasSpecialNeeds
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Email address
+          </dt>
+          <dd class="govuk-summary-list__value" id="test">
+              @Model.Referral.Email
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            UK telephone number
+          </dt>
+          <dd class="govuk-summary-list__value">
+              @Model.Referral.Phone
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Why does this person or family need support from this service?
+          </dt>
+          <dd class="govuk-summary-list__value">
+            @Model.Referral.ReasonForSupport
+          </dd>
+        </div>
+      </dl>
+
+    </fieldset>
+
+</main>
