@@ -1,0 +1,39 @@
+﻿@page
+@model FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral.ConsentModel
+@{
+}
+
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <form method="post">
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Do you have consent from the person or family?
+            </h1>
+          </legend>
+          <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="consent" name="IsConsentGiven" type="radio" value="yes">
+              <label class="govuk-label govuk-radios__label" for="consent">
+                Yes
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="consent-2" name="IsConsentGiven" type="radio" value="no">
+              <label class="govuk-label govuk-radios__label" for="consent-2">
+                No
+              </label>
+            </div>
+          </div>
+
+        </fieldset>
+      </div>
+      <button type="submit" class="govuk-button" asp-route-id="@Model.Id" asp-route-name="@Model.Name">
+        Continue
+      </button>
+    </form>
+
+</main>

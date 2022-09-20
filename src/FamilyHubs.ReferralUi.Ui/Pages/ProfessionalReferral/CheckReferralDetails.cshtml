@@ -1,0 +1,98 @@
+﻿@page
+@model FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral.CheckReferralDetailsModel
+@{
+}
+
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <fieldset class="govuk-fieldset">
+      <h1 class="govuk-fieldset__heading-l">
+          Check the details you entered
+      </h1>
+
+      <dl class="govuk-summary-list govuk-!-margin-bottom-9" id="replace-commas">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Full name
+          </dt>
+          <dd class="govuk-summary-list__value">
+            @Model.FullName
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" asp-page="/ProfessionalReferral/PersonnalDetails" asp-route-id="@Model.Id" asp-route-name="@Model.Name" asp-route-fullName="@Model.FullName" asp-route-hasSpecialNeeds="@Model.HasSpecialNeeds" asp-route-email="@Model.Email" asp-route-phone="@Model.Phone" asp-route-ReasonForSupport="@Model.ReasonForSupport" >
+              Change<span class="govuk-visually-hidden"> name</span>
+            </a>
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Does the person have any special educational needs, disabilities or health conditions?
+          </dt>
+          <dd class="govuk-summary-list__value">
+            @Model.HasSpecialNeeds
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" asp-page="/ProfessionalReferral/PersonnalDetails" asp-route-id="@Model.Id" asp-route-name="@Model.Name" asp-route-fullName="@Model.FullName" asp-route-hasSpecialNeeds="@Model.HasSpecialNeeds" asp-route-email="@Model.Email" asp-route-phone="@Model.Phone" asp-route-ReasonForSupport="@Model.ReasonForSupport" >
+              Change<span class="govuk-visually-hidden">type</span>
+            </a>
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Email address
+          </dt>
+          <dd class="govuk-summary-list__value" id="test">
+              @Model.Email
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" asp-page="/ProfessionalReferral/ContactDetails" asp-route-id="@Model.Id" asp-route-name="@Model.Name" asp-route-fullName="@Model.FullName" asp-route-hasSpecialNeeds="@Model.HasSpecialNeeds" asp-route-email="@Model.Email" asp-route-phone="@Model.Phone" asp-route-ReasonForSupport="@Model.ReasonForSupport" >
+              Change<span class="govuk-visually-hidden">type</span>
+            </a>
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            UK telephone number
+          </dt>
+          <dd class="govuk-summary-list__value">
+              @Model.Phone
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" asp-page="/ProfessionalReferral/ContactDetails" asp-route-id="@Model.Id" asp-route-name="@Model.Name" asp-route-fullName="@Model.FullName" asp-route-hasSpecialNeeds="@Model.HasSpecialNeeds" asp-route-email="@Model.Email" asp-route-phone="@Model.Phone" asp-route-ReasonForSupport="@Model.ReasonForSupport" >
+              Change<span class="govuk-visually-hidden">type</span>
+            </a>
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Why does this person or family need support from this service?
+          </dt>
+          <dd class="govuk-summary-list__value">
+            @Model.ReasonForSupport
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" asp-page="/ProfessionalReferral/WhySupport" asp-route-id="@Model.Id" asp-route-name="@Model.Name" asp-route-fullName="@Model.FullName" asp-route-hasSpecialNeeds="@Model.HasSpecialNeeds" asp-route-email="@Model.Email" asp-route-phone="@Model.Phone" asp-route-ReasonForSupport="@Model.ReasonForSupport">
+              Change<span class="govuk-visually-hidden"> type</span>
+            </a>
+          </dd>
+        </div>
+      </dl>
+
+    <form method="post">
+
+        <input asp-for="@Model.Id" type="hidden" >
+        <input asp-for="@Model.Name" type="hidden">
+        <input asp-for="@Model.FullName" type="hidden" >
+        <input asp-for="@Model.HasSpecialNeeds" type="hidden">
+        <input asp-for="@Model.Email" type="hidden" >
+        <input asp-for="@Model.Phone" type="hidden">
+        <input asp-for="@Model.ReasonForSupport" type="hidden">
+
+      <button class="govuk-button">
+        Submit request for support
+      </button>
+    </form>
+    </fieldset>
+
+</main>

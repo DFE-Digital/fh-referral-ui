@@ -1,0 +1,36 @@
+﻿@page
+@model FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral.SafeguardingModel
+@{
+}
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+     <form method="post">
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Is the person or family you are requesting support for safe from immediate harm?
+            </h1>
+          </legend>
+          <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="safeguarding" name="IsImmediateHarm" type="radio" value="yes">
+              <label class="govuk-label govuk-radios__label" for="safeguarding">
+                Yes
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="safeguarding-2" name="IsImmediateHarm" type="radio" value="no">
+              <label class="govuk-label govuk-radios__label" for="safeguarding-2">
+                No
+              </label>
+            </div>
+          </div>
+
+        </fieldset>
+      </div>
+      <button type="submit" class="govuk-button" asp-route-id="@Model.Id" asp-route-name="@Model.Name">
+        Continue
+      </button>
+    </form>
+</main>

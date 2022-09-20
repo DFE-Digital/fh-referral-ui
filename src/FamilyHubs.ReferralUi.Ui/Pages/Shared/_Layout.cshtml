@@ -1,49 +1,75 @@
-﻿<!DOCTYPE html>
+﻿@using FamilyHubs.ReferralUi.Ui.Extensions
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - FamilyHubs.ReferralUi.Ui</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] - WebUI</title>
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="~/lib/govuk/assets/images/favicon.ico" type="image/x-icon" />
+    <link rel="mask-icon" href="~/lib/govuk/assets/images/govuk-mask-icon.svg" color="#0b0c0c" />
+    <link rel="apple-touch-icon" sizes="180x180" href="~/lib/govuk/assets/images/govuk-apple-touch-icon-180x180.png" />
+    <link rel="apple-touch-icon" sizes="167x167" href="~/lib/govuk/assets/images/govuk-apple-touch-icon-167x167.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="~/lib/govuk/assets/images/govuk-apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon" href="~/lib/govuk/assets/images/govuk-apple-touch-icon.png" />
+
+     <!--[if !IE 8]><!-->
+      @*<link rel="stylesheet" href="~/lib/govuk/govuk-frontend-4.3.0.min.css" />*@
+      <link rel="stylesheet" href="~/css/application.css" asp-append-version="true" />
+    <!--<![endif]-->
+    <!--[if IE 8]>
+      <link rel="stylesheet" href="~/lib/govuk/govuk-frontend-ie8-4.3.0.min.css" />
+    <![endif]-->
+
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/FamilyHubs.ReferralUi.Ui.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebUI.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">FamilyHubs.ReferralUi.Ui</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+<body class="govuk-template__body ">
+   <script>
+            document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+    </script>
+
+    @await Html.PartialAsync("_CookieBanner", Html.GetCookieBannerViewModel())
+    @await Html.PartialAsync("_Header", Html.GetHeaderViewModel())
+
+    <div class="govuk-phase-banner govuk-width-container">
+        <p class="govuk-phase-banner__content">
+            <strong class="govuk-tag govuk-phase-banner__content__tag">
+                beta
+            </strong>
+            <span class="govuk-phase-banner__text">
+                This is a new service – your <a href="https://www.smartsurvey.co.uk/s/HANAIP" class="govuk-link" rel="noreferrer noopener" target="_blank">feedback</a> will help us to improve it.
+            </span>
+        </p>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <div class="govuk-width-container">
+        @RenderBody()
+    </div>
+
+    @await Html.PartialAsync("_Footer", Html.GetFooterViewModel())
+
+    @*<footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - FamilyHubs.ReferralUi.Ui - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2022 - WebUI - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
-    </footer>
+    </footer>*@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+    </script>
+    <!-- component HTML -->
+    <script src="~/lib/govuk/govuk-frontend-4.3.0.min.js"></script>
+    <script>
+      window.GOVUKFrontend.initAll()
+    </script>
+
+    
+    @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)

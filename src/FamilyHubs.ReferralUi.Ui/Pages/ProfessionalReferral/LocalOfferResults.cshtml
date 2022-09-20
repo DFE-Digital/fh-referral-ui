@@ -1,0 +1,218 @@
+﻿@page "{latitude:double}/{longitude:double}"
+@model FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral.LocalOfferResultsModel
+@{
+}
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column1 {
+  float: left;
+  width: 25%;
+  padding: 10px;
+}
+
+.column2 {
+  float: left;
+  width: 75%;
+  padding: 10px;
+}
+
+/* Create four equal columns that floats next to each other */
+.column4 {
+  float: left;
+  width: 25%;
+  padding: 5px;
+  
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#SearchBtn{
+ margin-top: 30px;
+}
+
+.govuk-select{
+    min-width: 5.0em;
+}
+
+
+</style>
+
+<a asp-page="/FindServiceFromPostcode" class="govuk-back-link">Back</a>
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-row">
+	    
+        
+	    <h1 class="govuk-heading-l">There are @Model.SearchResults.TotalCount results found in your local area</h1>
+	    
+
+        <div class="row">
+            <form method="post">
+          <div class="column1">
+            
+                    <fieldset class="govuk-fieldset">
+                        <h1 class="govuk-heading-m">
+                            Filter By
+                        </h1>
+                        <input asp-for="@Model.CurrentLatitude" type="hidden" >
+                        <input asp-for="@Model.CurrentLongitude" type="hidden">
+
+                        <div class="govuk-form-group">
+                        <label class="govuk-label" for="SelectedDistance">
+                            Max Distance
+                        </label>
+                        <select class="govuk-select" id="SelectedDistance" name="SelectedDistance" asp-for="SelectedDistance" asp-items="Model.DistanceSelectionList"></select> 
+                        </div>
+                      
+
+                    </fieldset>
+
+                    <div class="filters-component__groups__group">
+                    <div>
+                        <div class="govuk-form-group">
+                           
+                               
+                            <fieldset class="govuk-fieldset">
+                                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Eligability</h3></legend>
+                                <label class="govuk-label" for="minimumAge">
+                                    Minimum Age
+                                </label>
+                                <input class="govuk-input govuk-input--width-2" id="minimumAge" name="minimumAge" value="@Model.MinimumAge" asp-for="MinimumAge" type="text" pattern="\d*" oninput="this.value=this.value.replace(/[^0-9]/g,'');" autocomplete="minimumAge">
+                                
+                                <label class="govuk-label" for="maximumAge">
+                                    Maximum Age
+                                </label>
+                                <input class="govuk-input govuk-input--width-2" id="maximumAge" name="maximumAge" value="@Model.MaximumAge" asp-for="MaximumAge"  type="text" pattern="\d*" oninput="this.value=this.value.replace(/[^0-9]/g,'');" autocomplete="maximumAge">
+                      
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+
+                    <div class="filters-component__groups__group">
+                    <div>
+                        <div class="govuk-form-group">
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">How the support is delivered</h3></legend>
+                                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input" id="delivery-2" name="delivery" type="checkbox" value="In person">
+                                        <label class="govuk-label govuk-checkboxes__label" for="delivery-2">
+                                            In person
+                                        </label>
+                                    </div>
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input" id="delivery" name="delivery" type="checkbox" value="Online">
+                                        <label class="govuk-label govuk-checkboxes__label" for="delivery">
+                                            Online
+                                        </label>
+                                    </div>
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input" id="delivery-3" name="delivery" type="checkbox" value="Telephone">
+                                        <label class="govuk-label govuk-checkboxes__label" for="delivery-3">
+                                            Telephone
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="filters-component__groups__group">
+                    <div>
+                        <div class="govuk-form-group">
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Cost of service</h3></legend>
+                                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input" id="cost" name="cost" type="checkbox" value="free">
+                                        <label class="govuk-label govuk-checkboxes__label" for="cost">
+                                            Free
+                                        </label>
+                                    </div>
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input" id="cost-2" name="cost" type="checkbox" value="paid">
+                                        <label class="govuk-label govuk-checkboxes__label" for="cost-2">
+                                            Paid
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+                     <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                        Filter
+                    </button>
+          </div>
+          <div class="column2" >
+
+            <div>
+                
+                    <h1 class="govuk-heading-m">
+                          Services
+                </h1>
+              <div class="column4">
+                  <div class="govuk-form-group">
+                        <label class="govuk-label" for="searchText">
+                            Search Text
+                        </label>
+                        <input class="govuk-input" id="searchText" name="searchText" value="@Model.SearchText" type="text" autocomplete="searchText">
+                    </div>
+                
+              </div>
+              <div class="column4">
+               <div class="govuk-form-group">
+                    <label class="govuk-label" for="searchText">
+                        Postcode
+                    </label>
+                    <input class="govuk-input" id="searchPostcode" name="searchPostcode" value="@Model.SearchPostCode" type="text" autocomplete="searchText">
+                </div>
+              </div>
+              <div class="column4">
+                <label class="govuk-label" for="sort">
+                  Sort by
+                </label>
+                <select class="govuk-select" id="sort" name="sort" >
+                  <option value="distance">Distance</option>
+                  <option value="alphabetically" selected>Alphabetically</option>
+                  <option value="updated">Recently updated</option>
+                </select>
+              </div>
+              <div class="column4">
+               <button id="SearchBtn" type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                    Search
+               </button>
+              </div>
+              
+            </div>
+                <br />
+                @foreach(var item in Model.SearchResults.Items)
+                {
+                    <ul class="no-bullets">
+                        <li><a asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@item.Id" style="color:blue" class="govuk-!-font-weight-bold govuk-body govuk-!-font-size-24">@item.Name</a></li>
+                        <li>@item.Description</li>
+                    </ul>
+                    <br />
+                            
+                }
+          </div>
+            </form>  
+      </div>
+    </div>
+</div>
+
+ 
