@@ -12,6 +12,10 @@ public class ConsentModel : PageModel
     public string Id { get; set; } = default!;
     [BindProperty]
     public string Name { get; set; } = default!;
+
+    [BindProperty]
+    public bool ValidationValid { get; set; } = true;
+
     public void OnGet(string id, string name)
     {
         Id = id;
@@ -20,6 +24,12 @@ public class ConsentModel : PageModel
 
     public IActionResult OnPost(string id, string name)
     {
+        if (!ModelState.IsValid || IsConsentGiven == null)
+        {
+            ValidationValid = false;
+            return Page();
+        }
+
         if (string.Compare(IsConsentGiven, "yes", StringComparison.OrdinalIgnoreCase) == 0)
         {
             return RedirectToPage("/ProfessionalReferral/PersonalDetails", new

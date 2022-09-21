@@ -15,6 +15,13 @@ public class PersonalDetailsModel : PageModel
     public string Id { get; set; } = default!;
     [BindProperty]
     public string Name { get; set; } = default!;
+
+    [BindProperty]
+    public bool ValidationValid { get; set; } = true;
+
+    [BindProperty]
+    public bool NeedsValid { get; set; } = true;
+
     public void OnGet(string id, string name, string fullName, string hasSpecialNeeds)
     {
         Id = id;
@@ -28,6 +35,17 @@ public class PersonalDetailsModel : PageModel
 
     public IActionResult OnPost()
     {
+        if (!ModelState.IsValid)
+        {
+            if (HasSpecialNeeds == null)
+                NeedsValid = false;
+
+            if (FullName == null || FullName.Trim().Length == 0 || FullName.Length > 255)
+                ValidationValid = false;
+
+            return Page();
+        }
+            
         return RedirectToPage("/ProfessionalReferral/ContactDetails", new
         {
             id = Id,

@@ -10,41 +10,60 @@
       <input asp-for="@Model.Name" type="hidden">
 
       <div class="govuk-form-group">
+          <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
         <fieldset class="govuk-fieldset">
           <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
             <h1 class="govuk-fieldset__heading">
               Personal details
             </h1>
           </legend>
+          @{
+            if (Model.ValidationValid == false)
+            {
+                <p class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span> You must enter the persons full name
+                </p>
+            }
+        }
           <p>If you are requesting support for a child or a family, enter details of a parent or carer.</p>
           <div class="govuk-form-group">
             <label class="govuk-label" for="FullName">
               Full name
             </label>
-            <input class="govuk-input" type="text" spellcheck="false" autocomplete="FullName" id="FullName" name="FullName" value="@Model.FullName" asp-for="FullName">
+            <input class="govuk-input @(Model.ValidationValid == false ? "govuk-input--error" : "")" type="text" spellcheck="false" autocomplete="FullName" id="FullName" name="FullName" value="@Model.FullName" asp-for="FullName" maxlength="255">
           </div>
         </fieldset>
       </div>
+      </div>
       <div class="govuk-form-group">
+          <div class="govuk-form-group @(Model.NeedsValid == false ? "govuk-form-group--error" : "")">
         <fieldset class="govuk-fieldset">
           <legend class="govuk-fieldset__legend">
             Does the person have any special educational needs, disabilities or health conditions?
           </legend>
+              @{
+                        if (Model.NeedsValid == false)
+                        {
+                            <p class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> You must select one of the options
+                            </p>
+                        }
+                    }
           <div class="govuk-radios" data-module="govuk-radios">
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="send" name="HasSpecialNeeds" type="radio" value="Yes">
+                  <input class="govuk-radios__input" id="send" name="HasSpecialNeeds" type="radio" value="Yes" @(Model.HasSpecialNeeds != null && Model.HasSpecialNeeds == "Yes" ? "checked" : "")>
               <label class="govuk-label govuk-radios__label" for="send">
                 Yes
               </label>
             </div>
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="send-2" name="HasSpecialNeeds" type="radio" value="No">
+                  <input class="govuk-radios__input" id="send-2" name="HasSpecialNeeds" type="radio" value="No" @(Model.HasSpecialNeeds != null && Model.HasSpecialNeeds == "No" ? "checked" : "")>
               <label class="govuk-label govuk-radios__label" for="send-2">
                 No
               </label>
             </div>
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="send-3" name="HasSpecialNeeds" type="radio" value="Not sure">
+                  <input class="govuk-radios__input" id="send-3" name="HasSpecialNeeds" type="radio" value="Not sure" @(Model.HasSpecialNeeds != null && Model.HasSpecialNeeds == "Not sure" ? "checked" : "")>
               <label class="govuk-label govuk-radios__label" for="send-3">
                 Not sure
               </label>
@@ -52,6 +71,7 @@
           </div>
         </fieldset>
       </div>
+       </div>
       <button type="submit" class="govuk-button">
         Continue
       </button>

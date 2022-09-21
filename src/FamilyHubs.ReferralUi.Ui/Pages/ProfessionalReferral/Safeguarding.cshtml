@@ -6,21 +6,30 @@
 <main class="govuk-main-wrapper " id="main-content" role="main">
      <form method="post">
       <div class="govuk-form-group">
+          <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
         <fieldset class="govuk-fieldset">
           <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
             <h1 class="govuk-fieldset__heading">
               Is the person or family you are requesting support for safe from immediate harm?
             </h1>
           </legend>
+              @{
+                    if (Model.ValidationValid == false)
+                    {
+                        <p class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> You must select one of the options
+                        </p>
+                    }
+                }
           <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="safeguarding" name="IsImmediateHarm" type="radio" value="yes">
+                  <input class="govuk-radios__input" id="safeguarding" name="IsImmediateHarm" type="radio" value="yes" @(Model.IsImmediateHarm != null && Model.IsImmediateHarm == "yes" ? "checked" : "")>
               <label class="govuk-label govuk-radios__label" for="safeguarding">
                 Yes
               </label>
             </div>
             <div class="govuk-radios__item">
-              <input class="govuk-radios__input" id="safeguarding-2" name="IsImmediateHarm" type="radio" value="no">
+                  <input class="govuk-radios__input" id="safeguarding-2" name="IsImmediateHarm" type="radio" value="no" @(Model.IsImmediateHarm != null && Model.IsImmediateHarm == "no" ? "checked" : "")>
               <label class="govuk-label govuk-radios__label" for="safeguarding-2">
                 No
               </label>
@@ -28,6 +37,7 @@
           </div>
 
         </fieldset>
+      </div>
       </div>
       <button type="submit" class="govuk-button" asp-route-id="@Model.Id" asp-route-name="@Model.Name">
         Continue

@@ -9,6 +9,9 @@ public class SafeguardingModel : PageModel
     public string IsImmediateHarm { get; set; } = default!;
 
     [BindProperty]
+    public bool ValidationValid { get; set; } = true;
+
+    [BindProperty]
     public string Id { get; set; } = default!;
     [BindProperty]
     public string Name { get; set; } = default!;
@@ -20,6 +23,12 @@ public class SafeguardingModel : PageModel
 
     public IActionResult OnPost(string id, string name)
     {
+        if (!ModelState.IsValid || IsImmediateHarm == null)
+        {
+            ValidationValid = false;
+            return Page();
+        }
+
         if (string.Compare(IsImmediateHarm, "yes", StringComparison.OrdinalIgnoreCase) == 0)
         {
             return RedirectToPage("/ProfessionalReferral/Consent", new

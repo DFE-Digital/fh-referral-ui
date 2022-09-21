@@ -24,6 +24,10 @@ public class WhySupportModel : PageModel
     public string Id { get; set; } = default!;
     [BindProperty]
     public string Name { get; set; } = default!;
+
+    [BindProperty]
+    public bool ValidationValid { get; set; } = true;
+
     public void OnGet(string id, string name, string fullName, string hasSpecialNeeds, string email, string phone, string reasonForSupport)
     {
         Id = id;
@@ -39,6 +43,12 @@ public class WhySupportModel : PageModel
 
     public IActionResult OnPost()
     {
+        if (!ModelState.IsValid || (ReasonForSupport == null || ReasonForSupport.Trim().Length == 0 || ReasonForSupport.Length > 500))
+        {
+            ValidationValid = false;
+            return Page();
+        }
+
         return RedirectToPage("/ProfessionalReferral/CheckReferralDetails", new
         {
             id = Id,
