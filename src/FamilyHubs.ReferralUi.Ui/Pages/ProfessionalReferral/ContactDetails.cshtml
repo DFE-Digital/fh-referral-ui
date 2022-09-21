@@ -15,12 +15,12 @@
 
       <div class="govuk-form-group">
           <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
-            <fieldset class="govuk-fieldset">
-              <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                <h1 class="govuk-fieldset__heading">
-                  Contact details
-                </h1>
-              </legend>
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Contact details
+            </h1>
+          </legend>
               @{
                     if (Model.ValidationValid == false)
                     {
@@ -29,11 +29,11 @@
                         </p>
                     }
                 }
-              <p>If you are requesting support for a child or a family, enter details of a parent or carer.</p>
-              <div class="govuk-form-group">
-                <label class="govuk-label" for="Email">
-                  Email address
-                </label>
+          <p>If you are requesting support for a child or a family, enter details of a parent or carer.</p>
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="Email">
+              Email address
+            </label>
                 @{
                     if (Model.EmailValid == false)
                     {
@@ -43,11 +43,11 @@
                     }
                 }
                 <input class="govuk-input @(Model.EmailValid == false ? "govuk-input--error" : "")" id="Email" name="Email" value="@Model.Email" asp-for="Email"  type="email" spellcheck="false" autocomplete="Email" maxlength="255">
-              </div>
-              <div class="govuk-form-group">
-                <label class="govuk-label" for="Phone">
-                  UK telephone number
-                </label>
+          </div>
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="Phone">
+              UK telephone number
+            </label>
                 @{
                     if (Model.PhoneValid == false)
                     {
@@ -57,9 +57,9 @@
                     }
                 }
                 <input class="govuk-input govuk-input--width-20 @(Model.PhoneValid == false ? "govuk-input--error" : "")" id="Phone" name="Phone" value="@Model.Phone" asp-for="Phone" type="tel" autocomplete="Phone" maxlength="15">
-              </div>
-            </fieldset>
-         </div>
+          </div>
+        </fieldset>
+      </div>
        </div>
       <button type="submit" class="govuk-button">
         Continue

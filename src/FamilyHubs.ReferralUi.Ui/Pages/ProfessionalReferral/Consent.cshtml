@@ -9,12 +9,12 @@
     <form method="post">
       <div class="govuk-form-group">
           <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
-            <fieldset class="govuk-fieldset">
-              <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                <h1 class="govuk-fieldset__heading">
-                  Do you have consent from the person or family?
-                </h1>
-              </legend>
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Do you have consent from the person or family?
+            </h1>
+          </legend>
               @{
                     if (Model.ValidationValid == false)
                     {
@@ -23,23 +23,23 @@
                         </p>
                     }
                 }
-              <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
-                <div class="govuk-radios__item">
+          <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+            <div class="govuk-radios__item">
                   <input class="govuk-radios__input" id="consent" name="IsConsentGiven" type="radio" value="yes" @(Model.IsConsentGiven != null && Model.IsConsentGiven == "yes" ? "checked" : "")>
-                  <label class="govuk-label govuk-radios__label" for="consent">
-                    Yes
-                  </label>
-                </div>
-                <div class="govuk-radios__item">
+              <label class="govuk-label govuk-radios__label" for="consent">
+                Yes
+              </label>
+            </div>
+            <div class="govuk-radios__item">
                   <input class="govuk-radios__input" id="consent-2" name="IsConsentGiven" type="radio" value="no" @(Model.IsConsentGiven != null && Model.IsConsentGiven == "no" ? "checked" : "")>
-                  <label class="govuk-label govuk-radios__label" for="consent-2">
-                    No
-                  </label>
-                </div>
-              </div>
+              <label class="govuk-label govuk-radios__label" for="consent-2">
+                No
+              </label>
+            </div>
+          </div>
 
-            </fieldset>
-         </div>  
+        </fieldset>
+      </div>
       </div>
       <button type="submit" class="govuk-button" asp-route-id="@Model.Id" asp-route-name="@Model.Name">
         Continue

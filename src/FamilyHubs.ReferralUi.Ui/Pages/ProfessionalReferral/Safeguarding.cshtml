@@ -7,12 +7,12 @@
      <form method="post">
       <div class="govuk-form-group">
           <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
-            <fieldset class="govuk-fieldset">
-              <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                <h1 class="govuk-fieldset__heading">
-                  Is the person or family you are requesting support for safe from immediate harm?
-                </h1>
-              </legend>
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              Is the person or family you are requesting support for safe from immediate harm?
+            </h1>
+          </legend>
               @{
                     if (Model.ValidationValid == false)
                     {
@@ -21,22 +21,22 @@
                         </p>
                     }
                 }
-              <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
-                <div class="govuk-radios__item">
+          <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+            <div class="govuk-radios__item">
                   <input class="govuk-radios__input" id="safeguarding" name="IsImmediateHarm" type="radio" value="yes" @(Model.IsImmediateHarm != null && Model.IsImmediateHarm == "yes" ? "checked" : "")>
-                  <label class="govuk-label govuk-radios__label" for="safeguarding">
-                    Yes
-                  </label>
-                </div>
-                <div class="govuk-radios__item">
+              <label class="govuk-label govuk-radios__label" for="safeguarding">
+                Yes
+              </label>
+            </div>
+            <div class="govuk-radios__item">
                   <input class="govuk-radios__input" id="safeguarding-2" name="IsImmediateHarm" type="radio" value="no" @(Model.IsImmediateHarm != null && Model.IsImmediateHarm == "no" ? "checked" : "")>
-                  <label class="govuk-label govuk-radios__label" for="safeguarding-2">
-                    No
-                  </label>
-                </div>
-              </div>
+              <label class="govuk-label govuk-radios__label" for="safeguarding-2">
+                No
+              </label>
+            </div>
+          </div>
 
-            </fieldset>
+        </fieldset>
       </div>
       </div>
       <button type="submit" class="govuk-button" asp-route-id="@Model.Id" asp-route-name="@Model.Name">
