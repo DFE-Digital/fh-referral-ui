@@ -47,7 +47,8 @@
 
 </style>
 
-<a asp-page="/FindServiceFromPostcode" class="govuk-back-link">Back</a>
+<a asp-page="/Search" class="govuk-back-link">Back</a>
+
 
 
 <div class="govuk-grid-row">
@@ -104,29 +105,20 @@
                     <div class="filters-component__groups__group">
                     <div>
                         <div class="govuk-form-group">
-                            <fieldset class="govuk-fieldset">
-                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">How the support is delivered</h3></legend>
-                                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                                    <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" id="delivery-2" name="delivery" type="checkbox" value="In person">
-                                        <label class="govuk-label govuk-checkboxes__label" for="delivery-2">
-                                            In person
-                                        </label>
-                                    </div>
-                                    <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" id="delivery" name="delivery" type="checkbox" value="Online">
-                                        <label class="govuk-label govuk-checkboxes__label" for="delivery">
-                                            Online
-                                        </label>
-                                    </div>
-                                    <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" id="delivery-3" name="delivery" type="checkbox" value="Telephone">
-                                        <label class="govuk-label govuk-checkboxes__label" for="delivery-3">
-                                            Telephone
-                                        </label>
-                                    </div>
+                            <div class="govuk-form-group">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">How the support is delivered</h3></legend>
+                        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                            @foreach (var item in Model.DictServiceDelivery)
+                            {
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="@item.Value.ToLower().Replace(" ", "")" name="ServiceDeliverySelection" type="checkbox" value="@item.Key" @(Model.ServiceDeliverySelection != null && Model.ServiceDeliverySelection.Any(x => x == item.Key.ToString()) ? "checked" : "")>
+                                    <label class="govuk-label govuk-checkboxes__label" for="@item.Value.ToLower().Replace(" ", "")">
+                                            @item.Value
+                                    </label>
                                 </div>
-                            </fieldset>
+                            }
+                        </div>
+                    </div>
                         </div>
                     </div>
                 </div>
@@ -137,13 +129,13 @@
                                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Cost of service</h3></legend>
                                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                                     <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" id="cost" name="cost" type="checkbox" value="free">
+                                        <input class="govuk-checkboxes__input" id="cost" name="CostSelection" type="checkbox" value="free" @(Model.CostSelection != null && Model.CostSelection.Any(x => x == "free") ? "checked" : "")>
                                         <label class="govuk-label govuk-checkboxes__label" for="cost">
                                             Free
                                         </label>
                                     </div>
                                     <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" id="cost-2" name="cost" type="checkbox" value="paid">
+                                        <input class="govuk-checkboxes__input" id="cost-2" name="CostSelection" type="checkbox" value="paid" @(Model.CostSelection != null && Model.CostSelection.Any(x => x == "paid") ? "checked" : "")>
                                         <label class="govuk-label govuk-checkboxes__label" for="cost-2">
                                             Paid
                                         </label>
@@ -214,5 +206,3 @@
       </div>
     </div>
 </div>
-
- 

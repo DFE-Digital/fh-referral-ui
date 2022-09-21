@@ -1,4 +1,6 @@
+using FamilyHubs.ReferralUi.Ui.Models;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +12,15 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 public class LocalOfferResultsModel : PageModel
 {
     private readonly ILocalOfferClientService _localOfferClientService;
+    private readonly IPostcodeLocationClientService _postcodeLocationClientService;
+
+    public Dictionary<int, string> DictServiceDelivery = new();
+
+    [BindProperty]
+    public List<string> ServiceDeliverySelection { get; set; } = default!;
+
+    [BindProperty]
+    public List<string> CostSelection { get; set; } = default!;
 
     public double CurrentLatitude { get; set; }
     public double CurrentLongitude { get; set; }
@@ -38,9 +49,10 @@ public class LocalOfferResultsModel : PageModel
         new SelectListItem { Value = "32186.9", Text = "20 miles" },
     };
 
-    public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService)
+    public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService)
     {
         _localOfferClientService = localOfferClientService;
+        _postcodeLocationClientService = postcodeLocationClientService;
     }
 
     public async Task OnGetAsync(double latitude, double longitude, double distance, string minimumAge, string maximumAge, string searchText)
@@ -58,11 +70,18 @@ public class LocalOfferResultsModel : PageModel
             maxAge = 99;
         }
 
-        SearchResults = await _localOfferClientService.GetLocalOffers("active", minAge, maxAge, (latitude != 0.0D) ? latitude : null, (longitude != 0.0D) ? longitude : null, (distance > 0.0D) ? distance : null, 1, 99, SearchText ?? string.Empty);
-        //SearchResults = await _localOfferClientService.GetLocalOffers("active", minAge, maxAge, latitude, longitude, distance, 1, 99, SearchText ?? string.Empty);
+        if (searchText != null)
+        {
+            SearchText = searchText;
+        }
+
+        CreateServiceDeliveryDictionary();
+
+        SearchResults = await _localOfferClientService.GetLocalOffers("active", minAge, maxAge, (latitude != 0.0D) ? latitude : null, (longitude != 0.0D) ? longitude : null, (distance > 0.0D) ? distance : null, 1, 99, SearchText ?? string.Empty, null,null,null);
+        
     }
 
-    public IActionResult OnPost()
+    public async Task<IActionResult> OnPost()
     {
         SelectedDistance = Request.Form["SelectedDistance"];
         if (double.TryParse(Request.Form["CurrentLatitude"], out double currentLatitude))
@@ -74,15 +93,85 @@ public class LocalOfferResultsModel : PageModel
             CurrentLongitude = currentLongitude;
         }
 
-        return RedirectToPage("LocalOfferResults", new
+        if (SearchPostCode != null)
         {
-            latitude = CurrentLatitude,
-            longitude = CurrentLongitude,
-            distance = SelectedDistance,
-            minimumAge = MinimumAge,
-            maximumAge = MaximumAge,
-            searchText = SearchText
-        });
+            await GetPostCode();
+        }
 
+        if (!double.TryParse(SelectedDistance, out double distance))
+        {
+            distance = 0.0D;
+        }
+
+        if (!int.TryParse(MinimumAge, out int minimumAge))
+        {
+            minimumAge = 0;
+        }
+
+        if (!int.TryParse(MaximumAge, out int maximumAge))
+        {
+            maximumAge = 99;
+        }
+
+        CreateServiceDeliveryDictionary();
+
+        string? serviceDelivery = null;
+        if (ServiceDeliverySelection != null)
+        {
+            serviceDelivery = string.Join(',', ServiceDeliverySelection.ToArray());
+        }
+
+        bool? isPaidFor = null;
+        if (CostSelection != null && CostSelection.Count() == 1)
+        {
+            switch(CostSelection[0])
+            {
+                case "paid":
+                    isPaidFor = true;
+                    break;
+
+                case "free":
+                    isPaidFor = false;
+                    break;
+            }
+        }
+
+        SearchResults = await _localOfferClientService.GetLocalOffers("active", minimumAge, maximumAge, (CurrentLatitude != 0.0D) ? CurrentLatitude : null, (CurrentLongitude != 0.0D) ? CurrentLongitude : null, (distance > 0.0D) ? distance : null, 1, 99, SearchText ?? string.Empty, serviceDelivery, isPaidFor, null);
+
+        return Page();
+        
+    }
+
+    private void CreateServiceDeliveryDictionary()
+    {
+        var myEnumDescriptions = from ServiceDelivery n in Enum.GetValues(typeof(ServiceDelivery))
+                                 select new { Id = (int)n, Name = Utility.GetEnumDescription(n) };
+
+        foreach (var myEnumDescription in myEnumDescriptions)
+        {
+            if (myEnumDescription.Id == 0)
+                continue;
+            DictServiceDelivery[myEnumDescription.Id] = myEnumDescription.Name;
+        }
+    }
+
+    private async Task GetPostCode()
+    {
+        if (SearchPostCode == null)
+            return;
+
+        try
+        {
+            PostcodeApiModel postcodeApiModel = await _postcodeLocationClientService.LookupPostcode(SearchPostCode);
+            if (postcodeApiModel != null)
+            {
+                CurrentLatitude = postcodeApiModel.result.latitude;
+                CurrentLongitude = postcodeApiModel.result.longitude;
+            }
+        }
+        catch
+        {
+            return;
+        }
     }
 }
