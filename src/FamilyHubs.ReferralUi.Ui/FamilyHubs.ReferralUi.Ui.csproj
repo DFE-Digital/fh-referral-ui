@@ -19,14 +19,14 @@
 	<ItemGroup>
 		<PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-		<PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="1.1.0" />
-		<PackageReference Include="FamilyHubs.SharedKernel" Version="1.0.3" />
+		<PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="1.1.1" />
+		<PackageReference Include="FamilyHubs.SharedKernel" Version="1.0.4" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
 		<PackageReference Include="MassTransit" Version="8.0.6" />
 		<PackageReference Include="MassTransit.RabbitMQ" Version="8.0.6" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="6.0.9" />
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.8" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.9" />
 		<PackageReference Include="SFA.DAS.Http" Version="3.2.69" />
 	</ItemGroup>
 
