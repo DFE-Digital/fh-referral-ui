@@ -1,5 +1,5 @@
-using FamilyHubs.ReferralApi.Common.Dto;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.Referrals;
 using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
