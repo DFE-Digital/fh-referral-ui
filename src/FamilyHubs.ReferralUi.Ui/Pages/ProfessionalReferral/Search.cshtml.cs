@@ -76,7 +76,7 @@ public class SearchModel : PageModel
         {
             PostcodeApiModel postcodeApiModel = await _postcodeLocationClientService.LookupPostcode(Postcode);
 
-            return RedirectToPage("LocalOfferResults", new
+            return RedirectToPage("LocalOfferResultsNew", new //TODO - change back to original page when done
             {
                 postcodeApiModel.result.latitude,
                 postcodeApiModel.result.longitude,
