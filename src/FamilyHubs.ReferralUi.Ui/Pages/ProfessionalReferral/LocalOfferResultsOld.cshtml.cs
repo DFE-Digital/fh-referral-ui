@@ -1,18 +1,16 @@
 using FamilyHubs.ReferralUi.Ui.Models;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Drawing.Printing;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
-public class LocalOfferResultsNewModel : PageModel
+public class LocalOfferResultsOldModel : PageModel
 {
     private readonly ILocalOfferClientService _localOfferClientService;
     private readonly IPostcodeLocationClientService _postcodeLocationClientService;
@@ -45,7 +43,8 @@ public class LocalOfferResultsNewModel : PageModel
     [BindProperty(SupportsGet = true)]
     public int CurrentPage { get; set; } = 1;
     public int PageSize { get; set; } = 10;
-
+    public string? OutCode { get; set; }
+    public string? DistrictCode { get; set; }
     public List<SelectListItem> DistanceSelectionList { get; } = new List<SelectListItem>
     {
         new SelectListItem { Value = "1609.34", Text = "1 mile" },
@@ -56,7 +55,7 @@ public class LocalOfferResultsNewModel : PageModel
         new SelectListItem { Value = "32186.9", Text = "20 miles" },
     };
 
-    public LocalOfferResultsNewModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService)
+    public LocalOfferResultsOldModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService)
     {
         _localOfferClientService = localOfferClientService;
         _postcodeLocationClientService = postcodeLocationClientService;
@@ -84,7 +83,7 @@ public class LocalOfferResultsNewModel : PageModel
 
         CreateServiceDeliveryDictionary();
 
-        SearchResults = await _localOfferClientService.GetLocalOffers("active", minAge, maxAge, (latitude != 0.0D) ? latitude : null, (longitude != 0.0D) ? longitude : null, (distance > 0.0D) ? distance : null, CurrentPage, PageSize, SearchText ?? string.Empty, null, null, null);
+        SearchResults = await _localOfferClientService.GetLocalOffers("active", minAge, maxAge, DistrictCode ?? string.Empty, (latitude != 0.0D) ? latitude : null, (longitude != 0.0D) ? longitude : null, (distance > 0.0D) ? distance : null, CurrentPage, PageSize, SearchText ?? string.Empty, null, null, null);
 
     }
 
@@ -131,7 +130,7 @@ public class LocalOfferResultsNewModel : PageModel
         bool? isPaidFor = null;
         if (CostSelection != null && CostSelection.Count() == 1)
         {
-            switch (CostSelection[0])
+            switch(CostSelection[0])
             {
                 case "paid":
                     isPaidFor = true;
@@ -143,10 +142,10 @@ public class LocalOfferResultsNewModel : PageModel
             }
         }
 
-        SearchResults = await _localOfferClientService.GetLocalOffers("active", minimumAge, maximumAge, (CurrentLatitude != 0.0D) ? CurrentLatitude : null, (CurrentLongitude != 0.0D) ? CurrentLongitude : null, (distance > 0.0D) ? distance : null, 1, 99, SearchText ?? string.Empty, serviceDelivery, isPaidFor, null);
+        SearchResults = await _localOfferClientService.GetLocalOffers("active", minimumAge, maximumAge, DistrictCode ?? string.Empty, (CurrentLatitude != 0.0D) ? CurrentLatitude : null, (CurrentLongitude != 0.0D) ? CurrentLongitude : null, (distance > 0.0D) ? distance : null, 1, 99, SearchText ?? string.Empty, serviceDelivery, isPaidFor, null);
 
         return Page();
-
+        
     }
 
     private void CreateServiceDeliveryDictionary()
@@ -180,60 +179,5 @@ public class LocalOfferResultsNewModel : PageModel
         {
             return;
         }
-    }
-
-    internal string GetAddressAsString(OpenReferralPhysicalAddressDto addressDto)
-    {
-        string result = string.Empty;
-
-        if (addressDto.Address_1 == null || addressDto.Address_1 == string.Empty)
-        {
-            return result;
-        }
-
-        result = result + (addressDto.Address_1 != null ? addressDto.Address_1 + "," : string.Empty);
-        result = result + (addressDto.City != null ? addressDto.City + "," : string.Empty);
-        result = result + (addressDto.State_province != null ? addressDto.State_province + "," : string.Empty);
-        result = result + (addressDto.Postal_code != null ? addressDto.Postal_code : string.Empty);
-
-        return result;
-    }
-
-    internal string GetDeliveryMethodsAsString(ICollection<OpenReferralServiceDeliveryExDto> serviceDeliveries)
-    {
-        string result = string.Empty;
-
-        if (serviceDeliveries == null || serviceDeliveries.Count == 0)
-            return result;
-
-        foreach (var serviceDelivery in serviceDeliveries)
-            result = result + (Enum.GetName(serviceDelivery.ServiceDelivery) != null ? Enum.GetName(serviceDelivery.ServiceDelivery) + "," : String.Empty);
-
-        //Remove last comma if present
-        if (result.EndsWith(","))
-        {
-            result = result.Remove(result.Length - 1);
-        }
-
-        return result;
-    }
-
-    internal string GetLanguagesAsString(ICollection<OpenReferralLanguageDto> languageDtos)
-    {
-        string result = string.Empty;
-
-        if (languageDtos == null || languageDtos.Count == 0)
-            return result;
-
-        foreach (var language in languageDtos)
-            result = result + (language.Language != null ? language.Language + "," : String.Empty);
-
-        //Remove last comma if present
-        if (result.EndsWith(","))
-        {
-            result = result.Remove(result.Length - 1);
-        }
-
-        return result;
     }
 }

@@ -52,6 +52,7 @@ public class WhenUsingOpenReferralOrganisationClientService : BaseClientService
         {
             new OpenReferralOrganisationDto(
                 "56e62852-1b0b-40e5-ac97-54a67ea957dc",
+                new(string.Empty, string.Empty, string.Empty),
                 "Unit Test County Council",
                 "Unit Test County Council",
                 null,
