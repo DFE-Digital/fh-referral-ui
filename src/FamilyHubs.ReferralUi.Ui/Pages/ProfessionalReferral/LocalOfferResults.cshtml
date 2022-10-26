@@ -1,910 +1,459 @@
-﻿@page "{latitude:double}/{longitude:double}"
+﻿@page "{postCode}"
 @model FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral.LocalOfferResultsModel
 @{
 }
 
-<style>
-
-</style>
-
 <a asp-page="/Search" class="govuk-back-link">Back</a>
 
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-  <h1 class="govuk-heading-l"> 52 services found</h1>
-    <p class="govuk-caption-m">Showing results for <a href="search">
-      
-      DE2
-      
-    </a></p>
-  </div>
-  <div class="govuk-grid-column-one-third">
-    <button class="govuk-button govuk-button--secondary filters-mobile" id="buttonFilters" onclick="displayFilters();">Show filters</button>
-    <button class="govuk-button govuk-button--secondary filters-mobile" style="display: none" id="buttonFilters2" onclick="hideFilters();">Hide filters</button>
-    <div class="filters-component panel-component__content" id="filters-component" data-controller="filters">
-      <div class="filters-component__heading"><h2 class="govuk-heading-m">Filter results</h2>
-      </div>
-      <div class="filters-component__groups">
-        <div class="filters-component__groups__group" data-filters-target="group" data-group="subjects">
-          <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Category</h3></legend>
-          <div>
-            <div class="searchable-collection-component" data-controller="searchable-collection">
-              <div class=" searchable-collection-component--scrollable">
-                <div class="searchable-collection-component__search">
-                  <input aria-describedby="publishers-job-listing-job-details-form-subjects-hint" aria-expanded="true" aria-label="Subject" aria-owns="subjects__listbox" class="govuk-input icon icon--left icon--search js-action" id="filter" placeholder="Search" role="combobox">
-                  <div aria-live="assertive" class="govuk-visually-hidden collection-match" role="status"></div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-l"> @Model.SearchResults.TotalCount services found</h1>
+            <p class="govuk-caption-m">
+                Showing results for <a href="search">
+
+                    @Model.OutCode
+
+                </a>
+            </p>
+        </div>
+        <div class="govuk-grid-column-one-third">
+            <button class="govuk-button govuk-button--secondary filters-mobile" id="buttonFilters" onclick="displayFilters();">Show filters</button>
+            <button class="govuk-button govuk-button--secondary filters-mobile" style="display: none" id="buttonFilters2" onclick="hideFilters();">Hide filters</button>
+            <div class="filters-component panel-component__content" id="filters-component" data-controller="filters">
+                <div class="filters-component__heading">
+                    <h2 class="govuk-heading-m">Filter results</h2>
                 </div>
-                <div class="govuk-form-group">
-                  <fieldset class="govuk-fieldset">
-                    <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                      <input type="hidden" name="subjects[]" value="" autocomplete="off">
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Activities for children aged 0-5
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Birth registration
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Debt and welfare advice
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Domestic abuse support
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Early Childhood Education and Care (ECEC) and financial support (Tax-Free Childcare, Universal Credit childcare)
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Early Language and the Home Learning Environment
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Health Visiting
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Housing
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Infant Feeding Support
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Intensive targeted family support services, including those funded by the Supporting Families programme
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Local authority 0-19 public health services, based on local needs assessments
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Mental health services (beyond Start for Life parent-infant mental health)
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Midwifery/maternity
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Nutrition and weight management
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Oral health improvement
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Parent-Infant Relationships and Perinatnatal Mental Health Support
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Parenting Support
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Reducing Parental Conflict
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          SEND support and services (inclusive of the Start for Life period)
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Stop smoking support
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Substance (alcohol/drug) misuse support
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Support for separating and separated parents
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Youth justice services
-                        </label>
-                      </div>
-                      <div class="govuk-checkboxes__item" id="filterable">
-                        <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                        <label class="govuk-label govuk-checkboxes__label" for="types">
-                          Youth services - universal and targeted
-                        </label>
-                      </div>
+                <div class="filters-component__groups">
+                    <div class="filters-component__groups__group" data-filters-target="group" data-group="subjects">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Category</h3></legend>
+                        <div>
+                            <div class="searchable-collection-component" data-controller="searchable-collection">
+                                <div class=" searchable-collection-component--scrollable">
+                                    <div class="searchable-collection-component__search">
+                                        <input aria-describedby="publishers-job-listing-job-details-form-subjects-hint" aria-expanded="true"
+                                               aria-label="Subject" aria-owns="subjects__listbox"
+                                               class="govuk-input icon icon--left icon--search js-action" id="filter"
+                                               placeholder="Search" role="combobox">
+                                        <div aria-live="assertive" class="govuk-visually-hidden collection-match" role="status"></div>
+                                    </div>
+                                    <div class="govuk-form-group">
+                                        <fieldset class="govuk-fieldset">
+                                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                                <input type="hidden" name="subjects[]" value="" autocomplete="off">
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Activities for children aged 0-5
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Birth registration
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Debt and welfare advice
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Domestic abuse support
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Early Childhood Education and Care (ECEC) and financial support (Tax-Free Childcare, Universal Credit childcare)
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Early Language and the Home Learning Environment
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Health Visiting
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Housing
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Infant Feeding Support
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Intensive targeted family support services, including those funded by the Supporting Families programme
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Local authority 0-19 public health services, based on local needs assessments
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Mental health services (beyond Start for Life parent-infant mental health)
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Midwifery/maternity
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Nutrition and weight management
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Oral health improvement
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Parent-Infant Relationships and Perinatnatal Mental Health Support
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Parenting Support
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Reducing Parental Conflict
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        SEND support and services (inclusive of the Start for Life period)
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Stop smoking support
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Substance (alcohol/drug) misuse support
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Support for separating and separated parents
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Youth justice services
+                                                    </label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" id="filterable">
+                                                    <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="types">
+                                                        Youth services - universal and targeted
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </fieldset>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="filters-component__groups__group">
-          <div>
-            <div class="govuk-form-group">
-              <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Cost </h3></legend>
-                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                  <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="cost" name="cost" type="checkbox" value="free">
-                    <label class="govuk-label govuk-checkboxes__label" for="cost">
-                      Free
-                    </label>
-                  </div>
-                  <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="cost-2" name="cost" type="checkbox" value="paid">
-                    <label class="govuk-label govuk-checkboxes__label" for="cost-2">
-                      Pay to use
-                    </label>
-                  </div>
-                </div>
-              </fieldset>
-            </div>
-          </div>
-        </div>
-        <div class="filters-component__groups__group">
-          <div>
-            <div class="govuk-form-group">
-              <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Children and young people</h3></legend>
-                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                  <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="age-3" name="age" type="checkbox" value="Children and young people" aria-controls="age-range" aria-expanded="false">
-                    <label class="govuk-label govuk-checkboxes__label" for="age-3">
-                      For children and young people
-                    </label>
-                  </div>
-                  <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="age-range">
-                    <div class="govuk-form-group">
-                      <label class="govuk-label" for="ageNumber">
-                        Age
-                      </label>
-                      <select class="govuk-select" id="ageNumber" name="ageNumber">
-                        <option value="all" selected="">All ages</option>
-                        <option value="0">0 to 12 months</option>
-                        <option value="1">1 year old</option>
-                        <option value="2">2 year old</option>
-                        <option value="3">3 year old</option>
-                        <option value="4">4 year old</option>
-                        <option value="5">5 year old</option>
-                        <option value="6">6 year old</option>
-                        <option value="7">7 year old</option>
-                        <option value="8">8 year old</option>
-                        <option value="9">9 year old</option>
-                        <option value="10">10 year old</option>
-                        <option value="11">11 year old</option>
-                        <option value="12">12 year old</option>
-                        <option value="13">13 year old</option>
-                        <option value="14">14 year old</option>
-                        <option value="15">15 year old</option>
-                        <option value="16">16 year old</option>
-                        <option value="17">17 year old</option>
-                        <option value="18">18 year old</option>
-                        <option value="19">19 year old</option>
-                        <option value="20">20 year old</option>
-                        <option value="21">21 year old</option>
-                        <option value="22">22 year old</option>
-                        <option value="23">23 year old</option>
-                        <option value="24">24 year old</option>
-                        <option value="25">25 year old</option>
-                      </select>
+
+
+                    <!-- DONE - COST -->
+                    <div class="filters-component__groups__group">
+                        <div>
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Cost </h3></legend>
+                                    <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="cost" name="CostSelection" type="checkbox" value="free" @(Model.CostSelection != null && Model.CostSelection.Any(x => x == "free") ? "checked" : "")>
+                                            <label class="govuk-label govuk-checkboxes__label" for="cost">
+                                                Free
+                                            </label>
+                                        </div>
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="cost-2" name="CostSelection" type="checkbox" value="paid" @(Model.CostSelection != null && Model.CostSelection.Any(x => x == "paid") ? "checked" : "")>
+                                            <label class="govuk-label govuk-checkboxes__label" for="cost-2">
+                                                Pay to use
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
                     </div>
-                  </div>
+
+                    <!-- TODO - Children and young people -->
+                    <div class="filters-component__groups__group">
+                        <div>
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Children and young people</h3></legend>
+                                    <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="age-3" name="age" type="checkbox" value="Children and young people" aria-controls="age-range">
+                                            <label class="govuk-label govuk-checkboxes__label" for="age-3">
+                                                For children and young people
+                                            </label>
+                                        </div>
+                                        <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="age-range">
+                                            <div class="govuk-form-group">
+                                                <label class="govuk-label" for="ageNumber">
+                                                    Age
+                                                </label>
+                                                <select class="govuk-select" id="ageNumber" name="ageNumber">
+                                                    <option value="all" selected>All ages</option>
+                                                    <option value="0">0 to 12 months</option>
+                                                    <option value="1">1 year old</option>
+                                                    <option value="2">2 year old</option>
+                                                    <option value="3">3 year old</option>
+                                                    <option value="4">4 year old</option>
+                                                    <option value="5">5 year old</option>
+                                                    <option value="6">6 year old</option>
+                                                    <option value="7">7 year old</option>
+                                                    <option value="8">8 year old</option>
+                                                    <option value="9">9 year old</option>
+                                                    <option value="10">10 year old</option>
+                                                    <option value="11">11 year old</option>
+                                                    <option value="12">12 year old</option>
+                                                    <option value="13">13 year old</option>
+                                                    <option value="14">14 year old</option>
+                                                    <option value="15">15 year old</option>
+                                                    <option value="16">16 year old</option>
+                                                    <option value="17">17 year old</option>
+                                                    <option value="18">18 year old</option>
+                                                    <option value="19">19 year old</option>
+                                                    <option value="20">20 year old</option>
+                                                    <option value="21">21 year old</option>
+                                                    <option value="22">22 year old</option>
+                                                    <option value="23">23 year old</option>
+                                                    <option value="24">24 year old</option>
+                                                    <option value="25">25 year old</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TODO - Delivery method -->
+                    <div class="filters-component__groups__group">
+                        <div>
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Delivery method</h3></legend>
+                                    <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="delivery-2" name="delivery" type="checkbox" value="In person" aria-controls="flexible-location">
+                                            <label class="govuk-label govuk-checkboxes__label" for="delivery-2">
+                                                In person
+                                            </label>
+                                        </div>
+                                        <!--                  <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional&#45;&#45;hidden govuk-!-margin-bottom-1" id="flexible-location">-->
+                                        <!--                    <div class="govuk-form-group">-->
+                                        <!--                      <div class="govuk-checkboxes__item">-->
+                                        <!--                        <input class="govuk-checkboxes__input" id="delivery" name="delivery" type="checkbox" value="flexible">-->
+                                        <!--                        <label class="govuk-label govuk-checkboxes__label" for="delivery">-->
+                                        <!--                          In a location chose by the family-->
+                                        <!--                        </label>-->
+                                        <!--                      </div>-->
+                                        <!--                    </div>-->
+                                        <!--                  </div>-->
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="delivery" name="delivery" type="checkbox" value="Online">
+                                            <label class="govuk-label govuk-checkboxes__label" for="delivery">
+                                                Online
+                                            </label>
+                                        </div>
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="delivery-3" name="delivery" type="checkbox" value="Telephone">
+                                            <label class="govuk-label govuk-checkboxes__label" for="delivery-3">
+                                                Telephone
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TODO - Location -->
+                    <div class="filters-component__groups__group">
+                        <div>
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Location</h3></legend>
+                                    <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="age-4" name="age" type="checkbox" value="Flexible">
+                                            <label class="govuk-label govuk-checkboxes__label" for="age-4">
+                                                Families can choose the location
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TODO - Language -->
+                    <div class="filters-component__groups__group">
+                        <div>
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Language</h3></legend>
+                                    <select class="govuk-select" id="chooseLanguage" name="chooseLanguage">
+                                        <option value="All languages" selected>All languages</option>
+                                        <option value="Arabic">Arabic</option>
+                                        <option value="Bengali">Bengali</option>
+                                        <option value="Chinese">Chinese</option>
+                                        <option value="English">English</option>
+                                        <option value="French">French</option>
+                                        <option value="German">German</option>
+                                        <option value="Gujarati">Gujarati</option>
+                                        <option value="Italian">Italian</option>
+                                        <option value="Lithuanian">Lithuanian</option>
+                                        <option value="Persian/Farsi">Persian/Farsi</option>
+                                        <option value="Polish">Polish</option>
+                                        <option value="Portuguese">Portuguese</option>
+                                        <option value="Punjabi">Punjabi</option>
+                                        <option value="Romanian">Romanian</option>
+                                        <option value="Russian">Russian</option>
+                                        <option value="Somali">Somali</option>
+                                        <option value="Spanish">Spanish</option>
+                                        <option value="Tagalog/Filipino">Tagalog/Filipino</option>
+                                        <option value="Tamil">Tamil</option>
+                                        <option value="Turkish">Turkish</option>
+                                        <option value="Ukrainian">Ukrainian</option>
+                                        <option value="Urdu">Urdu</option>
+                                    </select>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </fieldset>
+                <button type="submit" class="govuk-button" data-module="govuk-button"
+                        data-prevent-double-click="true">
+                    Apply filters
+                </button>
+                <p><a href="">Clear filters</a></p>
             </div>
-          </div>
         </div>
-        <div class="filters-component__groups__group">
-          <div>
-            <div class="govuk-form-group">
-              <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Delivery method</h3></legend>
-                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                  <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="delivery-2" name="delivery" type="checkbox" value="In person" aria-controls="flexible-location">
-                    <label class="govuk-label govuk-checkboxes__label" for="delivery-2">
-                      In person
-                    </label>
-                  </div>
-<!--                  <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional&#45;&#45;hidden govuk-!-margin-bottom-1" id="flexible-location">-->
-<!--                    <div class="govuk-form-group">-->
-<!--                      <div class="govuk-checkboxes__item">-->
-<!--                        <input class="govuk-checkboxes__input" id="delivery" name="delivery" type="checkbox" value="flexible">-->
-<!--                        <label class="govuk-label govuk-checkboxes__label" for="delivery">-->
-<!--                          In a location chose by the family-->
-<!--                        </label>-->
-<!--                      </div>-->
-<!--                    </div>-->
-<!--                  </div>-->
-                  <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="delivery" name="delivery" type="checkbox" value="Online">
-                    <label class="govuk-label govuk-checkboxes__label" for="delivery">
-                      Online
-                    </label>
-                  </div>
-                  <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="delivery-3" name="delivery" type="checkbox" value="Telephone">
-                    <label class="govuk-label govuk-checkboxes__label" for="delivery-3">
-                      Telephone
-                    </label>
-                  </div>
-                </div>
-              </fieldset>
-            </div>
-          </div>
+
+        <!-- DONE - Search Results -->
+        <div class="govuk-grid-column-two-thirds vacancies_index">
+            <ul class="search-results" role="list">
+
+                @foreach (var item in Model.SearchResults.Items)
+                {
+                    <li role="listitem" tab-index="0">
+                        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+                            <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@item.Id">@item.Name</a>
+                        </h2>
+                        <p class="govuk-caption-m">
+                            @if (@item?.Service_at_locations?.FirstOrDefault()?.Location?.Physical_addresses?.FirstOrDefault() != null)
+                            {
+                                @Model.GetAddressAsString(@item?.Service_at_locations?.FirstOrDefault()?.Location?.Physical_addresses?.FirstOrDefault()?? new ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses.OpenReferralPhysicalAddressDto())
+                                ;
+                            }
+                        </p>
+                        <dl class="govuk-body-s dtmargins">
+                            <dt class="govuk-!-font-weight-bold">Category</dt>
+                            <dd>TBD</dd>
+                        </dl>
+                        <dl class="govuk-body-s dtmargins">
+                            <dt class="govuk-!-font-weight-bold">Cost</dt>
+                            @*<dd>£4 every session</dd>*@
+
+                            @if (item?.Cost_options?.FirstOrDefault()?.Amount != null && item?.Cost_options?.FirstOrDefault()?.Amount > 0)
+                            {
+                                <dd>£@item?.Cost_options?.FirstOrDefault()?.Amount every @item?.Cost_options?.FirstOrDefault()?.Option</dd>
+                            }
+                            else
+                            {
+                                <dd>Free</dd>
+                            }
+                        </dl>
+                        <dl class="govuk-body-s dtmargins">
+                            <dt class="govuk-!-font-weight-bold">Delivery method</dt>
+                            <dd>
+                                @if (item?.ServiceDelivery != null && item?.ServiceDelivery.Count > 0)
+                                    @Model.GetDeliveryMethodsAsString(item.ServiceDelivery)
+
+                                </dd>
+                            </dl>
+                            <dl class="govuk-body-s dtmargins">
+                                <dt class="govuk-!-font-weight-bold">Language</dt>
+                                <dd>
+                                @if (item?.Languages != null && item?.Languages.Count > 0)
+                                    @Model.GetLanguagesAsString(item.Languages)
+
+                                </dd>
+                            </dl>
+                        </li>
+                }
+
+                <!-- DONE - Navigation -->
+                <nav class="govuk-pagination" role="navigation" aria-label="results">
+                    <ul class="govuk-pagination__list">
+                        @for (int i = 1; i <= Model.SearchResults.TotalPages; i++)
+                        {
+                            <li class="govuk-pagination__item @(Model.SearchResults.PageNumber == i ? "govuk-pagination__item--current" : "") ">
+                                <a class="govuk-link govuk-pagination__link" asp-page="/pagination" asp-route-currentpage="@i">@i</a>
+                            </li>
+                        }
+                    </ul>
+                    <div class="govuk-pagination__next">
+                        <a class="govuk-link govuk-pagination__link" asp-page="/pagination" asp-route-currentpage="@(Model.CurrentPage+1)" rel="next">
+                            <span class="govuk-pagination__link-title">Next</span>
+                            <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+                                <path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </nav>
+            </ul>
         </div>
-        <div class="filters-component__groups__group">
-          <div>
-            <div class="govuk-form-group">
-              <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Location</h3></legend>
-                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                  <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="age-4" name="age" type="checkbox" value="Flexible">
-                    <label class="govuk-label govuk-checkboxes__label" for="age-4">
-                    Families can choose the location 
-                    </label>
-                  </div>
-                </div>
-              </fieldset>
-            </div>
-          </div>
-        </div>
-        <div class="filters-component__groups__group">
-          <div>
-            <div class="govuk-form-group">
-              <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Language</h3></legend>
-                <select class="govuk-select" id="chooseLanguage" name="chooseLanguage">
-                  <option value="All languages" selected="">All languages</option>
-                  <option value="Arabic">Arabic</option>
-                  <option value="Bengali">Bengali</option>
-                  <option value="Chinese">Chinese</option>
-                  <option value="English">English</option>
-                  <option value="French">French</option>
-                  <option value="German">German</option>
-                  <option value="Gujarati">Gujarati</option>
-                  <option value="Italian">Italian</option>
-                  <option value="Lithuanian">Lithuanian</option>
-                  <option value="Persian/Farsi">Persian/Farsi</option>
-                  <option value="Polish">Polish</option>
-                  <option value="Portuguese">Portuguese</option>
-                  <option value="Punjabi">Punjabi</option>
-                  <option value="Romanian">Romanian</option>
-                  <option value="Russian">Russian</option>
-                  <option value="Somali">Somali</option>
-                  <option value="Spanish">Spanish</option>
-                  <option value="Tagalog/Filipino">Tagalog/Filipino</option>
-                  <option value="Tamil">Tamil</option>
-                  <option value="Turkish">Turkish</option>
-                  <option value="Ukrainian">Ukrainian</option>
-                  <option value="Urdu">Urdu</option>
-                </select>
-              </fieldset>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">Apply filters
-      </button>
-      <p><a href="">Clear filters</a></p>
     </div>
-  </div>
-  <div class="govuk-grid-column-two-thirds vacancies_index">
-<!--    <div class="search-results-controls govuk-!-margin-bottom-0">-->
-<!--      <h2 class="govuk-heading-m">Search for services</h2>-->
-<!--      <div class="govuk-form-group">-->
-<!--        <label for="searchName" class="govuk-label">What does the family need help with?</label>-->
-<!--        <input id="searchName" class="govuk-input" type="text" value="" name="what">-->
-<!--      </div>-->
-<!--      <div class="search-results-controls__submit">-->
-<!--        <button type="submit" formnovalidate="formnovalidate"-->
-<!--                class="govuk-button govuk-button govuk-!-margin-bottom-3 govuk-!-width-full" data-module="govuk-button"-->
-<!--                data-prevent-double-click="true">Search-->
-<!--        </button>-->
-<!--      </div>-->
-<!--    </div>-->
-    <ul class="search-results" role="list">
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link" href="bouncers/details">Bouncers Parent and Toddler Group</a>
-        </h2>
-        <p class="govuk-caption-m">
-          The Good Shepherd Mission, 17 Three Colts Lane, London, E2 6JL
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>Parenting support</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>£4 every session</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">East London Tabernacle</a>
-        </h2>
-        <p class="govuk-caption-m">
-          East London Tabernacle Baptist Church, 1 Burdett Road, London, E3 4TU
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>Faith groups</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>Free</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person, online</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English, Polish</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">London Parenting Help Club</a>
-        </h2>
-        <p class="govuk-caption-m">
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>Parenting support, baby groups</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>Free</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>Online</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">Island Tots</a>
-        </h2>
-        <p class="govuk-caption-m">
-          Island Advice Centre, Island House, Roserton Street, London, E14 3PG
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>Infant feeding, baby classes, baby massage</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>£10 every session</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English, Turkish, Ukrainian</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">Acorn Football Club</a>
-        </h2>
-        <p class="govuk-caption-m">
-          Pavillion, Westcroft Street, London, E4 9LP
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>Sports clubs, activities and groups, team sports </dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>£300 every year</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#"> Hackney Cerebral Palsy</a>
-        </h2>
-        <p class="govuk-caption-m">
-          Units 1 and 2, Summer View, Bethnal Green E1 3GP
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>SEND</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>Free</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person, online, telephone</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">ADHD The Parent Support Programme</a>
-        </h2>
-        <p class="govuk-caption-m">
 
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>SEND, Speech, Language &amp; Communication Needs, Parent Support, Physical Disabilities </dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>Free</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>Online</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English, Polish, Arabic</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">African Family Service</a>
-        </h2>
-        <p class="govuk-caption-m">
-          30 Railton Street, London, E5 1PN
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>Housing support, debt and money, young offenders</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>Free</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person, online</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">Island Tots</a>
-        </h2>
-        <p class="govuk-caption-m">
-          Island Advise Centre Island House, Roserton Street, London, E14 3PG
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>Parenting support, baby groups</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>£50 every month</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">Acorn Football Club</a>
-        </h2>
-        <p class="govuk-caption-m">
-          Pavillion, Westcroft Street, London, E4 9LP
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>Sports clubs, activities and groups, team sports </dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>£300 every year</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#"> Hackney Cerebral Palsy</a>
-        </h2>
-        <p class="govuk-caption-m">
-          Units 1 and 2, Summer View, Bethnal Green E1 3GP
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>SEND</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>Free</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person, online, telephone</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">ADHD The Parent Support Programme</a>
-        </h2>
-        <p class="govuk-caption-m">
-
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>SEND, Speech, Language &amp; Communication Needs, Parent Support, Physical Disabilities </dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>Free</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>Online</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English, Polish, Arabic</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">African Family Service</a>
-        </h2>
-        <p class="govuk-caption-m">
-          30 Railton Street, London, E5 1PN
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>Housing support, debt and money, young offenders</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>Free</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person, online</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#"> Hackney Cerebral Palsy</a>
-        </h2>
-        <p class="govuk-caption-m">
-          Units 1 and 2, Summer View, Bethnal Green E1 3GP
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>SEND</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>Free</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person, online, telephone</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">ADHD The Parent Support Programme</a>
-        </h2>
-        <p class="govuk-caption-m">
-
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>SEND, Speech, Language &amp; Communication Needs, Parent Support, Physical Disabilities </dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>Free</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>Online</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English, Polish, Arabic</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">African Family Service</a>
-        </h2>
-        <p class="govuk-caption-m">
-          30 Railton Street, London, E5 1PN
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>Housing support, debt and money, young offenders</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>Free</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person, online</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">Island Tots</a>
-        </h2>
-        <p class="govuk-caption-m">
-          Island Advise Centre Island House, Roserton Street, London, E14 3PG
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>Parenting support, baby groups</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>£50 every month</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">Acorn Football Club</a>
-        </h2>
-        <p class="govuk-caption-m">
-          Pavillion, Westcroft Street, London, E4 9LP
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>Sports clubs, activities and groups, team sports </dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>£300 every year</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#"> Hackney Cerebral Palsy</a>
-        </h2>
-        <p class="govuk-caption-m">
-          Units 1 and 2, Summer View, Bethnal Green E1 3GP
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>SEND</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>Free</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person, online, telephone</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">ADHD The Parent Support Programme</a>
-        </h2>
-        <p class="govuk-caption-m">
-
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>SEND, Speech, Language &amp; Communication Needs, Parent Support, Physical Disabilities </dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>Free</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>Online</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English, Polish, Arabic</dd>
-        </dl>
-      </li>
-      <li role="listitem" tab-index="0">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">African Family Service</a>
-        </h2>
-        <p class="govuk-caption-m">
-          30 Railton Street, London, E5 1PN
-        </p>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Category</dt>
-          <dd>Housing support, debt and money, young offenders</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Cost</dt>
-          <dd>Free</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-          <dd>In person, online</dd>
-        </dl>
-        <dl class="govuk-body-s dtmargins">
-          <dt class="govuk-!-font-weight-bold">Language</dt>
-          <dd>English</dd>
-        </dl>
-      </li>
-      <nav class="govuk-pagination" role="navigation" aria-label="results">
-        <ul class="govuk-pagination__list">
-          <li class="govuk-pagination__item govuk-pagination__item--current">
-            <a class="govuk-link govuk-pagination__link" href="#" aria-label="Page 1" aria-current="page">
-              1
-            </a>
-          </li>
-          <li class="govuk-pagination__item">
-            <a class="govuk-link govuk-pagination__link" href="#" aria-label="Page 2">
-              2
-            </a>
-          </li>
-          <li class="govuk-pagination__item">
-            <a class="govuk-link govuk-pagination__link" href="#" aria-label="Page 3">
-              3
-            </a>
-          </li>
-        </ul>
-        <div class="govuk-pagination__next">
-          <a class="govuk-link govuk-pagination__link" href="#" rel="next"> <span class="govuk-pagination__link-title">Next</span> <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
-            <path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
-          </svg></a>
-        </div>
-      </nav>
-    </ul>
-  </div>
-</div>
+</main>
