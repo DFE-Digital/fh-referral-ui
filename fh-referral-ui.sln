@@ -19,8 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cypress", "cypress", "{A6EE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "e2e", "e2e", "{33EF0359-0789-4031-9D80-B65F8290EBA7}"
 	ProjectSection(SolutionItems) = preProject
-		localofferresults.feature = localofferresults.feature
-		localofferresults.js = localofferresults.js
 		tests\cypress\e2e\startnow.feature = tests\cypress\e2e\startnow.feature
 		tests\cypress\e2e\startnow.js = tests\cypress\e2e\startnow.js
 	EndProjectSection
