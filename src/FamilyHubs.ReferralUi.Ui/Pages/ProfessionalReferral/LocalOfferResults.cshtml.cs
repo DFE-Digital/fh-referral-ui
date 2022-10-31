@@ -67,41 +67,35 @@ public class LocalOfferResultsModel : PageModel
 
     public async Task OnGetAsync(string postCode, double latitude, double longitude, double distance, string minimumAge, string maximumAge, string searchText)
     {
-        await GetLocationDetails(postCode);
-        SelectedDistance = distance.ToString();
+        SearchPostCode = postCode;
+        await GetLocationDetails(SearchPostCode);
         
+        //Keep these as might be needed at a later stage
+        SelectedDistance = distance.ToString();
+        if (searchText != null)
+            SearchText = searchText;
+
         if (!int.TryParse(minimumAge, out int minAge))
             minAge = 0;
 
         if (!int.TryParse(maximumAge, out int maxAge))
             maxAge = 99;
         
-        if (searchText != null)
-            SearchText = searchText;
+
 
         CreateServiceDeliveryDictionary();
-        
-        SearchResults = await _localOfferClientService.GetLocalOffers("active", minAge, maxAge, DistrictCode ?? string.Empty, (CurrentLatitude != 0.0D) ? CurrentLatitude : null, (CurrentLongitude != 0.0D) ? CurrentLongitude : null, (distance > 0.0D) ? distance : null, CurrentPage, PageSize, SearchText ?? string.Empty, null, null, null);
 
+        SearchResults = await _localOfferClientService.GetLocalOffers("active", null, null, DistrictCode ?? string.Empty, (CurrentLatitude != 0.0D) ? CurrentLatitude : null, (CurrentLongitude != 0.0D) ? CurrentLongitude : null, (distance > 0.0D) ? distance : null, CurrentPage, PageSize, SearchText ?? string.Empty, null, null, null);
     }
 
-    public async Task<IActionResult> OnPost()
+    public async Task<IActionResult> OnPostAsync()
     {
+        //Keep these as might be needed at a later stage
         SelectedDistance = Request.Form["SelectedDistance"];
-        if (double.TryParse(Request.Form["CurrentLatitude"], out double currentLatitude))
-        {
-            CurrentLatitude = currentLatitude;
-        }
-        if (double.TryParse(Request.Form["CurrentLongitude"], out double currentLongitude))
-        {
-            CurrentLongitude = currentLongitude;
-        }
+        SearchText = Request.Form["SearchText"];
 
         if (SearchPostCode != null)
-        {
-            await GetPostCode();
             await GetLocationDetails(SearchPostCode);
-        }
 
         if (!double.TryParse(SelectedDistance, out double distance))
         {
@@ -122,9 +116,7 @@ public class LocalOfferResultsModel : PageModel
 
         string? serviceDelivery = null;
         if (ServiceDeliverySelection != null)
-        {
             serviceDelivery = string.Join(',', ServiceDeliverySelection.ToArray());
-        }
 
         bool? isPaidFor = null;
         if (CostSelection != null && CostSelection.Count() == 1)
@@ -141,7 +133,7 @@ public class LocalOfferResultsModel : PageModel
             }
         }
 
-        SearchResults = await _localOfferClientService.GetLocalOffers("active", minimumAge, maximumAge, DistrictCode ?? string.Empty, (CurrentLatitude != 0.0D) ? CurrentLatitude : null, (CurrentLongitude != 0.0D) ? CurrentLongitude : null, (distance > 0.0D) ? distance : null, 1, 99, SearchText ?? string.Empty, serviceDelivery, isPaidFor, null);
+        SearchResults = await _localOfferClientService.GetLocalOffers("active", null, null, DistrictCode ?? string.Empty, (CurrentLatitude != 0.0D) ? CurrentLatitude : null, (CurrentLongitude != 0.0D) ? CurrentLongitude : null, (distance > 0.0D) ? distance : null, 1, 99, SearchText ?? string.Empty, serviceDelivery, isPaidFor, null);
 
         return Page();
 
@@ -157,26 +149,6 @@ public class LocalOfferResultsModel : PageModel
             if (myEnumDescription.Id == 0)
                 continue;
             DictServiceDelivery[myEnumDescription.Id] = myEnumDescription.Name;
-        }
-    }
-
-    private async Task GetPostCode()
-    {
-        if (SearchPostCode == null)
-            return;
-
-        try
-        {
-            PostcodeApiModel postcodeApiModel = await _postcodeLocationClientService.LookupPostcode(SearchPostCode);
-            if (postcodeApiModel != null)
-            {
-                CurrentLatitude = postcodeApiModel.result.latitude;
-                CurrentLongitude = postcodeApiModel.result.longitude;
-            }
-        }
-        catch
-        {
-            return;
         }
     }
 
