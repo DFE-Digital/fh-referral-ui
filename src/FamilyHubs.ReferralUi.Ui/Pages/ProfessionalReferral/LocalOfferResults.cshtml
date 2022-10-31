@@ -209,13 +209,13 @@
                                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Cost </h3></legend>
                                         <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                                             <div class="govuk-checkboxes__item">
-                                                <input class="govuk-checkboxes__input" id="cost" name="CostSelection" type="checkbox" value="free" @(Model.CostSelection != null && Model.CostSelection.Any(x => x == "free") ? "checked" : "")>
+                                                <input class="govuk-checkboxes__input" id="cost" name="CostSelection" type="checkbox" value="free" @(Model.CostSelection != null && Model.CostSelection.Any(x => x == "free") ? "checked" : "") data-testid="checkbox-free">
                                                 <label class="govuk-label govuk-checkboxes__label" for="cost">
                                                     Free
                                                 </label>
                                             </div>
                                             <div class="govuk-checkboxes__item">
-                                                <input class="govuk-checkboxes__input" id="cost-2" name="CostSelection" type="checkbox" value="paid" @(Model.CostSelection != null && Model.CostSelection.Any(x => x == "paid") ? "checked" : "")>
+                                                <input class="govuk-checkboxes__input" id="cost-2" name="CostSelection" type="checkbox" value="paid" @(Model.CostSelection != null && Model.CostSelection.Any(x => x == "paid") ? "checked" : "") data-testid="checkbox-paid">
                                                 <label class="govuk-label govuk-checkboxes__label" for="cost-2">
                                                     Pay to use
                                                 </label>
