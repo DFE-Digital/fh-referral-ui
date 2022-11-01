@@ -12,6 +12,10 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build-env /app/out .
-EXPOSE 8000
+EXPOSE 80
 EXPOSE 443
 ENTRYPOINT ["dotnet", "FamilyHubs.ReferralUi.Ui.dll"]
+
+# Export image to tar 
+WORKDIR /app/out
+CMD $ docker save --output $(pipeline.workspace)/referralui.image.tar $(imagename):$(build.buildid)
