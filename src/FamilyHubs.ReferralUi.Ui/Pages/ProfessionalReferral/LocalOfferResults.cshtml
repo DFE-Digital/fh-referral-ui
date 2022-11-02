@@ -226,7 +226,7 @@
                             </div>
                         </div>
 
-                        <!-- TODO - Children and young people -->
+                        <!-- DONE - Children and young people -->
                         <div class="filters-component__groups__group">
                             <div>
                                 <div class="govuk-form-group">
@@ -234,7 +234,7 @@
                                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Children and young people</h3></legend>
                                         <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                                             <div class="govuk-checkboxes__item">
-                                                <input class="govuk-checkboxes__input" id="age-3" name="age" type="checkbox" value="Children and young people" aria-controls="age-range">
+                                                <input class="govuk-checkboxes__input" id="ForChildrenAndYoungPeople" name="ForChildrenAndYoungPeople" value="true" type="checkbox" aria-controls="age-range" @((Model.ForChildrenAndYoungPeople == true) ? "checked" : "")>
                                                 <label class="govuk-label govuk-checkboxes__label" for="age-3">
                                                     For children and young people
                                                 </label>
@@ -244,34 +244,8 @@
                                                     <label class="govuk-label" for="ageNumber">
                                                         Age
                                                     </label>
-                                                    <select class="govuk-select" id="ageNumber" name="ageNumber">
-                                                        <option value="all" selected>All ages</option>
-                                                        <option value="0">0 to 12 months</option>
-                                                        <option value="1">1 year old</option>
-                                                        <option value="2">2 year old</option>
-                                                        <option value="3">3 year old</option>
-                                                        <option value="4">4 year old</option>
-                                                        <option value="5">5 year old</option>
-                                                        <option value="6">6 year old</option>
-                                                        <option value="7">7 year old</option>
-                                                        <option value="8">8 year old</option>
-                                                        <option value="9">9 year old</option>
-                                                        <option value="10">10 year old</option>
-                                                        <option value="11">11 year old</option>
-                                                        <option value="12">12 year old</option>
-                                                        <option value="13">13 year old</option>
-                                                        <option value="14">14 year old</option>
-                                                        <option value="15">15 year old</option>
-                                                        <option value="16">16 year old</option>
-                                                        <option value="17">17 year old</option>
-                                                        <option value="18">18 year old</option>
-                                                        <option value="19">19 year old</option>
-                                                        <option value="20">20 year old</option>
-                                                        <option value="21">21 year old</option>
-                                                        <option value="22">22 year old</option>
-                                                        <option value="23">23 year old</option>
-                                                        <option value="24">24 year old</option>
-                                                        <option value="25">25 year old</option>
+                                                    <select asp-for="SearchAge" asp-items="Model.AgeRange" class="govuk-select">
+                                                        <option value="" selected disabled>Select age</option>
                                                     </select>
                                                 </div>
                                             </div>

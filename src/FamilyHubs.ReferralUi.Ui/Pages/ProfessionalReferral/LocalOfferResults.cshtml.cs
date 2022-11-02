@@ -32,6 +32,12 @@ public class LocalOfferResultsModel : PageModel
 
     public string SelectedDistance { get; set; } = "212892";
 
+    [BindProperty]
+    public bool ForChildrenAndYoungPeople { get; set; } = false;
+    [BindProperty]
+    public string SearchAge { get; set; } = default!;
+    public List<SelectListItem> AgeRange { get; set; } = default!;
+
     [BindProperty(SupportsGet = true)]
     public string MinimumAge { get; set; } = "0";
     [BindProperty(SupportsGet = true)]
@@ -69,7 +75,7 @@ public class LocalOfferResultsModel : PageModel
     {
         SearchPostCode = postCode;
         await GetLocationDetails(SearchPostCode);
-        
+
         //Keep these as might be needed at a later stage
         SelectedDistance = distance.ToString();
         if (searchText != null)
@@ -80,12 +86,23 @@ public class LocalOfferResultsModel : PageModel
 
         if (!int.TryParse(maximumAge, out int maxAge))
             maxAge = 99;
-        
-
 
         CreateServiceDeliveryDictionary();
-
-        SearchResults = await _localOfferClientService.GetLocalOffers("active", null, null, DistrictCode ?? string.Empty, (CurrentLatitude != 0.0D) ? CurrentLatitude : null, (CurrentLongitude != 0.0D) ? CurrentLongitude : null, (distance > 0.0D) ? distance : null, CurrentPage, PageSize, SearchText ?? string.Empty, null, null, null);
+        InitializeAgeRange();
+        SearchResults = await _localOfferClientService.GetLocalOffers("active",
+                                                                      null,
+                                                                      null,
+                                                                      null,
+                                                                      DistrictCode ?? string.Empty,
+                                                                      (CurrentLatitude != 0.0D) ? CurrentLatitude : null,
+                                                                      (CurrentLongitude != 0.0D) ? CurrentLongitude : null,
+                                                                      (distance > 0.0D) ? distance : null,
+                                                                      CurrentPage,
+                                                                      PageSize,
+                                                                      SearchText ?? string.Empty,
+                                                                      null,
+                                                                      null,
+                                                                      null);
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -112,7 +129,11 @@ public class LocalOfferResultsModel : PageModel
             maximumAge = 99;
         }
 
+        if (!int.TryParse(SearchAge, out int searchAge))
+            searchAge = 99;
+
         CreateServiceDeliveryDictionary();
+        InitializeAgeRange();
 
         string? serviceDelivery = null;
         if (ServiceDeliverySelection != null)
@@ -133,7 +154,7 @@ public class LocalOfferResultsModel : PageModel
             }
         }
 
-        SearchResults = await _localOfferClientService.GetLocalOffers("active", null, null, DistrictCode ?? string.Empty, (CurrentLatitude != 0.0D) ? CurrentLatitude : null, (CurrentLongitude != 0.0D) ? CurrentLongitude : null, (distance > 0.0D) ? distance : null, 1, 99, SearchText ?? string.Empty, serviceDelivery, isPaidFor, null);
+        SearchResults = await _localOfferClientService.GetLocalOffers("active", null, null, (ForChildrenAndYoungPeople && searchAge > 0) ? searchAge : null, DistrictCode ?? string.Empty, (CurrentLatitude != 0.0D) ? CurrentLatitude : null, (CurrentLongitude != 0.0D) ? CurrentLongitude : null, (distance > 0.0D) ? distance : null, 1, 99, SearchText ?? string.Empty, serviceDelivery, isPaidFor, null);
 
         return Page();
 
@@ -227,5 +248,39 @@ public class LocalOfferResultsModel : PageModel
         {
             return;
         }
+    }
+
+    private void InitializeAgeRange()
+    {
+        AgeRange = new List<SelectListItem>() {
+            new SelectListItem{ Value="-1", Text="All ages" },
+            new SelectListItem{ Value="0", Text="0 to 12 months" },
+            new SelectListItem{ Value="1", Text="1 year old"},
+            new SelectListItem{ Value="2", Text="2 years old"},
+            new SelectListItem{ Value="3", Text="3 years old"},
+            new SelectListItem{ Value="4", Text="4 years old"},
+            new SelectListItem{ Value="5", Text="5 years old"},
+            new SelectListItem{ Value="6", Text="6 years old"},
+            new SelectListItem{ Value="7", Text="7 years old"},
+            new SelectListItem{ Value="8", Text="8 years old"},
+            new SelectListItem{ Value="9", Text="9 years old"},
+            new SelectListItem{ Value="10", Text="10 years old"},
+            new SelectListItem{ Value="11", Text="11 years old"},
+            new SelectListItem{ Value="12", Text="12 years old"},
+            new SelectListItem{ Value="13", Text="13 years old"},
+            new SelectListItem{ Value="14", Text="14 years old"},
+            new SelectListItem{ Value="15", Text="15 years old"},
+            new SelectListItem{ Value="16", Text="16 years old"},
+            new SelectListItem{ Value="17", Text="17 years old"},
+            new SelectListItem{ Value="18", Text="18 years old"},
+            new SelectListItem{ Value="19", Text="19 years old"},
+            new SelectListItem{ Value="20", Text="20 years old"},
+            new SelectListItem{ Value="21", Text="21 years old"},
+            new SelectListItem{ Value="22", Text="22 years old"},
+            new SelectListItem{ Value="23", Text="23 years old"},
+            new SelectListItem{ Value="24", Text="24 years old"},
+            new SelectListItem{ Value="25", Text="25 years old"},
+
+        };
     }
 }
