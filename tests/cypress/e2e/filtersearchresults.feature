@@ -1,6 +1,16 @@
 Feature: Filter Local Offer Search Results Tests
- Scenario: filter search results using Paid cost option should return valid results
+ Scenario: filtering search results using cost options should return valid results
 	 Given a user as arrived on search page
 	 When user search with a valid postcode 'BS2 0SP'
 	 When user filters using Paid option
+	 Then the user should see a paid service 'testservice-paid-0to13yrs'
+	 When user filters using Free option
+	 Then the user should see a free service 'testservice-free-10to15yrs'
+	 When user filters using Paid and Free options
+	 Then the user should see a free service 'testservice-free-10to15yrs' and a paid service 'testservice-free-10to15yrs'
+
+ Scenario: filtering search results using specific Age should return valid results
+	 Given the user visits search page again
+	 When user enters a valid postcode 'BS2 0SP'
+	 When user filters using Age = 14
 	 Then the user should see filtered search results

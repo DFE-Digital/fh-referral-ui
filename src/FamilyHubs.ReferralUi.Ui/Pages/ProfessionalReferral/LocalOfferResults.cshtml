@@ -234,7 +234,7 @@
                                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Children and young people</h3></legend>
                                         <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                                             <div class="govuk-checkboxes__item">
-                                                <input class="govuk-checkboxes__input" id="ForChildrenAndYoungPeople" name="ForChildrenAndYoungPeople" value="true" type="checkbox" aria-controls="age-range" @((Model.ForChildrenAndYoungPeople == true) ? "checked" : "")>
+                                                <input class="govuk-checkboxes__input" id="ForChildrenAndYoungPeople" name="ForChildrenAndYoungPeople" value="true" type="checkbox" aria-controls="age-range" @((Model.ForChildrenAndYoungPeople == true) ? "checked" : "") data-testid="checkbox-children">
                                                 <label class="govuk-label govuk-checkboxes__label" for="age-3">
                                                     For children and young people
                                                 </label>
@@ -244,7 +244,7 @@
                                                     <label class="govuk-label" for="ageNumber">
                                                         Age
                                                     </label>
-                                                    <select asp-for="SearchAge" asp-items="Model.AgeRange" class="govuk-select">
+                                                    <select asp-for="SearchAge" asp-items="Model.AgeRange" class="govuk-select" data-testid="select-children">
                                                         <option value="" selected disabled>Select age</option>
                                                     </select>
                                                 </div>

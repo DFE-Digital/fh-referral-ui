@@ -7,6 +7,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverys
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -35,13 +36,9 @@ public class LocalOfferResultsModel : PageModel
     [BindProperty]
     public bool ForChildrenAndYoungPeople { get; set; } = false;
     [BindProperty]
-    public string SearchAge { get; set; } = default!;
+    public string? SearchAge { get; set; } = default!;
     public List<SelectListItem> AgeRange { get; set; } = default!;
 
-    [BindProperty(SupportsGet = true)]
-    public string MinimumAge { get; set; } = "0";
-    [BindProperty(SupportsGet = true)]
-    public string MaximumAge { get; set; } = "99";
     [BindProperty(SupportsGet = true)]
     public string? SearchText { get; set; }
 
@@ -71,7 +68,13 @@ public class LocalOfferResultsModel : PageModel
         _postcodeLocationClientService = postcodeLocationClientService;
     }
 
-    public async Task OnGetAsync(string postCode, double latitude, double longitude, double distance, string minimumAge, string maximumAge, string searchText)
+    public async Task OnGetAsync(string postCode,
+                                 double latitude,
+                                 double longitude,
+                                 double distance,
+                                 string minimumAge,
+                                 string maximumAge,
+                                 string searchText)
     {
         SearchPostCode = postCode;
         await GetLocationDetails(SearchPostCode);
@@ -80,10 +83,8 @@ public class LocalOfferResultsModel : PageModel
         SelectedDistance = distance.ToString();
         if (searchText != null)
             SearchText = searchText;
-
         if (!int.TryParse(minimumAge, out int minAge))
             minAge = 0;
-
         if (!int.TryParse(maximumAge, out int maxAge))
             maxAge = 99;
 
@@ -107,30 +108,31 @@ public class LocalOfferResultsModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
+        if (ForChildrenAndYoungPeople && (SearchAge == null || !int.TryParse(SearchAge, out int searchAgeTest)))
+        {
+            ModelState.AddModelError(nameof(SearchAge), "Please select a valid search age");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+            CreateServiceDeliveryDictionary();
+            InitializeAgeRange();
+            return Page();
+        }
+
         //Keep these as might be needed at a later stage
         SelectedDistance = Request.Form["SelectedDistance"];
         SearchText = Request.Form["SearchText"];
 
         if (SearchPostCode != null)
             await GetLocationDetails(SearchPostCode);
-
         if (!double.TryParse(SelectedDistance, out double distance))
-        {
             distance = 0.0D;
-        }
-
-        if (!int.TryParse(MinimumAge, out int minimumAge))
-        {
-            minimumAge = 0;
-        }
-
-        if (!int.TryParse(MaximumAge, out int maximumAge))
-        {
-            maximumAge = 99;
-        }
-
+        if (!ForChildrenAndYoungPeople)
+            SearchAge = null;
         if (!int.TryParse(SearchAge, out int searchAge))
-            searchAge = 99;
+            searchAge = -1;
 
         CreateServiceDeliveryDictionary();
         InitializeAgeRange();
@@ -154,7 +156,20 @@ public class LocalOfferResultsModel : PageModel
             }
         }
 
-        SearchResults = await _localOfferClientService.GetLocalOffers("active", null, null, (ForChildrenAndYoungPeople && searchAge > 0) ? searchAge : null, DistrictCode ?? string.Empty, (CurrentLatitude != 0.0D) ? CurrentLatitude : null, (CurrentLongitude != 0.0D) ? CurrentLongitude : null, (distance > 0.0D) ? distance : null, 1, 99, SearchText ?? string.Empty, serviceDelivery, isPaidFor, null);
+        SearchResults = await _localOfferClientService.GetLocalOffers("active",
+                                                                      null,
+                                                                      null,
+                                                                      (ForChildrenAndYoungPeople && searchAge >= 0) ? searchAge : null,
+                                                                      DistrictCode ?? string.Empty,
+                                                                      (CurrentLatitude != 0.0D) ? CurrentLatitude : null,
+                                                                      (CurrentLongitude != 0.0D) ? CurrentLongitude : null,
+                                                                      (distance > 0.0D) ? distance : null,
+                                                                      1,
+                                                                      99,
+                                                                      SearchText ?? string.Empty,
+                                                                      serviceDelivery,
+                                                                      isPaidFor,
+                                                                      null);
 
         return Page();
 
@@ -198,7 +213,8 @@ public class LocalOfferResultsModel : PageModel
             return result;
 
         foreach (var serviceDelivery in serviceDeliveries)
-            result = result + (Enum.GetName(serviceDelivery.ServiceDelivery) != null ? Enum.GetName(serviceDelivery.ServiceDelivery) + "," : String.Empty);
+            result = result
+                     + (Enum.GetName(serviceDelivery.ServiceDelivery) != null ? Enum.GetName(serviceDelivery.ServiceDelivery) + "," : String.Empty);
 
         //Remove last comma if present
         if (result.EndsWith(","))
@@ -253,7 +269,7 @@ public class LocalOfferResultsModel : PageModel
     private void InitializeAgeRange()
     {
         AgeRange = new List<SelectListItem>() {
-            new SelectListItem{ Value="-1", Text="All ages" },
+            new SelectListItem{ Value="-1", Text="All ages" , Selected = true},
             new SelectListItem{ Value="0", Text="0 to 12 months" },
             new SelectListItem{ Value="1", Text="1 year old"},
             new SelectListItem{ Value="2", Text="2 years old"},
