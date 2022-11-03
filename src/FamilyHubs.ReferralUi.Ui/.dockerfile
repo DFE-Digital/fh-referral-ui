@@ -16,6 +16,3 @@ EXPOSE 80
 EXPOSE 443
 ENTRYPOINT ["dotnet", "FamilyHubs.ReferralUi.Ui.dll"]
 
-# Export image to tar 
-WORKDIR /app/out
-CMD $ docker save --output $(pipeline.workspace)/referralui.image.tar $(imagename):$(build.buildid)
