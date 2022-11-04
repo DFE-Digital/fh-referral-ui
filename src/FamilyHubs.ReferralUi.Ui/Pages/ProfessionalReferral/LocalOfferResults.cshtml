@@ -1,9 +1,10 @@
 ﻿@page "{postCode}"
+@using FamilyHubs.ReferralUi.Ui.Extensions
 @model FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral.LocalOfferResultsModel
 @{
 }
 
-<a asp-page="/ProfessionalReferral/Search" class="govuk-back-link">Back</a>
+<a asp-page="/ProfessionalReferral/Search" class="govuk-back-link" data-testid="back-button">Back</a>
 
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 
@@ -17,9 +18,9 @@
             <div class="govuk-grid-column-full">
                 <h1 class="govuk-heading-l"> @Model.SearchResults.TotalCount services found</h1>
                 <p class="govuk-caption-m">
-                    Showing results for <a href="search">
+                    Showing results for <a asp-page="/ProfessionalReferral/Search" data-testid="postcodelink">
 
-                        @Model.OutCode
+                        @Model.SearchPostCode
 
                     </a>
                 </p>
@@ -255,41 +256,29 @@
                             </div>
                         </div>
 
-                        <!-- TODO - Delivery method -->
+                        <!-- DONE - Delivery method -->
                         <div class="filters-component__groups__group">
                             <div>
                                 <div class="govuk-form-group">
                                     <fieldset class="govuk-fieldset">
                                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Delivery method</h3></legend>
                                         <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                                            <div class="govuk-checkboxes__item">
-                                                <input class="govuk-checkboxes__input" id="delivery-2" name="delivery" type="checkbox" value="In person" aria-controls="flexible-location">
-                                                <label class="govuk-label govuk-checkboxes__label" for="delivery-2">
-                                                    In person
-                                                </label>
-                                            </div>
-                                            <!--                  <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional&#45;&#45;hidden govuk-!-margin-bottom-1" id="flexible-location">-->
-                                            <!--                    <div class="govuk-form-group">-->
-                                            <!--                      <div class="govuk-checkboxes__item">-->
-                                            <!--                        <input class="govuk-checkboxes__input" id="delivery" name="delivery" type="checkbox" value="flexible">-->
-                                            <!--                        <label class="govuk-label govuk-checkboxes__label" for="delivery">-->
-                                            <!--                          In a location chose by the family-->
-                                            <!--                        </label>-->
-                                            <!--                      </div>-->
-                                            <!--                    </div>-->
-                                            <!--                  </div>-->
-                                            <div class="govuk-checkboxes__item">
-                                                <input class="govuk-checkboxes__input" id="delivery" name="delivery" type="checkbox" value="Online">
-                                                <label class="govuk-label govuk-checkboxes__label" for="delivery">
-                                                    Online
-                                                </label>
-                                            </div>
-                                            <div class="govuk-checkboxes__item">
-                                                <input class="govuk-checkboxes__input" id="delivery-3" name="delivery" type="checkbox" value="Telephone">
-                                                <label class="govuk-label govuk-checkboxes__label" for="delivery-3">
-                                                    Telephone
-                                                </label>
-                                            </div>
+                                            @foreach (var item in Model.DictServiceDelivery)
+                                            {
+                                                <div class="govuk-checkboxes__item">
+                                                    <input  class="govuk-checkboxes__input"  
+                                                            id="@item.Value.ToLower().Replace(" ", "")" 
+                                                            name="ServiceDeliverySelection"
+                                                            data-testid=@($"checkbox-{item.Value.ToLower().Replace(" ", "")}")
+                                                            type="checkbox" 
+                                                            value="@item.Key" 
+                                                            @(Model.ServiceDeliverySelection != null && Model.ServiceDeliverySelection.Any(x => x == item.Key.ToString()) ? "checked" : "")
+                                                            >
+                                                    <label class="govuk-label govuk-checkboxes__label" for="@item.Value.ToLower().Replace(" ", "")">
+                                                        @item.Value.ToSentenceCase()
+                                                    </label>
+                                                </div>
+                                            }
                                         </div>
                                     </fieldset>
                                 </div>
@@ -362,7 +351,7 @@
 
             <!-- DONE - Search Results -->
             <div class="govuk-grid-column-two-thirds vacancies_index">
-                <ul class="search-results" role="list" >
+                <ul class="search-results" role="list">
 
                     @foreach (var item in Model.SearchResults.Items)
                     {
@@ -402,6 +391,7 @@
 
 
 
+
                                     </dd>
                                 </dl>
                                 <dl class="govuk-body-s dtmargins">
@@ -409,6 +399,7 @@
                                     <dd>
                                     @if (item?.Languages != null && item?.Languages.Count > 0)
                                         @Model.GetLanguagesAsString(item.Languages)
+
 
 
 

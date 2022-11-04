@@ -39,3 +39,9 @@ Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
 
     return originalFn(url, options);
 })
+
+Cypress.Commands.add('searchbypostcode', (postcode) => {
+    cy.get('[data-testid="radio-postcode"]').click();
+    cy.get('[data-testid="postcode-value"]').type(postcode);
+    cy.get('[data-testid="button-search"]').click();
+})
