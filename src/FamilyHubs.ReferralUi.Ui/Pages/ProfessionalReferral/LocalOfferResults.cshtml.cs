@@ -138,7 +138,7 @@ public class LocalOfferResultsModel : PageModel
         InitializeAgeRange();
 
         string? serviceDelivery = null;
-        if (ServiceDeliverySelection != null)
+        if (ServiceDeliverySelection != null && ServiceDeliverySelection.Count>0)
             serviceDelivery = string.Join(',', ServiceDeliverySelection.ToArray());
 
         bool? isPaidFor = null;

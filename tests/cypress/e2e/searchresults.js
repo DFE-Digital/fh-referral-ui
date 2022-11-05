@@ -18,3 +18,23 @@ Then("the user should see search results", () => {
 Then("the user should see no results", () => {
     cy.get('[data-testid="aidforchildrenwithtracheostomies"]').should('not.exist');
 });
+
+//*** Back button
+When("user clicks the back button", () => {
+    cy.get('[data-testid="back-button"]').click();
+});
+
+Then("the application should navigate to Search page", () => {
+    cy.location('pathname').should('match', new RegExp("/ProfessionalReferral/Search"));
+});
+
+//*** postcode hyperlink
+When("user clicks the postcode hyperlink", () => {
+    cy.visit(`ProfessionalReferral/Search`);
+    cy.searchbypostcode('BS2 0SP');
+    cy.get('[data-testid="postcodelink"]').click();
+});
+
+Then("the application should navigate to Search", () => {
+    cy.location('pathname').should('match', new RegExp("/ProfessionalReferral/Search"));
+});
