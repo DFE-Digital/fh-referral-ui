@@ -304,36 +304,16 @@
                             </div>
                         </div>
 
-                        <!-- TODO - Language -->
+                        <!-- DONE - Language -->
                         <div class="filters-component__groups__group">
                             <div>
                                 <div class="govuk-form-group">
                                     <fieldset class="govuk-fieldset">
-                                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Language</h3></legend>
-                                        <select class="govuk-select" id="chooseLanguage" name="chooseLanguage">
-                                            <option value="All languages" selected>All languages</option>
-                                            <option value="Arabic">Arabic</option>
-                                            <option value="Bengali">Bengali</option>
-                                            <option value="Chinese">Chinese</option>
-                                            <option value="English">English</option>
-                                            <option value="French">French</option>
-                                            <option value="German">German</option>
-                                            <option value="Gujarati">Gujarati</option>
-                                            <option value="Italian">Italian</option>
-                                            <option value="Lithuanian">Lithuanian</option>
-                                            <option value="Persian/Farsi">Persian/Farsi</option>
-                                            <option value="Polish">Polish</option>
-                                            <option value="Portuguese">Portuguese</option>
-                                            <option value="Punjabi">Punjabi</option>
-                                            <option value="Romanian">Romanian</option>
-                                            <option value="Russian">Russian</option>
-                                            <option value="Somali">Somali</option>
-                                            <option value="Spanish">Spanish</option>
-                                            <option value="Tagalog/Filipino">Tagalog/Filipino</option>
-                                            <option value="Tamil">Tamil</option>
-                                            <option value="Turkish">Turkish</option>
-                                            <option value="Ukrainian">Ukrainian</option>
-                                            <option value="Urdu">Urdu</option>
+                                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                            <h3 class="govuk-fieldset__heading">Language</h3>
+                                        </legend>
+                                        <select asp-for="SelectedLanguage" asp-items="Model.Languages" class="govuk-select" data-testid="select-language">
+                                            <option value="" selected disabled>Select language</option>
                                         </select>
                                     </fieldset>
                                 </div>

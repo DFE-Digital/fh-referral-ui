@@ -6,7 +6,7 @@ namespace FamilyHubs.ReferralUi.Ui.Services.Api;
 
 public interface ILocalOfferClientService
 {
-    Task<PaginatedList<OpenReferralServiceDto>> GetLocalOffers(string status, int? minimum_age, int? maximum_age, int? given_age, string? districtCode, double? latitude, double? longtitude, double? proximity, int pageNumber, int pageSize, string text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds);
+    Task<PaginatedList<OpenReferralServiceDto>> GetLocalOffers(string status, int? minimum_age, int? maximum_age, int? given_age, string? districtCode, double? latitude, double? longtitude, double? proximity, int pageNumber, int pageSize, string text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages);
     Task<OpenReferralServiceDto> GetLocalOfferById(string id);
     //Task<PaginatedList<TestItem>> GetTestCommand(double latitude, double logtitude, double meters);
 
@@ -21,7 +21,7 @@ public class LocalOfferClientService : ApiService, ILocalOfferClientService
 
     }
 
-    public async Task<PaginatedList<OpenReferralServiceDto>> GetLocalOffers(string status, int? minimum_age, int? maximum_age, int? given_age, string? districtCode, double? latitude, double? longtitude, double? proximity, int pageNumber, int pageSize, string text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds)
+    public async Task<PaginatedList<OpenReferralServiceDto>> GetLocalOffers(string status, int? minimum_age, int? maximum_age, int? given_age, string? districtCode, double? latitude, double? longtitude, double? proximity, int pageNumber, int pageSize, string text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages)
     {
         if (string.IsNullOrEmpty(status))
             status = "active";
@@ -65,6 +65,11 @@ public class LocalOfferClientService : ApiService, ILocalOfferClientService
         if (districtCode != null)
         {
             url += $"&districtCode={districtCode}";
+        }
+
+        if (languages != null)
+        {
+            url += $"&languages={languages}";
         }
 
         var request = new HttpRequestMessage
