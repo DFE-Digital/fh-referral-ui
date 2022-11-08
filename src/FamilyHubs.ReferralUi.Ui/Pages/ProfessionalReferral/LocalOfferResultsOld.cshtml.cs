@@ -83,7 +83,7 @@ public class LocalOfferResultsOldModel : PageModel
 
         CreateServiceDeliveryDictionary();
 
-        SearchResults = await _localOfferClientService.GetLocalOffers("active", minAge, maxAge, null, DistrictCode ?? string.Empty, (latitude != 0.0D) ? latitude : null, (longitude != 0.0D) ? longitude : null, (distance > 0.0D) ? distance : null, CurrentPage, PageSize, SearchText ?? string.Empty, null, null, null);
+        SearchResults = await _localOfferClientService.GetLocalOffers("active", minAge, maxAge, null, DistrictCode ?? string.Empty, (latitude != 0.0D) ? latitude : null, (longitude != 0.0D) ? longitude : null, (distance > 0.0D) ? distance : null, CurrentPage, PageSize, SearchText ?? string.Empty, null, null, null, null);
 
     }
 
@@ -142,7 +142,7 @@ public class LocalOfferResultsOldModel : PageModel
             }
         }
 
-        SearchResults = await _localOfferClientService.GetLocalOffers("active", minimumAge, maximumAge, null, DistrictCode ?? string.Empty, (CurrentLatitude != 0.0D) ? CurrentLatitude : null, (CurrentLongitude != 0.0D) ? CurrentLongitude : null, (distance > 0.0D) ? distance : null, 1, 99, SearchText ?? string.Empty, serviceDelivery, isPaidFor, null);
+        SearchResults = await _localOfferClientService.GetLocalOffers("active", minimumAge, maximumAge, null, DistrictCode ?? string.Empty, (CurrentLatitude != 0.0D) ? CurrentLatitude : null, (CurrentLongitude != 0.0D) ? CurrentLongitude : null, (distance > 0.0D) ? distance : null, 1, 99, SearchText ?? string.Empty, serviceDelivery, isPaidFor, null, null);
 
         return Page();
         
