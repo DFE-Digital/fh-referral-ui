@@ -391,4 +391,16 @@ public class LocalOfferResultsModel : PageModel
 
         };
     }
+
+
+    public async Task ClearFilters()
+    {
+        await OnGetAsync(SearchPostCode ?? String.Empty,
+                0.0D,
+                0.0D,
+                0.0D,
+                String.Empty,
+                String.Empty,
+                String.Empty);
+    }
 }
