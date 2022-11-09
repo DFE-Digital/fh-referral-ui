@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "e2e", "e2e", "{33EF0359-078
 		tests\cypress\e2e\filtersearchresults.js = tests\cypress\e2e\filtersearchresults.js
 		tests\cypress\e2e\searchresults.feature = tests\cypress\e2e\searchresults.feature
 		tests\cypress\e2e\searchresults.js = tests\cypress\e2e\searchresults.js
+		tests\cypress\e2e\searchresultsdetails.feature = tests\cypress\e2e\searchresultsdetails.feature
+		tests\cypress\e2e\searchresultsdetails.js = tests\cypress\e2e\searchresultsdetails.js
 		tests\cypress\e2e\startnow.feature = tests\cypress\e2e\startnow.feature
 		tests\cypress\e2e\startnow.js = tests\cypress\e2e\startnow.js
 	EndProjectSection
