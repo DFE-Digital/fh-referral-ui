@@ -43,6 +43,9 @@ public class LocalOfferResultsModel : PageModel
     public string? SelectedLanguage { get; set; } = default!;
     public List<SelectListItem> Languages { get; set; } = default!;
 
+    [BindProperty]
+    public bool CanFamilyChooseLocation { get; set; } = false;
+
     [BindProperty(SupportsGet = true)]
     public string? SearchText { get; set; }
 
@@ -106,6 +109,7 @@ public class LocalOfferResultsModel : PageModel
                                                                       CurrentPage,
                                                                       PageSize,
                                                                       SearchText ?? string.Empty,
+                                                                      null,
                                                                       null,
                                                                       null,
                                                                       null,
@@ -179,7 +183,8 @@ public class LocalOfferResultsModel : PageModel
                                                                       serviceDelivery,
                                                                       isPaidFor,
                                                                       null,
-                                                                      SelectedLanguage);
+                                                                      SelectedLanguage,
+                                                                      CanFamilyChooseLocation);
 
         InitializeAgeRange();
         InitializeLanguages();
