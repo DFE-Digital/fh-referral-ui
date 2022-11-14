@@ -89,7 +89,7 @@ public class LocalOfferResultsOldModel : PageModel
 
     public async Task<IActionResult> OnPost()
     {
-        SelectedDistance = Request.Form["SelectedDistance"];
+        //SelectedDistance = Request.Form["SelectedDistance"]?? ;
         if (double.TryParse(Request.Form["CurrentLatitude"], out double currentLatitude))
         {
             CurrentLatitude = currentLatitude;

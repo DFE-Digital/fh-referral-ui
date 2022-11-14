@@ -1,9 +1,10 @@
 using FamilyHubs.ReferralUi.Ui.Extensions;
 using FamilyHubs.ReferralUi.Ui.Models;
+using FamilyHubs.ServiceDirectory.Shared.Extensions;
 using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
-
+RegisterComponents(builder.Services, builder.Configuration);
 // Add services to the container.
 builder.Services
     .AddClientServices()
@@ -49,6 +50,10 @@ Program.ServiceProvider = app.Services;
 
 app.Run();
 
+static void RegisterComponents(IServiceCollection builder, IConfiguration configuration)
+{
+    builder.AddApplicationInsights(configuration, "fh_referralui_ui");
+}
 public partial class Program
 {
     public static IServiceProvider ServiceProvider { get; set; } = default!;
