@@ -133,7 +133,7 @@ public class LocalOfferResultsModel : PageModel
         }
 
         //Keep these as might be needed at a later stage
-        SelectedDistance = Request.Form["SelectedDistance"];
+        //SelectedDistance = Request.Form["SelectedDistance"];
         SearchText = Request.Form["SearchText"];
 
         if (SearchPostCode != null)

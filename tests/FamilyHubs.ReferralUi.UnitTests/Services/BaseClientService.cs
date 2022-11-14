@@ -79,7 +79,8 @@ public class BaseClientService
                 "active",
                 "www.unittestservice.com",
                 "support@unittestservice.com",
-                null)
+                "",
+                false)
             .WithServiceDelivery(new List<OpenReferralServiceDeliveryExDto>
                 {
                     new OpenReferralServiceDeliveryExDto(Guid.NewGuid().ToString(),ServiceDelivery.Online)
@@ -197,6 +198,7 @@ public class BaseClientService
                 "No",
                 "Robert.Brown@yahoo.co.uk",
                 "0131 222 3333",
+                "text",
                 "Requires help with child",
                 new List<ReferralStatusDto> { new ReferralStatusDto("1d2c41ac-fade-4933-a810-d8a040f0b9ee", "Inital-Referral") }
                 );
