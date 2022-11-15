@@ -59,6 +59,7 @@ public class LocalOfferResultsModel : PageModel
     public string? OutCode { get; set; }
     public string? DistrictCode { get; set; }
 
+    public bool InitialLoad { get; set; } = true;
     public List<SelectListItem> DistanceSelectionList { get; } = new List<SelectListItem>
     {
         new SelectListItem { Value = "1609.34", Text = "1 mile" },
@@ -188,6 +189,7 @@ public class LocalOfferResultsModel : PageModel
 
         InitializeAgeRange();
         InitializeLanguages();
+        InitialLoad = false;
         return Page();
 
     }
