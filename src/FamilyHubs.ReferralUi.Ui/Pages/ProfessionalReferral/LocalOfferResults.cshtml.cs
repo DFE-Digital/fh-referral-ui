@@ -99,7 +99,8 @@ public class LocalOfferResultsModel : PageModel
         CreateServiceDeliveryDictionary();
         InitializeAgeRange();
         InitializeLanguages();
-        SearchResults = await _localOfferClientService.GetLocalOffers("active",
+        SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing",
+                                                                      "active",
                                                                       null,
                                                                       null,
                                                                       null,
@@ -170,7 +171,8 @@ public class LocalOfferResultsModel : PageModel
         if (SelectedLanguage == "All languages")
             SelectedLanguage = null;
 
-        SearchResults = await _localOfferClientService.GetLocalOffers("active",
+        SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing",
+                                                                      "active",
                                                                       null,
                                                                       null,
                                                                       (ForChildrenAndYoungPeople && searchAge >= 0) ? searchAge : null,
