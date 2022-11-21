@@ -56,7 +56,7 @@ public class CheckReferralDetailsModel : PageModel
         // Save to API
         OpenReferralServiceDto openReferralServiceDto = await _localOfferClientService.GetLocalOfferById(Id);
 
-        ReferralDto dto = new(Guid.NewGuid().ToString(),Id, openReferralServiceDto.OpenReferralOrganisationId, Name, openReferralServiceDto.Description  ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), "CurrentUser",FullName,HasSpecialNeeds,Email,Phone,ReasonForSupport, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial-Referral") });
+        ReferralDto dto = new(Guid.NewGuid().ToString(),Id, openReferralServiceDto.OpenReferralOrganisationId, Name, openReferralServiceDto.Description  ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), "CurrentUser",FullName,HasSpecialNeeds,Email,Phone, null, ReasonForSupport, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial-Referral") });
 
         try
         {

@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
 using FamilyHubs.SharedKernel;
 using System.Text;
 using System.Text.Json;
@@ -72,6 +73,7 @@ public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOr
 
         return await JsonSerializer.DeserializeAsync<OpenReferralOrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new OpenReferralOrganisationWithServicesDto(
             Guid.NewGuid().ToString()
+            , new(string.Empty, string.Empty, string.Empty)
             , ""
             , null
             , null

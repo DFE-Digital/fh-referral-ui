@@ -14,32 +14,33 @@
         <div class="govuk-grid-column-two-thirds">
             <br />
 
-            <h1 class="govuk-heading-l">
-                Request local help and support for children, young people and families
+            <h1 class="govuk-heading-xl" data-testid="heading">
+               Connect families to voluntary and community services
             </h1>
             <p class="govuk-body">
-                This is for professionals working with children, young people and families in England.
+                This is for people working with children, young people and families in England.
             </p>
             <p class="govuk-body">
-                Find and request support from local organisations, community groups and charities.
+               Use this to find voluntary and community services for families. You can also use this to connect families to services you find.
             </p>
             
             <div class="govuk-warning-text">
               <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
               <strong class="govuk-warning-text__text">
                 <span class="govuk-warning-text__assistive">Warning</span>
-                Do not use this service if you believe the child is being harmed or is in immediate danger. Call the police on 999 instead.
+                 Contact the police if you think a child is in danger or is being harmed. Do not use this service. 
               </strong>
             </div>
-
-			<div class="govuk-details__text">
-                You need consent to request support. If the person is under 19, you need consent from a parent or carer. 
-            </div>
-
+            <p>To connect a family to a service, you will need:</p>
+			<ul class="govuk-list govuk-list--bullet" data-testid="list-id">
+               <li>the family's contact details</li>
+               <li>details about why the family needs help</li>
+               <li>consent from the family for you to give their details to the service</li>
+            </ul>
 			<br />
 			<br />
 
-            <a asp-page="/ProfessionalReferral/PersonRequestingSupport" class="govuk-button" data-module="govuk-button">Start now ></a>
+            <a asp-page="/ProfessionalReferral/SignIn" class="govuk-button govuk-button--start" data-module="govuk-button" data-testid="button-start">Start now ></a>
             
         </div>
     </div>

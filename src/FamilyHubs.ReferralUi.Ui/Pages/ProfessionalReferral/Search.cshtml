@@ -36,7 +36,7 @@
           </div>
           <div class="govuk-radios__divider">or</div>
           <div class="govuk-radios__item">
-            <input class="govuk-radios__input" aria-controls="location-conditional" type="radio" value="postcode" name="SearchOption" id="option2" aria-expanded="false" @(Model.SearchOption != null && Model.SearchOption == "postcode" ? "checked" : "")>
+            <input class="govuk-radios__input" aria-controls="location-conditional" type="radio" value="postcode" data-testid="radio-postcode" name="SearchOption" id="option2" aria-expanded="false" @(Model.SearchOption != null && Model.SearchOption == "postcode" ? "checked" : "")>
             <label class="govuk-label govuk-radios__label" for="option2">By postcode</label>
           </div>
           <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="location-conditional">
@@ -50,12 +50,12 @@
                         </p>
                     }
                 }
-              <input class="govuk-input govuk-input--width-10" id="Postcode" name="Postcode" value="@Model.Postcode" type="text" autocomplete="postal-code" @(Model.PostcodeValid == false ? "govuk-input--error" : "")>
+              <input class="govuk-input govuk-input--width-10" id="Postcode" name="Postcode" value="@Model.Postcode" data-testid="postcode-value" type="text" autocomplete="postal-code" @(Model.PostcodeValid == false ? "govuk-input--error" : "")>
             </div>
           </div>
         </div>
       </div>
-      <button type="submit" class="govuk-button">
+      <button type="submit" class="govuk-button" data-testid="button-search">
         Continue
       </button>
     </form>
