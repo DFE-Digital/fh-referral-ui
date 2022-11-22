@@ -76,11 +76,10 @@ public class SearchModel : PageModel
         {
             PostcodeApiModel postcodeApiModel = await _postcodeLocationClientService.LookupPostcode(Postcode);
 
-            return RedirectToPage("LocalOfferResults", new
+            return RedirectToPage("LocalOfferResults", new 
             {
-                postcodeApiModel.result.latitude,
-                postcodeApiModel.result.longitude,
-                distance = 32186.9 //212892.0
+                Postcode,
+                //distance = 32186.9 //212892.0
             });
         }
         catch

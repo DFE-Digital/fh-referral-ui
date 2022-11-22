@@ -17,6 +17,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceTaxonomys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.Referrals;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.ServiceType;
 using Moq;
 using Moq.Protected;
 using System.Net;
@@ -45,6 +46,7 @@ public class BaseClientService
     {
         var bristolCountyCouncil = new OpenReferralOrganisationWithServicesDto(
             "56e62852-1b0b-40e5-ac97-54a67ea957dc",
+            new(string.Empty, string.Empty, string.Empty),
             "Unit Test County Council",
             "Unit Test County Council",
             null,
@@ -65,6 +67,7 @@ public class BaseClientService
 
         ServicesDtoBuilder builder = new ServicesDtoBuilder();
         OpenReferralServiceDto service = builder.WithMainProperties("3010521b-6e0a-41b0-b610-200edbbeeb14",
+                new ServiceTypeDto("1", "Information Sharing", ""),
                 parentId,
                 "Unit Test Service",
                 @"Unit Test Service Description",
@@ -76,7 +79,8 @@ public class BaseClientService
                 "active",
                 "www.unittestservice.com",
                 "support@unittestservice.com",
-                null)
+                "",
+                false)
             .WithServiceDelivery(new List<OpenReferralServiceDeliveryExDto>
                 {
                     new OpenReferralServiceDeliveryExDto(Guid.NewGuid().ToString(),ServiceDelivery.Online)
@@ -129,9 +133,9 @@ public class BaseClientService
                             }
                             //new List<Accessibility_For_Disabilities>()
                             ),
-                        new List<OpenReferralRegularScheduleDto>(),
-                        new List<OpenReferralHolidayScheduleDto>()
-                        
+                            new List<OpenReferralRegularScheduleDto>(),
+                            new List<OpenReferralHolidayScheduleDto>()
+
                         )
 
                 })
@@ -194,6 +198,7 @@ public class BaseClientService
                 "No",
                 "Robert.Brown@yahoo.co.uk",
                 "0131 222 3333",
+                "text",
                 "Requires help with child",
                 new List<ReferralStatusDto> { new ReferralStatusDto("1d2c41ac-fade-4933-a810-d8a040f0b9ee", "Inital-Referral") }
                 );

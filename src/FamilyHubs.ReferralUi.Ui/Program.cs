@@ -1,13 +1,20 @@
 using FamilyHubs.ReferralUi.Ui.Extensions;
 using FamilyHubs.ReferralUi.Ui.Models;
+using FamilyHubs.ReferralUi.Ui.Services;
+using FamilyHubs.ServiceDirectory.Shared.Extensions;
+using FamilyHubs.ServiceDirectory.Shared.Helpers;
 using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
+RegisterComponents(builder.Services, builder.Configuration);
 
 // Add services to the container.
 builder.Services
     .AddClientServices()
     .AddWebUIServices(builder.Configuration);
+
+builder.Services.AddTransient<IRedisCache, RedisCache>();
+builder.Services.AddTransient<IRedisCacheService, RedisCacheService>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -49,6 +56,10 @@ Program.ServiceProvider = app.Services;
 
 app.Run();
 
+static void RegisterComponents(IServiceCollection builder, IConfiguration configuration)
+{
+    builder.AddApplicationInsights(configuration, "fh_referralui_ui");
+}
 public partial class Program
 {
     public static IServiceProvider ServiceProvider { get; set; } = default!;
