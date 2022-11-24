@@ -9,13 +9,13 @@ public class WhySupportModel : PageModel
     public string FullName { get; set; } = default!;
 
     [BindProperty]
-    public string HasSpecialNeeds { get; set; } = default!;
-
-    [BindProperty]
     public string Email { get; set; } = default!;
 
     [BindProperty]
-    public string Phone { get; set; } = default!;
+    public string Telephone { get; set; } = default!;
+
+    [BindProperty]
+    public string Textphone { get; set; } = default!;
 
     [BindProperty]
     public string ReasonForSupport { get; set; } = default!;
@@ -28,14 +28,14 @@ public class WhySupportModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public void OnGet(string id, string name, string fullName, string hasSpecialNeeds, string email, string phone, string reasonForSupport)
+    public void OnGet(string id, string name, string fullName, string email, string telephone, string textphone, string reasonForSupport)
     {
         Id = id;
         Name = name;
         FullName = fullName;
-        HasSpecialNeeds = hasSpecialNeeds;
         Email = email;
-        Phone = phone;
+        Telephone = telephone;
+        Textphone = textphone;
 
         if (!string.IsNullOrEmpty(reasonForSupport))
             ReasonForSupport = reasonForSupport;
@@ -54,9 +54,9 @@ public class WhySupportModel : PageModel
             id = Id,
             name = Name,
             fullName = FullName,
-            hasSpecialNeeds = HasSpecialNeeds,
             email = Email,
-            phone = Phone,
+            telephone = Telephone,
+            textphone = Textphone,
             reasonForSupport = ReasonForSupport
         });
 

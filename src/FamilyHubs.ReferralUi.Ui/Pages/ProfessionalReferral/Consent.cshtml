@@ -12,7 +12,7 @@
         <fieldset class="govuk-fieldset">
           <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
             <h1 class="govuk-fieldset__heading">
-              Do you have consent from the person or family?
+               Consent
             </h1>
           </legend>
               @{
@@ -23,6 +23,17 @@
                         </p>
                     }
                 }
+          <p>You must have consent from the family to give their details to the service.</p>
+          <p class="govuk-body">Those details include:</p>
+            <ul class="govuk-list govuk-list--bullet">
+              <li>who to contact in the family</li>
+              <li>ways to contact the family</li>
+              <li>why the family needs help </li>
+            </ul>
+            <p>You can come back and connect the family to the service once you have consent.</p>
+            <h2 class="govuk-heading-m">
+                Do you have consent from the family?
+            </h2>
           <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
             <div class="govuk-radios__item">
                   <input class="govuk-radios__input" id="consent" name="IsConsentGiven" type="radio" value="yes" @(Model.IsConsentGiven != null && Model.IsConsentGiven == "yes" ? "checked" : "")>

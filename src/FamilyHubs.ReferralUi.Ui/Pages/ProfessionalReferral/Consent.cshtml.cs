@@ -32,7 +32,7 @@ public class ConsentModel : PageModel
 
         if (string.Compare(IsConsentGiven, "yes", StringComparison.OrdinalIgnoreCase) == 0)
         {
-            return RedirectToPage("/ProfessionalReferral/PersonalDetails", new
+            return RedirectToPage("/ProfessionalReferral/FamilyContact", new
             {
                 id = id,
                 name = name
