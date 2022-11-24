@@ -346,6 +346,11 @@
 
                 <!-- DONE - Search Results -->
                 <div class="govuk-grid-column-two-thirds vacancies_index">
+
+                      <div class="govuk-button-group app-results-filter-overlay--show-filters" data-module="show-filters-button-group">
+                          <govuk-button class="govuk-button--secondary" data-testid="show-filters-button">Show filters</govuk-button>
+                       </div>
+
                     @if (Model.SearchResults.TotalCount == 0)
                     {
                         <h2 class="govuk-heading-m" data-testid="noservicesfound">No services found</h2>
