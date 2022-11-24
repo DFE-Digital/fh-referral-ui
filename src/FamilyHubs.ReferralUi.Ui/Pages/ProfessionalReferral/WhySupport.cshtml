@@ -3,47 +3,58 @@
 @{
 }
 
-<main class="govuk-main-wrapper " id="main-content" role="main">
+<a asp-page="/ProfessionalReferral/ContactDetails" asp-route-id="@Model.Id" asp-route-name="@Model.Name" asp-all-route-fullName="@Model.FullName" asp-route-email="@Model.Email" asp-route-telephone="@Model.Telephone" asp-route-textphone="@Model.Textphone" class="govuk-back-link">Back</a>
 
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <h1 class="govuk-heading-l">Details about the family</h1>
     <form method="post">
 
 
         <input asp-for="@Model.Id" type="hidden" >
         <input asp-for="@Model.Name" type="hidden">
         <input asp-for="@Model.FullName" type="hidden" >
-        <input asp-for="@Model.HasSpecialNeeds" type="hidden">
         <input asp-for="@Model.Email" type="hidden" >
-        <input asp-for="@Model.Phone" type="hidden">
+        <input asp-for="@Model.Telephone" type="hidden">
+        <input asp-for="@Model.Textphone" type="hidden">
 
       <div class="govuk-form-group">
           <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
-        <fieldset class="govuk-fieldset">
-          <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
-            <div class="govuk-form-group">
-              <h1 class="govuk-label-wrapper">
-                <label class="govuk-label govuk-label--l" for="ReasonForSupport">
-                Why does this person or family need support from this service?
-              </label>
-              </h1>
-                  @{
-                        if (Model.ValidationValid == false)
-                        {
-                            <p class="govuk-error-message">
-                                <span class="govuk-visually-hidden">Error:</span> You must enter a Reason For Support
-                            </p>
-                        }
-                    }
 
-                  <textarea class="govuk-textarea govuk-js-character-count @(Model.ValidationValid == false ? "govuk-input--error" : "")" id="ReasonForSupport" name="ReasonForSupport" value="@Model.ReasonForSupport" asp-for="ReasonForSupport" rows="10"></textarea>
-            </div>
+                <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
+                    <p>Use this to give the service details about the family, for example: </p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>why the family needs help</li>
+                        <li>any health conditions or special educational needs and disabilities (SEND)</li>
+                        <li>times of the day to contact the family</li>
+                    </ul>
 
-            <div id="with-hint-info" class="govuk-hint govuk-character-count__message">
-              You can enter up to 500 characters
-            </div>
+                    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="200">
+                        <div class="govuk-form-group">
+                            <h1 class="govuk-label-wrapper">
+                                <label class="govuk-label govuk-label--m" for="with-hint">
+                                    What do you want to tell the service?
+                                </label>
+                            </h1>
 
-          </div>
-        </fieldset>
-      </div>
+                            @{
+                                if (Model.ValidationValid == false)
+                                {
+                                    <p class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> You must enter a Reason For Support
+                                    </p>
+                                }
+                            }
+
+                            <textarea class="govuk-textarea govuk-js-character-count" @(Model.ValidationValid == false ? "govuk-input--error" : "") id="ReasonForSupport" name="ReasonForSupport" value="@Model.ReasonForSupport" asp-for="ReasonForSupport" rows="10"></textarea>
+                        </div>
+
+                        <div id="with-hint-info" class="govuk-hint govuk-character-count__message">
+                            You can enter up to 500 characters
+                        </div>
+
+                    </div>
+                </div>
+        </div>
       </div>
       <button type="submit" class="govuk-button">
         Continue

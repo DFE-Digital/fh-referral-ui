@@ -3,6 +3,7 @@
 @{
 }
 
+<a asp-page="/ProfessionalReferral/FamilyContact" asp-route-id="@Model.Id" asp-route-name="@Model.Name" asp-all-route-fullName="@Model.FullName" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
@@ -11,14 +12,13 @@
          <input asp-for="@Model.Id" type="hidden" >
          <input asp-for="@Model.Name" type="hidden">
          <input asp-for="@Model.FullName" type="hidden" >
-         <input asp-for="@Model.HasSpecialNeeds" type="hidden">
 
       <div class="govuk-form-group">
           <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
         <fieldset class="govuk-fieldset">
           <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
             <h1 class="govuk-fieldset__heading">
-              Contact details
+               How can the service contact @Model.FullName?
             </h1>
           </legend>
               @{
@@ -29,41 +29,86 @@
                         </p>
                     }
                 }
-          <p>If you are requesting support for a child or a family, enter details of a parent or carer.</p>
-          <div class="govuk-form-group">
-            <label class="govuk-label" for="Email">
-              Email address
-            </label>
-                @{
-                    if (Model.EmailValid == false)
-                    {
-                        <p class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> You must enter valid email address
-                        </p>
-                    }
-                }
-                <input class="govuk-input @(Model.EmailValid == false ? "govuk-input--error" : "")" id="Email" name="Email" value="@Model.Email" asp-for="Email"  type="email" spellcheck="false" autocomplete="Email" maxlength="255">
-          </div>
-          <div class="govuk-form-group">
-            <label class="govuk-label" for="Phone">
-              UK telephone number
-            </label>
-                @{
-                    if (Model.PhoneValid == false)
-                    {
-                        <p class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> You must enter valid phone number
-                        </p>
-                    }
-                }
-                <input class="govuk-input govuk-input--width-20 @(Model.PhoneValid == false ? "govuk-input--error" : "")" id="Phone" name="Phone" value="@Model.Phone" asp-for="Phone" type="tel" autocomplete="Phone" maxlength="15">
-          </div>
+          
         </fieldset>
       </div>
-       </div>
-      <button type="submit" class="govuk-button">
+     </div>
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-form-group">
+                    <div id="contact-hint" class="govuk-hint">
+                        Select all that apply.
+                    </div>
+                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="ContactSelectionEmail" name="ContactSelection" type="checkbox" value="email" data-aria-controls="conditional-contact" @(Model.ContactSelection != null && Model.ContactSelection.Any(x => x == "email") ? "data-conditional-active" : "")>
+                            <label class="govuk-label govuk-checkboxes__label" for="contact">
+                                Email
+                            </label>
+                        </div>
+                        <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-contact">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="contact-by-email">
+                                    Email address
+                                </label>
+                                @if (Model.EmailValid == false)
+                                {
+                                    <p class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> Please enter a valid email address
+                                    </p>
+                                }
+                                <input class="govuk-input govuk-!-width-one-half" id="Email" name="Email" type="email" spellcheck="false" autocomplete="email">
+                            </div>
+
+                        </div>
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="ContactSelectionTelephone" name="ContactSelection" type="checkbox" value="telephone" data-aria-controls="conditional-contact-2" @(Model.ContactSelection != null && Model.ContactSelection.Any(x => x == "telephone") ? "data-conditional-active" : "")>
+                            <label class="govuk-label govuk-checkboxes__label" for="contact-2">
+                                Telephone
+                            </label>
+                        </div>
+                        <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-contact-2">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="contact-by-phone">
+                                    Telephone number
+                                </label>
+                                @if (Model.TelephoneValid == false)
+                                {
+                                    <p class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> Please enter a valid phone number
+                                    </p>
+                                }
+                                <input class="govuk-input govuk-!-width-one-third" id="Telephone" name="Telephone" type="tel" autocomplete="tel">
+                            </div>
+                        </div>
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="ContactSelectionTextphone" name="ContactSelection" type="checkbox" value="textphone" data-aria-controls="conditional-contact-3" @(Model.ContactSelection != null && Model.ContactSelection.Any(x => x == "textphone") ? "data-conditional-active" : "")>
+                            <label class="govuk-label govuk-checkboxes__label" for="contact-3">
+                                Text message
+                            </label>
+                        </div>
+                        <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-contact-3">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="contact-by-text">
+                                    Telephone number
+                                </label>
+                                @if (Model.TelephoneValid == false)
+                                {
+                                    <p class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> Please enter a valid phone number for texts
+                                    </p>
+                                }
+                                <input class="govuk-input govuk-!-width-one-third" id="Textphone" name="Textphone" type="tel" autocomplete="tel">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+        </div>
+     <button type="submit" class="govuk-button">
         Continue
-      </button>
+     </button>
     </form>
 
 </main>
