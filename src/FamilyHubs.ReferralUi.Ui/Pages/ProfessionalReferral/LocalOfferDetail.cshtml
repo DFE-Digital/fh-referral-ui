@@ -80,8 +80,9 @@
       <li>consent from the family for you to give their details to the service</li>
     </ul>
     <p>Your contact details will also be shared with the service.</p>
-    <form method="">
-      <button class="govuk-button">
+    <form method="post">
+      <input asp-for="@Model.Name" type="hidden">
+      <button type="submit" class="govuk-button">
         Connect family to service
       </button>
     </form>
