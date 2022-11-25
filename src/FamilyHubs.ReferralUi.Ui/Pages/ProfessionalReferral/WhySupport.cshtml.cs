@@ -43,7 +43,7 @@ public class WhySupportModel : PageModel
 
     public IActionResult OnPost()
     {
-        if (!ModelState.IsValid || (ReasonForSupport == null || ReasonForSupport.Trim().Length == 0 || ReasonForSupport.Length > 500))
+        if (ReasonForSupport == null || ReasonForSupport.Trim().Length == 0 || ReasonForSupport.Length > 500)
         {
             ValidationValid = false;
             return Page();
