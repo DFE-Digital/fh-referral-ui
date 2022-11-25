@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
 //MAB No Longer used
+[Authorize(Policy = "Referrer")]
 public class PersonalDetailsModel : PageModel
 {
     [BindProperty]

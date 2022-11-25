@@ -2,11 +2,13 @@ using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
+[Authorize(Policy = "Referrer")]
 public class LocalOfferDetailModel : PageModel
 {
     private readonly ILocalOfferClientService _localOfferClientService;

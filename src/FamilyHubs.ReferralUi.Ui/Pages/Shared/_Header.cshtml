@@ -7,6 +7,10 @@
             </div>
             <div class="govuk-header__content">
                 @Html.Raw(Model.RenderLink<HomeLink>()) &nbsp;&nbsp;&nbsp;
+                @if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    @Html.Raw(Model.RenderLink<SignOutLink>())
+                }
             </div>
         </div>
     </header>

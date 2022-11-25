@@ -6,6 +6,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresse
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
+[Authorize(Policy = "Referrer")]
 public class LocalOfferResultsModel : PageModel
 {
     private readonly ILocalOfferClientService _localOfferClientService;

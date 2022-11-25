@@ -22,6 +22,7 @@ public class HeaderViewModel : IHeaderViewModel
     public HeaderViewModel(
         IHeaderConfiguration configuration,
         IUserContext userContext,
+        string userName,
         ILinkCollection? linkCollection = null,
         ILinkHelper? linkHelper = null,
         IUrlHelper? urlHelper = null,
@@ -44,8 +45,14 @@ public class HeaderViewModel : IHeaderViewModel
         // Header links
         AddOrUpdateLink(new GovUk(GovUkHref, isLegacy: UseLegacyStyles));
         AddOrUpdateLink(new HomeLink("/Index", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
-        
-        
+
+        if (userContext != null && userContext.User != null && userContext.User.Identity != null)
+        {
+            if (userContext.User.Identity.IsAuthenticated)
+            {
+                AddOrUpdateLink(new SignOutLink(userName, "/Logout", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
+            }
+        }
 
 
     }
