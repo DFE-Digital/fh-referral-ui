@@ -62,10 +62,70 @@
                                                    placeholder="Search" role="combobox">
                                                 <div aria-live="assertive" class="govuk-visually-hidden collection-match" role="status"></div>
                                             </div>
-                                            <div class="govuk-form-group">
+
+                                            <div class="govuk-form-group ">
+                                                <div class="govuk-hint" id="hint">
+                                                    Select all that apply.
+                                                </div>
+                                                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                                                    @if (!ModelState.IsValid)
+                                                    {
+                                                        <p class="govuk-error-message">
+                                                            <span class="govuk-visually-hidden">Error:</span>
+                                                            <span asp-validation-for="@Model.CategorySelection"></span>
+                                                        </p>
+                                                        <p class="govuk-error-message">
+                                                            <span class="govuk-visually-hidden">Error:</span>
+                                                            <span asp-validation-for="@Model.SubcategorySelection"></span>
+                                                        </p>
+                                                    }
+
+                                                    @foreach (var categoryKV in @Model.Categories)
+                                                    {
+                                                        <div class="govuk-checkboxes__item">
+                                                            <input class="govuk-checkboxes__input"
+                                                           id="@categoryKV.Key.Name.ToLower().Replace(" ", "")"
+                                                           name="CategorySelection" data-testid="@categoryKV.Key.Name.ToLower().Replace(" ", "")"
+                                                           type="checkbox" value="@categoryKV.Key.Id"
+                                                           data-aria-controls="conditional-checkbox - @categoryKV.Key.Name.ToLower().Replace(" ", " ")"
+                                                           @(Model.CategorySelection != null && Model.CategorySelection.Any(x => x == categoryKV.Key.Id) ? "checked" : "")>
+                                                            <label class="govuk-label govuk-checkboxes__label" for="support">
+                                                                @categoryKV.Key.Name
+                                                            </label>
+                                                        </div>
+                                                        <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-checkbox - @categoryKV.Key.Name.ToLower().Replace(" ", " ")">
+                                                            <div class="govuk-form-group">
+                                                                <label class="govuk-label--s">
+                                                                    Select @categoryKV.Key.Name.ToLower()
+                                                                </label>
+                                                                <div class="govuk-checkboxes govuk-checkboxes--small govuk-!-margin-top-2" data-module="govuk-checkboxes">
+                                                                    @foreach (var subcategory in categoryKV.Value)
+                                                                    {
+                                                                        <div class="govuk-checkboxes__item">
+                                                                            <input class="govuk-checkboxes__input"
+                                                                       id="@subcategory.Name.ToLower().Replace(" ", "")"
+                                                                       name="SubcategorySelection" data-testid="@subcategory.Name.ToLower().Replace(" ", "")"
+                                                                       type="checkbox"
+                                                                       value="@subcategory.Id"
+                                                                       @(Model.SubcategorySelection != null && Model.SubcategorySelection.Any(x => x == subcategory.Id) ? "checked" : "")>
+                                                                            <label class="govuk-label govuk-checkboxes__label" for="category-1">
+                                                                                @subcategory.Name
+                                                                            </label>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            
+
+                                            @*<div class="govuk-form-group">
                                                 <fieldset class="govuk-fieldset">
                                                     <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                                                         <input type="hidden" name="subjects[]" value="" autocomplete="off">
+
                                                         <div class="govuk-checkboxes__item" id="filterable">
                                                             <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
                                                             <label class="govuk-label govuk-checkboxes__label" for="types">
@@ -212,7 +272,7 @@
                                                         </div>
                                                     </div>
                                                 </fieldset>
-                                            </div>
+                                            </div>*@
                                         </div>
                                     </div>
                                 </div>

@@ -5,6 +5,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
 using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -17,6 +18,7 @@ public class LocalOfferResultsModel : PageModel
 {
     private readonly ILocalOfferClientService _localOfferClientService;
     private readonly IPostcodeLocationClientService _postcodeLocationClientService;
+    private readonly IOpenReferralOrganisationClientService _openReferralOrganisationClientService;
 
     public Dictionary<int, string> DictServiceDelivery = new();
 
@@ -25,6 +27,13 @@ public class LocalOfferResultsModel : PageModel
 
     [BindProperty]
     public List<string> CostSelection { get; set; } = default!;
+
+    public List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>> Categories { get; set; } = default!;
+
+    [BindProperty]
+    public List<string> CategorySelection { get; set; } = default!;
+    [BindProperty]
+    public List<string> SubcategorySelection { get; set; } = default!;
 
     public double CurrentLatitude { get; set; }
     public double CurrentLongitude { get; set; }
@@ -70,10 +79,11 @@ public class LocalOfferResultsModel : PageModel
         new SelectListItem { Value = "32186.9", Text = "20 miles" },
     };
 
-    public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService)
+    public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService, IOpenReferralOrganisationClientService openReferralOrganisationClientService)
     {
         _localOfferClientService = localOfferClientService;
         _postcodeLocationClientService = postcodeLocationClientService;
+        _openReferralOrganisationClientService = openReferralOrganisationClientService;
     }
 
     public async Task OnGetAsync(string postCode,
@@ -86,6 +96,7 @@ public class LocalOfferResultsModel : PageModel
     {
         SearchPostCode = postCode;
         await GetLocationDetails(SearchPostCode);
+        await GetCategoriesTreeAsync();
 
         //Keep these as might be needed at a later stage
         SelectedDistance = distance.ToString();
@@ -171,6 +182,9 @@ public class LocalOfferResultsModel : PageModel
         if (SelectedLanguage == "All languages")
             SelectedLanguage = null;
 
+        
+        var taxonomies = string.Join(",", SubcategorySelection);
+
         SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing",
                                                                       "active",
                                                                       null,
@@ -185,12 +199,13 @@ public class LocalOfferResultsModel : PageModel
                                                                       SearchText ?? string.Empty,
                                                                       serviceDelivery,
                                                                       isPaidFor,
-                                                                      null,
+                                                                      taxonomies,
                                                                       SelectedLanguage,
                                                                       CanFamilyChooseLocation);
 
         InitializeAgeRange();
         InitializeLanguages();
+        await GetCategoriesTreeAsync();
         InitialLoad = false;
         return Page();
 
@@ -411,5 +426,33 @@ public class LocalOfferResultsModel : PageModel
                 String.Empty,
                 String.Empty,
                 String.Empty);
+    }
+
+    private async Task GetCategoriesTreeAsync()
+    {
+        List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>> categories = await _openReferralOrganisationClientService.GetCategories();
+
+        if (categories != null)
+            Categories = new List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>>(categories);
+    }
+
+    private void GetCategoriesFromSelectedTaxonomiesAsync(List<string> selectedTaxonomies)
+    {
+        PaginatedList<OpenReferralTaxonomyDto> taxonomies = _openReferralOrganisationClientService.GetTaxonomyList(1, 9999).Result;
+        CategorySelection = new List<string>();
+        SubcategorySelection = new List<string>();
+
+        if (taxonomies != null && selectedTaxonomies.Any())
+        {
+            foreach (string taxonomyKey in selectedTaxonomies)
+            {
+                OpenReferralTaxonomyDto? taxonomy = taxonomies.Items.FirstOrDefault(x => x.Id == taxonomyKey);
+
+                if (taxonomy != null && string.IsNullOrEmpty(taxonomy.Parent))
+                    CategorySelection.Add(taxonomy.Id);
+                else if (taxonomy != null && !string.IsNullOrEmpty(taxonomy.Parent))
+                    SubcategorySelection.Add(taxonomy.Id);
+            }
+        }
     }
 }
