@@ -146,7 +146,7 @@ public class ContactDetailsModel : PageModel
             }
         }
 
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid || !ValidationValid)
         {
             ValidationValid = false;
             return Page();
