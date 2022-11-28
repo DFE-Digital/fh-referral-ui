@@ -436,23 +436,4 @@ public class LocalOfferResultsModel : PageModel
             Categories = new List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>>(categories);
     }
 
-    private void GetCategoriesFromSelectedTaxonomiesAsync(List<string> selectedTaxonomies)
-    {
-        PaginatedList<OpenReferralTaxonomyDto> taxonomies = _openReferralOrganisationClientService.GetTaxonomyList(1, 9999).Result;
-        CategorySelection = new List<string>();
-        SubcategorySelection = new List<string>();
-
-        if (taxonomies != null && selectedTaxonomies.Any())
-        {
-            foreach (string taxonomyKey in selectedTaxonomies)
-            {
-                OpenReferralTaxonomyDto? taxonomy = taxonomies.Items.FirstOrDefault(x => x.Id == taxonomyKey);
-
-                if (taxonomy != null && string.IsNullOrEmpty(taxonomy.Parent))
-                    CategorySelection.Add(taxonomy.Id);
-                else if (taxonomy != null && !string.IsNullOrEmpty(taxonomy.Parent))
-                    SubcategorySelection.Add(taxonomy.Id);
-            }
-        }
-    }
 }
