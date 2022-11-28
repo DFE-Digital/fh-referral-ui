@@ -49,7 +49,7 @@ public class WhySupportModel : PageModel
         ModelState.Remove("Telephone");
         ModelState.Remove("Textphone");
 
-        if (!ModelState.IsValid || (ReasonForSupport == null || ReasonForSupport.Trim().Length == 0 || ReasonForSupport.Length > 500))
+        if (ReasonForSupport == null || ReasonForSupport.Trim().Length == 0 || ReasonForSupport.Length > 500)
         {
             ValidationValid = false;
             return Page();
