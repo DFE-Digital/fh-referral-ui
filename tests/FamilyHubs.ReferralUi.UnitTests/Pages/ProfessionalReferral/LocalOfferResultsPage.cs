@@ -24,7 +24,8 @@ public class LocalOfferResultsPage
     {
         var mockLocalOfferClientService = new Mock<ILocalOfferClientService>();
         var mockIPostcodeLocationClientService = new Mock<IPostcodeLocationClientService>();
-        pageModel = new LocalOfferResultsModel(mockLocalOfferClientService.Object, mockIPostcodeLocationClientService.Object);
+        var mockIOpenReferralOrganisationClientService = new Mock<IOpenReferralOrganisationClientService>();
+        pageModel = new LocalOfferResultsModel(mockLocalOfferClientService.Object, mockIPostcodeLocationClientService.Object, mockIOpenReferralOrganisationClientService.Object);
     }
 
     //[Fact]
