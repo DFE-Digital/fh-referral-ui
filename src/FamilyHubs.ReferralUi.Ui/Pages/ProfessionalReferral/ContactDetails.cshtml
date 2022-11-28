@@ -57,7 +57,7 @@
                                         <span class="govuk-visually-hidden">Error:</span> Please enter a valid email address
                                     </p>
                                 }
-                                <input class="govuk-input govuk-!-width-one-half" id="Email" name="Email" type="email" spellcheck="false" autocomplete="email">
+                                <input class="govuk-input govuk-!-width-one-half" id="Email" name="Email" value="@Model.Email" type="email" spellcheck="false" autocomplete="email">
                             </div>
 
                         </div>
@@ -78,7 +78,7 @@
                                         <span class="govuk-visually-hidden">Error:</span> Please enter a valid phone number
                                     </p>
                                 }
-                                <input class="govuk-input govuk-!-width-one-third" id="Telephone" name="Telephone" type="tel" autocomplete="tel">
+                                <input class="govuk-input govuk-!-width-one-third" id="Telephone" name="Telephone" value="@Model.Telephone" type="tel" autocomplete="tel">
                             </div>
                         </div>
                         <div class="govuk-checkboxes__item">
@@ -98,7 +98,7 @@
                                         <span class="govuk-visually-hidden">Error:</span> Please enter a valid phone number for texts
                                     </p>
                                 }
-                                <input class="govuk-input govuk-!-width-one-third" id="Textphone" name="Textphone" type="tel" autocomplete="tel">
+                                <input class="govuk-input govuk-!-width-one-third" id="Textphone" name="Textphone" value="@Model.Textphone" type="tel" autocomplete="tel">
                             </div>
                         </div>
                     </div>

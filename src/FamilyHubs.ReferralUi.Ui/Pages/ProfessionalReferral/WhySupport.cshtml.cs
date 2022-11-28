@@ -43,7 +43,11 @@ public class WhySupportModel : PageModel
 
     public IActionResult OnPost()
     {
-        if (ReasonForSupport == null || ReasonForSupport.Trim().Length == 0 || ReasonForSupport.Length > 500)
+        ModelState.Remove("Email");
+        ModelState.Remove("Telephone");
+        ModelState.Remove("Textphone");
+
+        if (!ModelState.IsValid || (ReasonForSupport == null || ReasonForSupport.Trim().Length == 0 || ReasonForSupport.Length > 500))
         {
             ValidationValid = false;
             return Page();
