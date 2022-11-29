@@ -55,10 +55,12 @@ public class CheckReferralDetailsModel : PageModel
 
     public async Task<IActionResult> OnPost()
     {
+        var userclaim = User.Claims.FirstOrDefault(x => x.Type == "UserId");
+        
         // Save to API
         OpenReferralServiceDto openReferralServiceDto = await _localOfferClientService.GetLocalOfferById(Id);
 
-        ReferralDto dto = new(Guid.NewGuid().ToString(),Id, openReferralServiceDto.OpenReferralOrganisationId, Name, openReferralServiceDto.Description  ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), "CurrentUser",FullName,string.Empty,Email,Telephone, Textphone, ReasonForSupport, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial-Referral") });
+        ReferralDto dto = new(Guid.NewGuid().ToString(),Id, openReferralServiceDto.OpenReferralOrganisationId, Name, openReferralServiceDto.Description  ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), userclaim?.Value ?? "CurrentUser"  ,FullName,string.Empty,Email,Telephone, Textphone, ReasonForSupport, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial-Referral") });
 
         try
         {
