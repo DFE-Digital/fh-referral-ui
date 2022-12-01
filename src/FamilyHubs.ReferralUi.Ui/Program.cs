@@ -9,8 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 RegisterComponents(builder.Services, builder.Configuration);
 
 // Add services to the container.
+builder.AddClientServices();
+
 builder.Services
-    .AddClientServices()
     .AddWebUIServices(builder.Configuration);
 
 builder.Services.AddTransient<IRedisCache, RedisCache>();
