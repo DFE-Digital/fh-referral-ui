@@ -19,9 +19,20 @@
   <thead class="govuk-table__head">
   </thead>
   <tbody class="govuk-table__body">
-    <tr style="display: none;" class="govuk-table__row">
+    <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Category</th>
-      <td class="govuk-table__cell">TBD</td>
+      <td class="govuk-table__cell">
+         @if (@Model.LocalOffer != null && @Model.LocalOffer.Service_taxonomys != null)
+        {
+            foreach (var serviceTaxonomy in @Model.LocalOffer.Service_taxonomys)
+            {
+                if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
+                {
+                    @serviceTaxonomy.Taxonomy.Name
+                }
+            }                    
+        }
+    </td>
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Cost</th>
