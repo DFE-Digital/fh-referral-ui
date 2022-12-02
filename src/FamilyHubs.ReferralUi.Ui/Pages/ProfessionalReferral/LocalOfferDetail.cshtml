@@ -93,9 +93,12 @@
     <p>Your contact details will also be shared with the service.</p>
     <form method="post">
       <input asp-for="@Model.Name" type="hidden">
-      <button type="submit" class="govuk-button">
-        Connect family to service
-      </button>
+        @if(Model.IsReferralEnabled)
+        {
+            <button type="submit" class="govuk-button">
+                Connect family to service
+            </button>
+        }        
     </form>
   </div>
 </div>
