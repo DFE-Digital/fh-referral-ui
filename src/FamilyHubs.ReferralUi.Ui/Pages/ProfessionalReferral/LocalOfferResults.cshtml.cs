@@ -68,6 +68,21 @@ public class LocalOfferResultsModel : PageModel
     public string? OutCode { get; set; }
     public string? DistrictCode { get; set; }
 
+    public string SearchResultsTitle
+    {
+        get
+        {
+            if (SearchResults.TotalCount == 1)
+            {
+                return $"{SearchResults.TotalCount} service found";
+            }
+            else
+            {
+                return $"{SearchResults.TotalCount} services found";
+            }
+        }
+    }
+
     public bool InitialLoad { get; set; } = true;
     public List<SelectListItem> DistanceSelectionList { get; } = new List<SelectListItem>
     {
