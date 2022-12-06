@@ -64,27 +64,6 @@ public class LocalOfferDetailModel : PageModel
         return result;
     }
 
-
-    public string GetDeliveryMethodsAsString(ICollection<OpenReferralServiceDeliveryExDto>? serviceDeliveries )
-    {
-        string result = string.Empty;
-
-        if (serviceDeliveries == null || serviceDeliveries.Count == 0)
-            return result;
-
-        foreach (var serviceDelivery in serviceDeliveries)
-            result = result
-                     + (Enum.GetName(serviceDelivery.ServiceDelivery) != null ? Enum.GetName(serviceDelivery.ServiceDelivery) + "," : String.Empty);
-
-        //Remove last comma if present
-        if (result.EndsWith(","))
-        {
-            result = result.Remove(result.Length - 1);
-        }
-
-        return result;
-    }
-
     public string GetLanguagesAsString(ICollection<OpenReferralLanguageDto>? languageDtos)
     {
         string result = string.Empty;
