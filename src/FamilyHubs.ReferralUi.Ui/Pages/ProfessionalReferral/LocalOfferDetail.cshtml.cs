@@ -15,13 +15,20 @@ public class LocalOfferDetailModel : PageModel
 
     public string? ReturnUrl { get; set; }
 
-    public LocalOfferDetailModel(ILocalOfferClientService localOfferClientService)
+    public bool IsReferralEnabled { get; private set; }
+
+    [BindProperty]
+    public string Name { get; set; } = default!;
+
+    public LocalOfferDetailModel(ILocalOfferClientService localOfferClientService, IConfiguration configuration)
     {
         _localOfferClientService = localOfferClientService;
+        IsReferralEnabled = configuration.GetValue<bool>("IsReferralEnabled");
     }
 
-    public async Task OnGetAsync(string id)
+    public async Task OnGetAsync(string id, string name)
     {
+        Name = name;
         ReturnUrl = Request.Headers["Referer"].ToString();
         LocalOffer = await _localOfferClientService.GetLocalOfferById(id);
     }
@@ -34,6 +41,27 @@ public class LocalOfferDetailModel : PageModel
             name = name
         });
 
+    }
+
+
+    public string GetDeliveryMethodsAsString(ICollection<OpenReferralServiceDeliveryExDto>? serviceDeliveries )
+    {
+        string result = string.Empty;
+
+        if (serviceDeliveries == null || serviceDeliveries.Count == 0)
+            return result;
+
+        foreach (var serviceDelivery in serviceDeliveries)
+            result = result
+                     + (Enum.GetName(serviceDelivery.ServiceDelivery) != null ? Enum.GetName(serviceDelivery.ServiceDelivery) + "," : String.Empty);
+
+        //Remove last comma if present
+        if (result.EndsWith(","))
+        {
+            result = result.Remove(result.Length - 1);
+        }
+
+        return result;
     }
 
 

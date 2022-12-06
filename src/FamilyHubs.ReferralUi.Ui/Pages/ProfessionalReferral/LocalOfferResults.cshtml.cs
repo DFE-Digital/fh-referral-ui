@@ -5,6 +5,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
 using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -17,6 +18,7 @@ public class LocalOfferResultsModel : PageModel
 {
     private readonly ILocalOfferClientService _localOfferClientService;
     private readonly IPostcodeLocationClientService _postcodeLocationClientService;
+    private readonly IOpenReferralOrganisationClientService _openReferralOrganisationClientService;
 
     public Dictionary<int, string> DictServiceDelivery = new();
 
@@ -25,6 +27,13 @@ public class LocalOfferResultsModel : PageModel
 
     [BindProperty]
     public List<string> CostSelection { get; set; } = default!;
+
+    public List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>> Categories { get; set; } = default!;
+
+    [BindProperty]
+    public List<string> CategorySelection { get; set; } = default!;
+    [BindProperty]
+    public List<string> SubcategorySelection { get; set; } = default!;
 
     public double CurrentLatitude { get; set; }
     public double CurrentLongitude { get; set; }
@@ -59,6 +68,21 @@ public class LocalOfferResultsModel : PageModel
     public string? OutCode { get; set; }
     public string? DistrictCode { get; set; }
 
+    public string SearchResultsTitle
+    {
+        get
+        {
+            if (SearchResults.TotalCount == 1)
+            {
+                return $"{SearchResults.TotalCount} service found";
+            }
+            else
+            {
+                return $"{SearchResults.TotalCount} services found";
+            }
+        }
+    }
+
     public bool InitialLoad { get; set; } = true;
     public List<SelectListItem> DistanceSelectionList { get; } = new List<SelectListItem>
     {
@@ -70,10 +94,11 @@ public class LocalOfferResultsModel : PageModel
         new SelectListItem { Value = "32186.9", Text = "20 miles" },
     };
 
-    public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService)
+    public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService, IOpenReferralOrganisationClientService openReferralOrganisationClientService)
     {
         _localOfferClientService = localOfferClientService;
         _postcodeLocationClientService = postcodeLocationClientService;
+        _openReferralOrganisationClientService = openReferralOrganisationClientService;
     }
 
     public async Task OnGetAsync(string postCode,
@@ -86,6 +111,7 @@ public class LocalOfferResultsModel : PageModel
     {
         SearchPostCode = postCode;
         await GetLocationDetails(SearchPostCode);
+        await GetCategoriesTreeAsync();
 
         //Keep these as might be needed at a later stage
         SelectedDistance = distance.ToString();
@@ -171,6 +197,9 @@ public class LocalOfferResultsModel : PageModel
         if (SelectedLanguage == "All languages")
             SelectedLanguage = null;
 
+        
+        var taxonomies = string.Join(",", SubcategorySelection);
+
         SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing",
                                                                       "active",
                                                                       null,
@@ -185,12 +214,13 @@ public class LocalOfferResultsModel : PageModel
                                                                       SearchText ?? string.Empty,
                                                                       serviceDelivery,
                                                                       isPaidFor,
-                                                                      null,
+                                                                      taxonomies,
                                                                       SelectedLanguage,
                                                                       CanFamilyChooseLocation);
 
         InitializeAgeRange();
         InitializeLanguages();
+        await GetCategoriesTreeAsync();
         InitialLoad = false;
         return Page();
 
@@ -412,4 +442,139 @@ public class LocalOfferResultsModel : PageModel
                 String.Empty,
                 String.Empty);
     }
+
+    private void InitializeAgeRange()
+    {
+        AgeRange = new List<SelectListItem>() {
+            new SelectListItem{ Value="-1", Text="All ages" , Selected = true},
+            new SelectListItem{ Value="0", Text="0 to 12 months" },
+            new SelectListItem{ Value="1", Text="1 year old"},
+            new SelectListItem{ Value="2", Text="2 years old"},
+            new SelectListItem{ Value="3", Text="3 years old"},
+            new SelectListItem{ Value="4", Text="4 years old"},
+            new SelectListItem{ Value="5", Text="5 years old"},
+            new SelectListItem{ Value="6", Text="6 years old"},
+            new SelectListItem{ Value="7", Text="7 years old"},
+            new SelectListItem{ Value="8", Text="8 years old"},
+            new SelectListItem{ Value="9", Text="9 years old"},
+            new SelectListItem{ Value="10", Text="10 years old"},
+            new SelectListItem{ Value="11", Text="11 years old"},
+            new SelectListItem{ Value="12", Text="12 years old"},
+            new SelectListItem{ Value="13", Text="13 years old"},
+            new SelectListItem{ Value="14", Text="14 years old"},
+            new SelectListItem{ Value="15", Text="15 years old"},
+            new SelectListItem{ Value="16", Text="16 years old"},
+            new SelectListItem{ Value="17", Text="17 years old"},
+            new SelectListItem{ Value="18", Text="18 years old"},
+            new SelectListItem{ Value="19", Text="19 years old"},
+            new SelectListItem{ Value="20", Text="20 years old"},
+            new SelectListItem{ Value="21", Text="21 years old"},
+            new SelectListItem{ Value="22", Text="22 years old"},
+            new SelectListItem{ Value="23", Text="23 years old"},
+            new SelectListItem{ Value="24", Text="24 years old"},
+            new SelectListItem{ Value="25", Text="25 years old"},
+
+        };
+    }
+
+    private void InitializeLanguages()
+    {
+        Languages = new List<SelectListItem>() {
+        new SelectListItem { Value = "All languages", Text="All languages" , Selected = true},
+        new SelectListItem { Value = "Afrikaans", Text = "Afrikaans" },
+        new SelectListItem { Value = "Albanian", Text = "Albanian" },
+        new SelectListItem { Value = "Arabic", Text = "Arabic" },
+        new SelectListItem { Value = "Armenian", Text = "Armenian" },
+        new SelectListItem { Value = "Basque", Text = "Basque" },
+        new SelectListItem { Value = "Bengali", Text = "Bengali" },
+        new SelectListItem { Value = "Bulgarian", Text = "Bulgarian" },
+        new SelectListItem { Value = "Catalan", Text = "Catalan" },
+        new SelectListItem { Value = "Cambodian", Text = "Cambodian" },
+        new SelectListItem { Value = "Chinese (Mandarin)", Text = "Chinese (Mandarin)" },
+        new SelectListItem { Value = "Croatian", Text = "Croatian" },
+        new SelectListItem { Value = "Czech", Text = "Czech" },
+        new SelectListItem { Value = "Danish", Text = "Danish" },
+        new SelectListItem { Value = "Dutch", Text = "Dutch" },
+        new SelectListItem { Value = "English", Text = "English"},
+        new SelectListItem { Value = "Estonian", Text = "Estonian" },
+        new SelectListItem { Value = "Fiji", Text = "Fiji" },
+        new SelectListItem { Value = "Finnish", Text = "Finnish" },
+        new SelectListItem { Value = "French", Text = "French" },
+        new SelectListItem { Value = "Georgian", Text = "Georgian" },
+        new SelectListItem { Value = "German", Text = "German" },
+        new SelectListItem { Value = "Greek", Text = "Greek" },
+        new SelectListItem { Value = "Gujarati", Text = "Gujarati" },
+        new SelectListItem { Value = "Hebrew", Text = "Hebrew" },
+        new SelectListItem { Value = "Hindi", Text = "Hindi" },
+        new SelectListItem { Value = "Hungarian", Text = "Hungarian" },
+        new SelectListItem { Value = "Icelandic", Text = "Icelandic" },
+        new SelectListItem { Value = "Indonesian", Text = "Indonesian" },
+        new SelectListItem { Value = "Irish", Text = "Irish" },
+        new SelectListItem { Value = "Italian", Text = "Italian" },
+        new SelectListItem { Value = "Japanese", Text = "Japanese" },
+        new SelectListItem { Value = "Javanese", Text = "Javanese" },
+        new SelectListItem { Value = "Korean", Text = "Korean" },
+        new SelectListItem { Value = "Latin", Text = "Latin" },
+        new SelectListItem { Value = "Latvian", Text = "Latvian" },
+        new SelectListItem { Value = "Lithuanian", Text = "Lithuanian" },
+        new SelectListItem { Value = "Macedonian", Text = "Macedonian" },
+        new SelectListItem { Value = "Malay", Text = "Malay" },
+        new SelectListItem { Value = "Malayalam", Text = "Malayalam" },
+        new SelectListItem { Value = "Maltese", Text = "Maltese" },
+        new SelectListItem { Value = "Maori", Text = "Maori" },
+        new SelectListItem { Value = "Marathi", Text = "Marathi" },
+        new SelectListItem { Value = "Mongolian", Text = "Mongolian" },
+        new SelectListItem { Value = "Nepali", Text = "Nepali" },
+        new SelectListItem { Value = "Norwegian", Text = "Norwegian" },
+        new SelectListItem { Value = "Persian", Text = "Persian" },
+        new SelectListItem { Value = "Polish", Text = "Polish" },
+        new SelectListItem { Value = "Portuguese", Text = "Portuguese" },
+        new SelectListItem { Value = "Punjabi", Text = "Punjabi" },
+        new SelectListItem { Value = "Quechua", Text = "Quechua" },
+        new SelectListItem { Value = "Romanian", Text = "Romanian" },
+        new SelectListItem { Value = "Russian", Text = "Russian" },
+        new SelectListItem { Value = "Samoan", Text = "Samoan" },
+        new SelectListItem { Value = "Serbian", Text = "Serbian" },
+        new SelectListItem { Value = "Slovak", Text = "Slovak" },
+        new SelectListItem { Value = "Slovenian", Text = "Slovenian" },
+        new SelectListItem { Value = "Spanish", Text = "Spanish" },
+        new SelectListItem { Value = "Swahili", Text = "Swahili" },
+        new SelectListItem { Value = "Swedish ", Text = "Swedish " },
+        new SelectListItem { Value = "Tamil", Text = "Tamil" },
+        new SelectListItem { Value = "Tatar", Text = "Tatar" },
+        new SelectListItem { Value = "Telugu", Text = "Telugu" },
+        new SelectListItem { Value = "Thai", Text = "Thai" },
+        new SelectListItem { Value = "Tibetan", Text = "Tibetan" },
+        new SelectListItem { Value = "Tonga", Text = "Tonga" },
+        new SelectListItem { Value = "Turkish", Text = "Turkish" },
+        new SelectListItem { Value = "Ukrainian", Text = "Ukrainian" },
+        new SelectListItem { Value = "Urdu", Text = "Urdu" },
+        new SelectListItem { Value = "Uzbek", Text = "Uzbek" },
+        new SelectListItem { Value = "Vietnamese", Text = "Vietnamese" },
+        new SelectListItem { Value = "Welsh", Text = "Welsh" },
+        new SelectListItem { Value = "Xhosa", Text = "Xhosa" },
+
+        };
+    }
+
+
+    public async Task ClearFilters()
+    {
+        await OnGetAsync(SearchPostCode ?? String.Empty,
+                0.0D,
+                0.0D,
+                0.0D,
+                String.Empty,
+                String.Empty,
+                String.Empty);
+    }
+
+    private async Task GetCategoriesTreeAsync()
+    {
+        List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>> categories = await _openReferralOrganisationClientService.GetCategories();
+
+        if (categories != null)
+            Categories = new List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>>(categories);
+    }
+
 }
