@@ -29,7 +29,7 @@ public class SafeguardingModel : PageModel
             return Page();
         }
 
-        if (string.Compare(IsImmediateHarm, "yes", StringComparison.OrdinalIgnoreCase) == 0)
+        if (string.Compare(IsImmediateHarm, "no", StringComparison.OrdinalIgnoreCase) == 0)
         {
             return RedirectToPage("/ProfessionalReferral/Consent", new
             {

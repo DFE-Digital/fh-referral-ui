@@ -31,7 +31,7 @@
             else
             {
                 <div class="govuk-grid-column-full">
-                    <h1 class="govuk-heading-l"> @Model.SearchResults.TotalCount services found</h1>
+                    <h1 class="govuk-heading-l">@Model.SearchResultsTitle</h1>
                     <p class="govuk-caption-m">
                         Showing results for <a asp-page="/ProfessionalReferral/Search" data-testid="postcodelink">
 
@@ -62,156 +62,62 @@
                                                    placeholder="Search" role="combobox">
                                                 <div aria-live="assertive" class="govuk-visually-hidden collection-match" role="status"></div>
                                             </div>
-                                            <div class="govuk-form-group">
-                                                <fieldset class="govuk-fieldset">
-                                                    <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                                                        <input type="hidden" name="subjects[]" value="" autocomplete="off">
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Activities for children aged 0-5
+
+                                            <div class="govuk-form-group ">
+                                                <div class="govuk-hint" id="hint">
+                                                    Select all that apply.
+                                                </div>
+                                                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                                                    @if (!ModelState.IsValid)
+                                                    {
+                                                        <p class="govuk-error-message">
+                                                            <span class="govuk-visually-hidden">Error:</span>
+                                                            <span asp-validation-for="@Model.CategorySelection"></span>
+                                                        </p>
+                                                        <p class="govuk-error-message">
+                                                            <span class="govuk-visually-hidden">Error:</span>
+                                                            <span asp-validation-for="@Model.SubcategorySelection"></span>
+                                                        </p>
+                                                    }
+
+                                                    @foreach (var categoryKV in @Model.Categories)
+                                                    {
+                                                        <div class="govuk-checkboxes__item">
+                                                            <input class="govuk-checkboxes__input"
+                                                           id="@categoryKV.Key.Name.ToLower().Replace(" ", "")"
+                                                           name="CategorySelection" data-testid="@categoryKV.Key.Name.ToLower().Replace(" ", "")"
+                                                           type="checkbox" value="@categoryKV.Key.Id"
+                                                           data-aria-controls="conditional-checkbox - @categoryKV.Key.Name.ToLower().Replace(" ", " ")"
+                                                           @(Model.CategorySelection != null && Model.CategorySelection.Any(x => x == categoryKV.Key.Id) ? "checked" : "")>
+                                                            <label class="govuk-label govuk-checkboxes__label" for="support">
+                                                                @categoryKV.Key.Name
                                                             </label>
                                                         </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Birth registration
-                                                            </label>
+                                                        <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-checkbox - @categoryKV.Key.Name.ToLower().Replace(" ", " ")">
+                                                            <div class="govuk-form-group">
+                                                                <label class="govuk-label--s">
+                                                                    Select @categoryKV.Key.Name.ToLower()
+                                                                </label>
+                                                                <div class="govuk-checkboxes govuk-checkboxes--small govuk-!-margin-top-2" data-module="govuk-checkboxes">
+                                                                    @foreach (var subcategory in categoryKV.Value)
+                                                                    {
+                                                                        <div class="govuk-checkboxes__item">
+                                                                            <input class="govuk-checkboxes__input"
+                                                                       id="@subcategory.Name.ToLower().Replace(" ", "")"
+                                                                       name="SubcategorySelection" data-testid="@subcategory.Name.ToLower().Replace(" ", "")"
+                                                                       type="checkbox"
+                                                                       value="@subcategory.Id"
+                                                                       @(Model.SubcategorySelection != null && Model.SubcategorySelection.Any(x => x == subcategory.Id) ? "checked" : "")>
+                                                                            <label class="govuk-label govuk-checkboxes__label" for="category-1">
+                                                                                @subcategory.Name
+                                                                            </label>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Debt and welfare advice
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Domestic abuse support
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Early Childhood Education and Care (ECEC) and financial support (Tax-Free Childcare, Universal Credit childcare)
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Early Language and the Home Learning Environment
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Health Visiting
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Housing
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Infant Feeding Support
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Intensive targeted family support services, including those funded by the Supporting Families programme
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Local authority 0-19 public health services, based on local needs assessments
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Mental health services (beyond Start for Life parent-infant mental health)
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Midwifery/maternity
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Nutrition and weight management
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Oral health improvement
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Parent-Infant Relationships and Perinatnatal Mental Health Support
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Parenting Support
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Reducing Parental Conflict
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                SEND support and services (inclusive of the Start for Life period)
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Stop smoking support
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Substance (alcohol/drug) misuse support
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Support for separating and separated parents
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Youth justice services
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__item" id="filterable">
-                                                            <input class="govuk-checkboxes__input" id="types" name="types[]" type="checkbox" value="">
-                                                            <label class="govuk-label govuk-checkboxes__label" for="types">
-                                                                Youth services - universal and targeted
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </fieldset>
+                                                    }
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -358,7 +264,7 @@
                             {
                                 <li role="listitem" tab-index="0">
                                     <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-                                        <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@item.Id" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
+                                        <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@item.Id" asp-route-name="@item.Name" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
                                     </h2>
                                     <p class="govuk-caption-m">
                                         @if (@item?.Service_at_locations?.FirstOrDefault()?.Location?.Physical_addresses?.FirstOrDefault() != null)
@@ -369,7 +275,18 @@
                                     </p>
                                     <dl class="govuk-body-s dtmargins">
                                         <dt class="govuk-!-font-weight-bold">Category</dt>
-                                        <dd>TBD</dd>
+                                        <dd>
+                                            @if (item != null && item.Service_taxonomys != null)
+                                            {
+                                                foreach (var serviceTaxonomy in item.Service_taxonomys)
+                                                {
+                                                    if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
+                                                    {
+                                                        @serviceTaxonomy.Taxonomy.Name
+                                                    }
+                                                }
+                                            }
+                                        </dd >
                                     </dl>
                                     <dl class="govuk-body-s dtmargins">
                                         <dt class="govuk-!-font-weight-bold">Cost</dt>
@@ -389,12 +306,6 @@
                                         <dd>
                                             @if (item?.ServiceDelivery != null && item?.ServiceDelivery.Count > 0)
                                                 @Model.GetDeliveryMethodsAsString(item.ServiceDelivery)
-
-
-
-
-
-
                                             </dd>
                                         </dl>
                                         <dl class="govuk-body-s dtmargins">
@@ -402,12 +313,6 @@
                                             <dd>
                                             @if (item?.Languages != null && item?.Languages.Count > 0)
                                                 @Model.GetLanguagesAsString(item.Languages)
-
-
-
-
-
-
                                             </dd>
                                         </dl>
                                     </li>

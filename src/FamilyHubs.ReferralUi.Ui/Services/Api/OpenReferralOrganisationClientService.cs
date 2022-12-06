@@ -10,6 +10,7 @@ namespace FamilyHubs.ReferralUi.Ui.Services.Api;
 public interface IOpenReferralOrganisationClientService
 {
     Task<PaginatedList<OpenReferralTaxonomyDto>> GetTaxonomyList(int pageNumber = 1, int pageSize = 10);
+    Task<List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>>> GetCategories();
     Task<List<OpenReferralOrganisationDto>> GetListOpenReferralOrganisations();
     Task<OpenReferralOrganisationWithServicesDto> GetOpenReferralOrganisationById(string id);
     Task<string> CreateOrganisation(OpenReferralOrganisationWithServicesDto organisation);
@@ -55,6 +56,37 @@ public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOr
 
         return await JsonSerializer.DeserializeAsync<List<OpenReferralOrganisationDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<OpenReferralOrganisationDto>();
 
+    }
+
+    public async Task<List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>>> GetCategories()
+    {
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(_client.BaseAddress + "api/taxonomies?pageNumber=1&pageSize=99999999"),
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralTaxonomyDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>> keyValuePairs = new();
+
+        if (retVal == null)
+            return keyValuePairs;
+
+        var topLevelCategories = retVal.Items.Where(x => x.Parent == null && !x.Name.Contains("bccusergroupTestDelete")).ToList();
+
+        foreach (var topLevelCategory in topLevelCategories)
+        {
+            var subCategories = retVal.Items.Where(x => x.Parent == topLevelCategory.Id).ToList();
+            var pair = new KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>(topLevelCategory, subCategories);
+            keyValuePairs.Add(pair);
+        }
+
+        return keyValuePairs;
     }
 
     public async Task<OpenReferralOrganisationWithServicesDto> GetOpenReferralOrganisationById(string id)

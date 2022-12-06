@@ -15,13 +15,20 @@ public class LocalOfferDetailModel : PageModel
 
     public string? ReturnUrl { get; set; }
 
-    public LocalOfferDetailModel(ILocalOfferClientService localOfferClientService)
+    public bool IsReferralEnabled { get; private set; }
+
+    [BindProperty]
+    public string Name { get; set; } = default!;
+
+    public LocalOfferDetailModel(ILocalOfferClientService localOfferClientService, IConfiguration configuration)
     {
         _localOfferClientService = localOfferClientService;
+        IsReferralEnabled = configuration.GetValue<bool>("IsReferralEnabled");
     }
 
-    public async Task OnGetAsync(string id)
+    public async Task OnGetAsync(string id, string name)
     {
+        Name = name;
         ReturnUrl = Request.Headers["Referer"].ToString();
         LocalOffer = await _localOfferClientService.GetLocalOfferById(id);
     }
