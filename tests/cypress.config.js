@@ -2,6 +2,8 @@ const { defineConfig } = require("cypress");
 const webpack = require("@cypress/webpack-preprocessor");
 const preprocessor = require("@badeball/cypress-cucumber-preprocessor");
 
+
+
 async function setupNodeEvents(on, config) {
 
     on('task', {
@@ -15,6 +17,7 @@ async function setupNodeEvents(on, config) {
 
             return null
         }
+
     });
 
     await preprocessor.addCucumberPreprocessorPlugin(on, config);
@@ -57,6 +60,7 @@ async function setupNodeEvents(on, config) {
 }
 
 module.exports = defineConfig({
+    chromeWebSecurity: false,
     e2e: {
         baseUrl: 'https://localhost:7270/',
         specPattern: "**/*.feature",

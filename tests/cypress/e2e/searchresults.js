@@ -5,7 +5,6 @@ Given("a user as arrived on search page", () => {
 });
 
 When("user search with a valid postcode {string}", (postcode) => {
-    cy.get('[data-testid="radio-postcode"]').click();
     cy.get('[data-testid="postcode-value"]').type(postcode);
     cy.get('[data-testid="button-search"]').click();
 });

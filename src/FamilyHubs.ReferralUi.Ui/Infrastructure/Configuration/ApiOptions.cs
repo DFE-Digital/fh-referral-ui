@@ -1,6 +1,4 @@
-﻿using SFA.DAS.Http.Configuration;
-
-namespace FamilyHubs.ReferralUi.Ui.Infrastructure.Configuration;
+﻿namespace FamilyHubs.ReferralUi.Ui.Infrastructure.Configuration;
 
 public class ApiOptions //: IApimClientConfiguration
 {

@@ -21,7 +21,18 @@
   <tbody class="govuk-table__body">
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Category</th>
-      <td class="govuk-table__cell">TBD</td>
+      <td class="govuk-table__cell">
+         @if (@Model.LocalOffer != null && @Model.LocalOffer.Service_taxonomys != null)
+        {
+            foreach (var serviceTaxonomy in @Model.LocalOffer.Service_taxonomys)
+            {
+                if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
+                {
+                    @serviceTaxonomy.Taxonomy.Name
+                }
+            }                    
+        }
+    </td>
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Cost</th>
@@ -80,10 +91,14 @@
       <li>consent from the family for you to give their details to the service</li>
     </ul>
     <p>Your contact details will also be shared with the service.</p>
-    <form method="">
-      <button class="govuk-button">
-        Connect family to service
-      </button>
+    <form method="post">
+      <input asp-for="@Model.Name" type="hidden">
+        @if(Model.IsReferralEnabled)
+        {
+            <button type="submit" class="govuk-button">
+                Connect family to service
+            </button>
+        }        
     </form>
   </div>
 </div>

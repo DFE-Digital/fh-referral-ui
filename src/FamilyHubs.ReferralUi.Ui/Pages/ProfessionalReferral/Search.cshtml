@@ -3,60 +3,51 @@
 @{
 }
 
-<div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
-    <h1 class="govuk-heading-l">Find support from local services by name or postcode</h1>
+<a asp-page="/ProfessionalReferral/SignIn" class="govuk-back-link">Back</a>
+<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+<div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+          <div class="govuk-form-group @(Model.PostcodeValid == false ? "govuk-form-group--error" : "")">
+    <h1 class="govuk-heading-l">Search for services by postcode</h1>
+    <p class="govuk-details">
+        We will use the postcode you enter to find services in that local authority area. The postcode must be in England.
+    </p>
+     @{
+        if (Model.PostcodeValid == false)
+        {
+            <p class="govuk-error-message">
+                <span class="govuk-visually-hidden" data-testid="empty-error">Error:</span> There is a problem. You need to enter a postcode. Enter a postcode for example SW1A 2AA
+            </p>
+        }
+    }
      @{
         if (Model.ValidationValid == false)
         {
             <p class="govuk-error-message">
-                <span class="govuk-visually-hidden">Error:</span> You must select one of the options
+                <span class="govuk-visually-hidden" data-testid="invalid-error">Error:</span> There is a problem. Your postcode is not recognised - try another one
             </p>
         }
     }
     <form method="post">
-      <div class="govuk-form-group" id="search-options">
-        <div class="govuk-radios" data-module="govuk-radios">
-          <div class="govuk-radios__item">
-            <input class="govuk-radios__input" aria-controls="name-conditional" type="radio" value="name" name="SearchOption" id="option1" aria-expanded="false" @(Model.SearchOption != null && Model.SearchOption == "name" ? "checked" : "")>
-            <label class="govuk-label govuk-radios__label" for="option1">By name of service</label>
-          </div>
-          <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="name-conditional" >
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="ServiceName">Name of service or provider</label>
-              @{
-                    if (Model.ServiceNameValid == false)
-                    {
-                        <p class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> Name of the service is required
-                        </p>
-                    }
-                }
-              <input class="govuk-input" id="ServiceName" name="ServiceName" type="text" value="@Model.ServiceName" @(Model.ServiceNameValid == false ? "govuk-input--error" : "")>
-            </div>
-          </div>
-          <div class="govuk-radios__divider">or</div>
-          <div class="govuk-radios__item">
-            <input class="govuk-radios__input" aria-controls="location-conditional" type="radio" value="postcode" data-testid="radio-postcode" name="SearchOption" id="option2" aria-expanded="false" @(Model.SearchOption != null && Model.SearchOption == "postcode" ? "checked" : "")>
-            <label class="govuk-label govuk-radios__label" for="option2">By postcode</label>
-          </div>
-          <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="location-conditional">
-            <div class="govuk-form-group ">
-              <label class="govuk-label" for="postcode">Postcode</label>
-              @{
-                    if (Model.PostcodeValid == false)
-                    {
-                        <p class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> Postcode is required
-                        </p>
-                    }
-                }
-              <input class="govuk-input govuk-input--width-10" id="Postcode" name="Postcode" value="@Model.Postcode" data-testid="postcode-value" type="text" autocomplete="postal-code" @(Model.PostcodeValid == false ? "govuk-input--error" : "")>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button type="submit" class="govuk-button" data-testid="button-search">
-        Continue
+         <div class="govuk-form-group" id="search-options">
+  <h1 class="govuk-label-wrapper"><label class="govuk-label govuk-label--l" for="account-number">
+     Enter a postcode
+    </label>
+  </h1>
+  <div id="account-number-hint" class="govuk-hint">
+    For example SW1A 2AA
+  </div>
+   <input class="govuk-input govuk-input--width-10" id="Postcode" name="Postcode" type="text" spellcheck="false"  inputmode="numeric" value="@Model.Postcode" data-testid="postcode-value">
+ </div>
+ <br><br>
+   <button type="submit" class="govuk-button" data-testid="button-search">
+        Search
       </button>
     </form>
+   
 </div>
+          </div>
+           
+</div>
+</main>
+
