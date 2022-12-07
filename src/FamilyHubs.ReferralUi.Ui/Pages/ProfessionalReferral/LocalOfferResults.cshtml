@@ -20,11 +20,12 @@
                 <div class="govuk-grid-column-full">
                     <h1 class="govuk-heading-l">No results found</h1>
                     <p class="govuk-caption-m">
-                        Try searching again <a asp-page="/ProfessionalReferral/Search" data-testid="searchusingdifferentpostcodelink">
-
-                            using a different postcode
-
-                        </a>
+                        Sorry, there are no activities, groups or services listed in your area yet.
+                    </p>
+                    <p class="govuk-caption-m">
+                        You can
+                        <a href="https://www.gov.uk/find-local-council" data-testid="">check your council’s website</a>
+                        for your local family support services.
                     </p>
                 </div>
             }
@@ -67,9 +68,9 @@
                                         <div class=" searchable-collection-component--scrollable">
                                             <div class="searchable-collection-component__search">
                                                 <input aria-describedby="publishers-job-listing-job-details-form-subjects-hint" aria-expanded="true"
-                                                       aria-label="Subject" aria-owns="subjects__listbox"
-                                                       class="govuk-input icon icon--left icon--search js-action" id="filter"
-                                                       placeholder="Search" role="combobox">
+                                                   aria-label="Subject" aria-owns="subjects__listbox"
+                                                   class="govuk-input icon icon--left icon--search js-action" id="filter"
+                                                   placeholder="Search" role="combobox">
                                                 <div aria-live="assertive" class="govuk-visually-hidden collection-match" role="status"></div>
                                             </div>
 
@@ -94,11 +95,11 @@
                                                     {
                                                         <div class="govuk-checkboxes__item">
                                                             <input class="govuk-checkboxes__input"
-                                                                   id="@categoryKV.Key.Name.ToLower().Replace(" ", "")"
-                                                                   name="CategorySelection" data-testid="@categoryKV.Key.Name.ToLower().Replace(" ", "")"
-                                                                   type="checkbox" value="@categoryKV.Key.Id"
-                                                                   data-aria-controls="conditional-checkbox - @categoryKV.Key.Name.ToLower().Replace(" ", " ")"
-                                                                   @(Model.CategorySelection != null && Model.CategorySelection.Any(x => x == categoryKV.Key.Id) ? "checked" : "")>
+                                                           id="@categoryKV.Key.Name.ToLower().Replace(" ", "")"
+                                                           name="CategorySelection" data-testid="@categoryKV.Key.Name.ToLower().Replace(" ", "")"
+                                                           type="checkbox" value="@categoryKV.Key.Id"
+                                                           data-aria-controls="conditional-checkbox - @categoryKV.Key.Name.ToLower().Replace(" ", " ")"
+                                                           @(Model.CategorySelection != null && Model.CategorySelection.Any(x => x == categoryKV.Key.Id) ? "checked" : "")>
                                                             <label class="govuk-label govuk-checkboxes__label" for="support">
                                                                 @categoryKV.Key.Name
                                                             </label>
@@ -113,11 +114,11 @@
                                                                     {
                                                                         <div class="govuk-checkboxes__item">
                                                                             <input class="govuk-checkboxes__input"
-                                                                                   id="@subcategory.Name.ToLower().Replace(" ", "")"
-                                                                                   name="SubcategorySelection" data-testid="@subcategory.Name.ToLower().Replace(" ", "")"
-                                                                                   type="checkbox"
-                                                                                   value="@subcategory.Id"
-                                                                                   @(Model.SubcategorySelection != null && Model.SubcategorySelection.Any(x => x == subcategory.Id) ? "checked" : "")>
+                                                                       id="@subcategory.Name.ToLower().Replace(" ", "")"
+                                                                       name="SubcategorySelection" data-testid="@subcategory.Name.ToLower().Replace(" ", "")"
+                                                                       type="checkbox"
+                                                                       value="@subcategory.Id"
+                                                                       @(Model.SubcategorySelection != null && Model.SubcategorySelection.Any(x => x == subcategory.Id) ? "checked" : "")>
                                                                             <label class="govuk-label govuk-checkboxes__label" for="category-1">
                                                                                 @subcategory.Name
                                                                             </label>
@@ -199,12 +200,12 @@
                                                 {
                                                     <div class="govuk-checkboxes__item">
                                                         <input class="govuk-checkboxes__input"
-                                                               id="@item.Value.ToLower().Replace(" ", "")"
-                                                               name="ServiceDeliverySelection"
-                                                               data-testid=@($"checkbox-{item.Value.ToLower().Replace(" ", "")}")
-                                                               type="checkbox"
-                                                               value="@item.Key"
-                                                               @(Model.ServiceDeliverySelection != null && Model.ServiceDeliverySelection.Any(x => x == item.Key.ToString()) ? "checked" : "")>
+                                                       id="@item.Value.ToLower().Replace(" ", "")"
+                                                       name="ServiceDeliverySelection"
+                                                       data-testid=@($"checkbox-{item.Value.ToLower().Replace(" ", "")}")
+                                                       type="checkbox"
+                                                       value="@item.Key"
+                                                       @(Model.ServiceDeliverySelection != null && Model.ServiceDeliverySelection.Any(x => x == item.Key.ToString()) ? "checked" : "")>
                                                         <label class="govuk-label govuk-checkboxes__label" for="@item.Value.ToLower().Replace(" ", "")">
                                                             @item.Value.ToSentenceCase()
                                                         </label>
@@ -278,7 +279,7 @@
                                                     }
                                                 }
                                             }
-                                        </dd >
+                                        </dd>
                                     </dl>
                                     <dl class="govuk-body-s dtmargins">
                                         <dt class="govuk-!-font-weight-bold">Cost</dt>
@@ -298,13 +299,19 @@
                                         <dd>
                                             @if (item?.ServiceDelivery != null && item?.ServiceDelivery.Count > 0)
                                                 @Model.GetDeliveryMethodsAsString(item.ServiceDelivery)
+
+
+
                                             </dd>
                                         </dl>
                                         <dl class="govuk-body-s dtmargins">
                                             <dt class="govuk-!-font-weight-bold">Language</dt>
                                             <dd>
-                                            @if (item?.Languages != null && item?.Languages.Count > 0)
+                                                @if (item?.Languages != null && item?.Languages.Count > 0)
                                                 @Model.GetLanguagesAsString(item.Languages)
+
+
+
                                             </dd>
                                         </dl>
                                     </li>
