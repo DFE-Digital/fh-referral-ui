@@ -6,7 +6,7 @@
 
 <a asp-page="/ProfessionalReferral/Search" class="govuk-back-link" data-testid="back-button">Back</a>
 
-<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+<main class="govuk-main-wrapper custom-main" id="main-content" role="main">
 
 
     <div class="govuk-grid-row">
@@ -31,14 +31,16 @@
             else
             {
                 <div class="govuk-grid-column-full">
-                    <h1 class="govuk-heading-l">@Model.SearchResultsTitle</h1>
+                    <h1 class="govuk-heading-l govuk-!-margin-bottom-2">
+                        Services, groups and activities in this area
+                    </h1>
 
                     <div class="govuk-button-group app-results-filter-overlay--show-filters js-show-hide-filters" data-module="show-filters-button-group">
                         <button class="govuk-button govuk-button--secondary" data-module="govuk-button" data-testid="show-filters-button">Show filters</button>
                     </div>
 
-                    <p class="govuk-caption-m">
-                        Showing results for <a asp-page="/ProfessionalReferral/Search" data-testid="postcodelink">
+                    <p class="govuk-caption-m govuk-!-margin-top-4">
+                        @Model.SearchResultsSnippet <a class="dfe-capitalise" asp-page="/ProfessionalReferral/Search" data-testid="postcodelink">
 
                             @Model.SearchPostCode
 
