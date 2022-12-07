@@ -20,12 +20,11 @@
                 <div class="govuk-grid-column-full">
                     <h1 class="govuk-heading-l">No results found</h1>
                     <p class="govuk-caption-m">
-                        Sorry, there are no activities, groups or services listed in your area yet.
-                    </p>
-                    <p class="govuk-caption-m">
-                        You can
-                        <a href="https://www.gov.uk/find-local-council" data-testid="">check your council’s website</a>
-                        for your local family support services.
+                        Try searching again <a asp-page="/ProfessionalReferral/Search" data-testid="searchusingdifferentpostcodelink">
+
+                            using a different postcode
+
+                        </a>
                     </p>
                 </div>
             }
@@ -288,7 +287,6 @@
                                             @if (item?.ServiceDelivery != null && item?.ServiceDelivery.Count > 0)
                                                 @Model.GetDeliveryMethodsAsString(item.ServiceDelivery)
 
-
                                             </dd>
                                         </dl>
                                         <dl class="govuk-body-s dtmargins">
@@ -296,7 +294,6 @@
                                             <dd>
                                                 @if (item?.Languages != null && item?.Languages.Count > 0)
                                                 @Model.GetLanguagesAsString(item.Languages)
-
 
                                             </dd>
                                         </dl>
