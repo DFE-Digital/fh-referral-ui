@@ -68,17 +68,17 @@ public class LocalOfferResultsModel : PageModel
     public string? OutCode { get; set; }
     public string? DistrictCode { get; set; }
 
-    public string SearchResultsTitle
+    public string SearchResultsSnippet
     {
         get
         {
             if (SearchResults.TotalCount == 1)
             {
-                return $"{SearchResults.TotalCount} service found";
+                return $"Showing {SearchResults.TotalCount} search result for:";
             }
             else
             {
-                return $"{SearchResults.TotalCount} services found";
+                return $"Showing {SearchResults.TotalCount} search results for:";
             }
         }
     }
