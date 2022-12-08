@@ -157,8 +157,16 @@ js-enabled .panel-component__content {
     display: none;
 }
 
+.filters-show-hide-mobile {
+    display: none;
+}
+
 body.js-enabled {
     @include govuk-media-query($until: tablet) {
+        .filters-show-hide-mobile {
+            display: block;
+        }
+
         .app-results-filter-overlay--show-filters {
             display: block;
         }
