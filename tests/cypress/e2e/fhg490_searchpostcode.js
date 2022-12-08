@@ -25,3 +25,11 @@ Then("the user should see error message for empty postcode", () => {
 Then("the user should see error message for invalid postcode", () => {
     cy.get('[data-testid="invalid-error"]').should("exist");
 });
+
+When("user clicks the back button", () => {
+    cy.get('[data-testid="back-button"]').click();
+});
+
+Then("the application should navigate to start page", () => {
+    cy.location('pathname').should('match', new RegExp("/"));
+});

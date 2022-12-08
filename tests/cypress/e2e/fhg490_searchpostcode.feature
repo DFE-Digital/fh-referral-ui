@@ -16,3 +16,7 @@ Scenario: search with empty postcode
 	When user search by a empty postcode 
     Then the user should see error message for empty postcode
 
+Scenario: clicking back button should navigate to start page
+	When user clicks the back button
+	Then the application should navigate to start page
+
