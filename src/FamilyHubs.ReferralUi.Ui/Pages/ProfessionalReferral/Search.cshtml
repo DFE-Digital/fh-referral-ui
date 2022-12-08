@@ -7,7 +7,32 @@
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-          <div class="govuk-form-group @(Model.PostcodeValid == false ? "govuk-form-group--error" : "")">
+           @if (!Model.ValidationValid || !Model.PostcodeValid)
+            {
+                <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">
+                        There is a problem
+                    </h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            @if (Model.PostcodeValid == false)
+                            {
+                                <li>
+                                    <a href="#Postcode">You need to enter a postcode, like AA1 1AA</a>
+                                </li>
+                            }
+
+                            @if (Model.ValidationValid == false)
+                            {
+                                <li>
+                                    <a href="#Postcode">You need to enter a valid postcode, like AA1 1AA</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            }
+            <div class="govuk-form-group @(Model.PostcodeValid  == false|| Model.ValidationValid  == false? "govuk-form-group--error" : "")">
     <h1 class="govuk-heading-l">Search for services by postcode</h1>
     <p class="govuk-details">
         We will use the postcode you enter to find services in that local authority area. The postcode must be in England.
@@ -16,7 +41,7 @@
         if (Model.PostcodeValid == false)
         {
             <p class="govuk-error-message">
-                <span class="govuk-visually-hidden" data-testid="empty-error">Error:</span> There is a problem. You need to enter a postcode. Enter a postcode for example SW1A 2AA
+                <span class="govuk-visually-hidden" data-testid="empty-error">Error:</span> You need to enter a postcode, like AA1 1AA
             </p>
         }
     }
@@ -24,7 +49,7 @@
         if (Model.ValidationValid == false)
         {
             <p class="govuk-error-message">
-                <span class="govuk-visually-hidden" data-testid="invalid-error">Error:</span> There is a problem. Your postcode is not recognised - try another one
+                <span class="govuk-visually-hidden" data-testid="invalid-error">Error:</span> You need to enter a valid postcode, like AA1 1AA
             </p>
         }
     }
