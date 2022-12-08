@@ -82,6 +82,21 @@ public class LocalOfferResultsModel : PageModel
         }
     }
 
+    public string SearchResultsSnippet
+    {
+        get
+        {
+            if (SearchResults.TotalCount == 1)
+            {
+                return $"Showing {SearchResults.TotalCount} search result for:";
+            }
+            else
+            {
+                return $"Showing {SearchResults.TotalCount} search results for:";
+            }
+        }
+    }
+
     public bool InitialLoad { get; set; } = true;
     public List<SelectListItem> DistanceSelectionList { get; } = new List<SelectListItem>
     {

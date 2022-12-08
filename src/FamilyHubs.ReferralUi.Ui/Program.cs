@@ -19,6 +19,8 @@ builder.Services.AddTransient<ITokenService, TokenService>();
 builder.AddClientServices();
 
 // Add services to the container.
+builder.AddClientServices();
+
 builder.Services
     .AddWebUIServices(builder.Configuration);
 
