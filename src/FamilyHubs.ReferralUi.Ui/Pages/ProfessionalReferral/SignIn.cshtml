@@ -3,7 +3,7 @@
 @{
 }
 
-<a asp-page="/ProfessionalReferral/ConnectFamilyToServiceStart" asp-route-id="@Model.Id" asp-route-name="@Model.Name" class="govuk-back-link">Back</a>
+<a asp-page="/Index" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <div class="govuk-grid-row">
@@ -12,33 +12,16 @@
         <h1 class="govuk-heading-xl">Sign in to your account</h1>
 
         <form method="post">
-            <input asp-for="@Model.Id" type="hidden">
-            <input asp-for="@Model.Name" type="hidden">
-            @if (Model.ValidationValid == false)
-            {
-                <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
-                    <h2 class="govuk-error-summary__title" id="error-summary-title">
-                        There is a problem
-                    </h2>
-                    <div class="govuk-error-summary__body">
-                        <ul class="govuk-list govuk-error-summary__list">
-                            <li>
-                                <a href="#service-name" data-testid="enter-service-name-error">Your username or password is incorrect</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            }
-              <div class="govuk-form-group"> <label for="email" class="govuk-label" aria-describedby="user_id-hint">Email address</label>
-                <input type="text" name="email" id="email" class="govuk-input govuk-!-width-one-half" value="@Model.Email" maxlength="22" autocomplete="email">
-              </div>
-              <div class="govuk-form-group"> <label for="password" class="govuk-label">Password</label>
-                <input type="password" name="password" id="password" class="govuk-input govuk-!-width-one-half" value="@Model.Password" autocomplete="current-password">
-              </div>
-              <p style="display: none;"><a href="#" onclick="showAlert();">Create an account</a></p>
-              <button type="submit" class="govuk-button">
-                Continue
-              </button>
+          <div class="govuk-form-group"> <label for="email" class="govuk-label" aria-describedby="user_id-hint">Email address</label>
+            <input type="text" name="email" id="email" class="govuk-input govuk-!-width-one-half" value="@Model.Email" maxlength="22" autocomplete="email">
+          </div>
+          <div class="govuk-form-group"> <label for="password" class="govuk-label">Password</label>
+            <input type="password" name="password" id="password" class="govuk-input govuk-!-width-one-half" value="@Model.Password" autocomplete="current-password">
+          </div>
+          <p style="display: none;"><a href="#" onclick="showAlert();">Create an account</a></p>
+          <button type="submit" class="govuk-button">
+            Continue
+          </button>
         </form>
         <h2 style="display: none;" class="govuk-heading-m govuk-!-margin-top-6">Problems signing in</h2>
         <p style="display: none;"><a class="govuk-link" onclick="showAlert();" href="#" id="forgotten-password">I have forgotten my password</a></p>

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
+[Authorize(Policy = "Referrer")]
 public class LocalOfferDetailModel : PageModel
 {
     private readonly ILocalOfferClientService _localOfferClientService;
