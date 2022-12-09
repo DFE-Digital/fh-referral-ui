@@ -54,13 +54,22 @@
                         <div class="app-results-filter-overlay--heading">
                             <div class="app-results-filter-overlay--heading-left">
                                 <h2 class="govuk-heading-m">Filter results</h2>
+                                
                             </div>
                             <div class="app-results-filter-overlay--heading-right">
+                                 <p style="font-size: 16px"><a asp-page-handler="ClearFilters" class="govuk-link govuk-link--no-visited-state"  data-testid="clearfilters">Clear filters</a></p> 
                                 <a href="#" class="govuk-link govuk-link--no-underline js-show-hide-filters filters-show-hide-mobile" data-module="return-to-results-link" data-testid="return-to-results-link">Return to results</a>
                             </div>
+                             
                         </div>
-
+                        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Category</h3>
+                        <ul class="moj-filter-tags filters-component__remove-tags">
+                        <li><a class="moj-filter__tag icon--cross filters-component__remove-tags__tag" href="#"><span class="govuk-visually-hidden">Remove this filter</span>Activities</a></li>
+                        </ul>
                         <div class="filters-component__groups">
+                             <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true" data-testid="button-apply-filters">
+                            Apply filters
+                        </button>
                             <div class="filters-component__groups__group" data-filters-target="group" data-group="subjects">
                                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Category</h3></legend>
                                 <div>
@@ -233,11 +242,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true" data-testid="button-apply-filters">
-                            Apply filters
-                        </button>
-
-                        <p><a asp-page-handler="ClearFilters" data-testid="clearfilters">Clear filters</a></p>
+                     
                     </div>
                 </div>
 
