@@ -82,23 +82,12 @@
 
                                                     @foreach (var categoryKV in @Model.Categories)
                                                     {
-                                                        <div class="govuk-checkboxes__item">
-                                                            <input class="govuk-checkboxes__input"
-                                                           id="@categoryKV.Key.Name.ToLower().Replace(" ", "")"
-                                                           name="CategorySelection" data-testid="@categoryKV.Key.Name.ToLower().Replace(" ", "")"
-                                                           type="checkbox" value="@categoryKV.Key.Id"
-                                                           data-aria-controls="conditional-checkbox - @categoryKV.Key.Name.ToLower().Replace(" ", " ")"
-                                                           @(Model.CategorySelection != null && Model.CategorySelection.Any(x => x == categoryKV.Key.Id) ? "checked" : "")>
-                                                            <label class="govuk-label govuk-checkboxes__label" for="support">
-                                                                @categoryKV.Key.Name
-                                                            </label>
-                                                        </div>
-                                                        <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-checkbox - @categoryKV.Key.Name.ToLower().Replace(" ", " ")">
-                                                            <div class="govuk-form-group">
-                                                                <label class="govuk-label--s">
-                                                                    Select @categoryKV.Key.Name.ToLower()
-                                                                </label>
-                                                                <div class="govuk-checkboxes govuk-checkboxes--small govuk-!-margin-top-2" data-module="govuk-checkboxes">
+                                                        <div class="govuk-form-group app-filter-group">
+                                                            <fieldset class="govuk-fieldset">
+                                                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                                                    @categoryKV.Key.Name
+                                                                </legend>
+                                                                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                                                                     @foreach (var subcategory in categoryKV.Value)
                                                                     {
                                                                         <div class="govuk-checkboxes__item">
@@ -108,15 +97,15 @@
                                                                        type="checkbox"
                                                                        value="@subcategory.Id"
                                                                        @(Model.SubcategorySelection != null && Model.SubcategorySelection.Any(x => x == subcategory.Id) ? "checked" : "")>
-                                                                            <label class="govuk-label govuk-checkboxes__label" for="category-1">
+                                                                            <label class="govuk-label govuk-checkboxes__label">
                                                                                 @subcategory.Name
                                                                             </label>
                                                                         </div>
                                                                     }
-                                                                </div>
-                                                            </div>
+                                                                </div> 
+                                                            </fieldset>
                                                         </div>
-                                                    }
+                                                    }  
                                                 </div>
                                             </div>
                                         </div>
