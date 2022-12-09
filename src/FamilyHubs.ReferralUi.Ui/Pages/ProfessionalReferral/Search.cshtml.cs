@@ -1,11 +1,13 @@
 using FamilyHubs.ReferralUi.Ui.Models;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.RegularExpressions;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
+[Authorize(Policy = "Referrer")]
 public class SearchModel : PageModel
 {
     [BindProperty]

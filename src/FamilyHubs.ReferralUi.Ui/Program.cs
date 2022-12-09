@@ -5,6 +5,8 @@ using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Extensions;
 using FamilyHubs.ServiceDirectory.Shared.Helpers;
 using MassTransit;
+using Microsoft.AspNetCore.Builder;
+using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,7 +63,7 @@ var app = builder.Build();
 
 
 
-    // Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");

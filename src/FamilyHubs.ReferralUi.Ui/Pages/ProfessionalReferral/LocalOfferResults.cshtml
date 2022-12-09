@@ -1,4 +1,4 @@
-﻿@page "{postCode}"
+﻿    @page "{postCode}"
 @using FamilyHubs.ReferralUi.Ui.Extensions
 @model FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral.LocalOfferResultsModel
 @{
@@ -6,7 +6,7 @@
 
 <a asp-page="/ProfessionalReferral/Search" class="govuk-back-link" data-testid="back-button">Back</a>
 
-<main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+<main class="govuk-main-wrapper custom-main" id="main-content" role="main">
 
 
     <div class="govuk-grid-row">
@@ -20,20 +20,28 @@
                 <div class="govuk-grid-column-full">
                     <h1 class="govuk-heading-l">No results found</h1>
                     <p class="govuk-caption-m">
-                        Try searching again <a asp-page="/ProfessionalReferral/Search" data-testid="searchusingdifferentpostcodelink">
-
-                            using a different postcode
-
-                        </a>
+                        Sorry, there are no activities, groups or services listed in your area yet.
+                    </p>
+                    <p class="govuk-caption-m">
+                        You can
+                        <a href="https://www.gov.uk/find-local-council" data-testid="">check your council’s website</a>
+                        for your local family support services.
                     </p>
                 </div>
             }
             else
             {
                 <div class="govuk-grid-column-full">
-                    <h1 class="govuk-heading-l">@Model.SearchResultsTitle</h1>
-                    <p class="govuk-caption-m">
-                        Showing results for <a asp-page="/ProfessionalReferral/Search" data-testid="postcodelink">
+                    <h1 class="govuk-heading-l govuk-!-margin-bottom-2">
+                        Services, groups and activities in this area
+                    </h1>
+
+                    <div class="govuk-button-group app-results-filter-overlay--show-filters js-show-hide-filters" data-module="show-filters-button-group">
+                        <button class="govuk-button govuk-button--secondary" data-module="govuk-button" data-testid="show-filters-button">Show filters</button>
+                    </div>
+
+                    <p class="govuk-caption-m govuk-!-margin-top-4">
+                        @Model.SearchResultsSnippet <a class="dfe-capitalise" asp-page="/ProfessionalReferral/Search" data-testid="postcodelink">
 
                             @Model.SearchPostCode
 
@@ -42,11 +50,14 @@
                 </div>
 
                 <div class="govuk-grid-column-one-third">
-                    <button class="govuk-button govuk-button--secondary filters-mobile" id="buttonFilters" onclick="displayFilters();">Show filters</button>
-                    <button class="govuk-button govuk-button--secondary filters-mobile" style="display: none" id="buttonFilters2" onclick="hideFilters();">Hide filters</button>
                     <div class="filters-component panel-component__content" id="filters-component" data-controller="filters">
-                        <div class="filters-component__heading">
-                            <h2 class="govuk-heading-m">Filter results</h2>
+                        <div class="app-results-filter-overlay--heading">
+                            <div class="app-results-filter-overlay--heading-left">
+                                <h2 class="govuk-heading-m">Filter results</h2>
+                            </div>
+                            <div class="app-results-filter-overlay--heading-right">
+                                <a href="#" class="govuk-link govuk-link--no-underline js-show-hide-filters filters-show-hide-mobile" data-module="return-to-results-link" data-testid="return-to-results-link">Return to results</a>
+                            </div>
                         </div>
 
                         <div class="filters-component__groups">
@@ -232,6 +243,8 @@
 
                 <!-- DONE - Search Results -->
                 <div class="govuk-grid-column-two-thirds vacancies_index">
+
+
                     @if (Model.SearchResults.TotalCount == 0)
                     {
                         <h2 class="govuk-heading-m" data-testid="noservicesfound">No services found</h2>
@@ -287,6 +300,8 @@
                                             @if (item?.ServiceDelivery != null && item?.ServiceDelivery.Count > 0)
                                                 @Model.GetDeliveryMethodsAsString(item.ServiceDelivery)
 
+
+
                                             </dd>
                                         </dl>
                                         <dl class="govuk-body-s dtmargins">
@@ -294,6 +309,8 @@
                                             <dd>
                                                 @if (item?.Languages != null && item?.Languages.Count > 0)
                                                 @Model.GetLanguagesAsString(item.Languages)
+
+
 
                                             </dd>
                                         </dl>
