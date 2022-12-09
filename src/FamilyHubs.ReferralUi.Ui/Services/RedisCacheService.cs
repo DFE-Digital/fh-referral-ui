@@ -9,15 +9,17 @@ namespace FamilyHubs.ReferralUi.Ui.Services;
 public class RedisCacheService : IRedisCacheService
 {
     private readonly IRedisCache _redisCache;
+    private readonly int _timespanMinites;
 
-    public RedisCacheService(IRedisCache redisCache)
+    public RedisCacheService(IRedisCache redisCache, IConfiguration configuration)
     {
         _redisCache = redisCache;
+        _timespanMinites = configuration.GetValue<int>("SessionTimeOutMinutes");
     }
 
     public void ResetOrganisationWithService()
     {
-        _redisCache.SetStringValue(KeyOrgWithService, String.Empty);
+        _redisCache.SetStringValue(KeyOrgWithService, String.Empty, _timespanMinites);
     }
 
     public string RetrieveLastPageName()
@@ -28,7 +30,7 @@ public class RedisCacheService : IRedisCacheService
     public void StoreCurrentPageName(string? currPage)
     {
         if (currPage != null)
-            _redisCache.SetStringValue(KeyCurrentPage, currPage);
+            _redisCache.SetStringValue(KeyCurrentPage, currPage, _timespanMinites);
     }
 
     public OpenReferralServiceDto? RetrieveService()
@@ -38,11 +40,11 @@ public class RedisCacheService : IRedisCacheService
 
     public void StoreService(OpenReferralServiceDto serviceDto)
     {
-        _redisCache.SetValue<OpenReferralServiceDto>(KeyService, serviceDto);
+        _redisCache.SetValue<OpenReferralServiceDto>(KeyService, serviceDto, _timespanMinites);
     }
 
     public void ResetLastPageName()
     {
-        _redisCache.SetStringValue(KeyCurrentPage, String.Empty);
+        _redisCache.SetStringValue(KeyCurrentPage, String.Empty, _timespanMinites);
     }
 }
