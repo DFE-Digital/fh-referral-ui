@@ -55,6 +55,8 @@ public class LocalOfferResultsModel : PageModel
     [BindProperty]
     public bool CanFamilyChooseLocation { get; set; } = false;
 
+    public bool RemoveFilter { get; set; } = false;
+
     [BindProperty(SupportsGet = true)]
     public string? SearchText { get; set; }
 
@@ -144,8 +146,26 @@ public class LocalOfferResultsModel : PageModel
                                                                       null);
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(string? removeCostSelection, bool removeFilter, string? removeServiceDeliverySelection, 
+                                                 string? removeSelectedLanguage, string? removeSearchAge, string? removecategorySelection,
+                                                 string? removesubcategorySelection)
     {
+        if(removeFilter)
+        {
+            if(removeCostSelection != null) RemoveFilterCostSelection(removeCostSelection);
+            if (removeServiceDeliverySelection != null) RemoveFilterServiceDeliverySelection(removeServiceDeliverySelection);
+            if (removeSelectedLanguage != null) SelectedLanguage = null;
+            if (removeSearchAge != null)
+            {
+                SearchAge = null;
+                ForChildrenAndYoungPeople = false;
+            }
+                
+            if (removecategorySelection != null) RemoveFilterForCategory(removecategorySelection);
+            if (removesubcategorySelection != null) RemoveFilterForSubCategory(removesubcategorySelection);
+
+
+        }
         if (ForChildrenAndYoungPeople && (SearchAge == null || !int.TryParse(SearchAge, out int searchAgeTest)))
         {
             ModelState.AddModelError(nameof(SearchAge), "Please select a valid search age");
@@ -451,4 +471,28 @@ public class LocalOfferResultsModel : PageModel
             Categories = new List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>>(categories);
     }
 
+
+    private void RemoveFilterCostSelection(string removeFilter)
+    {
+        CostSelection.Remove(removeFilter);
+        ModelState.Remove(removeFilter);
+    }
+
+    private void RemoveFilterServiceDeliverySelection(string removeFilter)
+    {
+        ServiceDeliverySelection.Remove(removeFilter);
+        ModelState.Remove(removeFilter);
+    }
+
+    private void RemoveFilterForCategory(string removeFilter)
+    {
+        CategorySelection.Remove(removeFilter);
+        ModelState.Remove(removeFilter);
+    }
+
+    private void RemoveFilterForSubCategory(string removeFilter)
+    {
+        ModelState.Remove(removeFilter);
+        SubcategorySelection.Remove(removeFilter);
+    }
 }
