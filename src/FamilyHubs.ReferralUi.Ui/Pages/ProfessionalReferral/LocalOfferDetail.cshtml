@@ -7,102 +7,171 @@
 <a href="@Model.ReturnUrl" class="govuk-back-link" data-testid="back-button">Back</a>
 
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
-          
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-testid="service-name">@Model.LocalOffer.Name</h1>
-  </div>
-  <div class="govuk-grid-column-two-thirds">
 
-    <table class="govuk-table">
-  <thead class="govuk-table__head">
-  </thead>
-  <tbody class="govuk-table__body">
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Category</th>
-      <td class="govuk-table__cell">
-         @if (@Model.LocalOffer != null && @Model.LocalOffer.Service_taxonomys != null)
-        {
-            foreach (var serviceTaxonomy in @Model.LocalOffer.Service_taxonomys)
-            {
-                if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
-                {
-                    @serviceTaxonomy.Taxonomy.Name
-                }
-            }                    
-        }
-    </td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Cost</th>
-      @if (@Model.LocalOffer?.Cost_options?.FirstOrDefault()?.Amount != null && @Model.LocalOffer?.Cost_options?.FirstOrDefault()?.Amount > 0)
-       {
-         <td class="govuk-table__cell" data-testid="cost-value">
-             £@Model.LocalOffer?.Cost_options?.FirstOrDefault()?.Amount every @Model.LocalOffer?.Cost_options?.FirstOrDefault()?.Amount_description.ToLower()
-             </td>
-       }
-      else
-      {
-        <td class="govuk-table__cell" data-testid="cost-value">Free</td>
-       }
-    
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Delivery method</th>
-      <td class="govuk-table__cell" data-testid="delivery-value">
-         @if (@Model.LocalOffer?.ServiceDelivery != null && @Model.LocalOffer?.ServiceDelivery?.Count > 0)
-              @Model.GetDeliveryMethodsAsString(@Model.LocalOffer?.ServiceDelivery)
-       </td>
-    </tr>
-      <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">For children and young people</th>
-      @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Eligibility !=null)
-        {
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-testid="service-name">@Model.LocalOffer.Name</h1>
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Category</th>
+                        <td class="govuk-table__cell">
+                            @if (@Model.LocalOffer != null && @Model.LocalOffer.Service_taxonomys != null)
+                            {
+                                foreach (var serviceTaxonomy in @Model.LocalOffer.Service_taxonomys)
+                                {
+                                    if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
+                                    {
+                                        @serviceTaxonomy.Taxonomy.Name
+                                    }
+                                }
+                            }
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Cost</th>
+                        @if (@Model.LocalOffer?.Cost_options?.FirstOrDefault()?.Amount != null && @Model.LocalOffer?.Cost_options?.FirstOrDefault()?.Amount > 0)
+                        {
+                            <td class="govuk-table__cell" data-testid="cost-value">
+                                £@Model.LocalOffer?.Cost_options?.FirstOrDefault()?.Amount every @Model.LocalOffer?.Cost_options?.FirstOrDefault()?.Amount_description.ToLower()
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="govuk-table__cell" data-testid="cost-value">Free</td>
+                        }
+
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Delivery method</th>
+                        <td class="govuk-table__cell" data-testid="delivery-value">
+                            @if (@Model.LocalOffer?.ServiceDelivery != null && @Model.LocalOffer?.ServiceDelivery?.Count > 0)
+                                @Model.GetDeliveryMethodsAsString(@Model.LocalOffer?.ServiceDelivery)
+
+
+
+
+                            </td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">For children and young people</th>
+                            @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Eligibility != null)
+                        {
                             <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Minimum_age to @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Maximum_age years old</td>
                         }
                         else
                         {
-                             <td class="govuk-table__cell" data-testid="eligibilities-value"></td>
+                            <td class="govuk-table__cell" data-testid="eligibilities-value"></td>
                         }
 
-    </tr>
-      <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Families can choose location</th>
-      <td class="govuk-table__cell">TBD</td>
-    </tr>
-      <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Languages</th>
-      <td class="govuk-table__cell" data-testid="language-value">
-          @if (@Model.LocalOffer?.Languages != null && @Model.LocalOffer?.Languages?.Count > 0)
-                                        @Model.GetLanguagesAsString(@Model.LocalOffer.Languages)
-      </td>
-    </tr>
-  </tbody>
-</table>
-    <h2 class="govuk-heading-m">More details</h2>
-    <p data-testid="description-value">@Model.LocalOffer?.Description</p>
-    <h2 class="govuk-heading-m">Connect a family to this service</h2>
-    <p>Use this to give the family's details to the service. The service will contact the family if they can help.</p>
-    <p>To connect them, you will need:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>the family's contact details</li>
-      <li>details about why the family needs help</li>
-      <li>consent from the family for you to give their details to the service</li>
-    </ul>
-    <p>Your contact details will also be shared with the service.</p>
-    <form method="post">
-      <input asp-for="@Model.Name" type="hidden">
-        @if(Model.IsReferralEnabled)
-        {
-            <button type="submit" class="govuk-button">
-                Connect family to service
-            </button>
-        }        
-    </form>
-  </div>
-</div>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Families can choose location</th>
+                        <td class="govuk-table__cell">TBD</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Languages</th>
+                        <td class="govuk-table__cell" data-testid="language-value">
+                            @if (@Model.LocalOffer?.Languages != null && @Model.LocalOffer?.Languages?.Count > 0)
+                                @Model.GetLanguagesAsString(@Model.LocalOffer.Languages)
 
-        </main>
+
+
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h2 class="govuk-heading-m">More details</h2>
+                <p data-testid="description-value">@Model.LocalOffer?.Description</p>
+                <h2 class="govuk-heading-m">Connect a family to this service</h2>
+
+                <!-- Contact details -->
+                <!-- Phone-->
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Phone
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        <a href="tel:0201234567">@Model.Phone</a>
+                    </dd>
+                </div>
+
+                <!--Email-->
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Email
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        <a href="mailto:@Model.LocalOffer?.Email">
+                            @Model.LocalOffer?.Email
+                        </a>
+                    </dd>
+                </div>
+
+                <!--Address-->
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Address
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @if (!string.IsNullOrEmpty(Model.Address_1))
+                        {
+                            @Model.Address_1
+
+                            <br />
+                        }
+                        @if (!string.IsNullOrEmpty(@Model.City))
+                        {
+                            @Model.City
+
+                            <br />
+                        }
+                        @if (!string.IsNullOrEmpty(@Model.State_province))
+                        {
+                            @Model.State_province
+
+                            <br />
+                        }
+                        @if (!string.IsNullOrEmpty(@Model.Postal_code))
+                        {
+                            @Model.Postal_code
+
+                            <br />
+                        }
+                    </dd>
+                </div>
+
+            <!--Website-->
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Website
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    <a href="https://@Model.LocalOffer?.Url">
+                        @Model.LocalOffer?.Url
+                    </a>
+                </dd>
+            </div>
+
+            <form method="post">
+                <input asp-for="@Model.Name" type="hidden">
+                @if (Model.IsReferralEnabled)
+                {
+                    <button type="submit" class="govuk-button">
+                        Connect family to service
+                    </button>
+                }
+            </form>
+        </div>
+    </div>
+
+</main>
 
 
