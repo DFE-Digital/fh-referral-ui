@@ -62,10 +62,80 @@
                             </div>
                              
                         </div>
-                        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Category</h3>
-                        <ul class="moj-filter-tags">
-                        <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href="#"><span class="govuk-visually-hidden">Remove this filter</span>Activities</a></li>
-                        </ul>
+                        @if (Model.CostSelection != null && Model.CostSelection.Count > 0)
+                        {
+                             <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Cost</h3>
+                             @foreach (var costSelected in Model.CostSelection)
+                            {
+                                 <ul class="moj-filter-tags">
+                                 <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href="#"><span class="govuk-visually-hidden">Remove this filter</span>@(costSelected == "paid" ? "Pay to use" : costSelected)</a></li>
+                                  </ul>
+                            }
+                        }
+
+                        @if (Model.ServiceDeliverySelection != null && Model.ServiceDeliverySelection.Count > 0)
+                        {
+                             <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Delivery method</h3>
+                             @foreach (var serviceDeliverySelectionSelected in Model.ServiceDeliverySelection)
+                            {
+                                @if(serviceDeliverySelectionSelected == "1")
+                                {
+                                     <ul class="moj-filter-tags">
+                                  <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href="#"><span class="govuk-visually-hidden">Remove this filter</span>In Person</a></li>
+                                 </ul>
+                                }
+                                @if(serviceDeliverySelectionSelected == "2")
+                                {
+                                     <ul class="moj-filter-tags">
+                                  <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href="#"><span class="govuk-visually-hidden">Remove this filter</span>Online</a></li>
+                                 </ul>
+                                }
+                                 @if(serviceDeliverySelectionSelected == "3")
+                                {
+                                     <ul class="moj-filter-tags">
+                                  <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href="#"><span class="govuk-visually-hidden">Remove this filter</span>Telephone</a></li>
+                                 </ul>
+                                }
+
+                               
+                            }
+                        }
+                         @if (Model.SelectedLanguage != null)
+                        {
+                             <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Language</h3>
+                                 <ul class="moj-filter-tags">
+                                 <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href="#"><span class="govuk-visually-hidden">Remove this filter</span>@Model.SelectedLanguage</a></li>
+                                  </ul>
+                        }
+                        @if (Model.CategorySelection != null && Model.CategorySelection.Count > 0 )
+                        {
+                             <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Category</h3>
+                             @foreach (var categorySelection in Model.CategorySelection)
+                            {
+                                <ul class="moj-filter-tags">
+                                 <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href="#"><span class="govuk-visually-hidden">Remove this filter</span>@Model.Categories.FirstOrDefault(s => s.Key.Id == categorySelection).Key.Name</a></li>
+                                  </ul>
+                                @if (Model.SubcategorySelection != null && Model.SubcategorySelection.Count > 0)
+                                {
+                                     <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Sub Category</h3>
+                                    @foreach (var subcategorySelection in Model.SubcategorySelection)
+                                    {
+                                          <ul class="moj-filter-tags">
+                                           <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href="#"><span class="govuk-visually-hidden">Remove this filter</span>@Model.Categories.FirstOrDefault(s => s.Key.Id == categorySelection).Value.First(s => s.Id == subcategorySelection).Name</a></li>
+                                          </ul>
+                                    }
+                                }
+                            }
+                            
+                        }
+                        @if (Model.ForChildrenAndYoungPeople == true && Model.SearchAge != null)
+                        {
+                             <h3 class="govuk-heading-s govuk-!-margin-bottom-1">For children and young people</h3>
+                    
+                                 <ul class="moj-filter-tags">
+                                 <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href="#"><span class="govuk-visually-hidden">Remove this filter</span>Age @Model.SearchAge</a></li>
+                                  </ul>
+                        }
                         <div class="filters-component__groups">
                              <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true" data-testid="button-apply-filters">
                             Apply filters
