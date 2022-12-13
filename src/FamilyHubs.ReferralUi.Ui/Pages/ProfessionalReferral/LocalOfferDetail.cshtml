@@ -156,15 +156,6 @@
                 </dd>
             </div>
 
-
-            @*                <p>Use this to give the family's details to the service. The service will contact the family if they can help.</p>
-            <p>To connect them, you will need:</p>
-            <ul class="govuk-list govuk-list--bullet">
-            <li>the family's contact details</li>
-            <li>details about why the family needs help</li>
-            <li>consent from the family for you to give their details to the service</li>
-            </ul>
-            <p>Your contact details will also be shared with the service.</p>*@
     <form method="post">
       <input asp-for="@Model.Name" type="hidden">
         @if(Model.IsReferralEnabled)
