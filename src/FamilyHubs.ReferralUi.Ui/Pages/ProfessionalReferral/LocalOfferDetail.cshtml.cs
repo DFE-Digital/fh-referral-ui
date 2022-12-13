@@ -22,6 +22,8 @@ public class LocalOfferDetailModel : PageModel
     [BindProperty]
     public string Name { get; set; } = default!;
 
+    public string Phone { get; set; } = default!;
+
     public LocalOfferDetailModel(ILocalOfferClientService localOfferClientService, IConfiguration configuration)
     {
         _localOfferClientService = localOfferClientService;
@@ -33,6 +35,7 @@ public class LocalOfferDetailModel : PageModel
         Name = name;
         ReturnUrl = Request.Headers["Referer"].ToString();
         LocalOffer = await _localOfferClientService.GetLocalOfferById(id);
+        GetTelephone();
     }
 
     public IActionResult OnPost(string id, string name)
@@ -83,6 +86,29 @@ public class LocalOfferDetailModel : PageModel
         }
 
         return result;
+    }
+
+    private void GetTelephone()
+    {
+        if (LocalOffer == null || LocalOffer.Contacts == null)
+            return;
+
+        foreach (var contact in LocalOffer.Contacts)
+        {
+            if (contact == null)
+                continue;
+
+            //Telephone
+            if (contact.Name == "Telephone")
+            {
+                if (contact.Phones != null && contact.Phones.Any())
+                {
+                    Phone = contact.Phones.First().Number;
+                }
+            }
+
+        }
+
     }
 
 }

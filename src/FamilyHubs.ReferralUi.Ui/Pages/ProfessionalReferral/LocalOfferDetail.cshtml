@@ -80,17 +80,91 @@
     </tr>
   </tbody>
 </table>
-    <h2 class="govuk-heading-m">More details</h2>
-    <p data-testid="description-value">@Model.LocalOffer?.Description</p>
-    <h2 class="govuk-heading-m">Connect a family to this service</h2>
-    <p>Use this to give the family's details to the service. The service will contact the family if they can help.</p>
-    <p>To connect them, you will need:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>the family's contact details</li>
-      <li>details about why the family needs help</li>
-      <li>consent from the family for you to give their details to the service</li>
-    </ul>
-    <p>Your contact details will also be shared with the service.</p>
+
+
+
+
+                <h2 class="govuk-heading-m">More details</h2>
+                <p data-testid="description-value">@Model.LocalOffer?.Description</p>
+                <h2 class="govuk-heading-m">Connect a family to this service</h2>
+
+                <!-- Contact details -->
+                <!-- Phone-->
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Phone
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        <a href="tel:0201234567">@Model.Phone</a>
+                    </dd>
+                </div>
+
+                <!--Email-->
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Email
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        <a href="mailto:@Model.LocalOffer?.Email">
+                            @Model.LocalOffer?.Email
+                        </a>
+                    </dd>
+                </div>
+
+                <!--Address-->
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Address
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @if (!string.IsNullOrEmpty(Model.Address_1))
+                    {
+                        @Model.Address_1
+
+                        <br />
+                    }
+                    @if (!string.IsNullOrEmpty(@Model.City))
+                    {
+                        @Model.City
+
+                        <br />
+                    }
+                    @if (!string.IsNullOrEmpty(@Model.State_province))
+                    {
+                        @Model.State_province
+
+                        <br />
+                    }
+                    @if (!string.IsNullOrEmpty(@Model.Postal_code))
+                    {
+                        @Model.Postal_code
+
+                        <br />
+                    }
+                </dd>
+            </div>
+
+            <!--Website-->
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Website
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    <a href="https://@Model.LocalOffer?.Url">
+                        @Model.LocalOffer?.Url
+                    </a>
+                </dd>
+            </div>
+
+
+            @*                <p>Use this to give the family's details to the service. The service will contact the family if they can help.</p>
+            <p>To connect them, you will need:</p>
+            <ul class="govuk-list govuk-list--bullet">
+            <li>the family's contact details</li>
+            <li>details about why the family needs help</li>
+            <li>consent from the family for you to give their details to the service</li>
+            </ul>
+            <p>Your contact details will also be shared with the service.</p>*@
     <form method="post">
       <input asp-for="@Model.Name" type="hidden">
         @if(Model.IsReferralEnabled)
