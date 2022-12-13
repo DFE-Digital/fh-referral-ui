@@ -1,44 +1,41 @@
-﻿using FamilyHubs.ReferralUi.Ui.Infrastructure.Configuration;
-using FamilyHubs.ReferralUi.Ui.Services.Api;
-using Microsoft.Extensions.Options;
+﻿using FamilyHubs.ReferralUi.Ui.Services.Api;
 
 namespace FamilyHubs.ReferralUi.Ui.Extensions;
 
 public static class ServiceCollectionExtensions
 {
 
-    public static WebApplicationBuilder AddClientServices(this WebApplicationBuilder builder)
+    public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
     {
-        builder.Services.AddHttpClient<IApiService, ApiService>(client =>
+        services.AddHttpClient<IApiService, ApiService>(client =>
         {
-            client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("ApplicationServiceApi:ServiceDirectoryUrl"));
+            client.BaseAddress = new Uri(configuration.GetValue<string>("ApplicationServiceApi:ServiceDirectoryUrl")!);
         });
 
-        builder.Services.AddHttpClient<IPostcodeLocationClientService, PostcodeLocationClientService>(client =>
+        services.AddHttpClient<IPostcodeLocationClientService, PostcodeLocationClientService>(client =>
         {
-            client.BaseAddress = new Uri("http://api.postcodes.io");
+            const string postcodesIo = "http://api.postcodes.io";
+            client.BaseAddress = new Uri(postcodesIo);
         });
 
-        builder.Services.AddHttpClient<ILocalOfferClientService, LocalOfferClientService>(client =>
+        services.AddHttpClient<ILocalOfferClientService, LocalOfferClientService>(client =>
         {
-            client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("ApplicationServiceApi:ServiceDirectoryUrl"));
+            client.BaseAddress = new Uri(configuration.GetValue<string>("ApplicationServiceApi:ServiceDirectoryUrl")!);
         });
 
-        builder.Services.AddHttpClient<IOpenReferralOrganisationClientService, OpenReferralOrganisationClientService>(client =>
+        services.AddHttpClient<IOpenReferralOrganisationClientService, OpenReferralOrganisationClientService>(client =>
         {
-            client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("ApplicationServiceApi:ServiceDirectoryUrl"));
+            client.BaseAddress = new Uri(configuration.GetValue<string>("ApplicationServiceApi:ServiceDirectoryUrl")!);
         });
 
-        builder.Services.AddHttpClient<IUICacheService, UICacheService>(client =>
+        services.AddHttpClient<IUICacheService, UICacheService>(client =>
         {
-            client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("ApplicationServiceApi:ServiceDirectoryUrl"));
+            client.BaseAddress = new Uri(configuration.GetValue<string>("ApplicationServiceApi:ServiceDirectoryUrl")!);
         });
 
-        builder.Services.AddHttpClient<IReferralClientService, ReferralClientService>(client =>
+        services.AddHttpClient<IReferralClientService, ReferralClientService>(client =>
         {
-            client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("ApplicationServiceApi:ReferralApiUrl"));
+            client.BaseAddress = new Uri(configuration.GetValue<string>("ApplicationServiceApi:ReferralApiUrl")!);
         });
-
-        return builder;
     }
 }
