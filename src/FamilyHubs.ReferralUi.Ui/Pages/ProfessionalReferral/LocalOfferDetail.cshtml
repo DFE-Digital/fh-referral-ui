@@ -98,8 +98,8 @@
                     <dt class="govuk-summary-list__key">
                         Phone
                     </dt>
-                    <dd class="govuk-summary-list__value">
-                        <a href="tel:0201234567">@Model.Phone</a>
+                    <dd class="govuk-summary-list__value" data-testid="detailsphone">
+                        <a href="tel:@Model.Phone">@Model.Phone</a>
                     </dd>
                 </div>
 
@@ -108,7 +108,7 @@
                     <dt class="govuk-summary-list__key">
                         Email
                     </dt>
-                    <dd class="govuk-summary-list__value">
+                    <dd class="govuk-summary-list__value" data-testid="detailsemail">
                         <a href="mailto:@Model.LocalOffer?.Email">
                             @Model.LocalOffer?.Email
                         </a>
@@ -120,7 +120,7 @@
                     <dt class="govuk-summary-list__key">
                         Address
                     </dt>
-                    <dd class="govuk-summary-list__value">
+                    <dd class="govuk-summary-list__value" data-testid="detailsaddress">
                         @if (!string.IsNullOrEmpty(Model.Address_1))
                         {
                             @Model.Address_1
@@ -153,7 +153,7 @@
                 <dt class="govuk-summary-list__key">
                     Website
                 </dt>
-                <dd class="govuk-summary-list__value">
+                <dd class="govuk-summary-list__value" data-testid="detailswebsite">
                     <a href="https://@Model.LocalOffer?.Url">
                         @Model.LocalOffer?.Url
                     </a>
