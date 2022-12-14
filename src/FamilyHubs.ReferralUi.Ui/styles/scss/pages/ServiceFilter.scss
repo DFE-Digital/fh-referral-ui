@@ -1,0 +1,71 @@
+﻿
+.app-open-close-filters {
+    display: none;
+
+    @include govuk-media-query($until: tablet) {
+        display: block;
+        @include govuk-responsive-margin(3, "bottom");
+    }
+}
+
+.app-filter-group {
+    border-bottom: 1px solid $govuk-border-colour;
+    &:last-child
+
+{
+    border-bottom: none;
+}
+
+}
+
+.app-family-hub {
+    background-color: rgba($govuk-brand-colour, 0.1);
+    /*note: we can't use "all" and "top", as that doesn't produce the correct css*/
+    /*the generated css is a bit verbose (multiple unnecessary media queries). perhaps minification is smart enough to sort that out??*/
+    @include govuk-responsive-padding(2, "top");
+    @include govuk-responsive-padding(4, "right");
+    @include govuk-responsive-padding(4, "bottom");
+    @include govuk-responsive-padding(4, "left");
+
+    @include govuk-media-query($until: tablet) {
+        @include govuk-responsive-margin(2, "top");
+    }
+}
+
+/*todo: important not nice*/
+.app-sub-filters {
+    @include govuk-responsive-margin(4, "bottom", $important: true);
+}
+
+.app-sub-filters-scrollable {
+    margin-left: govuk-spacing(-2);
+    padding-left: govuk-spacing(2);
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#filters {
+    @include govuk-media-query($from: tablet) {
+        display: block !important;
+    }
+}
+
+#family-hubs-description {
+    @include govuk-responsive-margin(2, "bottom");
+}
+
+#services-description {
+    @include govuk-responsive-margin(4, "top");
+    @include govuk-responsive-margin(0, "bottom");
+}
+
+.app-icon-cross {
+    background-image: url("../images/icon-cross.svg");
+    background-repeat: no-repeat;
+}
+
+.app-remove-filter-tag {
+    line-height: 1.5;
+    padding-left: 25px;
+    background-position: 5px center;
+}
