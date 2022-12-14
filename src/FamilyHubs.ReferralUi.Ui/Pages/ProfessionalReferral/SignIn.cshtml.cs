@@ -16,12 +16,6 @@ public class SignInModel : PageModel
     private readonly ITokenService _tokenService;
 
     [BindProperty]
-    public string Id { get; set; } = default!;
-
-    [BindProperty]
-    public string Name { get; set; } = default!;
-
-    [BindProperty]
     public string Email { get; set; } = string.Empty;
     [BindProperty]
     public string Password { get; set; } = string.Empty;
@@ -34,10 +28,8 @@ public class SignInModel : PageModel
         _tokenService = tokenService;
     }
 
-    public void OnGet(string id, string name)
+    public void OnGet()
     {
-        Id = id;
-        Name = name;
     }
 
     public async Task<IActionResult> OnPost()
@@ -76,11 +68,22 @@ public class SignInModel : PageModel
             return Page();
         }
 
-
-        return RedirectToPage("/ProfessionalReferral/Safeguarding", new
+        if (User != null && User.IsInRole("Professional")) 
         {
-            id = Id,
-            name = Name
+            return RedirectToPage("/ProfessionalReferral/ProfessionalHomepage", new
+            {
+            });
+        }
+
+        if (User != null && User.IsInRole("VCSAdmin"))
+        {
+            return RedirectToPage("/ProfessionalReferral/ReferralDashboard", new
+            {
+            });
+        }
+
+        return RedirectToPage("/ProfessionalReferral/Search", new
+        {
         });
     }
 }

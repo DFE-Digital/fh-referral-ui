@@ -19,10 +19,10 @@ public class ConnectFamilyToServiceStartModel : PageModel
 
     public IActionResult OnPost(string id, string name)
     {
-        return RedirectToPage("/ProfessionalReferral/SignIn", new
+        return RedirectToPage("/ProfessionalReferral/Safeguarding", new
         {
-            id = id,
-            name = name
+            id = Id,
+            name = Name
         });
 
     }
