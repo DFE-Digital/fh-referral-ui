@@ -54,13 +54,92 @@
                         <div class="app-results-filter-overlay--heading">
                             <div class="app-results-filter-overlay--heading-left">
                                 <h2 class="govuk-heading-m">Filter results</h2>
+                                
                             </div>
                             <div class="app-results-filter-overlay--heading-right">
+                                 <p style="font-size: 16px"><a asp-page-handler="ClearFilters" class="govuk-link govuk-link--no-visited-state"  data-testid="clearfilters">Clear filters</a></p> 
                                 <a href="#" class="govuk-link govuk-link--no-underline js-show-hide-filters filters-show-hide-mobile" data-module="return-to-results-link" data-testid="return-to-results-link">Return to results</a>
                             </div>
+                             
                         </div>
+                        @if (Model.CostSelection != null && Model.CostSelection.Count > 0)
+                        {
+                             <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Cost</h3>
+                             @foreach (var costSelected in Model.CostSelection)
+                            {
+                                 <ul class="moj-filter-tags">
+                                 <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" asp-route-removeFilter=true name="removeCostSelection" value="@costSelected" data-testid="@costSelected-remove"><span class="govuk-visually-hidden">Remove this filter</span>@(costSelected == "paid" ? "Pay to use" : costSelected)</button></li>
+                                  </ul>
+                            }
+                        }
 
+                        @if (Model.ServiceDeliverySelection != null && Model.ServiceDeliverySelection.Count > 0)
+                        {
+                             <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Delivery method</h3>
+                             @foreach (var serviceDeliverySelectionSelected in Model.ServiceDeliverySelection)
+                            {
+                                @if(serviceDeliverySelectionSelected == "1")
+                                {
+                                     <ul class="moj-filter-tags">
+                                  <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove"><span class="govuk-visually-hidden">Remove this filter</span>In Person</button></li>
+                                 </ul>
+                                }
+                                @if(serviceDeliverySelectionSelected == "2")
+                                {
+                                     <ul class="moj-filter-tags">
+                                  <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove"><span class="govuk-visually-hidden">Remove this filter</span>Online</button></li>
+                                 </ul>
+                                }
+                                 @if(serviceDeliverySelectionSelected == "3")
+                                {
+                                     <ul class="moj-filter-tags">
+                                  <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove"><span class="govuk-visually-hidden">Remove this filter</span>Telephone</button></li>
+                                 </ul>
+                                }
+
+                               
+                            }
+                        }
+                         @if (Model.SelectedLanguage != null)
+                        {
+                             <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Language</h3>
+                                 <ul class="moj-filter-tags">
+                                 <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" asp-route-removeFilter=true name="removeSelectedLanguage" value="@Model.SelectedLanguage" data-testid="@Model.SelectedLanguage-remove"><span class="govuk-visually-hidden">Remove this filter</span>@Model.SelectedLanguage</button></li>
+                                  </ul>
+                        }
+                        @if (Model.CategorySelection != null && Model.CategorySelection.Count > 0 )
+                        {
+                             <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Category</h3>
+                             @foreach (var categorySelection in Model.CategorySelection)
+                            {
+                                <ul class="moj-filter-tags">
+                                 <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" asp-route-removeFilter=true name="removecategorySelection" value="@categorySelection" data-testid="@categorySelection-remove"><span class="govuk-visually-hidden">Remove this filter</span>@Model.Categories.FirstOrDefault(s => s.Key.Id == categorySelection).Key.Name</button></li>
+                                  </ul>
+                                @if (Model.SubcategorySelection != null && Model.SubcategorySelection.Count > 0)
+                                {
+                                     <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Sub Category</h3>
+                                    @foreach (var subcategorySelection in Model.SubcategorySelection)
+                                    {
+                                          <ul class="moj-filter-tags">
+                                           <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" asp-route-removeFilter=true name="removesubcategorySelection" value="@subcategorySelection" data-testid="@subcategorySelection-remove"><span class="govuk-visually-hidden">Remove this filter</span>@Model.Categories.FirstOrDefault(s => s.Key.Id == categorySelection).Value.First(s => s.Id == subcategorySelection).Name</button></li>
+                                          </ul>
+                                    }
+                                }
+                            }
+                            
+                        }
+                        @if (Model.ForChildrenAndYoungPeople == true && Model.SearchAge != null)
+                        {
+                             <h3 class="govuk-heading-s govuk-!-margin-bottom-1">For children and young people</h3>
+                    
+                                 <ul class="moj-filter-tags">
+                                 <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" asp-route-removeFilter=true name="removeSearchAge" value="@Model.SearchAge" data-testid="@Model.SearchAge-remove"><span class="govuk-visually-hidden">Remove this filter</span>Age @Model.SearchAge</button></li>
+                                  </ul>
+                        }
                         <div class="filters-component__groups">
+                             <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true" asp-route-removeFilter=false data-testid="button-apply-filters">
+                            Apply filters
+                        </button>
                             <div class="filters-component__groups__group" data-filters-target="group" data-group="subjects">
                                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Category</h3></legend>
                                 <div>
@@ -233,11 +312,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true" data-testid="button-apply-filters">
-                            Apply filters
-                        </button>
-
-                        <p><a asp-page-handler="ClearFilters" data-testid="clearfilters">Clear filters</a></p>
+                     
                     </div>
                 </div>
 
