@@ -17,5 +17,5 @@ When("user searches using postcode {string} and filters using language {string}"
 })
 
 Then("the user should see the language filter {language}", (language) => {
-    cy.get('[data-testid="English-remove"]').should("exist");
+    cy.get(`[data-testid=${language}-remove]`).should("exist");
 });
