@@ -14,7 +14,7 @@
                         There is a problem
                     </h2>
                     <div class="govuk-error-summary__body">
-                        <ul class="govuk-list govuk-error-summary__list">
+                        <ul class="govuk-list govuk-error-summary__list" data-testid="errorslist">
                             @if (Model.PostcodeValid == false)
                             {
                                 <li>
@@ -40,16 +40,16 @@
      @{
         if (Model.PostcodeValid == false)
         {
-            <p class="govuk-error-message">
-                <span class="govuk-visually-hidden" data-testid="empty-error">Error:</span> You need to enter a postcode, like AA1 1AA
+            <p class="govuk-error-message" data-testid="empty-error">
+                <span class="govuk-visually-hidden">Error:</span> You need to enter a postcode, like AA1 1AA
             </p>
         }
     }
      @{
         if (Model.ValidationValid == false)
         {
-            <p class="govuk-error-message">
-                <span class="govuk-visually-hidden" data-testid="invalid-error">Error:</span> You need to enter a valid postcode, like AA1 1AA
+            <p class="govuk-error-message" data-testid="invalid-error">
+                <span class="govuk-visually-hidden">Error:</span> You need to enter a valid postcode, like AA1 1AA
             </p>
         }
     }

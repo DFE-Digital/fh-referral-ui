@@ -2,6 +2,29 @@ import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 
 Given("a user as arrived on search page", () => {
     cy.visit(`ProfessionalReferral/Search`);
+}); 
+
+When("user search with empty postcode", () => {
+    cy.get('[data-testid="button-search"]').click();
+});
+
+Then("the user should see {string} empty error", (emptypostcode) => {
+    cy.get('[data-testid="errorslist"]').should("exist"); 
+    cy.get('[data-testid="empty-error"]').should("exist");
+    cy.get('[data-testid="errorslist"]').should("contain.text", emptypostcode);
+    cy.get('[data-testid="empty-error"]').should("contain.text", emptypostcode);
+});
+
+When("user search with invalid postcode {string}", (postcode) => {
+    cy.get('[data-testid="postcode-value"]').type(postcode);
+    cy.get('[data-testid="button-search"]').click();
+});
+
+Then("the user should see {string} invalid error", (invalidpostcode) => {
+    cy.get('[data-testid="errorslist"]').should("exist");
+    cy.get('[data-testid="invalid-error"]').should("exist");
+    cy.get('[data-testid="errorslist"]').should("contain.text", invalidpostcode);
+    cy.get('[data-testid="invalid-error"]').should("contain.text", invalidpostcode);
 });
 
 When("user search with a valid postcode {string}", (postcode) => {

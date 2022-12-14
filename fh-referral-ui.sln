@@ -43,6 +43,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "e2e", "e2e", "{33EF0359-078
 		tests\cypress\e2e\searchresultsdetails.js = tests\cypress\e2e\searchresultsdetails.js
 		tests\cypress\e2e\startnow.feature = tests\cypress\e2e\startnow.feature
 		tests\cypress\e2e\startnow.js = tests\cypress\e2e\startnow.js
+		tests\fhg1088-showfilteroption.feature = tests\fhg1088-showfilteroption.feature
+		tests\fhg1088-showfilteroption.js = tests\fhg1088-showfilteroption.js
+		tests\fhg1326_dfebrandingheader.js = tests\fhg1326_dfebrandingheader.js
+		tests\fhg1326_dfebrandingheader.feature = tests\fhg1326_dfebrandingheader.feature
+		tests\fhg1397_PhoneEmailAddressWebsite.js = tests\fhg1397_PhoneEmailAddressWebsite.js
+		tests\fhg1397_PhoneEmailAddressWebsite.feature = tests\fhg1397_PhoneEmailAddressWebsite.feature
+		tests\fhg1042-filterbycategory.feature = tests\fhg1042-filterbycategory.feature
+		tests\fhg1042-filterbycategory.js = tests\fhg1042-filterbycategory.js
+		tests\fhg816_multiplefiltersselected.js = tests\fhg816_multiplefiltersselected.js
+		tests\fhg816_multiplefiltersselected.feature = tests\fhg816_multiplefiltersselected.feature
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "downloads", "downloads", "{75564816-EDB6-4BA6-BB96-64A9FFF9B38F}"
