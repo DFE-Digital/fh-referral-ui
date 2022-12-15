@@ -202,9 +202,9 @@
                                 <div class="govuk-form-group">
 
                                     <!-- Categories -->
-                                    <fieldset class="govuk-fieldset resul-filters">
+                                    <fieldset class="govuk-fieldset">                                    </fieldset>
 
-                                        <div class="filters-component__groups">
+                                        <div class="filters-component__groups result-filters">
                                             <div class="filters-component__groups__group" data-filters-target="group" data-group="subjects">
                                                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Category</h3></legend>
                                                 <div>
@@ -258,12 +258,7 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
-                                    </fieldset>
-
-
-                                    <!-- DONE - COST -->
+                                                   <!-- DONE - COST -->
                                     <div class="filters-component__groups__group border-bottom govuk-!-padding-bottom-3 govuk-!-padding-top-3">
                                         <div>
                                             <div class="govuk-form-group">
@@ -381,10 +376,15 @@
                                                     <select asp-for="SelectedLanguage" asp-items="Model.Languages" class="govuk-select" data-testid="select-language">
                                                         <option value="" selected disabled>Select language</option>
                                                     </select>
+                                                    <br> <br>
                                                 </fieldset>
                                             </div>
                                         </div>
                                     </div>
+                            
+
+
+                         
 
 
                                 </div>
