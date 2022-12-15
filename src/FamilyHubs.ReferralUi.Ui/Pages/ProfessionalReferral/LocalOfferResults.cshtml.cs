@@ -28,7 +28,9 @@ public class LocalOfferResultsModel : PageModel
     [BindProperty]
     public List<string> CostSelection { get; set; } = default!;
 
-    public List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>> Categories { get; set; } = default!;
+    public List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>> NestedCategories { get; set; } = default!;
+
+    public List<OpenReferralTaxonomyDto> Categories { get; set; } = default!;
 
     [BindProperty]
     public List<string> CategorySelection { get; set; } = default!;
@@ -114,6 +116,7 @@ public class LocalOfferResultsModel : PageModel
         SearchPostCode = postCode;
         await GetLocationDetails(SearchPostCode);
         await GetCategoriesTreeAsync();
+        GetCategories();
 
         //Keep these as might be needed at a later stage
         SelectedDistance = distance.ToString();
@@ -175,6 +178,8 @@ public class LocalOfferResultsModel : PageModel
         {
             IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             CreateServiceDeliveryDictionary();
+            await GetCategoriesTreeAsync();
+            GetCategories();
             InitializeAgeRange();
             InitializeLanguages();
             return Page();
@@ -217,7 +222,7 @@ public class LocalOfferResultsModel : PageModel
         if (SelectedLanguage == "All languages")
             SelectedLanguage = null;
 
-        
+
         var taxonomies = string.Join(",", SubcategorySelection);
 
         SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing",
@@ -235,13 +240,15 @@ public class LocalOfferResultsModel : PageModel
                                                                       serviceDelivery,
                                                                       isPaidFor,
                                                                       taxonomies,
-                                                                      SelectedLanguage,
+                                                                      SelectedLanguage == "All languages"? null: SelectedLanguage,
                                                                       CanFamilyChooseLocation);
 
         InitializeAgeRange();
         InitializeLanguages();
         await GetCategoriesTreeAsync();
+        GetCategories();
         InitialLoad = false;
+        ModelState.Clear();
         return Page();
 
     }
@@ -468,7 +475,22 @@ public class LocalOfferResultsModel : PageModel
         List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>> categories = await _openReferralOrganisationClientService.GetCategories();
 
         if (categories != null)
-            Categories = new List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>>(categories);
+            NestedCategories = new List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>>(categories);
+
+    }
+
+    /// <summary>
+    /// Stores category dto's in a list to make it easy to get category name from id
+    /// </summary>
+    private void GetCategories()
+    {
+        Categories = new List<OpenReferralTaxonomyDto>();
+        foreach (var category in NestedCategories)
+        {
+            Categories.Add(category.Key);
+            foreach (var subcategory in category.Value)
+                Categories.Add(subcategory);
+        }
     }
 
 
@@ -495,4 +517,6 @@ public class LocalOfferResultsModel : PageModel
         ModelState.Remove(removeFilter);
         SubcategorySelection.Remove(removeFilter);
     }
+
+    
 }

@@ -77,11 +77,11 @@ public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOr
         if (retVal == null)
             return keyValuePairs;
 
-        var topLevelCategories = retVal.Items.Where(x => x.Parent == null && !x.Name.Contains("bccusergroupTestDelete")).ToList();
+        var topLevelCategories = retVal.Items.Where(x => x.Parent == null && !x.Name.Contains("bccusergroupTestDelete")).OrderBy(x => x.Name).ToList();
 
         foreach (var topLevelCategory in topLevelCategories)
         {
-            var subCategories = retVal.Items.Where(x => x.Parent == topLevelCategory.Id).ToList();
+            var subCategories = retVal.Items.Where(x => x.Parent == topLevelCategory.Id).OrderBy(x => x.Name).ToList();
             var pair = new KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>(topLevelCategory, subCategories);
             keyValuePairs.Add(pair);
         }
