@@ -18,14 +18,14 @@
                             @if (Model.PostcodeValid == false)
                             {
                                 <li>
-                                    <a href="#Postcode">You need to enter a postcode, like AA1 1AA</a>
+                                    <a href="#Postcode">There is a problem. Enter a valid postcode, for example SW1A 2AA.</a>
                                 </li>
                             }
 
                             @if (Model.ValidationValid == false)
                             {
                                 <li>
-                                    <a href="#Postcode">You need to enter a valid postcode, like AA1 1AA</a>
+                                    <a href="#Postcode">There is a problem. Enter a valid postcode, for example SW1A 2AA. </a>
                                 </li>
                             }
                         </ul>
@@ -41,7 +41,7 @@
         if (Model.PostcodeValid == false)
         {
             <p class="govuk-error-message" data-testid="empty-error">
-                <span class="govuk-visually-hidden">Error:</span> You need to enter a postcode, like AA1 1AA
+                <span class="govuk-visually-hidden">Error:</span> There is a problem. Enter a valid postcode, for example SW1A 2AA.
             </p>
         }
     }
@@ -49,7 +49,7 @@
         if (Model.ValidationValid == false)
         {
             <p class="govuk-error-message" data-testid="invalid-error">
-                <span class="govuk-visually-hidden">Error:</span> You need to enter a valid postcode, like AA1 1AA
+                <span class="govuk-visually-hidden">Error:</span> There is a problem. Enter a valid postcode, for example SW1A 2AA. 
             </p>
         }
     }
