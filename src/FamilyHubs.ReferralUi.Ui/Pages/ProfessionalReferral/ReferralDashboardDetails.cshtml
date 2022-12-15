@@ -3,8 +3,18 @@
 @{
 }
 
-<main class="govuk-main-wrapper " id="main-content" role="main">
+@if (User.IsInRole("VCSAdmin"))
+{
+    <a asp-page="/ProfessionalReferral/ReferralDashboard" class="govuk-back-link" data-testid="back-button">Back</a>
+}
+else
+{
+    <a asp-page="/ProfessionalReferral/ProfessionalHomepage" class="govuk-back-link" data-testid="back-button">Back</a> 
+}
 
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    <form method="post">
+        <input asp-for="@Model.ReferralId" type="hidden">
     <fieldset class="govuk-fieldset">
       <h1 class="govuk-fieldset__heading-l">
           Referral Details
@@ -21,10 +31,30 @@
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
+            Current Status
+          </dt>
+            @if (User.IsInRole("VCSAdmin"))
+            {
+                <dd class="govuk-summary-list__value">
+                    <select asp-for="SelectedStatus" asp-items="Model.StatusOptions" class="govuk-select" data-testid="select-status">
+                        <option value="" selected disabled>Select status</option>
+                    </select>
+                </dd>
+            }
+            else
+            {
+                <dd class="govuk-summary-list__value">
+                    @Model?.Referral?.Status?.LastOrDefault()?.Status
+                </dd>
+            }
+                    
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
             Does the person have any special educational needs, disabilities or health conditions?
           </dt>
           <dd class="govuk-summary-list__value">
-            @Model.Referral.HasSpecialNeeds
+            @Model?.Referral.HasSpecialNeeds
           </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -32,7 +62,7 @@
             Email address
           </dt>
           <dd class="govuk-summary-list__value" id="test">
-              @Model.Referral.Email
+              @Model?.Referral.Email
           </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -40,7 +70,7 @@
             UK telephone number
           </dt>
           <dd class="govuk-summary-list__value">
-              @Model.Referral.Phone
+              @Model?.Referral.Phone
           </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -48,12 +78,19 @@
             Why does this person or family need support from this service?
           </dt>
           <dd class="govuk-summary-list__value">
-            @Model.Referral.ReasonForSupport
+            @Model?.Referral.ReasonForSupport
           </dd>
         </div>
       </dl>
 
     </fieldset>
-
+        @if (User.IsInRole("VCSAdmin"))
+        {
+            <button type="submit" class="govuk-button" data-testid="button-update">
+                Update
+            </button>
+        }
+        
+    </form>
 </main>
 
