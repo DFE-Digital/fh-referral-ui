@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
@@ -25,7 +26,18 @@ public class LocalOfferResultsPage
         var mockLocalOfferClientService = new Mock<ILocalOfferClientService>();
         var mockIPostcodeLocationClientService = new Mock<IPostcodeLocationClientService>();
         var mockIOpenReferralOrganisationClientService = new Mock<IOpenReferralOrganisationClientService>();
-        pageModel = new LocalOfferResultsModel(mockLocalOfferClientService.Object, mockIPostcodeLocationClientService.Object, mockIOpenReferralOrganisationClientService.Object);
+
+
+        IEnumerable<KeyValuePair<string, string?>>? inMemorySettings = new List<KeyValuePair<string, string?>>()
+        {
+            new KeyValuePair<string, string?>("IsReferralEnabled", "false")
+        };
+
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings)
+            .Build();
+
+        pageModel = new LocalOfferResultsModel(mockLocalOfferClientService.Object, mockIPostcodeLocationClientService.Object, mockIOpenReferralOrganisationClientService.Object, configuration);
     }
 
     //[Fact]

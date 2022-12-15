@@ -11,6 +11,7 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 public class LocalOfferDetailModel : PageModel
 {
     private readonly ILocalOfferClientService _localOfferClientService;
+    private readonly bool _isReferralEnabled;
 
     public OpenReferralServiceDto LocalOffer { get; set; } = default!;
 
@@ -33,13 +34,25 @@ public class LocalOfferDetailModel : PageModel
         IsReferralEnabled = configuration.GetValue<bool>("IsReferralEnabled");
     }
 
-    public async Task OnGetAsync(string id, string name)
+    public async Task<IActionResult> OnGetAsync(string id, string name)
     {
+        if (IsReferralEnabled)
+        {
+            if (User != null && User.Identity != null && !User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/ProfessionalReferral/SignIn", new
+                {
+                });
+            }
+        }
+
         Name = name;
         ReturnUrl = Request.Headers["Referer"].ToString();
         LocalOffer = await _localOfferClientService.GetLocalOfferById(id);
         ExtractAddressParts(LocalOffer?.Service_at_locations?.FirstOrDefault()?.Location?.Physical_addresses?.FirstOrDefault() ?? new OpenReferralPhysicalAddressDto());
         GetTelephone();
+
+        return Page();
     }
 
     public IActionResult OnPost(string id, string name)
