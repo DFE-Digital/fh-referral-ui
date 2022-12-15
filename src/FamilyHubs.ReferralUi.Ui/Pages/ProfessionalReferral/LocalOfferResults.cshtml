@@ -32,7 +32,7 @@
             else
             {
                 <div class="govuk-grid-column-full">
-                    <h1 class="govuk-heading-l govuk-!-margin-bottom-2">
+                    <h1 class="govuk-heading-l govuk-!-margin-bottom-2" data-testid="search-results-title">
                         Services, groups and activities in this area
                     </h1>
 
@@ -40,7 +40,7 @@
                         <button class="govuk-button govuk-button--secondary" data-module="govuk-button" data-testid="show-filters-button">Show filters</button>
                     </div>
 
-                    <p class="govuk-caption-m govuk-!-margin-top-4">
+                    <p class="govuk-caption-m govuk-!-margin-top-4" data-testid="number-of-results">
                         @Model.SearchResultsSnippet <a class="dfe-capitalise" asp-page="/ProfessionalReferral/Search" data-testid="postcodelink">
 
                             @Model.SearchPostCode
