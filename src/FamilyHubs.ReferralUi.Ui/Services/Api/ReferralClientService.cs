@@ -11,8 +11,10 @@ public interface IReferralClientService
 {
     Task<PaginatedList<ReferralDto>> GetReferralsByReferrer(string referrer, int pageNumber, int pageSize);
     Task<string> CreateReferral(ReferralDto referralDto);
+    Task<string> UpdateReferral(ReferralDto referralDto);
     Task<PaginatedList<ReferralDto>> GetReferralsByOrganisationId(string id, int pageNumber, int pageSize);
     Task<ReferralDto?> GetReferralById(string id);
+    Task<string> SetReferralStatusReferral(string referralId, string status);
 }
 
 public class ReferralClientService : ApiService, IReferralClientService
@@ -76,6 +78,39 @@ public class ReferralClientService : ApiService, IReferralClientService
             Method = HttpMethod.Post,
             RequestUri = new Uri(_client.BaseAddress + "api/referrals"),
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(referralDto), Encoding.UTF8, "application/json"),
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var stringResult = await response.Content.ReadAsStringAsync();
+        return stringResult;
+    }
+
+    public async Task<string> UpdateReferral(ReferralDto referralDto)
+    {
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Put,
+            RequestUri = new Uri(_client.BaseAddress + $"api/referrals/{referralDto.Id}"),
+            Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(referralDto), Encoding.UTF8, "application/json"),
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var stringResult = await response.Content.ReadAsStringAsync();
+        return stringResult;
+    }
+
+    public async Task<string> SetReferralStatusReferral(string referralId, string status)
+    {
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri(_client.BaseAddress + $"api/referralStatus/{referralId}/{status}"),
         };
 
         using var response = await _client.SendAsync(request);

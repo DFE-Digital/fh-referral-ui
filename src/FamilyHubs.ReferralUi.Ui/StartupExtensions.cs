@@ -1,11 +1,13 @@
 ﻿using FamilyHubs.ReferralUi.Ui.Extensions;
 using FamilyHubs.ReferralUi.Ui.Models;
 using FamilyHubs.ReferralUi.Ui.Services;
+using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Helpers;
 using MassTransit;
 using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
 using Serilog.Events;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace FamilyHubs.ReferralUi.Ui;
 
@@ -41,9 +43,27 @@ public static class StartupExtensions
 
         services.AddTransient<IRedisCache, RedisCache>();
         services.AddTransient<IRedisCacheService, RedisCacheService>();
+        services.AddTransient<AuthenticationDelegatingHandler>();
+        services.AddTransient<ITokenService, TokenService>();
 
         // Add services to the container.
         services.AddRazorPages();
+
+        JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultScheme = "Cookies";
+            //options.DefaultChallengeScheme = "oidc";
+        }).AddCookie("Cookies");
+
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("Referrer", policy =>
+                            policy.RequireAssertion(context =>
+                                        context.User.IsInRole("VCSAdmin") ||
+                                        context.User.IsInRole("Professional")));
+        });
 
         if (!configuration.GetValue<bool>("UseRabbitMQ")) return;
 
@@ -76,6 +96,7 @@ public static class StartupExtensions
 
         app.UseRouting();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapRazorPages();

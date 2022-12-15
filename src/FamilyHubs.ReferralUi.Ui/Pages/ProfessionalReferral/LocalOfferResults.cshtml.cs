@@ -19,6 +19,7 @@ public class LocalOfferResultsModel : PageModel
     private readonly ILocalOfferClientService _localOfferClientService;
     private readonly IPostcodeLocationClientService _postcodeLocationClientService;
     private readonly IOpenReferralOrganisationClientService _openReferralOrganisationClientService;
+    private readonly bool _isReferralEnabled;
 
     public Dictionary<int, string> DictServiceDelivery = new();
 
@@ -96,14 +97,15 @@ public class LocalOfferResultsModel : PageModel
         new SelectListItem { Value = "32186.9", Text = "20 miles" },
     };
 
-    public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService, IOpenReferralOrganisationClientService openReferralOrganisationClientService)
+    public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService, IOpenReferralOrganisationClientService openReferralOrganisationClientService, IConfiguration configuration)
     {
         _localOfferClientService = localOfferClientService;
         _postcodeLocationClientService = postcodeLocationClientService;
         _openReferralOrganisationClientService = openReferralOrganisationClientService;
+        _isReferralEnabled = configuration.GetValue<bool>("IsReferralEnabled");
     }
 
-    public async Task OnGetAsync(string postCode,
+    public async Task<IActionResult> OnGetAsync(string postCode,
                                  double latitude,
                                  double longitude,
                                  double distance,
@@ -111,6 +113,16 @@ public class LocalOfferResultsModel : PageModel
                                  string maximumAge,
                                  string searchText)
     {
+        if (_isReferralEnabled) 
+        {
+            if (User != null && User.Identity != null && !User.Identity.IsAuthenticated) 
+            {
+                return RedirectToPage("/ProfessionalReferral/SignIn", new
+                {
+                });
+            }
+        }
+
         SearchPostCode = postCode;
         await GetLocationDetails(SearchPostCode);
         await GetCategoriesTreeAsync();
@@ -144,6 +156,8 @@ public class LocalOfferResultsModel : PageModel
                                                                       null,
                                                                       null,
                                                                       null);
+
+        return Page();
     }
 
     public async Task<IActionResult> OnPostAsync(string? removeCostSelection, bool removeFilter, string? removeServiceDeliverySelection, 
