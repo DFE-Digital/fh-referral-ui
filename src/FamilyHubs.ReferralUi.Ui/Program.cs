@@ -44,7 +44,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+#if use_https
+        app.UseHttpsRedirection();
+#endif
+
 app.UseStaticFiles();
 
 app.UseRouting();
