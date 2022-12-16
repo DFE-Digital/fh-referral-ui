@@ -40,12 +40,6 @@ public class LocalOfferResultsPage
         pageModel = new LocalOfferResultsModel(mockLocalOfferClientService.Object, mockIPostcodeLocationClientService.Object, mockIOpenReferralOrganisationClientService.Object, configuration);
     }
 
-    //[Fact]
-    //public void OnGetAsync_PopulatesThePageModel_WithAListOfServices()
-    //{
-    //    throw new NotImplementedException();
-    //}
-
     [Theory]
     [InlineData(null)]
     [InlineData("")]

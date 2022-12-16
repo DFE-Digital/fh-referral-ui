@@ -8,6 +8,8 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 public class WhySupportModel : PageModel
 {
     [BindProperty]
+    public string ReferralId { get; set; } = default!;
+    [BindProperty]
     public string FullName { get; set; } = default!;
 
     [BindProperty]
@@ -30,7 +32,7 @@ public class WhySupportModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public void OnGet(string id, string name, string fullName, string email, string telephone, string textphone, string reasonForSupport)
+    public void OnGet(string id, string name, string fullName, string email, string telephone, string textphone, string reasonForSupport, string referralId)
     {
         Id = id;
         Name = name;
@@ -38,6 +40,7 @@ public class WhySupportModel : PageModel
         Email = email;
         Telephone = telephone;
         Textphone = textphone;
+        ReferralId = referralId;
 
         if (!string.IsNullOrEmpty(reasonForSupport))
             ReasonForSupport = reasonForSupport;
@@ -48,6 +51,7 @@ public class WhySupportModel : PageModel
         ModelState.Remove("Email");
         ModelState.Remove("Telephone");
         ModelState.Remove("Textphone");
+        ModelState.Remove("ReferralId");
 
         if (ReasonForSupport == null || ReasonForSupport.Trim().Length == 0 || ReasonForSupport.Length > 500)
         {
@@ -63,7 +67,8 @@ public class WhySupportModel : PageModel
             email = Email,
             telephone = Telephone,
             textphone = Textphone,
-            reasonForSupport = ReasonForSupport
+            reasonForSupport = ReasonForSupport,
+            referralId = ReferralId
         });
 
     }

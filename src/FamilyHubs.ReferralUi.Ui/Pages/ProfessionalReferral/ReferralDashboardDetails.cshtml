@@ -90,7 +90,14 @@ else
                 Update
             </button>
         }
-        
+
+        @if (User.IsInRole("Professional"))
+        {
+            <button type="submit" asp-page-handler="EditDetails" class="govuk-button" data-testid="button-update">
+                Edit
+            </button>
+        }
+
     </form>
 </main>
 

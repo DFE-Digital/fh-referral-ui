@@ -12,6 +12,7 @@
          <input asp-for="@Model.Id" type="hidden" >
          <input asp-for="@Model.Name" type="hidden">
          <input asp-for="@Model.FullName" type="hidden" >
+         <input asp-for="@Model.ReferralId" type="hidden">
 
       <div class="govuk-form-group">
           <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
@@ -25,8 +26,29 @@
                     if (Model.ValidationValid == false)
                     {
                         <p class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> You must enter the contact details
+                            <span class="govuk-visually-hidden">Error:</span> You must enter the correct contact details
                         </p>
+
+                        if (Model.EmailValid == false)
+                        {
+                            <p class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> Email is invalid
+                            </p>
+                        } 
+                        
+                        if (Model.TelephoneValid == false)
+                        {
+                            <p class="govuk-error-message">
+                                    <span class="govuk-visually-hidden">Error:</span> Telephone is invalid (can not contain spaces)
+                            </p>
+                        } 
+
+                        if (Model.TextphoneValid == false)
+                        {
+                            <p class="govuk-error-message">
+                                    <span class="govuk-visually-hidden">Error:</span> Textphone is invalid (can not contain spaces)
+                            </p>
+                        } 
                     }
                 }
           

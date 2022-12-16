@@ -48,6 +48,28 @@ public class ReferralDashboardDetailsModel : PageModel
         await Init(ReferralId);
     }
 
+    public async Task<IActionResult> OnPostEditDetails()
+    {
+        ReferralDto? dto = await _referralClientService.GetReferralById(ReferralId);
+        if (dto != null) 
+        {
+            return RedirectToPage("/ProfessionalReferral/CheckReferralDetails", new
+            {
+                id = dto.ServiceId,
+                name = dto.ServiceName,
+                fullName = dto.FullName,
+                email = dto.Email,
+                telephone = dto.Phone,
+                textphone = dto.Text,
+                reasonForSupport = dto.ReasonForSupport,
+                referralId = dto.Id
+            });
+        }
+
+        return Page();
+    }
+    
+
     private async Task Init(string id)
     {
         var referral = await _referralClientService.GetReferralById(id);

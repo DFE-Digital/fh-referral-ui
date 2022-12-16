@@ -7,6 +7,8 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 [Authorize(Policy = "Referrer")]
 public class ConsentModel : PageModel
 {
+    public string ReferralId { get; set; } = default!;
+
     [BindProperty]
     public string IsConsentGiven { get; set; } = default!;
 
@@ -18,16 +20,20 @@ public class ConsentModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public void OnGet(string id, string name)
+    public void OnGet(string id, string name, string referralId)
     {
         Id = id;
         Name = name;
+        ReferralId = referralId;
     }
 
-    public IActionResult OnPost(string id, string name)
+    public IActionResult OnPost(string id, string name, string referralId)
     {
         if (!ModelState.IsValid || IsConsentGiven == null)
         {
+            Id = id;
+            Name = name;
+            ReferralId = referralId;
             ValidationValid = false;
             return Page();
         }
@@ -37,7 +43,8 @@ public class ConsentModel : PageModel
             return RedirectToPage("/ProfessionalReferral/FamilyContact", new
             {
                 id = id,
-                name = name
+                name = name,
+                referralId = referralId
             });
         }
 

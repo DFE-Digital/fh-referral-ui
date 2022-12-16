@@ -11,7 +11,6 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 public class LocalOfferDetailModel : PageModel
 {
     private readonly ILocalOfferClientService _localOfferClientService;
-    private readonly bool _isReferralEnabled;
 
     public OpenReferralServiceDto LocalOffer { get; set; } = default!;
 

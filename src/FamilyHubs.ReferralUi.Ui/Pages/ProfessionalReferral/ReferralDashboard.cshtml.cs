@@ -20,6 +20,14 @@ public class ReferralDashboardModel : PageModel
 
     public async Task OnGet()
     {
-        ReferralList = await _referralClientService.GetReferralsByReferrer("CurrentUser", 1, 99);
+        if (User != null && User.Identity != null)
+        {
+            ReferralList = await _referralClientService.GetReferralsByReferrer(User?.Identity?.Name ?? "BtlPro@email.com", 1, 999999);
+        }
+        else
+        {
+            ReferralList = await _referralClientService.GetReferralsByReferrer("BtlPro@email.com", 1, 999999);
+        }
+        
     }
 }
