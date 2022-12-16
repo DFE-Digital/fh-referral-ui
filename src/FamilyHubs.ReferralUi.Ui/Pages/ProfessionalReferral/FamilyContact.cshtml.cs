@@ -8,6 +8,9 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 public class FamilyContactModel : PageModel
 {
     [BindProperty]
+    public string ReferralId { get; set; } = default!;
+
+    [BindProperty]
     public string FullName { get; set; } = default!;
 
     [BindProperty]
@@ -18,10 +21,12 @@ public class FamilyContactModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public void OnGet(string id, string name, string fullName)
+    public void OnGet(string id, string name, string fullName, string referralId)
     {
         Id = id;
         Name = name;
+        FullName = fullName;
+        ReferralId = referralId;
 
         if (!string.IsNullOrEmpty(fullName))
             FullName = fullName;
@@ -41,7 +46,8 @@ public class FamilyContactModel : PageModel
         {
             id = Id,
             name = Name,
-            fullName = FullName
+            fullName = FullName,
+            referralId = ReferralId
         });
 
     }

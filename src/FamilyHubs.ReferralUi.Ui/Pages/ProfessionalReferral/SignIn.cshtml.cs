@@ -34,6 +34,8 @@ public class SignInModel : PageModel
 
     public async Task<IActionResult> OnPost()
     {
+        Guid organisationId = new Guid("72e653e8-1d05-4821-84e9-9177571a6013");
+
         try
         {
             var tokenModel = await _authenticationService.Login(Email, Password);
@@ -43,6 +45,12 @@ public class SignInModel : PageModel
                 var handler = new JwtSecurityTokenHandler();
                 var jwtSecurityToken = handler.ReadJwtToken(tokenModel.Token);
                 var claims = jwtSecurityToken.Claims.ToList();
+
+                var claim = claims.FirstOrDefault(x => x.Type == "OpenReferralOrganisationId");
+                if (claim != null)
+                {
+                    organisationId = new Guid(claim.Value);
+                }
 
                 var appIdentity = new ClaimsIdentity(claims);
                 User.AddIdentity(appIdentity);
@@ -79,6 +87,7 @@ public class SignInModel : PageModel
         {
             return RedirectToPage("/ProfessionalReferral/ReferralDashboard", new
             {
+                organisationId = organisationId
             });
         }
 

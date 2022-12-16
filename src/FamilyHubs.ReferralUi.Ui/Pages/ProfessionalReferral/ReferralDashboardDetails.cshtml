@@ -13,6 +13,21 @@ else
 }
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
+    @if (Model.ReasonForRejectionIsMissing == true)
+    {
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li>
+                        <a href="#service-name" data-testid="enter-service-name-error">Please add a reason for rejecting</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    }
     <form method="post">
         <input asp-for="@Model.ReferralId" type="hidden">
     <fieldset class="govuk-fieldset">
@@ -39,6 +54,13 @@ else
                     <select asp-for="SelectedStatus" asp-items="Model.StatusOptions" class="govuk-select" data-testid="select-status">
                         <option value="" selected disabled>Select status</option>
                     </select>
+                    <br />
+                     <h1 class="govuk-label-wrapper">
+                        <label class="govuk-label " for="with-hint">
+                                    If you set the status to 'Reject Connection' please enter the reason below:
+                        </label>
+                    </h1>
+                    <textarea asp-for="ReasonForRejection" class="govuk-textarea govuk-js-character-count" rows="3" id="with-hint"></textarea>
                 </dd>
             }
             else
@@ -90,7 +112,14 @@ else
                 Update
             </button>
         }
-        
+
+        @if (User.IsInRole("Professional"))
+        {
+            <button type="submit" asp-page-handler="EditDetails" class="govuk-button" data-testid="button-update">
+                Edit
+            </button>
+        }
+
     </form>
 </main>
 

@@ -18,8 +18,22 @@ public class ReferralDashboardModel : PageModel
         _referralClientService = referralClientService;
     }
 
-    public async Task OnGet()
+    public async Task OnGet(string organisationId)
     {
-        ReferralList = await _referralClientService.GetReferralsByReferrer("CurrentUser", 1, 99);
+        if (organisationId != null && User.IsInRole("VCSAdmin")) 
+        {
+            ReferralList = await _referralClientService.GetReferralsByOrganisationId(organisationId, 1, 999999);
+            return;
+        }
+
+        if (User != null && User.Identity != null)
+        {
+            ReferralList = await _referralClientService.GetReferralsByReferrer(User?.Identity?.Name ?? "BtlPro@email.com", 1, 999999);
+        }
+        else
+        {
+            ReferralList = await _referralClientService.GetReferralsByReferrer("BtlPro@email.com", 1, 999999);
+        }
+        
     }
 }

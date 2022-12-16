@@ -200,6 +200,7 @@ public class BaseClientService
                 "0131 222 3333",
                 "text",
                 "Requires help with child",
+                null,
                 new List<ReferralStatusDto> { new ReferralStatusDto("1d2c41ac-fade-4933-a810-d8a040f0b9ee", "Inital-Referral") }
                 );
     }
