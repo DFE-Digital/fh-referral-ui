@@ -15,6 +15,11 @@ public class ReferralDashboardDetailsModel : PageModel
     public ReferralDto Referral { get; set; } = default!;
 
     [BindProperty]
+    public string ReasonForRejection { get; set; } = default!;
+
+    public bool ReasonForRejectionIsMissing { get; set; } = false;
+
+    [BindProperty]
     public string ReferralId { get; set; } = default!;
 
     [BindProperty]
@@ -40,6 +45,23 @@ public class ReferralDashboardDetailsModel : PageModel
 
     public async Task OnPost()
     {
+        if (SelectedStatus == "Reject Connection" && string.IsNullOrEmpty(ReasonForRejection))
+        {
+            ReasonForRejectionIsMissing = true;
+            await Init(ReferralId);
+            return;
+        }
+
+        if (SelectedStatus == "Reject Connection")
+        {
+            ReferralDto? dto = await _referralClientService.GetReferralById(ReferralId);
+            if (dto != null) 
+            {
+                dto.ReasonForRejection = ReasonForRejection;
+                await _referralClientService.UpdateReferral(dto);
+            }
+        }
+
         if (!string.IsNullOrEmpty(SelectedStatus))
         {
             var status = await _referralClientService.SetReferralStatusReferral(ReferralId, SelectedStatus);
