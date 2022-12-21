@@ -9,7 +9,8 @@
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
-    "watch": "webpack --watch --mode development"
+    "watch": "webpack --watch --mode development",
+    "open:referral-dev": "CYPRESS_BASE_URL=https://s181d01-as-fh-referral-ui-dev.azurewebsites.net/ npx cypress open"
   },
   "repository": {
     "type": "git",
