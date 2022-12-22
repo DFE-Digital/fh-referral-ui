@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="3.560" tests="4" failures="0">
+  <testsuite name="Root Suite" timestamp="2022-12-22T14:58:41" tests="0" file="cypress\e2e\fhg490_searchpostcode.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Search for Services by Postcode Tests" timestamp="2022-12-22T14:58:41" tests="4" time="3.517" failures="0">
+    <testcase name="Search for Services by Postcode Tests search with valid postcode" time="1.602" classname="search with valid postcode">
+    </testcase>
+    <testcase name="Search for Services by Postcode Tests search with invalid postcode" time="1.326" classname="search with invalid postcode">
+    </testcase>
+    <testcase name="Search for Services by Postcode Tests search with empty postcode" time="0.365" classname="search with empty postcode">
+    </testcase>
+    <testcase name="Search for Services by Postcode Tests clicking back button should navigate to start page" time="0.206" classname="clicking back button should navigate to start page">
+    </testcase>
+  </testsuite>
+</testsuites>
