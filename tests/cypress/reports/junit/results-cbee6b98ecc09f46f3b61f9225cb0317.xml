@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.223" tests="1" failures="1">
+  <testsuite name="Root Suite" timestamp="2022-12-22T14:58:29" tests="1" file="cypress\e2e\fhg1395_removefilter.feature" time="0.216" failures="1">
+    <testcase name="An uncaught error was detected outside of a test" time="0.000" classname="An uncaught error was detected outside of a test">
+      <failure message="The following error originated from your test code, not from Cypress.
+
+  &gt; This Cucumber Expression has a problem at column 41:
+
+the user should see the language filter {language}
+                                        ^--------^
+Undefined parameter type &apos;language&apos;.
+Please register a ParameterType for &apos;language&apos;
+
+When Cypress detects uncaught errors originating from your test code it will automatically fail the current test.
+
+Cypress could not associate this error to any specific test.
+
+We dynamically generated a new test to display this failure." type="Error"><![CDATA[Error: The following error originated from your test code, not from Cypress.
+
+  > This Cucumber Expression has a problem at column 41:
+
+the user should see the language filter {language}
+                                        ^--------^
+Undefined parameter type 'language'.
+Please register a ParameterType for 'language'
+
+When Cypress detects uncaught errors originating from your test code it will automatically fail the current test.
+
+Cypress could not associate this error to any specific test.
+
+We dynamically generated a new test to display this failure.
+    at UndefinedParameterTypeError.CucumberExpressionError [as constructor] (webpack://fh-referral-ui/./node_modules/@cucumber/cucumber-expressions/dist/cjs/src/CucumberExpressionError.js:21:0)
+    at new UndefinedParameterTypeError (webpack://fh-referral-ui/./node_modules/@cucumber/cucumber-expressions/dist/cjs/src/Errors.js:109:0)
+    at createUndefinedParameterType (webpack://fh-referral-ui/./node_modules/@cucumber/cucumber-expressions/dist/cjs/src/Errors.js:117:0)
+    at __webpack_modules__../node_modules/@cucumber/cucumber-expressions/dist/cjs/src/CucumberExpression.js.CucumberExpression.rewriteParameter (webpack://fh-referral-ui/./node_modules/@cucumber/cucumber-expressions/dist/cjs/src/CucumberExpression.js:104:0)
+    at __webpack_modules__../node_modules/@cucumber/cucumber-expressions/dist/cjs/src/CucumberExpression.js.CucumberExpression.rewriteToRegex (webpack://fh-referral-ui/./node_modules/@cucumber/cucumber-expressions/dist/cjs/src/CucumberExpression.js:48:0)
+    at eval (webpack://fh-referral-ui/./node_modules/@cucumber/cucumber-expressions/dist/cjs/src/CucumberExpression.js:115:61)
+    at Array.map (<anonymous>)
+    at __webpack_modules__../node_modules/@cucumber/cucumber-expressions/dist/cjs/src/CucumberExpression.js.CucumberExpression.rewriteExpression (webpack://fh-referral-ui/./node_modules/@cucumber/cucumber-expressions/dist/cjs/src/CucumberExpression.js:115:0)
+    at __webpack_modules__../node_modules/@cucumber/cucumber-expressions/dist/cjs/src/CucumberExpression.js.CucumberExpression.rewriteToRegex (webpack://fh-referral-ui/./node_modules/@cucumber/cucumber-expressions/dist/cjs/src/CucumberExpression.js:50:0)
+    at new CucumberExpression (webpack://fh-referral-ui/./node_modules/@cucumber/cucumber-expressions/dist/cjs/src/CucumberExpression.js:34:0)]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

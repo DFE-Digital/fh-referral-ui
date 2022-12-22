@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="12.463" tests="3" failures="2">
+  <testsuite name="Root Suite" timestamp="2022-12-22T14:59:42" tests="0" file="cypress\e2e\fhg816_multiplefiltersselected.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Filter Results by Category Tests" timestamp="2022-12-22T14:59:42" tests="3" time="12.421" failures="2">
+    <testcase name="Filter Results by Category Tests search using valid postcode should return results" time="1.256" classname="search using valid postcode should return results">
+    </testcase>
+    <testcase name="Filter Results by Category Tests search using Activities &amp; Hearing &amp; Sight" time="0.000" classname="search using Activities &amp; Hearing &amp; Sight">
+      <failure message="Timed out retrying after 4000ms: Expected to find element: `[data-testid=&quot;activities,clubsandgroups&quot;]`, but never found it." type="AssertionError"><![CDATA[AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="activities,clubsandgroups"]`, but never found it.
+    at Context.eval (webpack://fh-referral-ui/./cypress/e2e/fhg816_multiplefiltersselected.js:17:0)
+    at Registry.runStepDefininition (webpack://fh-referral-ui/./node_modules/@badeball/cypress-cucumber-preprocessor/lib/registry.js:106:0)
+    at Context.eval (webpack://fh-referral-ui/./node_modules/@badeball/cypress-cucumber-preprocessor/lib/create-tests.js:327:0)]]></failure>
+    </testcase>
+    <testcase name="Filter Results by Category Tests search using Activities &amp; Hearing &amp; Sight &amp; Free" time="0.000" classname="search using Activities &amp; Hearing &amp; Sight &amp; Free">
+      <failure message="Timed out retrying after 4000ms: Expected to find element: `[data-testid=&quot;activities,clubsandgroups&quot;]`, but never found it." type="AssertionError"><![CDATA[AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="activities,clubsandgroups"]`, but never found it.
+    at Context.eval (webpack://fh-referral-ui/./cypress/e2e/fhg816_multiplefiltersselected.js:31:0)
+    at Registry.runStepDefininition (webpack://fh-referral-ui/./node_modules/@badeball/cypress-cucumber-preprocessor/lib/registry.js:106:0)
+    at Context.eval (webpack://fh-referral-ui/./node_modules/@badeball/cypress-cucumber-preprocessor/lib/create-tests.js:327:0)]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>
