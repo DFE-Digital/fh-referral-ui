@@ -32,10 +32,12 @@
             else
             {
                 <div class="govuk-grid-column-full">
-                    <h1 class="govuk-heading-l govuk-!-margin-bottom-2">Services, groups and activities in this area</h1>
+                    <h1 class="govuk-heading-l govuk-!-margin-bottom-2" data-testid="search-results-title">
+                        Services, groups and activities in this area
+                    </h1>
                     <!-- <h2 class="govuk-heading-s">52 services found</h2> -->
                     <!-- <p class="govuk-caption-m">Showing 52 search results for <a href="search"> -->
-                    <p class="govuk-caption-m govuk-!-margin-top-4">
+                    <p class="govuk-caption-m govuk-!-margin-top-4" data-testid="number-of-results">
                         @Model.SearchResultsSnippet
                         <a class="govuk-link" asp-page="/ProfessionalReferral/Search" data-testid="postcodelink">
                             @Model.SearchPostCode
@@ -121,7 +123,7 @@
                                                 <ul class="moj-filter-tags filters-component__remove-tags">
 
                                                     <li>
-                                                        <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove">
+                                                        <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
                                                             <span class="govuk-visually-hidden">Remove this filter</span>
                                                             In Person
                                                         </button>
@@ -133,7 +135,7 @@
                                                 <ul class="moj-filter-tags filters-component__remove-tags">
 
                                                     <li>
-                                                        <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove">
+                                                        <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
                                                             <span class="govuk-visually-hidden">Remove this filter</span>
                                                             Online
                                                         </button>
@@ -145,7 +147,7 @@
                                                 <ul class="moj-filter-tags filters-component__remove-tags">
 
                                                     <li>
-                                                        <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove">
+                                                        <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
                                                             <span class="govuk-visually-hidden">Remove this filter</span>
                                                             Telephone
                                                         </button>
