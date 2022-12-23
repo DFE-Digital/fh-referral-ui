@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="2.983" tests="1" failures="0">
+  <testsuite name="Root Suite" timestamp="2022-12-22T14:59:36" tests="0" file="cypress\e2e\fhg766_nofilterresults.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Filter Local Offer Search Results By Delivery methods Tests" timestamp="2022-12-22T14:59:36" tests="1" time="2.944" failures="0">
+    <testcase name="Filter Local Offer Search Results By Delivery methods Tests no results message should be displayed when no results returned after filtering" time="2.888" classname="no results message should be displayed when no results returned after filtering">
+    </testcase>
+  </testsuite>
+</testsuites>

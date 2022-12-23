@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="2.847" tests="1" failures="0">
+  <testsuite name="Root Suite" timestamp="2022-12-22T14:59:31" tests="0" file="cypress\e2e\fhg544_clearfilters.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Filter Local Offer Search Results By Delivery methods Tests" timestamp="2022-12-22T14:59:31" tests="1" time="2.763" failures="0">
+    <testcase name="Filter Local Offer Search Results By Delivery methods Tests previous servcies are displayed after clearing filters" time="2.736" classname="previous servcies are displayed after clearing filters">
+    </testcase>
+  </testsuite>
+</testsuites>

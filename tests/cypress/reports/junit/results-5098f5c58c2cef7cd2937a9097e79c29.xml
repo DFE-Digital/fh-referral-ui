@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="5.093" tests="3" failures="0">
+  <testsuite name="Root Suite" timestamp="2022-12-22T15:00:15" tests="0" file="cypress\e2e\searchresultsdetails.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Search Results Details Tests" timestamp="2022-12-22T15:00:15" tests="3" time="5.053" failures="0">
+    <testcase name="Search Results Details Tests Search Details heading is &apos;Aid for Children with Tracheostomies&apos;" time="1.748" classname="Search Details heading is &apos;Aid for Children with Tracheostomies&apos;">
+    </testcase>
+    <testcase name="Search Results Details Tests Search Details page has cost value" time="1.276" classname="Search Details page has cost value">
+    </testcase>
+    <testcase name="Search Results Details Tests Search Details page has back link to search results page" time="2.006" classname="Search Details page has back link to search results page">
+    </testcase>
+  </testsuite>
+</testsuites>

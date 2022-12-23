@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="2.493" tests="1" failures="0">
+  <testsuite name="Root Suite" timestamp="2022-12-22T14:57:53" tests="0" file="cypress\e2e\fhg1032_nosearchresults.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Search Results Tests" timestamp="2022-12-22T14:57:53" tests="1" time="2.442" failures="0">
+    <testcase name="Search Results Tests search using valid postcode with no results" time="2.403" classname="search using valid postcode with no results">
+    </testcase>
+  </testsuite>
+</testsuites>
