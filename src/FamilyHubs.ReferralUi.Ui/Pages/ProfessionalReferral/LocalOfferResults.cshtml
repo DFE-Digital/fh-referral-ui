@@ -91,7 +91,7 @@
                                         {
                                             <ul class="moj-filter-tags filters-component__remove-tags">
                                                 <li>
-                                                    <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removesubcategorySelection" value="@subcategorySelection" data-testid="@subcategorySelection-remove">
+                                                    <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removesubcategorySelection" value="@subcategorySelection" data-testid="@Model.Categories.FirstOrDefault(c => c.Id == subcategorySelection)?.Name.ToLower().Replace(" ", "")-remove">
                                                         <span class="govuk-visually-hidden">Remove this filter</span>
                                                         @Model.Categories.FirstOrDefault(c => c.Id == subcategorySelection)?.Name
                                                     </button>
@@ -437,7 +437,7 @@
                                                 {
                                                     if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
                                                     {
-                                                        @serviceTaxonomy.Taxonomy.Name
+                                                        <span data-testid="@serviceTaxonomy.Taxonomy.Name.ToLower().Replace(" ", "")-table">@serviceTaxonomy.Taxonomy.Name</span>
                                                     }
                                                 }
                                             }
