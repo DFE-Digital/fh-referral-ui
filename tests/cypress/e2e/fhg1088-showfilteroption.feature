@@ -1,8 +1,8 @@
-﻿Feature: Search Results Tests
+﻿Feature: Show filters on mobile
 
 	Scenario: search using valid postcode should return a valid results
 	Given a user has arrived on search page
-	When user searches with a valid postcode 'BS2 0SP'
+	When user searches with a valid postcode 'E1 2AD'
 	Then the user should see search results
 	When user is in desktop mode
 	Then the user should not see show filters or return to results buttons

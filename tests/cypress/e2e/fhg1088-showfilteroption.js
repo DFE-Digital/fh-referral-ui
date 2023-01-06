@@ -10,7 +10,7 @@ When("user searches with a valid postcode {string}", (postcode) => {
 });
 
 Then("the user should see search results", () => {
-    cy.get('[data-testid="aidforchildrenwithtracheostomies"]').should("exist");
+    cy.get('[data-testid="testservice1"]').should("exist");
 });
 
 When("user is in desktop mode", () => {

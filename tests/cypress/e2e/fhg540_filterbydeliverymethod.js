@@ -19,8 +19,11 @@ When("user searches using postcode {string} and filters using delivery method 'O
     cy.get('[data-testid="checkbox-online"]').click();
     cy.get('[data-testid="button-apply-filters"]').click();
 })
-Then("the user should see the service 'aidforchildrenwithtracheostomies'", () => {
-    cy.get('[data-testid="aidforchildrenwithtracheostomies"]').should("exist");
+Then("the user should see the service {string}", service => {
+    cy.get('[data-testid="' + service + '"]').should("exist");
+});
+Then("the user should not see the service {string}", service => {
+    cy.get('[data-testid="' + service + '"]').should("not.exist");
 });
 
 When("user searches using postcode {string} and filters using delivery method 'In person'", (postcode) => {
@@ -29,9 +32,6 @@ When("user searches using postcode {string} and filters using delivery method 'I
     cy.get('[data-testid="checkbox-inperson"]').click();
     cy.get('[data-testid="button-apply-filters"]').click();
 })
-Then("the user should see the service 'testservice-free-10to15yrs'", () => {
-    cy.get('[data-testid="testservice-free-10to15yrs"]').should("exist");
-});
 
 When("user searches using postcode {string} and filters using delivery method 'Telephone'", (postcode) => {
     cy.visit(`ProfessionalReferral/Search`);
@@ -39,9 +39,6 @@ When("user searches using postcode {string} and filters using delivery method 'T
     cy.get('[data-testid="checkbox-telephone"]').click();
     cy.get('[data-testid="button-apply-filters"]').click();
 })
-Then("the user should see the service 'testservice-paid-0to13yrs'", () => {
-    cy.get('[data-testid="testservice-paid-0to13yrs"]').should("exist");
-});
 
 When("user searches using postcode {string} and filters using delivery methods 'In person' and 'Online'", (postcode) => {
     cy.visit(`ProfessionalReferral/Search`);
@@ -50,9 +47,9 @@ When("user searches using postcode {string} and filters using delivery methods '
     cy.get('[data-testid="checkbox-online"]').click();
     cy.get('[data-testid="button-apply-filters"]').click();
 })
-Then("the user should see the services 'aidforchildrenwithtracheostomies' and 'testservice-free-10to15yrs'", () => {
-    cy.get('[data-testid="aidforchildrenwithtracheostomies"]').should("exist");
-    cy.get('[data-testid="testservice-free-10to15yrs"]').should("exist");
+Then("the user should see the services 'testservice11' and 'testservice1'", () => {
+    cy.get('[data-testid="testservice11"]').should("exist");
+    cy.get('[data-testid="testservice1"]').should("exist");
 });
 
 When("user searches using postcode {string} and filters using all delivery methods", (postcode) => {

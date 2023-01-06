@@ -10,33 +10,36 @@ When("user search with a valid postcode {string}", (postcode) => {
 });
 
 Then("the user should see search results", () => {
-    cy.get('[data-testid="aidforchildrenwithtracheostomies"]').should("exist");
+    cy.get('[data-testid="testservice1"]').should("exist");
 });
 
-When("use applies Free & In Person filters", () => {
-    cy.get('[data-testid="checkbox-free"]').click();
-    cy.get('[data-testid="checkbox-inperson"]').click();
+When("use applies German & Online filters", () => {
+    cy.get('[data-testid="select-language"]').select("German");
+    cy.get('[data-testid="checkbox-online"]').click();
     cy.get('[data-testid="button-apply-filters"]').click();
 });
 
 Then("the filter cloud should contain these filters", () => {
-    cy.get('[data-testid="free-remove"]').should("exist");
-    cy.get('[data-testid="1-remove-delivery"]').should("exist");
-    cy.get('[data-testid="testservice-free-10to15yrs"]').should("exist");
-    cy.get('[data-testid="aidforchildrenwithtracheostomies"]').should("not.exist");
-    cy.get('[data-testid="testservice-paid-15to20yrs-afrikaans"]').should("not.exist");
+    cy.get('[data-testid="2-remove-delivery"]').should("exist");
+    cy.get('[data-testid="German-remove"]').should("exist");
+    cy.get('[data-testid="testservice6"]').should("exist");
+    cy.get('[data-testid="testservice2"]').should("not.exist");
+    cy.get('[data-testid="testservice11"]').should("not.exist");
+    cy.get('[data-testid="testservice13"]').should("not.exist");
 });
 
-When("user removes In Person", () => {
-    cy.get('[data-testid="1-remove-delivery"]').click();
+When("user removes German", () => {
+    cy.get('[data-testid="German-remove"]').click();
 });
 
 Then("only one filter should exist", () => {
-    cy.get('[data-testid="free-remove"]').should("exist");
-    cy.get('[data-testid="1-remove-delivery"]').should("not.exist");
-    cy.get('[data-testid="testservice-free-10to15yrs"]').should("exist");
-    cy.get('[data-testid="aidforchildrenwithtracheostomies"]').should("exist");
-    cy.get('[data-testid="testservice-paid-15to20yrs-afrikaans"]').should("not.exist");
+    cy.get('[data-testid="2-remove-delivery"]').should("exist");
+    cy.get('[data-testid="German-remove"]').should("not.exist");
+    cy.get('[data-testid="testservice1"]').should("not.exist");
+    cy.get('[data-testid="testservice6"]').should("exist");
+    cy.get('[data-testid="testservice2"]').should("exist");
+    cy.get('[data-testid="testservice11"]').should("exist");
+    cy.get('[data-testid="testservice13"]').should("exist");
 });
 
 When("user clicks on clear all filters", () => {
@@ -44,9 +47,6 @@ When("user clicks on clear all filters", () => {
 });
 
 Then("all filters should be cleared", () => {
-    cy.get('[data-testid="free-remove"]').should("not.exist");
-    cy.get('[data-testid="1-remove-delivery"]').should("not.exist");
-    cy.get('[data-testid="testservice-free-10to15yrs"]').should("exist");
-    cy.get('[data-testid="aidforchildrenwithtracheostomies"]').should("exist");
-    cy.get('[data-testid="testservice-paid-15to20yrs-afrikaans"]').should("exist");
+    cy.get('[data-testid="2-remove-delivery"]').should("not.exist");
+    cy.get('[data-testid="German-remove"]').should("not.exist");
 });

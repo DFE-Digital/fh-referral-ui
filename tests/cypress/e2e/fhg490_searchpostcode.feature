@@ -2,7 +2,7 @@ Feature:  Search for Services by Postcode Tests
 
 Scenario: search with valid postcode
 	Given a user has arrived on search page
-	When user search by a postcode 'BS2 0SP'
+	When user search by a postcode 'E1 2AD'
     Then the user should see search results
 
 

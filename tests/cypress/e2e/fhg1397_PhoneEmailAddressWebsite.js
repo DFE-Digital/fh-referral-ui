@@ -8,7 +8,7 @@ Given("a user has arrived on search results page by a search with a valid postco
 });
 
 When("user user arrives on search details page", () => {
-    cy.get('[data-testid="aidforchildrenwithtracheostomies"]').click();
+    cy.get('[data-testid="testservice1"]').click();
 });
 
 Then("search results page should contain Phone", () => {

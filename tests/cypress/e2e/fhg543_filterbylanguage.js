@@ -17,7 +17,12 @@ When("user searches using postcode {string} and filters using language {string}"
     cy.get('[data-testid="select-language"]').select(language);
     cy.get('[data-testid="button-apply-filters"]').click();
 })
+
 Then("the user should see the service {string}", (service) => {
     cy.get('[data-testid="' + service +'"]').should("exist");
+});
+
+Then("the user should not see the service {string}", (service) => {
+    cy.get('[data-testid="' + service + '"]').should("not.exist");
 });
 

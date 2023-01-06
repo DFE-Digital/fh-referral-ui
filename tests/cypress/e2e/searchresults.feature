@@ -2,7 +2,7 @@ Feature: Search Results Tests
 
 	Scenario: search using valid postcode should return a valid results
 	Given a user as arrived on search page 
-	When user search with a valid postcode 'BS2 0SP'
+	When user search with a valid postcode 'E1 2AD'
 	Then the user should see search results
 
 	Scenario: search using empty postcode should return correct error

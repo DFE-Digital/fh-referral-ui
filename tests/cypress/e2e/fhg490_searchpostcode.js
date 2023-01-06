@@ -15,7 +15,7 @@ When("user search by a empty postcode", () => {
 });
 
 Then("the user should see search results", () => {
-    cy.get('[data-testid="aidforchildrenwithtracheostomies"]').should("exist");
+    cy.get('[data-testid="testservice1"]').should("exist");
 });
 
 Then("the user should see error message for empty postcode", () => {

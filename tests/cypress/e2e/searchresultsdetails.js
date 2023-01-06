@@ -8,7 +8,7 @@ Given("a user has arrived on search results page by a search with a valid postco
 });
 
 When("user click on the  results", () => {
-    cy.get('[data-testid="aidforchildrenwithtracheostomies"]').click();
+    cy.get('[data-testid="testservice1"]').click();
 });
 
 Then("search results page should show heading {string}", (heading) => {
@@ -22,5 +22,5 @@ Then("search results page should show cost has {string}", (cost) => {
 
 Then("user clicks on the back button he should be redirected to search results page", () => {
     cy.get('[data-testid="back-button"]').click()
-    cy.get('[data-testid="aidforchildrenwithtracheostomies"]').should("exist");
+    cy.get('[data-testid="testservice1"]').should("exist");
 });
