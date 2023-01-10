@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FamilyHubs.ServiceDirectory.Web.Pages.Error
+namespace FamilyHubs.ReferralUi.Ui.Pages.Error
 {
     public class TestModel : PageModel
     {
