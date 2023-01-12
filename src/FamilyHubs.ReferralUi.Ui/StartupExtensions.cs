@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.ReferralUi.Ui.Extensions;
 using FamilyHubs.ReferralUi.Ui.Models;
+using FamilyHubs.ReferralUi.Ui.Security;
 using FamilyHubs.ReferralUi.Ui.Services;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Helpers;
@@ -82,6 +83,8 @@ public static class StartupExtensions
     public static IServiceProvider ConfigureWebApplication(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
+
+        app.UseAppSecurityHeaders();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
