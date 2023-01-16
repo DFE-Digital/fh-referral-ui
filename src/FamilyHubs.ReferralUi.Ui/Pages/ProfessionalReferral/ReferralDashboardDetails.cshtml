@@ -68,6 +68,12 @@ else
                 <dd class="govuk-summary-list__value">
                     @Model?.Referral?.Status?.LastOrDefault()?.Status
                 </dd>
+                @if (Model != null && !string.IsNullOrEmpty(Model.ReasonForRejection))
+                {
+                    <dd>
+                        @Model?.ReasonForRejection
+                    </dd>            
+                } 
             }
                     
         </div>

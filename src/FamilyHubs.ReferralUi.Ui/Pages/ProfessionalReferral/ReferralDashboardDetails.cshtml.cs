@@ -52,14 +52,11 @@ public class ReferralDashboardDetailsModel : PageModel
             return;
         }
 
-        if (SelectedStatus == "Reject Connection")
+        ReferralDto? dto = await _referralClientService.GetReferralById(ReferralId);
+        if (dto != null) 
         {
-            ReferralDto? dto = await _referralClientService.GetReferralById(ReferralId);
-            if (dto != null) 
-            {
-                dto.ReasonForRejection = ReasonForRejection;
-                await _referralClientService.UpdateReferral(dto);
-            }
+            dto.ReasonForRejection = ReasonForRejection;
+            await _referralClientService.UpdateReferral(dto);
         }
 
         if (!string.IsNullOrEmpty(SelectedStatus))
@@ -99,6 +96,10 @@ public class ReferralDashboardDetailsModel : PageModel
         {
             ReferralId = referral.Id;
             Referral = referral;
+            if (referral != null)
+            {
+                ReasonForRejection = referral.ReasonForRejection ?? string.Empty;
+            }
             var currentStatus = Referral.Status.LastOrDefault();
             if (currentStatus != null)
             {
