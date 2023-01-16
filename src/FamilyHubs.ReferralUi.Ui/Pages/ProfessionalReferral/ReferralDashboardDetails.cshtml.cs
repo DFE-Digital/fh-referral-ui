@@ -102,7 +102,7 @@ public class ReferralDashboardDetailsModel : PageModel
             var currentStatus = Referral.Status.LastOrDefault();
             if (currentStatus != null)
             {
-                if (currentStatus.Status == "Inital-Referral")
+                if (currentStatus.Status == "Initial-Referral")
                 {
                     SelectedStatus = "Initial Connection";
                 }

@@ -20,8 +20,18 @@ public class ReferralDashboardModel : PageModel
 
     public async Task OnGet(string organisationId)
     {
-        if (organisationId != null && User.IsInRole("VCSAdmin")) 
+        var user = User;
+        if (User.IsInRole("VCSAdmin")) 
         {
+            if (string.IsNullOrEmpty(organisationId))
+            {
+                var claim = User.Claims.FirstOrDefault(x => x.Type == "OpenReferralOrganisationId");
+                if (claim != null)
+                {
+                    organisationId = claim.Value;
+                }
+            }
+            
             ReferralList = await _referralClientService.GetReferralsByOrganisationId(organisationId, 1, 999999);
             return;
         }
