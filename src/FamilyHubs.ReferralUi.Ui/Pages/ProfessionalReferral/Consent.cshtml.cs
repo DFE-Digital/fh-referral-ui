@@ -29,6 +29,8 @@ public class ConsentModel : PageModel
 
     public IActionResult OnPost(string id, string name, string referralId)
     {
+        ModelState.Remove("ReferralId");
+
         if (!ModelState.IsValid || IsConsentGiven == null)
         {
             Id = id;

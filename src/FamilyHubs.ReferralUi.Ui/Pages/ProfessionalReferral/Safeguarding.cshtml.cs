@@ -28,6 +28,8 @@ public class SafeguardingModel : PageModel
 
     public IActionResult OnPost(string id, string name, string referralId)
     {
+        ModelState.Remove("ReferralId");
+
         if (!ModelState.IsValid || IsImmediateHarm == null)
         {
             Id = id;

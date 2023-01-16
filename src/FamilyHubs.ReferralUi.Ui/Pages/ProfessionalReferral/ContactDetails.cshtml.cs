@@ -156,6 +156,8 @@ public class ContactDetailsModel : PageModel
             }
         }
 
+        ModelState.Remove("ReferralId");
+
         if (!ModelState.IsValid || !ValidationValid)
         {
             ValidationValid = false;

@@ -34,6 +34,8 @@ public class FamilyContactModel : PageModel
 
     public IActionResult OnPost()
     {
+        ModelState.Remove("ReferralId");
+
         if (!ModelState.IsValid)
         {
             if (FullName == null || FullName.Trim().Length == 0 || FullName.Length > 255)
