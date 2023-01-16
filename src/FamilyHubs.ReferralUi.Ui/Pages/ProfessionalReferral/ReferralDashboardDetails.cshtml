@@ -9,7 +9,7 @@
 }
 else
 {
-    <a asp-page="/ProfessionalReferral/ProfessionalHomepage" class="govuk-back-link" data-testid="back-button">Back</a> 
+    <a asp-page="/ProfessionalReferral/ReferralDashboard" class="govuk-back-link" data-testid="back-button">Back</a>
 }
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
@@ -73,14 +73,6 @@ else
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
-            Does the person have any special educational needs, disabilities or health conditions?
-          </dt>
-          <dd class="govuk-summary-list__value">
-            @Model?.Referral.HasSpecialNeeds
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
             Email address
           </dt>
           <dd class="govuk-summary-list__value" id="test">
@@ -94,6 +86,14 @@ else
           <dd class="govuk-summary-list__value">
               @Model?.Referral.Phone
           </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                UK textphone number
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model?.Referral.Text
+            </dd>
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
