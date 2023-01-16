@@ -68,7 +68,7 @@ public class CheckReferralDetailsModel : PageModel
             ReferralDto dto;
             if (string.IsNullOrEmpty(ReferralId))
             {
-                dto = new(Guid.NewGuid().ToString(), openReferralServiceDto.OpenReferralOrganisationId, Id, Name, openReferralServiceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial-Referral") });
+                dto = new(Guid.NewGuid().ToString(), openReferralServiceDto.OpenReferralOrganisationId, Id, Name, openReferralServiceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial Connection") });
             }
             else
             {
@@ -80,7 +80,7 @@ public class CheckReferralDetailsModel : PageModel
                 }
                 else
                 {
-                    dto = new(Guid.NewGuid().ToString(), openReferralServiceDto.OpenReferralOrganisationId, Id, Name, openReferralServiceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial-Referral") });
+                    dto = new(Guid.NewGuid().ToString(), openReferralServiceDto.OpenReferralOrganisationId, Id, Name, openReferralServiceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial Connection") });
                 }
 
                 
