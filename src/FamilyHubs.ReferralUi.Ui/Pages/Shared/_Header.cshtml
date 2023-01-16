@@ -26,6 +26,9 @@
                         @if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
                         {
                         <li class="govuk-header__navigation-item">
+                                @Html.Raw(Model.RenderLink<HomeLink>())
+                        </li>
+                        <li class="govuk-header__navigation-item">
                                 @Html.Raw(Model.RenderLink<SignOutLink>())
                         </li>
                         }
