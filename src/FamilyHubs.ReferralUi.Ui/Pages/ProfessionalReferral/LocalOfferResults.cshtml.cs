@@ -1,3 +1,4 @@
+using EnumsNET;
 using FamilyHubs.ReferralUi.Ui.Models;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
@@ -11,6 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json.Linq;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
@@ -305,8 +309,15 @@ public class LocalOfferResultsModel : PageModel
             return result;
 
         foreach (var serviceDelivery in serviceDeliveries)
-            result = result
-                     + (Enum.GetName(serviceDelivery.ServiceDelivery) != null ? Enum.GetName(serviceDelivery.ServiceDelivery) + "," : String.Empty);
+        {   
+            result = result +
+                serviceDelivery.ServiceDelivery.AsString(EnumFormat.Description) != null ?
+                serviceDelivery.ServiceDelivery.AsString(EnumFormat.Description)  + "," : 
+                String.Empty;
+        }
+
+
+        
 
         //Remove last comma if present
         if (result.EndsWith(","))
