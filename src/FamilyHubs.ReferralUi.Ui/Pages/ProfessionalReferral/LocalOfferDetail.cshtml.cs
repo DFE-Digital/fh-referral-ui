@@ -1,4 +1,6 @@
+using EnumsNET;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
@@ -65,7 +67,7 @@ public class LocalOfferDetailModel : PageModel
     }
 
 
-    public string GetDeliveryMethodsAsString(ICollection<OpenReferralServiceDeliveryExDto>? serviceDeliveries )
+    public string GetDeliveryMethodsAsString(ICollection<OpenReferralServiceDeliveryExDto>? serviceDeliveries)
     {
         string result = string.Empty;
 
@@ -73,8 +75,12 @@ public class LocalOfferDetailModel : PageModel
             return result;
 
         foreach (var serviceDelivery in serviceDeliveries)
-            result = result
-                     + (Enum.GetName(serviceDelivery.ServiceDelivery) != null ? Enum.GetName(serviceDelivery.ServiceDelivery) + "," : String.Empty);
+        {
+            result = result +
+                    serviceDelivery.ServiceDelivery.AsString(EnumFormat.Description) != null ?
+                    serviceDelivery.ServiceDelivery.AsString(EnumFormat.Description) + "," :
+                    String.Empty;
+        }
 
         //Remove last comma if present
         if (result.EndsWith(","))
@@ -109,7 +115,7 @@ public class LocalOfferDetailModel : PageModel
         if (addressDto == null || addressDto.Address_1 == null || addressDto.Address_1 == string.Empty)
             return;
 
-        Address_1 =  (addressDto.Address_1 != null ? addressDto.Address_1 + "," : string.Empty);
+        Address_1 = (addressDto.Address_1 != null ? addressDto.Address_1 + "," : string.Empty);
         City = (addressDto.City != null ? addressDto.City + "," : string.Empty);
         State_province = (addressDto.State_province != null ? addressDto.State_province + "," : string.Empty);
         Postal_code = (addressDto.Postal_code != null ? addressDto.Postal_code : string.Empty);
