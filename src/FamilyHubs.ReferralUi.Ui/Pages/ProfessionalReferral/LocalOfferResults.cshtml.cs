@@ -289,7 +289,7 @@ public class LocalOfferResultsModel : PageModel
             return result;
         }
 
-        result = result + (addressDto.Address_1 != null ? addressDto.Address_1 + "," : string.Empty);
+        result = result + (addressDto.Address_1 != null ? addressDto.Address_1.Replace("|", ",") + "," : string.Empty);
         result = result + (addressDto.City != null ? addressDto.City + "," : string.Empty);
         result = result + (addressDto.State_province != null ? addressDto.State_province + "," : string.Empty);
         result = result + (addressDto.Postal_code != null ? addressDto.Postal_code : string.Empty);
