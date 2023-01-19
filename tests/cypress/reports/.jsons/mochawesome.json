@@ -1,0 +1,110 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2022-12-22T14:57:53.077Z",
+    "end": "2022-12-22T14:57:55.570Z",
+    "duration": 2493,
+    "testsRegistered": 1,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "0eb21e41-b274-4e54-bab4-3f962e70ba75",
+      "title": "",
+      "fullFile": "cypress\\e2e\\fhg1032_nosearchresults.feature",
+      "file": "cypress\\e2e\\fhg1032_nosearchresults.feature",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "5aed7035-d04a-458d-9c77-084fafb183d0",
+          "title": "Search Results Tests",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "search using valid postcode with no results",
+              "fullTitle": "Search Results Tests search using valid postcode with no results",
+              "timedOut": null,
+              "duration": 2403,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "var _a, _b, _c, _d, _e;\nconst { remainingSteps, testCaseStartedId } = retrieveInternalProperties();\n(0, registry_1.assignRegistry)(registry);\nmessages.stack.push({\n    testCaseStarted: {\n        id: testCaseStartedId,\n        testCaseId,\n        attempt: attempt++,\n        timestamp: createTimestamp(),\n    },\n});\nwindow.testState = {\n    gherkinDocument,\n    pickles,\n    pickle,\n};\nfor (const step of steps) {\n    if (step.hook) {\n        const hook = step.hook;\n        cy.then(() => {\n            Cypress.log({\n                name: \"step\",\n                displayName: hook.keyword,\n                message: \"\",\n            });\n            const start = createTimestamp();\n            messages.stack.push({\n                testStepStarted: {\n                    testStepId: hook.id,\n                    testCaseStartedId,\n                    timestamp: start,\n                },\n            });\n            if (messages.enabled) {\n                cy.task(constants_1.TASK_TEST_STEP_STARTED, hook.id, { log: false });\n            }\n            return cy.wrap(start, { log: false });\n        })\n            .then((start) => {\n            registry.runHook(this, hook);\n            return cy.wrap(start, { log: false });\n        })\n            .then((start) => {\n            const end = createTimestamp();\n            messages.stack.push({\n                testStepFinished: {\n                    testStepId: hook.id,\n                    testCaseStartedId,\n                    testStepResult: {\n                        status: Status.Passed,\n                        duration: duration(start, end),\n                    },\n                    timestamp: end,\n                },\n            });\n            remainingSteps.shift();\n        });\n    }\n    else if (step.pickleStep) {\n        const pickleStep = step.pickleStep;\n        const text = (0, assertions_1.assertAndReturn)(pickleStep.text, \"Expected pickle step to have a text\");\n        const scenarioStep = (0, assertions_1.assertAndReturn)(astIdMap.get((0, assertions_1.assertAndReturn)((_a = pickleStep.astNodeIds) === null || _a === void 0 ? void 0 : _a[0], \"Expected to find at least one astNodeId\")), `Expected to find scenario step associated with id = ${(_b = pickleStep.astNodeIds) === null || _b === void 0 ? void 0 : _b[0]}`);\n        cy.then(() => {\n            Cypress.log({\n                name: \"step\",\n                displayName: (0, assertions_1.assertAndReturn)(\"keyword\" in scenarioStep && scenarioStep.keyword, \"Expected to find a keyword in the scenario step\"),\n                message: text,\n            });\n        });\n        const argument = ((_c = pickleStep.argument) === null || _c === void 0 ? void 0 : _c.dataTable)\n            ? new data_table_1.default(pickleStep.argument.dataTable)\n            : ((_e = (_d = pickleStep.argument) === null || _d === void 0 ? void 0 : _d.docString) === null || _e === void 0 ? void 0 : _e.content)\n                ? pickleStep.argument.docString.content\n                : undefined;\n        cy.then(() => {\n            internalProperties.currentStep = { pickleStep };\n            const start = createTimestamp();\n            messages.stack.push({\n                testStepStarted: {\n                    testStepId: pickleStep.id,\n                    testCaseStartedId,\n                    timestamp: start,\n                },\n            });\n            if (messages.enabled) {\n                cy.task(constants_1.TASK_TEST_STEP_STARTED, pickleStep.id, { log: false });\n            }\n            return cy.wrap(start, { log: false });\n        })\n            .then((start) => {\n            const ensureChain = (value) => Cypress.isCy(value) ? value : cy.wrap(value, { log: false });\n            try {\n                return ensureChain(registry.runStepDefininition(this, text, argument)).then((result) => {\n                    return {\n                        start,\n                        result,\n                    };\n                });\n            }\n            catch (e) {\n                if (e instanceof registry_1.MissingDefinitionError) {\n                    throw new Error(createMissingStepDefinitionMessage(context, text));\n                }\n                else {\n                    throw e;\n                }\n            }\n        })\n            .then(({ start, result }) => {\n            var _a, _b, _c;\n            const end = createTimestamp();\n            if (result === \"pending\") {\n                messages.stack.push({\n                    testStepFinished: {\n                        testStepId: pickleStep.id,\n                        testCaseStartedId,\n                        testStepResult: {\n                            status: Status.Pending,\n                            duration: duration(start, end),\n                        },\n                        timestamp: end,\n                    },\n                });\n                remainingSteps.shift();\n                for (const skippedStep of remainingSteps) {\n                    const testStepId = (0, assertions_1.assertAndReturn)((_b = (_a = skippedStep.hook) === null || _a === void 0 ? void 0 : _a.id) !== null && _b !== void 0 ? _b : (_c = skippedStep.pickleStep) === null || _c === void 0 ? void 0 : _c.id, \"Expected a step to either be a hook or a pickleStep\");\n                    messages.stack.push({\n                        testStepStarted: {\n                            testStepId,\n                            testCaseStartedId,\n                        },\n                    });\n                    messages.stack.push({\n                        testStepFinished: {\n                            testStepId,\n                            testCaseStartedId,\n                            testStepResult: {\n                                status: Status.Skipped,\n                            },\n                        },\n                    });\n                }\n                for (let i = 0, count = remainingSteps.length; i < count; i++) {\n                    remainingSteps.pop();\n                }\n                this.skip();\n            }\n            else {\n                messages.stack.push({\n                    testStepFinished: {\n                        testStepId: pickleStep.id,\n                        testCaseStartedId,\n                        testStepResult: {\n                            status: Status.Passed,\n                            duration: duration(start, end),\n                        },\n                        timestamp: end,\n                    },\n                });\n                remainingSteps.shift();\n            }\n        });\n    }\n}",
+              "err": {},
+              "uuid": "b57dc847-5713-424d-bd5f-cbe9f26ca88b",
+              "parentUUID": "5aed7035-d04a-458d-9c77-084fafb183d0",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "b57dc847-5713-424d-bd5f-cbe9f26ca88b"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 2403,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "id": "default",
+        "reportDir": "cypress\\reports\\.jsons",
+        "charts": true,
+        "reportPageTitle": "My Test Suite",
+        "embeddedScreenshots": true,
+        "inlineAssets": true,
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "6.2.0"
+    }
+  }
+}

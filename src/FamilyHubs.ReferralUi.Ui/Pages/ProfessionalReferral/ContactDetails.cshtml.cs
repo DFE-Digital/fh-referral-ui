@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -5,8 +6,11 @@ using System.Text.RegularExpressions;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
+[Authorize(Policy = "Referrer")]
 public class ContactDetailsModel : PageModel
 {
+    [BindProperty]
+    public string ReferralId { get; set; } = default!;
     [BindProperty]
     public string FullName { get; set; } = default!;
 
@@ -44,11 +48,15 @@ public class ContactDetailsModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public void OnGet(string id, string name, string fullName, string email, string telephone, string textphone)
+    public void OnGet(string id, string name, string fullName, string email, string telephone, string textphone, string referralId)
     {
         Id = id;
         Name = name;
         FullName = fullName;
+        Email = email;
+        Telephone = telephone;
+        Textphone = textphone;
+        ReferralId = referralId;
 
         if (!string.IsNullOrEmpty(email))
         {
@@ -124,6 +132,7 @@ public class ContactDetailsModel : PageModel
                 {
                     TelephoneValid = false;
                     ValidationValid = false;
+                    ModelState.AddModelError("textphone", "Telephone is invalid (can not contain spaces)");
                 }
 
             }
@@ -141,10 +150,13 @@ public class ContactDetailsModel : PageModel
                 {
                     TextphoneValid = false;
                     ValidationValid = false;
+                    ModelState.AddModelError("textphone", "Textphone is invalid (can not contain spaces)");
                 }
 
             }
         }
+
+        ModelState.Remove("ReferralId");
 
         if (!ModelState.IsValid || !ValidationValid)
         {
@@ -160,6 +172,7 @@ public class ContactDetailsModel : PageModel
             email = Email,
             telephone = Telephone,
             textphone = Textphone,
+            referralId = ReferralId,
         });
     }
 }

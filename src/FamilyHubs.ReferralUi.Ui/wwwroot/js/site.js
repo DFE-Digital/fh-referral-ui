@@ -7,15 +7,16 @@
 	'use strict';
 	function fhgov() {
 		this.init = function () {
-			restoreConditionalInputs();
+			showHideFilters();
 		};
 
-		this.showAlert = function (message) {
-			alert(message);
-		}
+		let showHideFilters = function () {
+			$('.js-show-hide-filters').click(function (evt) {
+				evt.preventDefault();
 
-		let restoreConditionalInputs = function () {
-			$("[data-conditional-active]").click();
+				$('.filters-component').toggleClass('app-results-filter-overlay');
+				$('body').toggleClass('app-results-filter-overlay-active');
+			});
 		}
 	}
 

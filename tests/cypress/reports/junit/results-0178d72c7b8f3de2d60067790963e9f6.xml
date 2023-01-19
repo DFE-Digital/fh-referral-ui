@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="4.614" tests="2" failures="0">
+  <testsuite name="Root Suite" timestamp="2022-12-22T14:58:47" tests="0" file="cypress\e2e\fhg539_filterbyage.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Filter Local Offer Search Results By Age Tests" timestamp="2022-12-22T14:58:47" tests="2" time="4.567" failures="0">
+    <testcase name="Filter Local Offer Search Results By Age Tests children and young people filter should exist" time="1.643" classname="children and young people filter should exist">
+    </testcase>
+    <testcase name="Filter Local Offer Search Results By Age Tests show local services that offer children and young people services for the selected age" time="2.886" classname="show local services that offer children and young people services for the selected age">
+    </testcase>
+  </testsuite>
+</testsuites>

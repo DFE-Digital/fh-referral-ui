@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="5.132" tests="6" failures="0">
+  <testsuite name="Root Suite" timestamp="2022-12-22T15:00:07" tests="0" file="cypress\e2e\searchresults.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Search Results Tests" timestamp="2022-12-22T15:00:07" tests="6" time="5.087" failures="0">
+    <testcase name="Search Results Tests search using valid postcode should return a valid results" time="1.338" classname="search using valid postcode should return a valid results">
+    </testcase>
+    <testcase name="Search Results Tests search using empty postcode should return correct error" time="0.433" classname="search using empty postcode should return correct error">
+    </testcase>
+    <testcase name="Search Results Tests search using invalid postcode should return correct error" time="0.666" classname="search using invalid postcode should return correct error">
+    </testcase>
+    <testcase name="Search Results Tests search using valid postcode with no results" time="1.083" classname="search using valid postcode with no results">
+    </testcase>
+    <testcase name="Search Results Tests clicking back button should navigate to search page" time="0.217" classname="clicking back button should navigate to search page">
+    </testcase>
+    <testcase name="Search Results Tests clicking postcode hyperlink should navigate to search page" time="1.275" classname="clicking postcode hyperlink should navigate to search page">
+    </testcase>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="5.625" tests="3" failures="0">
+  <testsuite name="Root Suite" timestamp="2022-12-22T14:59:23" tests="0" file="cypress\e2e\fhg543_filterbylanguage.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Filter Local Offer Search Results By Delivery methods Tests" timestamp="2022-12-22T14:59:23" tests="3" time="5.580" failures="0">
+    <testcase name="Filter Local Offer Search Results By Delivery methods Tests language filter should exist" time="1.850" classname="language filter should exist">
+    </testcase>
+    <testcase name="Filter Local Offer Search Results By Delivery methods Tests show local services offered in Afrikaans" time="1.911" classname="show local services offered in Afrikaans">
+    </testcase>
+    <testcase name="Filter Local Offer Search Results By Delivery methods Tests show local services offered in English" time="1.791" classname="show local services offered in English">
+    </testcase>
+  </testsuite>
+</testsuites>

@@ -7,9 +7,12 @@ public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
 
-    public IndexModel(ILogger<IndexModel> logger)
+    public bool IsReferralEnabled { get; set; } = false;
+
+    public IndexModel(IConfiguration configuration, ILogger<IndexModel> logger)
     {
         _logger = logger;
+        IsReferralEnabled = configuration.GetValue<bool>("IsReferralEnabled");
     }
 
     public void OnGet()

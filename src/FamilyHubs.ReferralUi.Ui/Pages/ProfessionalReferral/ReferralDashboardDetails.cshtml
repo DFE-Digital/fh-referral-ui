@@ -3,8 +3,33 @@
 @{
 }
 
-<main class="govuk-main-wrapper " id="main-content" role="main">
+@if (User.IsInRole("VCSAdmin"))
+{
+    <a asp-page="/ProfessionalReferral/ReferralDashboard" class="govuk-back-link" data-testid="back-button">Back</a>
+}
+else
+{
+    <a asp-page="/ProfessionalReferral/ReferralDashboard" class="govuk-back-link" data-testid="back-button">Back</a>
+}
 
+<main class="govuk-main-wrapper " id="main-content" role="main">
+    @if (Model.ReasonForRejectionIsMissing == true)
+    {
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li>
+                        <a href="#service-name" data-testid="enter-service-name-error">Please add a reason for rejecting</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    }
+    <form method="post">
+        <input asp-for="@Model.ReferralId" type="hidden">
     <fieldset class="govuk-fieldset">
       <h1 class="govuk-fieldset__heading-l">
           Referral Details
@@ -21,18 +46,43 @@
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
-            Does the person have any special educational needs, disabilities or health conditions?
+            Current Status
           </dt>
-          <dd class="govuk-summary-list__value">
-            @Model.Referral.HasSpecialNeeds
-          </dd>
+            @if (User.IsInRole("VCSAdmin"))
+            {
+                <dd class="govuk-summary-list__value">
+                    <select asp-for="SelectedStatus" asp-items="Model.StatusOptions" class="govuk-select" data-testid="select-status">
+                        <option value="" selected disabled>Select status</option>
+                    </select>
+                    <br />
+                     <h1 class="govuk-label-wrapper">
+                        <label class="govuk-label " for="with-hint">
+                                    If you set the status to 'Reject Connection' please enter the reason below:
+                        </label>
+                    </h1>
+                    <textarea asp-for="ReasonForRejection" class="govuk-textarea govuk-js-character-count" rows="3" id="with-hint"></textarea>
+                </dd>
+            }
+            else
+            {
+                <dd class="govuk-summary-list__value">
+                    @Model?.Referral?.Status?.LastOrDefault()?.Status
+                </dd>
+                @if (Model != null && !string.IsNullOrEmpty(Model.ReasonForRejection))
+                {
+                    <dd>
+                        @Model?.ReasonForRejection
+                    </dd>            
+                } 
+            }
+                    
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
             Email address
           </dt>
           <dd class="govuk-summary-list__value" id="test">
-              @Model.Referral.Email
+              @Model?.Referral.Email
           </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -40,20 +90,42 @@
             UK telephone number
           </dt>
           <dd class="govuk-summary-list__value">
-              @Model.Referral.Phone
+              @Model?.Referral.Phone
           </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                UK textphone number
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model?.Referral.Text
+            </dd>
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
             Why does this person or family need support from this service?
           </dt>
           <dd class="govuk-summary-list__value">
-            @Model.Referral.ReasonForSupport
+            @Model?.Referral.ReasonForSupport
           </dd>
         </div>
       </dl>
 
     </fieldset>
+        @if (User.IsInRole("VCSAdmin"))
+        {
+            <button type="submit" class="govuk-button" data-testid="button-update">
+                Update
+            </button>
+        }
 
+        @if (User.IsInRole("Professional"))
+        {
+            <button type="submit" asp-page-handler="EditDetails" class="govuk-button" data-testid="button-update">
+                Edit
+            </button>
+        }
+
+    </form>
 </main>
 

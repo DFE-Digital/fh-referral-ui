@@ -19,6 +19,7 @@ public class LocalOfferResultsModel : PageModel
     private readonly ILocalOfferClientService _localOfferClientService;
     private readonly IPostcodeLocationClientService _postcodeLocationClientService;
     private readonly IOpenReferralOrganisationClientService _openReferralOrganisationClientService;
+    private readonly bool _isReferralEnabled;
 
     public Dictionary<int, string> DictServiceDelivery = new();
 
@@ -28,7 +29,9 @@ public class LocalOfferResultsModel : PageModel
     [BindProperty]
     public List<string> CostSelection { get; set; } = default!;
 
-    public List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>> Categories { get; set; } = default!;
+    public List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>> NestedCategories { get; set; } = default!;
+
+    public List<OpenReferralTaxonomyDto> Categories { get; set; } = default!;
 
     [BindProperty]
     public List<string> CategorySelection { get; set; } = default!;
@@ -55,6 +58,8 @@ public class LocalOfferResultsModel : PageModel
     [BindProperty]
     public bool CanFamilyChooseLocation { get; set; } = false;
 
+    public bool RemoveFilter { get; set; } = false;
+
     [BindProperty(SupportsGet = true)]
     public string? SearchText { get; set; }
 
@@ -68,17 +73,17 @@ public class LocalOfferResultsModel : PageModel
     public string? OutCode { get; set; }
     public string? DistrictCode { get; set; }
 
-    public string SearchResultsTitle
+    public string SearchResultsSnippet
     {
         get
         {
             if (SearchResults.TotalCount == 1)
             {
-                return $"{SearchResults.TotalCount} service found";
+                return $"Showing {SearchResults.TotalCount} search result for:";
             }
             else
             {
-                return $"{SearchResults.TotalCount} services found";
+                return $"Showing {SearchResults.TotalCount} search results for:";
             }
         }
     }
@@ -94,14 +99,15 @@ public class LocalOfferResultsModel : PageModel
         new SelectListItem { Value = "32186.9", Text = "20 miles" },
     };
 
-    public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService, IOpenReferralOrganisationClientService openReferralOrganisationClientService)
+    public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService, IOpenReferralOrganisationClientService openReferralOrganisationClientService, IConfiguration configuration)
     {
         _localOfferClientService = localOfferClientService;
         _postcodeLocationClientService = postcodeLocationClientService;
         _openReferralOrganisationClientService = openReferralOrganisationClientService;
+        _isReferralEnabled = configuration.GetValue<bool>("IsReferralEnabled");
     }
 
-    public async Task OnGetAsync(string postCode,
+    public async Task<IActionResult> OnGetAsync(string postCode,
                                  double latitude,
                                  double longitude,
                                  double distance,
@@ -109,9 +115,20 @@ public class LocalOfferResultsModel : PageModel
                                  string maximumAge,
                                  string searchText)
     {
+        if (_isReferralEnabled) 
+        {
+            if (User != null && User.Identity != null && !User.Identity.IsAuthenticated) 
+            {
+                return RedirectToPage("/ProfessionalReferral/SignIn", new
+                {
+                });
+            }
+        }
+
         SearchPostCode = postCode;
         await GetLocationDetails(SearchPostCode);
         await GetCategoriesTreeAsync();
+        GetCategories();
 
         //Keep these as might be needed at a later stage
         SelectedDistance = distance.ToString();
@@ -142,10 +159,30 @@ public class LocalOfferResultsModel : PageModel
                                                                       null,
                                                                       null,
                                                                       null);
+
+        return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(string? removeCostSelection, bool removeFilter, string? removeServiceDeliverySelection, 
+                                                 string? removeSelectedLanguage, string? removeSearchAge, string? removecategorySelection,
+                                                 string? removesubcategorySelection)
     {
+        if(removeFilter)
+        {
+            if(removeCostSelection != null) RemoveFilterCostSelection(removeCostSelection);
+            if (removeServiceDeliverySelection != null) RemoveFilterServiceDeliverySelection(removeServiceDeliverySelection);
+            if (removeSelectedLanguage != null) SelectedLanguage = null;
+            if (removeSearchAge != null)
+            {
+                SearchAge = null;
+                ForChildrenAndYoungPeople = false;
+            }
+                
+            if (removecategorySelection != null) RemoveFilterForCategory(removecategorySelection);
+            if (removesubcategorySelection != null) RemoveFilterForSubCategory(removesubcategorySelection);
+
+
+        }
         if (ForChildrenAndYoungPeople && (SearchAge == null || !int.TryParse(SearchAge, out int searchAgeTest)))
         {
             ModelState.AddModelError(nameof(SearchAge), "Please select a valid search age");
@@ -155,6 +192,8 @@ public class LocalOfferResultsModel : PageModel
         {
             IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             CreateServiceDeliveryDictionary();
+            await GetCategoriesTreeAsync();
+            GetCategories();
             InitializeAgeRange();
             InitializeLanguages();
             return Page();
@@ -197,7 +236,7 @@ public class LocalOfferResultsModel : PageModel
         if (SelectedLanguage == "All languages")
             SelectedLanguage = null;
 
-        
+
         var taxonomies = string.Join(",", SubcategorySelection);
 
         SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing",
@@ -215,13 +254,15 @@ public class LocalOfferResultsModel : PageModel
                                                                       serviceDelivery,
                                                                       isPaidFor,
                                                                       taxonomies,
-                                                                      SelectedLanguage,
+                                                                      SelectedLanguage == "All languages"? null: SelectedLanguage,
                                                                       CanFamilyChooseLocation);
 
         InitializeAgeRange();
         InitializeLanguages();
         await GetCategoriesTreeAsync();
+        GetCategories();
         InitialLoad = false;
+        ModelState.Clear();
         return Page();
 
     }
@@ -448,7 +489,48 @@ public class LocalOfferResultsModel : PageModel
         List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>> categories = await _openReferralOrganisationClientService.GetCategories();
 
         if (categories != null)
-            Categories = new List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>>(categories);
+            NestedCategories = new List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>>(categories);
+
     }
 
+    /// <summary>
+    /// Stores category dto's in a list to make it easy to get category name from id
+    /// </summary>
+    private void GetCategories()
+    {
+        Categories = new List<OpenReferralTaxonomyDto>();
+        foreach (var category in NestedCategories)
+        {
+            Categories.Add(category.Key);
+            foreach (var subcategory in category.Value)
+                Categories.Add(subcategory);
+        }
+    }
+
+
+    private void RemoveFilterCostSelection(string removeFilter)
+    {
+        CostSelection.Remove(removeFilter);
+        ModelState.Remove(removeFilter);
+    }
+
+    private void RemoveFilterServiceDeliverySelection(string removeFilter)
+    {
+        ServiceDeliverySelection.Remove(removeFilter);
+        ModelState.Remove(removeFilter);
+    }
+
+    private void RemoveFilterForCategory(string removeFilter)
+    {
+        CategorySelection.Remove(removeFilter);
+        ModelState.Remove(removeFilter);
+    }
+
+    private void RemoveFilterForSubCategory(string removeFilter)
+    {
+        ModelState.Remove(removeFilter);
+        SubcategorySelection.Remove(removeFilter);
+    }
+
+    
 }

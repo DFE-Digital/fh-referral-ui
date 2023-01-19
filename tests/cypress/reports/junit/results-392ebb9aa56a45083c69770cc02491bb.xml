@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="13.738" tests="4" failures="2">
+  <testsuite name="Root Suite" timestamp="2022-12-22T14:57:58" tests="0" file="cypress\e2e\fhg1042-filterbycategory.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Filter Results by Category Tests" timestamp="2022-12-22T14:57:58" tests="4" time="13.696" failures="2">
+    <testcase name="Filter Results by Category Tests search using valid postcode should return results" time="1.427" classname="search using valid postcode should return results">
+    </testcase>
+    <testcase name="Filter Results by Category Tests search using Activity" time="0.983" classname="search using Activity">
+    </testcase>
+    <testcase name="Filter Results by Category Tests search using Activities Aid for Children with Tracheostomies should not be in results" time="0.000" classname="search using Activities Aid for Children with Tracheostomies should not be in results">
+      <failure message="Timed out retrying after 4000ms: Expected to find element: `[data-testid=&quot;activities,clubsandgroups&quot;]`, but never found it." type="AssertionError"><![CDATA[AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="activities,clubsandgroups"]`, but never found it.
+    at Context.eval (webpack://fh-referral-ui/./cypress/e2e/fhg1042-filterbycategory.js:17:0)
+    at Registry.runStepDefininition (webpack://fh-referral-ui/./node_modules/@badeball/cypress-cucumber-preprocessor/lib/registry.js:106:0)
+    at Context.eval (webpack://fh-referral-ui/./node_modules/@badeball/cypress-cucumber-preprocessor/lib/create-tests.js:327:0)]]></failure>
+    </testcase>
+    <testcase name="Filter Results by Category Tests search using Activities Test Service - Paid - 15 to 20yrs - Afrikaans should be in results" time="0.000" classname="search using Activities Test Service - Paid - 15 to 20yrs - Afrikaans should be in results">
+      <failure message="Timed out retrying after 4000ms: Expected to find element: `[data-testid=&quot;activities,clubsandgroups&quot;]`, but never found it." type="AssertionError"><![CDATA[AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="activities,clubsandgroups"]`, but never found it.
+    at Context.eval (webpack://fh-referral-ui/./cypress/e2e/fhg1042-filterbycategory.js:17:0)
+    at Registry.runStepDefininition (webpack://fh-referral-ui/./node_modules/@badeball/cypress-cucumber-preprocessor/lib/registry.js:106:0)
+    at Context.eval (webpack://fh-referral-ui/./node_modules/@badeball/cypress-cucumber-preprocessor/lib/create-tests.js:327:0)]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

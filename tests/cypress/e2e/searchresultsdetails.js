@@ -3,7 +3,6 @@ import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 
 Given("a user has arrived on search results page by a search with a valid postcode {string}", (postcode) => {
     cy.visit(`ProfessionalReferral/Search`);
-    cy.get('[data-testid="radio-postcode"]').click();
     cy.get('[data-testid="postcode-value"]').type(postcode);
     cy.get('[data-testid="button-search"]').click();
 });

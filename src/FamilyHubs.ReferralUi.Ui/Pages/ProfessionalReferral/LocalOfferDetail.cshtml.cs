@@ -1,5 +1,6 @@
 using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using Microsoft.AspNetCore.Mvc;
@@ -20,17 +21,37 @@ public class LocalOfferDetailModel : PageModel
     [BindProperty]
     public string Name { get; set; } = default!;
 
+    public string Address_1 { get; set; } = default!;
+    public string City { get; set; } = default!;
+    public string State_province { get; set; } = default!;
+    public string Postal_code { get; set; } = default!;
+    public string Phone { get; set; } = default!;
+
     public LocalOfferDetailModel(ILocalOfferClientService localOfferClientService, IConfiguration configuration)
     {
         _localOfferClientService = localOfferClientService;
         IsReferralEnabled = configuration.GetValue<bool>("IsReferralEnabled");
     }
 
-    public async Task OnGetAsync(string id, string name)
+    public async Task<IActionResult> OnGetAsync(string id, string name)
     {
+        if (IsReferralEnabled)
+        {
+            if (User != null && User.Identity != null && !User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/ProfessionalReferral/SignIn", new
+                {
+                });
+            }
+        }
+
         Name = name;
         ReturnUrl = Request.Headers["Referer"].ToString();
         LocalOffer = await _localOfferClientService.GetLocalOfferById(id);
+        ExtractAddressParts(LocalOffer?.Service_at_locations?.FirstOrDefault()?.Location?.Physical_addresses?.FirstOrDefault() ?? new OpenReferralPhysicalAddressDto());
+        GetTelephone();
+
+        return Page();
     }
 
     public IActionResult OnPost(string id, string name)
@@ -81,6 +102,40 @@ public class LocalOfferDetailModel : PageModel
         }
 
         return result;
+    }
+
+    public void ExtractAddressParts(OpenReferralPhysicalAddressDto addressDto)
+    {
+        if (addressDto == null || addressDto.Address_1 == null || addressDto.Address_1 == string.Empty)
+            return;
+
+        Address_1 =  (addressDto.Address_1 != null ? addressDto.Address_1 + "," : string.Empty);
+        City = (addressDto.City != null ? addressDto.City + "," : string.Empty);
+        State_province = (addressDto.State_province != null ? addressDto.State_province + "," : string.Empty);
+        Postal_code = (addressDto.Postal_code != null ? addressDto.Postal_code : string.Empty);
+    }
+
+    private void GetTelephone()
+    {
+        if (LocalOffer == null || LocalOffer.Contacts == null)
+            return;
+
+        foreach (var contact in LocalOffer.Contacts)
+        {
+            if (contact == null)
+                continue;
+
+            //Telephone
+            if (contact.Name == "Telephone")
+            {
+                if (contact.Phones != null && contact.Phones.Any())
+                {
+                    Phone = contact.Phones.First().Number;
+                }
+            }
+
+        }
+
     }
 
 }

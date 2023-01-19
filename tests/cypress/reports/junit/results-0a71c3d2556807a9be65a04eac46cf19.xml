@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="11.463" tests="2" failures="2">
+  <testsuite name="Root Suite" timestamp="2022-12-22T14:59:09" tests="0" file="cypress\e2e\fhg541_filterbylocation.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Filter Local Offer Search Results By family location choice" timestamp="2022-12-22T14:59:09" tests="2" time="11.427" failures="2">
+    <testcase name="Filter Local Offer Search Results By family location choice filter should exist" time="0.000" classname="filter should exist">
+      <failure message="Timed out retrying after 4000ms: Expected to find element: `[data-testid=&quot;checkbox-location&quot;]`, but never found it." type="AssertionError"><![CDATA[AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="checkbox-location"]`, but never found it.
+    at Context.eval (webpack://fh-referral-ui/./cypress/e2e/fhg541_filterbylocation.js:10:0)
+    at Registry.runStepDefininition (webpack://fh-referral-ui/./node_modules/@badeball/cypress-cucumber-preprocessor/lib/registry.js:106:0)
+    at Context.eval (webpack://fh-referral-ui/./node_modules/@badeball/cypress-cucumber-preprocessor/lib/create-tests.js:327:0)]]></failure>
+    </testcase>
+    <testcase name="Filter Local Offer Search Results By family location choice show local services that offer option for families to choose the location" time="0.000" classname="show local services that offer option for families to choose the location">
+      <failure message="Timed out retrying after 4000ms: Expected to find element: `[data-testid=&quot;checkbox-location&quot;]`, but never found it." type="AssertionError"><![CDATA[AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="checkbox-location"]`, but never found it.
+    at Context.eval (webpack://fh-referral-ui/./cypress/e2e/fhg541_filterbylocation.js:20:0)
+    at Registry.runStepDefininition (webpack://fh-referral-ui/./node_modules/@badeball/cypress-cucumber-preprocessor/lib/registry.js:106:0)
+    at Context.eval (webpack://fh-referral-ui/./node_modules/@badeball/cypress-cucumber-preprocessor/lib/create-tests.js:327:0)]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

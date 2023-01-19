@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="7.814" tests="1" failures="0">
+  <testsuite name="Root Suite" timestamp="2022-12-22T14:59:57" tests="0" file="cypress\e2e\filtersearchresults.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Filter Local Offer Search Results Tests" timestamp="2022-12-22T14:59:57" tests="1" time="7.723" failures="0">
+    <testcase name="Filter Local Offer Search Results Tests filtering search results using cost options should return valid results" time="7.708" classname="filtering search results using cost options should return valid results">
+    </testcase>
+  </testsuite>
+</testsuites>
