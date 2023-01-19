@@ -410,7 +410,7 @@
                             {
                                 <li role="listitem" tab-index="0">
                                     <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-                                        <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@item.Id" asp-route-name="@item.Name" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
+                                        <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@Guid.NewGuid().ToString()" asp-route-serviceid="@item.Id" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
                                     </h2>
                                     <p class="govuk-caption-m">
                                         @if (@item?.Service_at_locations?.FirstOrDefault()?.Location?.Physical_addresses?.FirstOrDefault() != null)

@@ -33,7 +33,8 @@ public class LocalOfferDetailModel : PageModel
         IsReferralEnabled = configuration.GetValue<bool>("IsReferralEnabled");
     }
 
-    public async Task<IActionResult> OnGetAsync(string id, string name)
+    //Needs to pass dummy id so service id can be any string
+    public async Task<IActionResult> OnGetAsync(string id, string serviceid)
     {
         if (IsReferralEnabled)
         {
@@ -45,9 +46,13 @@ public class LocalOfferDetailModel : PageModel
             }
         }
 
-        Name = name;
+        
         ReturnUrl = Request.Headers["Referer"].ToString();
-        LocalOffer = await _localOfferClientService.GetLocalOfferById(id);
+        LocalOffer = await _localOfferClientService.GetLocalOfferById(serviceid);
+        if (LocalOffer != null)
+        {
+            Name = LocalOffer.Name;
+        }
         ExtractAddressParts(LocalOffer?.Service_at_locations?.FirstOrDefault()?.Location?.Physical_addresses?.FirstOrDefault() ?? new OpenReferralPhysicalAddressDto());
         GetTelephone();
 
