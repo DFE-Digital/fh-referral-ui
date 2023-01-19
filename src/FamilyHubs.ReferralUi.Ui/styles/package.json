@@ -5,11 +5,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "node-sass --watch scss/application.scss -o ../wwwroot/css/ --output-style compressed",
-    "build": "node-sass scss/application.scss -o ../wwwroot/css/ --output-style compressed"
+    "build": "node-sass scss/application.scss -o ../wwwroot/css/ --output-style compressed",
+    "scss": "sass -w --quiet-deps scss/application.scss ../wwwroot/css/application.css"
   },
   "author": "",
   "license": "ISC",
+  "devDependencies": {
+    "sass": "^1.56.1",
+    "jquery": "^3.6.0"
+  },
   "dependencies": {
+    "@ministryofjustice/frontend": "^1.6.3",
     "govuk-frontend": "^4.3.1",
     "node-sass": "^7.0.2"
   }

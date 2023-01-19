@@ -2,6 +2,7 @@ using FamilyHubs.ReferralUi.Ui.Models;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.RegularExpressions;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
@@ -33,45 +34,17 @@ public class SearchModel : PageModel
 
     public async Task<IActionResult> OnPost()
     {
-        switch(SearchOption)
+        var validPostcode = new Regex(@"([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})");
+        if (string.IsNullOrEmpty(Postcode))
         {
-            case "name":
-                ModelState.Remove("Postcode");
-                if (string.IsNullOrEmpty(ServiceName))
-                    ServiceNameValid = false;
-                break;
-
-            case "postcode":
-                ModelState.Remove("ServiceName");
-                if (string.IsNullOrEmpty(Postcode))
-                    PostcodeValid = false;
-                break;
-
-            default:
-                ValidationValid = false;
-                return Page();
+            PostcodeValid = false;
+            return Page();
         }
-
-        if (!ModelState.IsValid)
+        if(!validPostcode.IsMatch(Postcode))
         {
             ValidationValid = false;
             return Page();
         }
-
-        if (string.Compare(SearchOption, "Name", StringComparison.OrdinalIgnoreCase) == 0)
-        {
-            return RedirectToPage("LocalOfferResults", new
-            {
-                latitude = 0.0D,
-                longitude = 0.0D,
-                distance = 0.0D,
-                minimumAge = 0,
-                maximumAge = 99,
-                searchText = ServiceName
-            });
-
-        }
-
         try
         {
             PostcodeApiModel postcodeApiModel = await _postcodeLocationClientService.LookupPostcode(Postcode);

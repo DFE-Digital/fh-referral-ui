@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="7.838" tests="4" failures="0">
+  <testsuite name="Root Suite" timestamp="2022-12-22T14:58:31" tests="0" file="cypress\e2e\fhg1397_PhoneEmailAddressWebsite.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Search Results Details Should contain Phone, Email, Address and website data" timestamp="2022-12-22T14:58:31" tests="4" time="7.796" failures="0">
+    <testcase name="Search Results Details Should contain Phone, Email, Address and website data Search Details contains Phone field" time="3.017" classname="Search Details contains Phone field">
+    </testcase>
+    <testcase name="Search Results Details Should contain Phone, Email, Address and website data Search Details contains Email field" time="1.833" classname="Search Details contains Email field">
+    </testcase>
+    <testcase name="Search Results Details Should contain Phone, Email, Address and website data Search Details contains Address field" time="1.370" classname="Search Details contains Address field">
+    </testcase>
+    <testcase name="Search Results Details Should contain Phone, Email, Address and website data Search Details contains Website field" time="1.492" classname="Search Details contains Website field">
+    </testcase>
+  </testsuite>
+</testsuites>

@@ -9,7 +9,8 @@
             <div class="footer-meta">
                 <div class="footer-meta-inner">
                     <ul class="platform-help-links">
-                        @Html.Raw(Model.RenderListItemLink<Help>())
+                        <a asp-page="/Accessibility" class="govuk-footer__link"
+                               data-testid="accessibility-link">Accessibility</a>
                         @Html.Raw(Model.RenderListItemLink<Feedback>())
                         @Html.Raw(Model.RenderListItemLink<Privacy>())
                         @Html.Raw(Model.RenderListItemLink<Cookies>())
@@ -40,15 +41,25 @@ else
                 <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
                     <h2 class="govuk-visually-hidden">Support links</h2>
                     <ul class="govuk-footer__inline-list">
-                        @Html.Raw(Model.RenderListItemLink<Help>(@class: "govuk-footer__inline-list-item"))
-                        @Html.Raw(Model.RenderListItemLink<Feedback>(@class: "govuk-footer__inline-list-item"))
-                        @Html.Raw(Model.RenderListItemLink<Privacy>(@class: "govuk-footer__inline-list-item"))
-                        @Html.Raw(Model.RenderListItemLink<Cookies>(@class: "govuk-footer__inline-list-item"))
-                        
-                        @Html.Raw(Model.RenderListItemLink<TermsAndConditions>(@class: "govuk-footer__inline-list-item"))
-
-                        <li class="govuk-footer__inline-list-item">
-                            Built by the @Html.Raw(Model.RenderLink<BuiltBy>())
+                       <li class="govuk-footer__inline-list-item">
+                            <a asp-page="/ProfessionalReferral/Accessibility" class="govuk-footer__link"
+                               data-testid="accessibility-link">Accessibility</a>
+                        </li>
+                         <li class="govuk-footer__inline-list-item">
+                            <a asp-page="/ProfessionalReferral/Contactus" class="govuk-footer__link"
+                               data-testid="contact-us-link">Contact us</a>
+                        </li>
+                         <li class="govuk-footer__inline-list-item">
+                            <a asp-page="/ProfessionalReferral/Cookies" class="govuk-footer__link"
+                               data-testid="cookies-link">Cookies</a>
+                        </li>
+                             <li class="govuk-footer__inline-list-item">
+                            <a href="https://qfreeaccountssjc1.az1.qualtrics.com/jfe/form/SV_3aXYQWE1MKuhSya" class="govuk-footer__link"
+                               data-testid="feedback-link">Feedback</a>
+                        </li>
+                             <li class="govuk-footer__inline-list-item">
+                            <a asp-page="/ProfessionalReferral/Termsandcondition" class="govuk-footer__link"
+                               data-testid="terms-condition-link">Terms and condition</a>
                         </li>
                     </ul>
                     <svg role="presentation" focusable="false" class="govuk-footer__licence-logo" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 483.2 195.7" height="17" width="41">

@@ -1,72 +1,40 @@
-using FamilyHubs.ReferralUi.Ui.Extensions;
-using FamilyHubs.ReferralUi.Ui.Models;
-using FamilyHubs.ReferralUi.Ui.Services;
-using FamilyHubs.ServiceDirectory.Shared.Extensions;
-using FamilyHubs.ServiceDirectory.Shared.Helpers;
-using MassTransit;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
-RegisterComponents(builder.Services, builder.Configuration);
+namespace FamilyHubs.ReferralUi.Ui;
 
-// Add services to the container.
-builder.AddClientServices();
-
-builder.Services
-    .AddWebUIServices(builder.Configuration);
-
-builder.Services.AddTransient<IRedisCache, RedisCache>();
-builder.Services.AddTransient<IRedisCacheService, RedisCacheService>();
-
-// Add services to the container.
-builder.Services.AddRazorPages();
-
-if (builder.Configuration.GetValue<bool>("UseRabbitMQ"))
+public static class Program
 {
-    var rabbitMqSettings = builder.Configuration.GetSection(nameof(RabbitMqSettings)).Get<RabbitMqSettings>();
-    builder.Services.AddMassTransit(mt =>
-                        mt.UsingRabbitMq((cntxt, cfg) =>
-                        {
-                            cfg.Host(rabbitMqSettings.Uri, "/", c =>
-                            {
-                                c.Username(rabbitMqSettings.UserName);
-                                c.Password(rabbitMqSettings.Password);
-                            });
-                        }));
+    public static IServiceProvider ServiceProvider { get; private set; } = default!;
+
+    public static async Task Main(string[] args)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateBootstrapLogger();
+
+        Log.Information("Starting up");
+
+        try
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            builder.ConfigureHost();
+
+            builder.Services.ConfigureServices(builder.Configuration);
+
+            var app = builder.Build();
+
+            ServiceProvider = app.ConfigureWebApplication();
+
+            await app.RunAsync();
+        }
+        catch (Exception e)
+        {
+            Log.Fatal(e, "An unhandled exception occurred during bootstrapping");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
+    }
 }
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-
-#if use_https
-        app.UseHttpsRedirection();
-#endif
-
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapRazorPages();
-
-Program.ServiceProvider = app.Services;
-
-app.Run();
-
-static void RegisterComponents(IServiceCollection builder, IConfiguration configuration)
-{
-    builder.AddApplicationInsights(configuration, "fh_referralui_ui");
-}
-public partial class Program
-{
-    public static IServiceProvider ServiceProvider { get; set; } = default!;
-}
-
-

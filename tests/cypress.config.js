@@ -2,6 +2,8 @@ const { defineConfig } = require("cypress");
 const webpack = require("@cypress/webpack-preprocessor");
 const preprocessor = require("@badeball/cypress-cucumber-preprocessor");
 
+
+
 async function setupNodeEvents(on, config) {
 
     on('task', {
@@ -15,6 +17,7 @@ async function setupNodeEvents(on, config) {
 
             return null
         }
+
     });
 
     await preprocessor.addCucumberPreprocessorPlugin(on, config);
@@ -57,9 +60,27 @@ async function setupNodeEvents(on, config) {
 }
 
 module.exports = defineConfig({
+    chromeWebSecurity: false,
     e2e: {
         baseUrl: 'https://localhost:7270/',
         specPattern: "**/*.feature",
         setupNodeEvents,
     },
+    reporter: 'cypress-multi-reporters',
+    reporterOptions: {
+        reporterEnabled: 'cypress-mochawesome-reporter, mocha-junit-reporter',
+        cypressMochawesomeReporterReporterOptions: {
+            reportDir: 'cypress/reports',
+            charts: true,
+            reportPageTitle: 'My Test Suite',
+            embeddedScreenshots: true,
+            inlineAssets: true
+        },
+        mochaJunitReporterReporterOptions: {
+            mochaFile: 'cypress/reports/junit/results-[hash].xml'
+        }
+    },
+    video: false
+
 });
+

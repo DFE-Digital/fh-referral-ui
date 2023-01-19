@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="2.033" tests="4" failures="0">
+  <testsuite name="Root Suite" timestamp="2022-12-22T15:00:22" tests="0" file="cypress\e2e\startnow.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Start Now Page Tests" timestamp="2022-12-22T15:00:22" tests="4" time="1.995" failures="0">
+    <testcase name="Start Now Page Tests start now heading is &apos;Connect families to support&apos;" time="0.437" classname="start now heading is &apos;Connect families to support&apos;">
+    </testcase>
+    <testcase name="Start Now Page Tests start now has a list class" time="0.245" classname="start now has a list class">
+    </testcase>
+    <testcase name="Start Now Page Tests start now page has a  start now button" time="0.354" classname="start now page has a  start now button">
+    </testcase>
+    <testcase name="Start Now Page Tests start now page has a child abuse link" time="0.922" classname="start now page has a child abuse link">
+    </testcase>
+  </testsuite>
+</testsuites>

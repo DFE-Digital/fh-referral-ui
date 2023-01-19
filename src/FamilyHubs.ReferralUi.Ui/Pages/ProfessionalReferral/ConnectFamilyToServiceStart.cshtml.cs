@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
+[Authorize(Policy = "Referrer")]
 public class ConnectFamilyToServiceStartModel : PageModel
 {
     [BindProperty]
@@ -17,11 +19,10 @@ public class ConnectFamilyToServiceStartModel : PageModel
 
     public IActionResult OnPost(string id, string name)
     {
-        return RedirectToPage("/ProfessionalReferral/SignIn", new
+        return RedirectToPage("/ProfessionalReferral/Safeguarding", new
         {
-            id = id,
-            name = name
+            id = Id,
+            name = Name
         });
-
     }
 }

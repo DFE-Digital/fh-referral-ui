@@ -1,8 +1,17 @@
 ﻿//Patterns
+@import "patterns/global";
 @import "patterns/cards";
 
 //Pages
 @import "pages/InPersonWhere";
 @import "pages/delivery-type";
 @import "pages/search-results";
-@import "pages/search-filters";
+@import "pages/ServiceFilter";
+
+//Components
+@import "components/search-filters";
+
+//Overrides
+
+@import "dfe-overrides/header";
+@import "dfe-overrides/main";

@@ -3,13 +3,18 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.Referrals;
 using FamilyHubs.ServiceDirectory.Shared.Models.MassTransit;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
+[Authorize(Policy = "Referrer")]
 public class CheckReferralDetailsModel : PageModel
 {
+    [BindProperty]
+    public string ReferralId { get; set; } = default!;
+
     [BindProperty]
     public string FullName { get; set; } = default!;
 
@@ -40,7 +45,7 @@ public class CheckReferralDetailsModel : PageModel
         _localOfferClientService = localOfferClientService;
     }
 
-    public void OnGet(string id, string name, string fullName, string email, string telephone, string textphone, string reasonForSupport)
+    public void OnGet(string id, string name, string fullName, string email, string telephone, string textphone, string reasonForSupport, string referralId)
     {
         Id = id;
         Name = name;
@@ -49,6 +54,7 @@ public class CheckReferralDetailsModel : PageModel
         Telephone = telephone;
         Textphone= textphone;
         ReasonForSupport = reasonForSupport;
+        ReferralId = referralId;
     }
 
     public async Task<IActionResult> OnPost()
@@ -56,10 +62,30 @@ public class CheckReferralDetailsModel : PageModel
         // Save to API
         OpenReferralServiceDto openReferralServiceDto = await _localOfferClientService.GetLocalOfferById(Id);
 
-        ReferralDto dto = new(Guid.NewGuid().ToString(),Id, openReferralServiceDto.OpenReferralOrganisationId, Name, openReferralServiceDto.Description  ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), "CurrentUser",FullName,string.Empty,Email,Telephone, Textphone, ReasonForSupport, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial-Referral") });
-
         try
         {
+            bool isNewReferral = true;
+            ReferralDto dto;
+            if (string.IsNullOrEmpty(ReferralId))
+            {
+                dto = new(Guid.NewGuid().ToString(), openReferralServiceDto.OpenReferralOrganisationId, Id, Name, openReferralServiceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial Connection") });
+            }
+            else
+            {
+                ReferralDto? original = await _referralClientService.GetReferralById(ReferralId);
+                if (original != null) 
+                {
+                    isNewReferral = false;
+                    dto = new(ReferralId, openReferralServiceDto.OpenReferralOrganisationId, Id, Name, openReferralServiceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, original.Status);
+                }
+                else
+                {
+                    dto = new(Guid.NewGuid().ToString(), openReferralServiceDto.OpenReferralOrganisationId, Id, Name, openReferralServiceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial Connection") });
+                }
+
+                
+            }
+
             if (_configuration.GetValue<bool>("UseRabbitMQ"))
             {
                 using (var scope = Program.ServiceProvider.CreateScope())
@@ -74,7 +100,15 @@ public class CheckReferralDetailsModel : PageModel
             }
             else
             {
-                await _referralClientService.CreateReferral(dto);
+                if (isNewReferral)
+                {
+                    await _referralClientService.CreateReferral(dto);
+                }
+                else
+                {
+                    await _referralClientService.UpdateReferral(dto);
+                }
+                
             }
         }
         catch

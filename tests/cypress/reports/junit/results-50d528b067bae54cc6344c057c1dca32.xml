@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="3.906" tests="5" failures="0">
+  <testsuite name="Root Suite" timestamp="2022-12-22T14:58:23" tests="0" file="cypress\e2e\fhg1326_dfebrandingheader.feature" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="DFE Header Tests" timestamp="2022-12-22T14:58:23" tests="5" time="3.868" failures="0">
+    <testcase name="DFE Header Tests Body element has the DFE class" time="0.413" classname="Body element has the DFE class">
+    </testcase>
+    <testcase name="DFE Header Tests Header title is &apos;Department for Education&apos;" time="0.492" classname="Header title is &apos;Department for Education&apos;">
+    </testcase>
+    <testcase name="DFE Header Tests Header sub-title is &apos;Connect families to support&apos;" time="0.254" classname="Header sub-title is &apos;Connect families to support&apos;">
+    </testcase>
+    <testcase name="DFE Header Tests DFE logo title should link to DFE website" time="2.297" classname="DFE logo title should link to DFE website">
+    </testcase>
+    <testcase name="DFE Header Tests DFE logo sub-title should link to start now page" time="0.366" classname="DFE logo sub-title should link to start now page">
+    </testcase>
+  </testsuite>
+</testsuites>

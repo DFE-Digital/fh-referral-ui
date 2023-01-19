@@ -1,6 +1,6 @@
 ﻿@using FamilyHubs.ReferralUi.Ui.Extensions
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,12 +24,12 @@
     <!--<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />-->
     <!--<link rel="stylesheet" href="~/WebUI.styles.css" asp-append-version="true" />-->
 </head>
-<body class="govuk-template__body ">
+<body class="govuk-template__body dfe-template__body" data-testid="pagebody">
    <script>
             document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
 
-    @await Html.PartialAsync("_CookieBanner", Html.GetCookieBannerViewModel())
+    @*@await Html.PartialAsync("_CookieBanner", Html.GetCookieBannerViewModel())*@
     @await Html.PartialAsync("_Header", Html.GetHeaderViewModel())
 
     <div class="govuk-phase-banner govuk-width-container">
