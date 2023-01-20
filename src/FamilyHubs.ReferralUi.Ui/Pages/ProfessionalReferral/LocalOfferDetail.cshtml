@@ -94,17 +94,17 @@
 
                 <!-- Contact details -->
                 <!-- Phone-->
-                <div class="govuk-summary-list__row">
+                <dl class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                         Phone
                     </dt>
                     <dd class="govuk-summary-list__value" data-testid="detailsphone">
                         <a href="tel:@Model.Phone">@Model.Phone</a>
                     </dd>
-                </div>
+                </dl>
 
                 <!--Email-->
-                <div class="govuk-summary-list__row">
+                <dl class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                         Email
                     </dt>
@@ -113,10 +113,10 @@
                             @Model.LocalOffer?.Email
                         </a>
                     </dd>
-                </div>
+                </dl>
 
                 <!--Address-->
-                <div class="govuk-summary-list__row">
+                <dl class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                         Address
                     </dt>
@@ -146,10 +146,10 @@
                             <br />
                         }
                     </dd>
-                </div>
+                </dl>
 
             <!--Website-->
-            <div class="govuk-summary-list__row">
+            <dl class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     Website
                 </dt>
@@ -158,7 +158,7 @@
                         @Model.LocalOffer?.Url
                     </a>
                 </dd>
-            </div>
+            </dl>
 
             <form method="post">
                 <input asp-for="@Model.Name" type="hidden">
