@@ -354,13 +354,13 @@ public class LocalOfferResultsModel : PageModel
 
         try
         {
-            PostcodeApiModel postcodeApiModel = await _postcodeLocationClientService.LookupPostcode(postCode);
-            if (postcodeApiModel != null)
+            PostcodesIoResponse postcodesIoResponse = await _postcodeLocationClientService.LookupPostcode(postCode);
+            if (postcodesIoResponse != null)
             {
-                CurrentLatitude = postcodeApiModel.result.latitude;
-                CurrentLongitude = postcodeApiModel.result.longitude;
-                DistrictCode = postcodeApiModel.result.codes.admin_district;
-                OutCode = postcodeApiModel.result.outcode;
+                CurrentLatitude = postcodesIoResponse.Result.Latitude;
+                CurrentLongitude = postcodesIoResponse.Result.Longitude;
+                DistrictCode = postcodesIoResponse.Result.AdminArea;
+                OutCode = postcodesIoResponse.Result.OutCode;
             }
         }
         catch

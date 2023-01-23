@@ -40,7 +40,7 @@ public class LocalOfferDetailModel : PageModel
     {
         if (IsReferralEnabled)
         {
-            if (User != null && User.Identity != null && !User.Identity.IsAuthenticated)
+            if (User.Identity != null && !User.Identity.IsAuthenticated)
             {
                 return RedirectToPage("/ProfessionalReferral/SignIn", new
                 {
@@ -65,8 +65,8 @@ public class LocalOfferDetailModel : PageModel
     {
         return RedirectToPage("/ProfessionalReferral/ConnectFamilyToServiceStart", new
         {
-            id = id,
-            name = name
+            id,
+            name
         });
 
     }
@@ -74,7 +74,7 @@ public class LocalOfferDetailModel : PageModel
 
     public string GetDeliveryMethodsAsString(ICollection<OpenReferralServiceDeliveryExDto>? serviceDeliveries)
     {
-        string result = string.Empty;
+        var result = string.Empty;
 
         if (serviceDeliveries == null || serviceDeliveries.Count == 0)
             return result;
@@ -98,13 +98,13 @@ public class LocalOfferDetailModel : PageModel
 
     public string GetLanguagesAsString(ICollection<OpenReferralLanguageDto>? languageDtos)
     {
-        string result = string.Empty;
+        var result = string.Empty;
 
         if (languageDtos == null || languageDtos.Count == 0)
             return result;
 
         foreach (var language in languageDtos)
-            result = result + (language.Language != null ? language.Language + "," : String.Empty);
+            result = result + language.Language + ",";
 
         //Remove last comma if present
         if (result.EndsWith(","))
@@ -117,7 +117,7 @@ public class LocalOfferDetailModel : PageModel
 
     public void ExtractAddressParts(OpenReferralPhysicalAddressDto addressDto)
     {
-        if (addressDto == null || addressDto.Address_1 == null || addressDto.Address_1 == string.Empty)
+        if (addressDto.Address_1 == string.Empty)
             return;
 
         Address_1 = (addressDto.Address_1 != null ? addressDto.Address_1 + "," : string.Empty);
@@ -128,25 +128,16 @@ public class LocalOfferDetailModel : PageModel
 
     private void GetTelephone()
     {
-        if (LocalOffer == null || LocalOffer.Contacts == null)
+        if (LocalOffer.Contacts == null)
             return;
 
         foreach (var contact in LocalOffer.Contacts)
         {
-            if (contact == null)
-                continue;
-
             //Telephone
             if (contact.Name == "Telephone")
             {
-                if (contact.Phones != null && contact.Phones.Any())
-                {
-                    Phone = contact.Phones.First().Number;
-                }
+                Phone = contact.Telephone;
             }
-
         }
-
     }
-
 }
