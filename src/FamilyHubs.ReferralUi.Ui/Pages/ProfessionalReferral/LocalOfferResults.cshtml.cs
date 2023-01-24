@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json.Linq;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -252,8 +253,10 @@ public class LocalOfferResultsModel : PageModel
                                                                       (CurrentLatitude != 0.0D) ? CurrentLatitude : null,
                                                                       (CurrentLongitude != 0.0D) ? CurrentLongitude : null,
                                                                       (distance > 0.0D) ? distance : null,
-                                                                      1,
-                                                                      99,
+                                                                      CurrentPage,
+                                                                      PageSize,
+                                                                      //1,
+                                                                      //99,
                                                                       SearchText ?? string.Empty,
                                                                       serviceDelivery,
                                                                       isPaidFor,
@@ -543,5 +546,5 @@ public class LocalOfferResultsModel : PageModel
         SubcategorySelection.Remove(removeFilter);
     }
 
-    
+
 }
