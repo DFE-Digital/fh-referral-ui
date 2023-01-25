@@ -1,6 +1,5 @@
 using EnumsNET;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
-using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
@@ -51,10 +50,7 @@ public class LocalOfferDetailModel : PageModel
         
         ReturnUrl = Request.Headers["Referer"].ToString();
         LocalOffer = await _localOfferClientService.GetLocalOfferById(serviceid);
-        if (LocalOffer != null)
-        {
-            Name = LocalOffer.Name;
-        }
+        Name = LocalOffer.Name;
         ExtractAddressParts(LocalOffer?.Service_at_locations?.FirstOrDefault()?.Location?.Physical_addresses?.FirstOrDefault() ?? new OpenReferralPhysicalAddressDto());
         GetTelephone();
 
@@ -120,10 +116,10 @@ public class LocalOfferDetailModel : PageModel
         if (addressDto.Address_1 == string.Empty)
             return;
 
-        Address_1 = (addressDto.Address_1 != null ? addressDto.Address_1 + "," : string.Empty);
-        City = (addressDto.City != null ? addressDto.City + "," : string.Empty);
-        State_province = (addressDto.State_province != null ? addressDto.State_province + "," : string.Empty);
-        Postal_code = (addressDto.Postal_code != null ? addressDto.Postal_code : string.Empty);
+        Address_1 = addressDto.Address_1 + ",";
+        City = addressDto.City != null ? addressDto.City + "," : string.Empty;
+        State_province = addressDto.State_province != null ? addressDto.State_province + "," : string.Empty;
+        Postal_code = addressDto.Postal_code;
     }
 
     private void GetTelephone()
@@ -131,6 +127,7 @@ public class LocalOfferDetailModel : PageModel
         if (LocalOffer.Contacts == null)
             return;
 
+        //if there are more then one contact with Name equal "Telephone" then bellow code will pick the last record
         foreach (var contact in LocalOffer.Contacts)
         {
             //Telephone

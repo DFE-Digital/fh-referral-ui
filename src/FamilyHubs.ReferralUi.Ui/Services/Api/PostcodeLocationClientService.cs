@@ -1,5 +1,5 @@
-﻿using FamilyHubs.ReferralUi.Ui.Models;
-using Newtonsoft.Json;
+﻿using System.Text.Json;
+using FamilyHubs.ReferralUi.Ui.Models;
 
 namespace FamilyHubs.ReferralUi.Ui.Services.Api
 {
@@ -21,10 +21,9 @@ namespace FamilyHubs.ReferralUi.Ui.Services.Api
 
             response.EnsureSuccessStatusCode();
 
-            var content = await response.Content.ReadAsStringAsync();
-
 #pragma warning disable CS8603 // Possible null reference return.
-            return JsonConvert.DeserializeObject<PostcodesIoResponse>(content);
+            return await JsonSerializer.DeserializeAsync<PostcodesIoResponse>(
+                await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 #pragma warning restore CS8603 // Possible null reference return.
         }
     }

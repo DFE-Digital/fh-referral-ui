@@ -47,7 +47,7 @@ public class SearchModel : PageModel
         }
         try
         {
-            PostcodesIoResponse postcodesIoResponse = await _postcodeLocationClientService.LookupPostcode(Postcode);
+            var postcodesIoResponse = await _postcodeLocationClientService.LookupPostcode(Postcode);
 
             return RedirectToPage("LocalOfferResults", new 
             {
