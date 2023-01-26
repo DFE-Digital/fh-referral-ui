@@ -1,6 +1,5 @@
 using EnumsNET;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
-using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
@@ -40,7 +39,7 @@ public class LocalOfferDetailModel : PageModel
     {
         if (IsReferralEnabled)
         {
-            if (User != null && User.Identity != null && !User.Identity.IsAuthenticated)
+            if (User.Identity != null && !User.Identity.IsAuthenticated)
             {
                 return RedirectToPage("/ProfessionalReferral/SignIn", new
                 {
@@ -51,10 +50,7 @@ public class LocalOfferDetailModel : PageModel
         
         ReturnUrl = Request.Headers["Referer"].ToString();
         LocalOffer = await _localOfferClientService.GetLocalOfferById(serviceid);
-        if (LocalOffer != null)
-        {
-            Name = LocalOffer.Name;
-        }
+        Name = LocalOffer.Name;
         ExtractAddressParts(LocalOffer?.Service_at_locations?.FirstOrDefault()?.Location?.Physical_addresses?.FirstOrDefault() ?? new OpenReferralPhysicalAddressDto());
         GetTelephone();
 
@@ -65,8 +61,8 @@ public class LocalOfferDetailModel : PageModel
     {
         return RedirectToPage("/ProfessionalReferral/ConnectFamilyToServiceStart", new
         {
-            id = id,
-            name = name
+            id,
+            name
         });
 
     }
@@ -74,7 +70,7 @@ public class LocalOfferDetailModel : PageModel
 
     public string GetDeliveryMethodsAsString(ICollection<OpenReferralServiceDeliveryExDto>? serviceDeliveries)
     {
-        string result = string.Empty;
+        var result = string.Empty;
 
         if (serviceDeliveries == null || serviceDeliveries.Count == 0)
             return result;
@@ -98,13 +94,13 @@ public class LocalOfferDetailModel : PageModel
 
     public string GetLanguagesAsString(ICollection<OpenReferralLanguageDto>? languageDtos)
     {
-        string result = string.Empty;
+        var result = string.Empty;
 
         if (languageDtos == null || languageDtos.Count == 0)
             return result;
 
         foreach (var language in languageDtos)
-            result = result + (language.Language != null ? language.Language + "," : String.Empty);
+            result = result + language.Language + ",";
 
         //Remove last comma if present
         if (result.EndsWith(","))
@@ -117,36 +113,28 @@ public class LocalOfferDetailModel : PageModel
 
     public void ExtractAddressParts(OpenReferralPhysicalAddressDto addressDto)
     {
-        if (addressDto == null || addressDto.Address_1 == null || addressDto.Address_1 == string.Empty)
+        if (addressDto.Address_1 == string.Empty)
             return;
 
-        Address_1 = (addressDto.Address_1 != null ? addressDto.Address_1 + "," : string.Empty);
-        City = (addressDto.City != null ? addressDto.City + "," : string.Empty);
-        State_province = (addressDto.State_province != null ? addressDto.State_province + "," : string.Empty);
-        Postal_code = (addressDto.Postal_code != null ? addressDto.Postal_code : string.Empty);
+        Address_1 = addressDto.Address_1 + ",";
+        City = addressDto.City != null ? addressDto.City + "," : string.Empty;
+        State_province = addressDto.State_province != null ? addressDto.State_province + "," : string.Empty;
+        Postal_code = addressDto.Postal_code;
     }
 
     private void GetTelephone()
     {
-        if (LocalOffer == null || LocalOffer.Contacts == null)
+        if (LocalOffer.Contacts == null)
             return;
 
+        //if there are more then one contact with Name equal "Telephone" then bellow code will pick the last record
         foreach (var contact in LocalOffer.Contacts)
         {
-            if (contact == null)
-                continue;
-
             //Telephone
             if (contact.Name == "Telephone")
             {
-                if (contact.Phones != null && contact.Phones.Any())
-                {
-                    Phone = contact.Phones.First().Number;
-                }
+                Phone = contact.Telephone;
             }
-
         }
-
     }
-
 }

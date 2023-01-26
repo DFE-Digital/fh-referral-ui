@@ -7,7 +7,6 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralHolidaySchedule;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhones;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralRegularSchedule;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAreas;
@@ -21,6 +20,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.ServiceType;
 using Moq;
 using Moq.Protected;
 using System.Net;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLinkTaxonomies;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Services;
 
@@ -95,11 +95,8 @@ public class BaseClientService
                     contactId,
                     "Contact",
                     string.Empty,
-                    new List<OpenReferralPhoneDto>()
-                    {
-                        new OpenReferralPhoneDto("1567", "01827 65777")
-                    }
-                    )
+                    "01827 65777",
+                    "01827 65777")
             })
             .WithCostOption(new List<OpenReferralCostOptionDto>())
             .WithLanguages(new List<OpenReferralLanguageDto>()
@@ -130,7 +127,8 @@ public class BaseClientService
                                     "England",
                                     null
                                     )
-                            }
+                            },
+                            new List<OpenReferralLinkTaxonomyDto>()
                             //new List<Accessibility_For_Disabilities>()
                             ),
                             new List<OpenReferralRegularScheduleDto>(),

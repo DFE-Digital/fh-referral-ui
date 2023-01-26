@@ -168,16 +168,14 @@ public class LocalOfferResultsOldModel : PageModel
 
         try
         {
-            PostcodeApiModel postcodeApiModel = await _postcodeLocationClientService.LookupPostcode(SearchPostCode);
-            if (postcodeApiModel != null)
-            {
-                CurrentLatitude = postcodeApiModel.result.latitude;
-                CurrentLongitude = postcodeApiModel.result.longitude;
-            }
+            var postcodesIoResponse = await _postcodeLocationClientService.LookupPostcode(SearchPostCode);
+            
+            CurrentLatitude = postcodesIoResponse.Result.Latitude;
+            CurrentLongitude = postcodesIoResponse.Result.Longitude;
         }
         catch
         {
-            return;
+            // ignored
         }
     }
 }
