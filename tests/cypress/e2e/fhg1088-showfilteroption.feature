@@ -2,7 +2,7 @@
 
 	Scenario: On mobile we should see the Show filters button which displays filter on overlay
 		Given a user has arrived on search page
-		When user searches with a valid postcode 'E1 2AD'
+		When user searches with a valid postcode 'BS2 0SP'
 		Then the user should see search results
 		When user is in desktop mode
 		Then the user should not see show filters or return to results buttons
