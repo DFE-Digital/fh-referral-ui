@@ -27,8 +27,14 @@ public class LocalOfferClientService : ApiService, ILocalOfferClientService
             status = "active";
 
         string url = string.Empty;
-        if (latitude != null && longtitude != null && proximity != null)
-            url = $"api/services?serviceType={serviceType}&status={status}&latitude={latitude}&longtitude={longtitude}&proximity={proximity}&pageNumber={pageNumber}&pageSize={pageSize}&text={text}";
+        if (latitude != null && longtitude != null)
+        {
+            if (proximity != null)
+                url = $"api/services?serviceType={serviceType}&status={status}&latitude={latitude}&longtitude={longtitude}&proximity={proximity}&pageNumber={pageNumber}&pageSize={pageSize}&text={text}";
+            else
+                url = $"api/services?serviceType={serviceType}&status={status}&latitude={latitude}&longtitude={longtitude}&pageNumber={pageNumber}&pageSize={pageSize}&text={text}";
+        }
+            
         else
             url = $"api/services?serviceType={serviceType}&status={status}&pageNumber={pageNumber}&pageSize={pageSize}&text={text}";
 
