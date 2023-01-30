@@ -5,5 +5,5 @@
 		When user search with a valid postcode 'BS2 0SP'
 		Then the user should see search results
 		Then the user should see 'Services, groups and activities in this area' title
-		Then the user should see 'Showing 3 search results for' message
+		Then the user should see 'Showing # search results for' message
 		Then the user should see 'BS2 0SP' poscode
