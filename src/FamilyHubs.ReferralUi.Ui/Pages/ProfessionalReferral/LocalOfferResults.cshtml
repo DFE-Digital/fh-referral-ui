@@ -37,6 +37,11 @@
                     </h1>
                     <!-- <h2 class="govuk-heading-s">52 services found</h2> -->
                     <!-- <p class="govuk-caption-m">Showing 52 search results for <a href="search"> -->
+
+                    <div class="govuk-button-group app-results-filter-overlay--show-filters js-show-hide-filters" data-module="show-filters-button-group">
+                        <button class="govuk-button govuk-button--secondary" data-module="govuk-button" data-testid="show-filters-button">Show filters</button>
+                    </div>
+
                     <p class="govuk-caption-m govuk-!-margin-top-4" data-testid="number-of-results">
                         @Model.SearchResultsSnippet
                         <a class="govuk-link" asp-page="/ProfessionalReferral/Search" data-testid="postcodelink">
@@ -46,13 +51,17 @@
                 </div>
 
                 <div class="govuk-grid-column-one-third">
-                    <div class="moj-filter">
+                    <div class="moj-filter filters-component panel-component__content" id="filters-component" data-controller="filters" data-testid="filtersoverlay">
 
                         <div class="moj-filter__header" style="padding: 0;">
 
                             <div class="moj-filter__header-action">
                             </div>
 
+                        </div>
+
+                        <div class="app-results-filter-overlay--heading-right">
+                            <a href="#" class="govuk-link govuk-link--no-underline js-show-hide-filters filters-show-hide-mobile" data-module="return-to-results-link" data-testid="return-to-results-link">Return to results</a>
                         </div>
 
                         <div class="moj-filter__content">
