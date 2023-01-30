@@ -494,7 +494,7 @@
                                     @for (int i = 1; i <= Model.SearchResults.TotalPages; i++)
                                     {
                                         <li class="govuk-pagination__item @(Model.SearchResults.PageNumber == i ? "govuk-pagination__item--current" : "") ">
-                                            <a href="#" class="govuk-link govuk-pagination__link" href="#" aria-label="Page 1">@i</a>
+                                            <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@i">@i</button>
                                         </li>
                                     }
                                 </ul>
