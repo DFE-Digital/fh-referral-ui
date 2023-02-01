@@ -20,6 +20,9 @@ public class LocalOfferDetailModel : PageModel
     public bool IsReferralEnabled { get; private set; }
 
     [BindProperty]
+    public string ServiceId { get; set; } = default!;
+
+    [BindProperty]
     public string Name { get; set; } = default!;
 
     public string Address_1 { get; set; } = default!;
@@ -47,7 +50,7 @@ public class LocalOfferDetailModel : PageModel
             }
         }
 
-        
+        ServiceId = serviceid;
         ReturnUrl = Request.Headers["Referer"].ToString();
         LocalOffer = await _localOfferClientService.GetLocalOfferById(serviceid);
         Name = LocalOffer.Name;
@@ -57,11 +60,11 @@ public class LocalOfferDetailModel : PageModel
         return Page();
     }
 
-    public IActionResult OnPost(string id, string name)
+    public IActionResult OnPost(string id, string serviceId, string name)
     {
         return RedirectToPage("/ProfessionalReferral/ConnectFamilyToServiceStart", new
         {
-            id,
+            id = serviceId,
             name
         });
 

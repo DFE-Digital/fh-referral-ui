@@ -162,7 +162,8 @@
 
             <form method="post">
                 <input asp-for="@Model.Name" type="hidden">
-                @if (Model.IsReferralEnabled)
+                <input asp-for="@Model.ServiceId" type="hidden">
+                @if (Model.IsReferralEnabled && Model?.LocalOffer?.ServiceType?.Name == "Information Sharing")
                 {
                     <button type="submit" class="govuk-button">
                         Connect family to service
