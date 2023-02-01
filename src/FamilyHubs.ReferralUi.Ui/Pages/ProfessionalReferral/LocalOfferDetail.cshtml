@@ -94,28 +94,38 @@
 
                 <!-- Contact details -->
                 <!-- Phone-->
-                <dl class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Phone
-                    </dt>
-                    <dd class="govuk-summary-list__value" data-testid="detailsphone">
-                        <a href="tel:@Model.Phone">@Model.Phone</a>
-                    </dd>
-                </dl>
+                @if (!string.IsNullOrEmpty(@Model.Phone))
+                {
+                    <dl class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Phone
+                        </dt>
+                        <dd class="govuk-summary-list__value" data-testid="detailsphone">
+                            <a href="tel:@Model.Phone">@Model.Phone</a>
+                        </dd>
+                    </dl>
+                }
+                
 
                 <!--Email-->
-                <dl class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Email
-                    </dt>
-                    <dd class="govuk-summary-list__value" data-testid="detailsemail">
-                        <a href="mailto:@Model.LocalOffer?.Email">
-                            @Model.LocalOffer?.Email
-                        </a>
-                    </dd>
-                </dl>
+                @if (!string.IsNullOrEmpty(@Model.LocalOffer?.Email))
+                {
+                    <dl class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Email
+                        </dt>
+                        <dd class="govuk-summary-list__value" data-testid="detailsemail">
+                            <a href="mailto:@Model.LocalOffer?.Email">
+                                @Model.LocalOffer?.Email
+                            </a>
+                        </dd>
+                    </dl>
+                }
+                
 
                 <!--Address-->
+                @if (!string.IsNullOrEmpty(@Model.Postal_code))
+                {
                 <dl class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                         Address
@@ -147,19 +157,24 @@
                         }
                     </dd>
                 </dl>
+                }
+            
 
             <!--Website-->
-            <dl class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Website
-                </dt>
-                <dd class="govuk-summary-list__value" data-testid="detailswebsite">
-                    <a href="https://@Model.LocalOffer?.Url">
-                        @Model.LocalOffer?.Url
-                    </a>
-                </dd>
-            </dl>
-
+            @if (!string.IsNullOrEmpty(@Model.LocalOffer?.Email))
+            {
+                <dl class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Website
+                    </dt>
+                    <dd class="govuk-summary-list__value" data-testid="detailswebsite">
+                        <a href="https://@Model.LocalOffer?.Url">
+                            @Model.LocalOffer?.Url
+                        </a>
+                    </dd>
+                </dl>    
+            }
+            
             <form method="post">
                 <input asp-for="@Model.Name" type="hidden">
                 <input asp-for="@Model.ServiceId" type="hidden">
