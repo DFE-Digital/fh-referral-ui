@@ -1,4 +1,4 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.SharedKernel;
 using System.Text.Json;
 
@@ -6,11 +6,11 @@ namespace FamilyHubs.ReferralUi.Ui.Services.Api;
 
 public interface ILocalOfferClientService
 {
-    Task<PaginatedList<OpenReferralServiceDto>> GetLocalOffers(string serviceType, string status, int? minimum_age, int? maximum_age, int? given_age, string? districtCode, double? latitude, double? longtitude, double? proximity, int pageNumber, int pageSize, string text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation);
-    Task<OpenReferralServiceDto> GetLocalOfferById(string id);
+    Task<PaginatedList<ServiceDto>> GetLocalOffers(string serviceType, string status, int? minimum_age, int? maximum_age, int? given_age, string? districtCode, double? latitude, double? longtitude, double? proximity, int pageNumber, int pageSize, string text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation);
+    Task<ServiceDto> GetLocalOfferById(string id);
     //Task<PaginatedList<TestItem>> GetTestCommand(double latitude, double logtitude, double meters);
 
-    Task<List<OpenReferralServiceDto>> GetServicesByOrganisationId(string id);
+    Task<List<ServiceDto>> GetServicesByOrganisationId(string id);
 }
 
 public class LocalOfferClientService : ApiService, ILocalOfferClientService
@@ -21,7 +21,7 @@ public class LocalOfferClientService : ApiService, ILocalOfferClientService
 
     }
 
-    public async Task<PaginatedList<OpenReferralServiceDto>> GetLocalOffers(string? serviceType, string status, int? minimum_age, int? maximum_age, int? given_age, string? districtCode, double? latitude, double? longtitude, double? proximity, int pageNumber, int pageSize, string text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation)
+    public async Task<PaginatedList<ServiceDto>> GetLocalOffers(string? serviceType, string status, int? minimum_age, int? maximum_age, int? given_age, string? districtCode, double? latitude, double? longtitude, double? proximity, int pageNumber, int pageSize, string text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation)
     {
         if (string.IsNullOrEmpty(status))
             status = "active";
@@ -93,10 +93,10 @@ public class LocalOfferClientService : ApiService, ILocalOfferClientService
 
         response.EnsureSuccessStatusCode();
 
-        return await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new PaginatedList<OpenReferralServiceDto>();
+        return await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new PaginatedList<ServiceDto>();
     }
 
-    public async Task<OpenReferralServiceDto> GetLocalOfferById(string id)
+    public async Task<ServiceDto> GetLocalOfferById(string id)
     {
         var request = new HttpRequestMessage
         {
@@ -109,13 +109,13 @@ public class LocalOfferClientService : ApiService, ILocalOfferClientService
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<OpenReferralServiceDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
+        var retVal = await JsonSerializer.DeserializeAsync<ServiceDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        ArgumentNullException.ThrowIfNull(retVal);
 
         return retVal;
     }
 
-    public async Task<List<OpenReferralServiceDto>> GetServicesByOrganisationId(string id)
+    public async Task<List<ServiceDto>> GetServicesByOrganisationId(string id)
     {
         var request = new HttpRequestMessage
         {
@@ -127,6 +127,6 @@ public class LocalOfferClientService : ApiService, ILocalOfferClientService
 
         response.EnsureSuccessStatusCode();
 
-        return await JsonSerializer.DeserializeAsync<List<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<OpenReferralServiceDto>();
+        return await JsonSerializer.DeserializeAsync<List<ServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<ServiceDto>();
     }
 }

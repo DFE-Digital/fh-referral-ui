@@ -37,7 +37,7 @@ public class TokenService : ITokenService
         TimeSpan ts = validDate - DateTime.Now;
 
         var cacheEntryOptions = new MemoryCacheEntryOptions()
-            .SetSlidingExpiration(ts); // TimeSpan.FromSeconds(3));
+            .SetSlidingExpiration(ts);
 
         _memoryCache.Set("FamilyHubToken", tokenValue, cacheEntryOptions);
         _memoryCache.Set("FamilyHubRefreshToken", refreshToken, cacheEntryOptions);
@@ -45,7 +45,7 @@ public class TokenService : ITokenService
 
     public string GetToken()
     {
-        if (_memoryCache.TryGetValue("FamilyHubToken", out string cacheValue))
+        if (_memoryCache.TryGetValue("FamilyHubToken", out string? cacheValue) && !string.IsNullOrEmpty(cacheValue))
         {
             return cacheValue;
         }
@@ -54,7 +54,7 @@ public class TokenService : ITokenService
     }
     public string GetRefreshToken()
     {
-        if (_memoryCache.TryGetValue("FamilyHubRefreshToken", out string cacheValue))
+        if (_memoryCache.TryGetValue("FamilyHubRefreshToken", out string? cacheValue) && !string.IsNullOrEmpty(cacheValue))
         {
             return cacheValue;
         }

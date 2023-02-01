@@ -1,6 +1,4 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
+﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.SharedKernel;
 using System.Text;
 using System.Text.Json;
@@ -9,12 +7,12 @@ namespace FamilyHubs.ReferralUi.Ui.Services.Api;
 
 public interface IOpenReferralOrganisationClientService
 {
-    Task<PaginatedList<OpenReferralTaxonomyDto>> GetTaxonomyList(int pageNumber = 1, int pageSize = 10);
-    Task<List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>>> GetCategories();
-    Task<List<OpenReferralOrganisationDto>> GetListOpenReferralOrganisations();
-    Task<OpenReferralOrganisationWithServicesDto> GetOpenReferralOrganisationById(string id);
-    Task<string> CreateOrganisation(OpenReferralOrganisationWithServicesDto organisation);
-    Task<string> UpdateOrganisation(OpenReferralOrganisationWithServicesDto organisation);
+    Task<PaginatedList<TaxonomyDto>> GetTaxonomyList(int pageNumber = 1, int pageSize = 10);
+    Task<List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>> GetCategories();
+    Task<List<OrganisationDto>> GetListOpenReferralOrganisations();
+    Task<OrganisationWithServicesDto> GetOpenReferralOrganisationById(string id);
+    Task<string> CreateOrganisation(OrganisationWithServicesDto organisation);
+    Task<string> UpdateOrganisation(OrganisationWithServicesDto organisation);
 }
 
 public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOrganisationClientService
@@ -25,7 +23,7 @@ public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOr
 
     }
 
-    public async Task<PaginatedList<OpenReferralTaxonomyDto>> GetTaxonomyList(int pageNumber = 1, int pageSize = 10)
+    public async Task<PaginatedList<TaxonomyDto>> GetTaxonomyList(int pageNumber = 1, int pageSize = 10)
     {
         var request = new HttpRequestMessage
         {
@@ -37,11 +35,11 @@ public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOr
 
         response.EnsureSuccessStatusCode();
 
-        return await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralTaxonomyDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new PaginatedList<OpenReferralTaxonomyDto>();
+        return await JsonSerializer.DeserializeAsync<PaginatedList<TaxonomyDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new PaginatedList<TaxonomyDto>();
 
     }
 
-    public async Task<List<OpenReferralOrganisationDto>> GetListOpenReferralOrganisations()
+    public async Task<List<OrganisationDto>> GetListOpenReferralOrganisations()
     {
         var request = new HttpRequestMessage
         {
@@ -54,11 +52,11 @@ public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOr
 
         response.EnsureSuccessStatusCode();
 
-        return await JsonSerializer.DeserializeAsync<List<OpenReferralOrganisationDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<OpenReferralOrganisationDto>();
+        return await JsonSerializer.DeserializeAsync<List<OrganisationDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<OrganisationDto>();
 
     }
 
-    public async Task<List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>>> GetCategories()
+    public async Task<List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>> GetCategories()
     {
         var request = new HttpRequestMessage
         {
@@ -70,9 +68,9 @@ public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOr
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralTaxonomyDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<TaxonomyDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-        List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>> keyValuePairs = new();
+        List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>> keyValuePairs = new();
 
         if (retVal == null)
             return keyValuePairs;
@@ -82,14 +80,14 @@ public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOr
         foreach (var topLevelCategory in topLevelCategories)
         {
             var subCategories = retVal.Items.Where(x => x.Parent == topLevelCategory.Id).OrderBy(x => x.Name).ToList();
-            var pair = new KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>(topLevelCategory, subCategories);
+            var pair = new KeyValuePair<TaxonomyDto, List<TaxonomyDto>>(topLevelCategory, subCategories);
             keyValuePairs.Add(pair);
         }
 
         return keyValuePairs;
     }
 
-    public async Task<OpenReferralOrganisationWithServicesDto> GetOpenReferralOrganisationById(string id)
+    public async Task<OrganisationWithServicesDto> GetOpenReferralOrganisationById(string id)
     {
         var request = new HttpRequestMessage
         {
@@ -103,7 +101,7 @@ public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOr
         response.EnsureSuccessStatusCode();
 
 
-        return await JsonSerializer.DeserializeAsync<OpenReferralOrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new OpenReferralOrganisationWithServicesDto(
+        return await JsonSerializer.DeserializeAsync<OrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new OrganisationWithServicesDto(
             Guid.NewGuid().ToString()
             , new(string.Empty, string.Empty, string.Empty)
             , ""
@@ -115,7 +113,7 @@ public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOr
             );
     }
 
-    public async Task<string> CreateOrganisation(OpenReferralOrganisationWithServicesDto organisation)
+    public async Task<string> CreateOrganisation(OrganisationWithServicesDto organisation)
     {
         var request = new HttpRequestMessage
         {
@@ -132,7 +130,7 @@ public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOr
         return stringResult;
     }
 
-    public async Task<string> UpdateOrganisation(OpenReferralOrganisationWithServicesDto organisation)
+    public async Task<string> UpdateOrganisation(OrganisationWithServicesDto organisation)
     {
         var request = new HttpRequestMessage
         {

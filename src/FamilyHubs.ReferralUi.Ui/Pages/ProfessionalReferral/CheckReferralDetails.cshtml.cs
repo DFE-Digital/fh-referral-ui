@@ -1,7 +1,6 @@
 using FamilyHubs.ReferralUi.Ui.Services.Api;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.Referrals;
-using FamilyHubs.ServiceDirectory.Shared.Models.MassTransit;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.MassTransit;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -60,7 +59,7 @@ public class CheckReferralDetailsModel : PageModel
     public async Task<IActionResult> OnPost()
     {
         // Save to API
-        OpenReferralServiceDto openReferralServiceDto = await _localOfferClientService.GetLocalOfferById(Id);
+        ServiceDto openReferralServiceDto = await _localOfferClientService.GetLocalOfferById(Id);
 
         try
         {
@@ -68,7 +67,7 @@ public class CheckReferralDetailsModel : PageModel
             ReferralDto dto;
             if (string.IsNullOrEmpty(ReferralId))
             {
-                dto = new(Guid.NewGuid().ToString(), openReferralServiceDto.OpenReferralOrganisationId, Id, Name, openReferralServiceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial Connection") });
+                dto = new(Guid.NewGuid().ToString(), openReferralServiceDto.OrganisationId, Id, Name, openReferralServiceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial Connection") });
             }
             else
             {
@@ -76,14 +75,12 @@ public class CheckReferralDetailsModel : PageModel
                 if (original != null) 
                 {
                     isNewReferral = false;
-                    dto = new(ReferralId, openReferralServiceDto.OpenReferralOrganisationId, Id, Name, openReferralServiceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, original.Status);
+                    dto = new(ReferralId, openReferralServiceDto.OrganisationId, Id, Name, openReferralServiceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, original.Status);
                 }
                 else
                 {
-                    dto = new(Guid.NewGuid().ToString(), openReferralServiceDto.OpenReferralOrganisationId, Id, Name, openReferralServiceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial Connection") });
-                }
-
-                
+                    dto = new(Guid.NewGuid().ToString(), openReferralServiceDto.OrganisationId, Id, Name, openReferralServiceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(openReferralServiceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial Connection") });
+                } 
             }
 
             if (_configuration.GetValue<bool>("UseRabbitMQ"))

@@ -9,7 +9,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddHttpClient<IAuthService, AuthService>(client =>
         {
-            client.BaseAddress = new Uri(configuration.GetValue<string>("AuthServiceUrl"));
+            client.BaseAddress = new Uri(configuration?.GetValue<string>("AuthServiceUrl"));
         });
 
         services.AddHttpClient<IApiService, ApiService>(client =>

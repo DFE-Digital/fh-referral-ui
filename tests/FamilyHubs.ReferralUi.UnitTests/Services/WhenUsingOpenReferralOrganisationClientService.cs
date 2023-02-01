@@ -1,6 +1,5 @@
 ﻿using FamilyHubs.ReferralUi.Ui.Services.Api;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.SharedKernel;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -13,15 +12,15 @@ public class WhenUsingOpenReferralOrganisationClientService : BaseClientService
     public async Task ThenGetTaxonomyList()
     {
         //Arrange
-        List<OpenReferralTaxonomyDto> list = new()
+        List<TaxonomyDto> list = new()
         {
-            new OpenReferralTaxonomyDto(
+            new TaxonomyDto(
                         "UnitTest bccsource:Organisation",
                         "Organisation",
                         "Test BCC Data Sources",
                         null
                         ),
-            new OpenReferralTaxonomyDto(
+            new TaxonomyDto(
                         "UnitTest bccprimaryservicetype:38",
                         "Support",
                         "Test BCC Primary Services",
@@ -30,7 +29,7 @@ public class WhenUsingOpenReferralOrganisationClientService : BaseClientService
         };
 
 
-        PaginatedList<OpenReferralTaxonomyDto> paginatedList = new();
+        PaginatedList<TaxonomyDto> paginatedList = new();
         paginatedList.Items.AddRange(list);
         var json = JsonConvert.SerializeObject(paginatedList);
         var mockClient = GetMockClient(json);
@@ -48,13 +47,13 @@ public class WhenUsingOpenReferralOrganisationClientService : BaseClientService
     public async Task ThenGetCategories()
     {
         //Arrange
-        var openReferralTaxonomies = new List<OpenReferralTaxonomyDto>()
+        var openReferralTaxonomies = new List<TaxonomyDto>()
         {
-            new OpenReferralTaxonomyDto("16f3a451-e88d-4ad0-b53f-c8925d1cc9e4", "Activities, clubs and groups", "Activities, clubs and groups", null),
-            new OpenReferralTaxonomyDto("aafa1cc3-b984-4b10-89d5-27388c5432de", "Activities", "Activities", "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
+            new TaxonomyDto("16f3a451-e88d-4ad0-b53f-c8925d1cc9e4", "Activities, clubs and groups", "Activities, clubs and groups", null),
+            new TaxonomyDto("aafa1cc3-b984-4b10-89d5-27388c5432de", "Activities", "Activities", "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
         };
 
-        PaginatedList<OpenReferralTaxonomyDto> paginatedList = new PaginatedList<OpenReferralTaxonomyDto>(openReferralTaxonomies, openReferralTaxonomies.Count, 1, 1);
+        PaginatedList<TaxonomyDto> paginatedList = new PaginatedList<TaxonomyDto>(openReferralTaxonomies, openReferralTaxonomies.Count, 1, 1);
 
         var json = JsonConvert.SerializeObject(paginatedList);
         var mockClient = GetMockClient(json);
@@ -75,9 +74,9 @@ public class WhenUsingOpenReferralOrganisationClientService : BaseClientService
     public async Task ThenGetListOpenReferralOrganisations()
     {
         //Arrange
-        List<OpenReferralOrganisationDto> list = new()
+        List<OrganisationDto> list = new()
         {
-            new OpenReferralOrganisationDto(
+            new OrganisationDto(
                 "56e62852-1b0b-40e5-ac97-54a67ea957dc",
                 new(string.Empty, string.Empty, string.Empty),
                 "Unit Test County Council",

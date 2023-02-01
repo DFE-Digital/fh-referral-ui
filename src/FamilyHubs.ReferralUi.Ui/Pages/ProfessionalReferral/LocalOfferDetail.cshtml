@@ -22,9 +22,9 @@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Category</th>
                         <td class="govuk-table__cell">
-                            @if (@Model.LocalOffer != null && @Model.LocalOffer.Service_taxonomys != null)
+                            @if (@Model.LocalOffer != null && @Model.LocalOffer.ServiceTaxonomies != null)
                             {
-                                foreach (var serviceTaxonomy in @Model.LocalOffer.Service_taxonomys)
+                                foreach (var serviceTaxonomy in @Model.LocalOffer.ServiceTaxonomies)
                                 {
                                     if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
                                     {
@@ -36,10 +36,10 @@
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Cost</th>
-                        @if (@Model.LocalOffer?.Cost_options?.FirstOrDefault()?.Amount != null && @Model.LocalOffer?.Cost_options?.FirstOrDefault()?.Amount > 0)
+                        @if (@Model.LocalOffer?.CostOptions?.FirstOrDefault()?.Amount != null && @Model.LocalOffer?.CostOptions?.FirstOrDefault()?.Amount > 0)
                         {
                             <td class="govuk-table__cell" data-testid="cost-value">
-                                £@Model.LocalOffer?.Cost_options?.FirstOrDefault()?.Amount every @Model.LocalOffer?.Cost_options?.FirstOrDefault()?.Amount_description.ToLower()
+                                £@Model.LocalOffer?.CostOptions?.FirstOrDefault()?.Amount every @Model.LocalOffer?.CostOptions?.FirstOrDefault()?.AmountDescription.ToLower()
                             </td>
                         }
                         else
@@ -51,25 +51,21 @@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Delivery method</th>
                         <td class="govuk-table__cell" data-testid="delivery-value">
-                            @if (@Model.LocalOffer?.ServiceDelivery != null && @Model.LocalOffer?.ServiceDelivery?.Count > 0)
-                                @Model.GetDeliveryMethodsAsString(@Model.LocalOffer?.ServiceDelivery)
-
-
-
-
+                            @if (@Model.LocalOffer?.ServiceDeliveries != null && @Model.LocalOffer?.ServiceDeliveries?.Count > 0)
+                                @Model.GetDeliveryMethodsAsString(@Model.LocalOffer?.ServiceDeliveries)
                             </td>
                         </tr>
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table__header">For children and young people</th>
-                            @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Eligibility != null)
+                            @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.EligibilityDescription != null)
                             {
-                                @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Maximum_age > 100)
+                                @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MaximumAge > 100)
                                 {
-                                    <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Minimum_age to 25+ years old</td>
+                                    <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MinimumAge to 25+ years old</td>
                                 }
                                 else
                                 {
-                                    <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Minimum_age to @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Maximum_age years old</td>
+                                <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MinimumAge to @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MaximumAge years old</td>
                                 }
                             }
                             else
@@ -115,15 +111,15 @@
                 
 
                 <!--Email-->
-                @if (!string.IsNullOrEmpty(@Model.LocalOffer?.Email))
+                @if (!string.IsNullOrEmpty(@Model.LocalOffer?.LinkContacts?.ElementAt(0).Contact.Email))
                 {
                     <dl class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
                             Email
                         </dt>
                         <dd class="govuk-summary-list__value" data-testid="detailsemail">
-                            <a href="mailto:@Model.LocalOffer?.Email">
-                                @Model.LocalOffer?.Email
+                        <a href="mailto:@Model.LocalOffer?.LinkContacts?.ElementAt(0).Contact.Email">
+                                @Model.LocalOffer?.LinkContacts?.ElementAt(0).Contact.Email
                             </a>
                         </dd>
                     </dl>
@@ -168,15 +164,15 @@
             
 
             <!--Website-->
-            @if (!string.IsNullOrEmpty(@Model.LocalOffer?.Email))
+            @if (!string.IsNullOrEmpty(@Model.LocalOffer?.LinkContacts?.ElementAt(0).Contact?.Url))
             {
                 <dl class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                         Website
                     </dt>
                     <dd class="govuk-summary-list__value" data-testid="detailswebsite">
-                        <a href="https://@Model.LocalOffer?.Url">
-                            @Model.LocalOffer?.Url
+                        <a href="https://@Model.LocalOffer?.LinkContacts?.ElementAt(0).Contact?.Url">
+                            @Model.LocalOffer?.LinkContacts?.ElementAt(0).Contact?.Url
                         </a>
                     </dd>
                 </dl>    

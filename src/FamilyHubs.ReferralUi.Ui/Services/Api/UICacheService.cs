@@ -1,4 +1,4 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api;
+﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
 using System.Text;
 using System.Text.Json;
 

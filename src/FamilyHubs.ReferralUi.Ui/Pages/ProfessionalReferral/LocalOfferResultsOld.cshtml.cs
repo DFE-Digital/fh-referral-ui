@@ -1,12 +1,10 @@
-using FamilyHubs.ReferralUi.Ui.Models;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Drawing.Printing;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
@@ -26,7 +24,7 @@ public class LocalOfferResultsOldModel : PageModel
     public double CurrentLatitude { get; set; }
     public double CurrentLongitude { get; set; }
 
-    public PaginatedList<OpenReferralServiceDto> SearchResults { get; set; } = default!;
+    public PaginatedList<ServiceDto> SearchResults { get; set; } = default!;
 
     public string SelectedDistance { get; set; } = "212892";
 
@@ -89,7 +87,6 @@ public class LocalOfferResultsOldModel : PageModel
 
     public async Task<IActionResult> OnPost()
     {
-        //SelectedDistance = Request.Form["SelectedDistance"]?? ;
         if (double.TryParse(Request.Form["CurrentLatitude"], out double currentLatitude))
         {
             CurrentLatitude = currentLatitude;
@@ -150,7 +147,7 @@ public class LocalOfferResultsOldModel : PageModel
 
     private void CreateServiceDeliveryDictionary()
     {
-        var myEnumDescriptions = from ServiceDelivery n in Enum.GetValues(typeof(ServiceDelivery))
+        var myEnumDescriptions = from ServiceDeliveryType n in Enum.GetValues(typeof(ServiceDeliveryType))
                                  select new { Id = (int)n, Name = Utility.GetEnumDescription(n) };
 
         foreach (var myEnumDescription in myEnumDescriptions)
