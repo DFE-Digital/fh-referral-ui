@@ -62,13 +62,20 @@
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table__header">For children and young people</th>
                             @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Eligibility != null)
-                        {
-                            <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Minimum_age to @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Maximum_age years old</td>
-                        }
-                        else
-                        {
-                            <td class="govuk-table__cell" data-testid="eligibilities-value"></td>
-                        }
+                            {
+                                @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Maximum_age > 100)
+                                {
+                                    <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Minimum_age to 25+ years old</td>
+                                }
+                                else
+                                {
+                                    <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Minimum_age to @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.Maximum_age years old</td>
+                                }
+                            }
+                            else
+                            {
+                                <td class="govuk-table__cell" data-testid="eligibilities-value"></td>
+                            }
 
                     </tr>
                     <tr class="govuk-table__row">
