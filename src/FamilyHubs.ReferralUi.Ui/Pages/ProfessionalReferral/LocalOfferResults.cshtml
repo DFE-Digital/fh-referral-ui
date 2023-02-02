@@ -49,6 +49,10 @@
                         <a class="govuk-link" asp-page="/ProfessionalReferral/Search" data-testid="postcodelink">
                             @Model.SearchPostCode
                         </a>
+                        @if (@Model.IsSearchTimeEnabled)
+                        {
+                            @Model.SearchTime
+                        }
                     </p>
                 </div>
 

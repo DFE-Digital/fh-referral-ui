@@ -12,10 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.VisualBasic;
-using Newtonsoft.Json.Linq;
-using System;
-using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
@@ -26,7 +23,9 @@ public class LocalOfferResultsModel : PageModel
     private readonly IOpenReferralOrganisationClientService _openReferralOrganisationClientService;
     private readonly bool _isReferralEnabled;
 
-    public Dictionary<int, string> DictServiceDelivery = new();
+    public bool IsSearchTimeEnabled { get; private set; }
+
+    public Dictionary<int, string> DictServiceDelivery { get; private set; }
 
     [BindProperty]
     public List<string> ServiceDeliverySelection { get; set; } = default!;
@@ -78,6 +77,8 @@ public class LocalOfferResultsModel : PageModel
     public string? OutCode { get; set; }
     public string? DistrictCode { get; set; }
 
+    public string SearchTime { get; private set; } = default!;
+
     public string SearchResultsSnippet
     {
         get
@@ -106,10 +107,12 @@ public class LocalOfferResultsModel : PageModel
 
     public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService, IOpenReferralOrganisationClientService openReferralOrganisationClientService, IConfiguration configuration)
     {
+        DictServiceDelivery = new();
         _localOfferClientService = localOfferClientService;
         _postcodeLocationClientService = postcodeLocationClientService;
         _openReferralOrganisationClientService = openReferralOrganisationClientService;
         _isReferralEnabled = configuration.GetValue<bool>("IsReferralEnabled");
+        IsSearchTimeEnabled = configuration.GetValue<bool>("IsSearchTimeEnabled");
     }
 
     public async Task<IActionResult> OnGetAsync(string postCode,
@@ -120,14 +123,11 @@ public class LocalOfferResultsModel : PageModel
                                  string maximumAge,
                                  string searchText)
     {
-        if (_isReferralEnabled) 
+        if (_isReferralEnabled && User != null && User.Identity != null && !User.Identity.IsAuthenticated) 
         {
-            if (User != null && User.Identity != null && !User.Identity.IsAuthenticated) 
+            return RedirectToPage("/ProfessionalReferral/SignIn", new
             {
-                return RedirectToPage("/ProfessionalReferral/SignIn", new
-                {
-                });
-            }
+            });
         }
 
         SearchPostCode = postCode;
@@ -140,13 +140,18 @@ public class LocalOfferResultsModel : PageModel
         if (searchText != null)
             SearchText = searchText;
         if (!int.TryParse(minimumAge, out int minAge))
-            minAge = 0;
+        {
+            if (minAge != 0)
+                minAge = 0;
+        }
+           
         if (!int.TryParse(maximumAge, out int maxAge))
             maxAge = 99;
 
         CreateServiceDeliveryDictionary();
         InitializeAgeRange();
         InitializeLanguages();
+        DateTime dtNow = DateTime.Now;
         SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing",
                                                                       "active",
                                                                       null,
@@ -164,6 +169,8 @@ public class LocalOfferResultsModel : PageModel
                                                                       null,
                                                                       null,
                                                                       null);
+        TimeSpan ts = DateTime.Now - dtNow;
+        SearchTime = $" Took: {ts.Milliseconds} milliseconds";
 
         return Page();
     }
@@ -195,7 +202,6 @@ public class LocalOfferResultsModel : PageModel
 
         if (!ModelState.IsValid)
         {
-            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             CreateServiceDeliveryDictionary();
             await GetCategoriesTreeAsync();
             GetCategories();
@@ -204,8 +210,6 @@ public class LocalOfferResultsModel : PageModel
             return Page();
         }
 
-        //Keep these as might be needed at a later stage
-        //SelectedDistance = Request.Form["SelectedDistance"];
         SearchText = Request.Form["SearchText"];
 
         if (SearchPostCode != null)
@@ -224,7 +228,7 @@ public class LocalOfferResultsModel : PageModel
             serviceDelivery = string.Join(',', ServiceDeliverySelection.ToArray());
 
         bool? isPaidFor = null;
-        if (CostSelection != null && CostSelection.Count() == 1)
+        if (CostSelection != null && CostSelection.Any())
         {
             switch (CostSelection[0])
             {
@@ -244,6 +248,7 @@ public class LocalOfferResultsModel : PageModel
 
         var taxonomies = string.Join(",", SubcategorySelection);
 
+        DateTime dtNow = DateTime.Now;
         SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing",
                                                                       "active",
                                                                       null,
@@ -263,6 +268,8 @@ public class LocalOfferResultsModel : PageModel
                                                                       taxonomies,
                                                                       SelectedLanguage == "All languages"? null: SelectedLanguage,
                                                                       CanFamilyChooseLocation);
+        TimeSpan ts = DateTime.Now - dtNow;
+        SearchTime = $" Took: {ts.Milliseconds} milliseconds";
 
         InitializeAgeRange();
         InitializeLanguages();
@@ -311,16 +318,16 @@ public class LocalOfferResultsModel : PageModel
         if (serviceDeliveries == null || serviceDeliveries.Count == 0)
             return result;
 
-        foreach (var serviceDelivery in serviceDeliveries)
-        {   
+        foreach (var name in serviceDeliveries.Select(serviceDelivery => serviceDelivery.ServiceDelivery))
+        {
             result = result +
-                serviceDelivery.ServiceDelivery.AsString(EnumFormat.Description) != null ?
-                serviceDelivery.ServiceDelivery.AsString(EnumFormat.Description)  + "," : 
+                name.AsString(EnumFormat.Description) != null ?
+                name.AsString(EnumFormat.Description) + "," :
                 String.Empty;
         }
 
 
-        
+
 
         //Remove last comma if present
         if (result.EndsWith(","))
@@ -338,8 +345,10 @@ public class LocalOfferResultsModel : PageModel
         if (languageDtos == null || languageDtos.Count == 0)
             return result;
 
-        foreach (var language in languageDtos)
-            result = result + (language.Language != null ? language.Language + "," : String.Empty);
+        StringBuilder sb = new();
+        foreach (var name in languageDtos.Select(language => language.Language))
+            sb.Append(name != null ? name + "," : String.Empty);
+        result = sb.ToString();
 
         //Remove last comma if present
         if (result.EndsWith(","))
@@ -368,7 +377,7 @@ public class LocalOfferResultsModel : PageModel
         }
         catch
         {
-            return;
+            //If post code is not valid then just return
         }
     }
 
