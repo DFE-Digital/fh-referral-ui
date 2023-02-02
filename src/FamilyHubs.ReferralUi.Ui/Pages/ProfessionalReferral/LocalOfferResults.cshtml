@@ -387,8 +387,8 @@
                                         <div>
                                             <div class="govuk-form-group">
                                                 <fieldset class="govuk-fieldset">
-                                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Language</h3></legend>
-                                                    <select asp-for="SelectedLanguage" asp-items="Model.Languages" class="govuk-select" data-testid="select-language">
+                                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading"><label for="SelectedLanguage">Language</label></h3></legend>
+                                                    <select asp-for="SelectedLanguage" id="SelectedLanguage" asp-items="Model.Languages" class="govuk-select" data-testid="select-language">
                                                         <option value="" selected disabled>Select language</option>
                                                     </select>
                                                     <br> <br>
