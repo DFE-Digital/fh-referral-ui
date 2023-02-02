@@ -2,9 +2,12 @@
 @using FamilyHubs.ReferralUi.Ui.Extensions
 @model FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral.LocalOfferDetailModel
 @{
+    ViewData["Title"] = @Model.LocalOffer.Name;
+    ViewData["Description"] = "Description TBC";
 }
 
-<a href="@Model.ReturnUrl" class="govuk-back-link" data-testid="back-button">Back</a>
+@*<a href="@Model.ReturnUrl" onclick="window.history.back(); return false;" class="govuk-back-link" data-testid="back-button">Back</a>*@
+<a href="/ProfessionalReferral/Search" onclick="window.history.back(); return false;" class="govuk-back-link" data-testid="back-button">Back</a>
 
 <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 
@@ -53,26 +56,25 @@
                         <td class="govuk-table__cell" data-testid="delivery-value">
                             @if (@Model.LocalOffer?.ServiceDeliveries != null && @Model.LocalOffer?.ServiceDeliveries?.Count > 0)
                                 @Model.GetDeliveryMethodsAsString(@Model.LocalOffer?.ServiceDeliveries)
-                            </td>
-                        </tr>
-                        <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table__header">For children and young people</th>
-                            @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.EligibilityDescription != null)
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">For children and young people</th>
+                        @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.EligibilityDescription != null)
+                        {
+                            @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MaximumAge > 100)
                             {
-                                @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MaximumAge > 100)
-                                {
-                                    <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MinimumAge to 25+ years old</td>
-                                }
-                                else
-                                {
-                                <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MinimumAge to @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MaximumAge years old</td>
-                                }
+                                <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MinimumAge to 25+ years old</td>
                             }
                             else
                             {
-                                <td class="govuk-table__cell" data-testid="eligibilities-value"></td>
+                                <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MinimumAge to @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MaximumAge years old</td>
                             }
-
+                        }
+                        else
+                        {
+                            <td class="govuk-table__cell" data-testid="eligibilities-value"></td>
+                        }
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Families can choose location</th>
@@ -83,32 +85,28 @@
                         <td class="govuk-table__cell" data-testid="language-value">
                             @if (@Model.LocalOffer?.Languages != null && @Model.LocalOffer?.Languages?.Count > 0)
                                 @Model.GetLanguagesAsString(@Model.LocalOffer.Languages)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2 class="govuk-heading-m">More details</h2>
+            <p data-testid="description-value">@Model.LocalOffer?.Description</p>
+            <h2 class="govuk-heading-m">Connect a family to this service</h2>
 
+            <!-- Contact details -->
+            <!-- Phone-->
+            @if (!string.IsNullOrEmpty(@Model.Phone))
+            {
+                <dl class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Phone
+                    </dt>
+                    <dd class="govuk-summary-list__value" data-testid="detailsphone">
+                        <a href="tel:@Model.Phone">@Model.Phone</a>
+                    </dd>
+                </dl>
+            }
 
-
-
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <h2 class="govuk-heading-m">More details</h2>
-                <p data-testid="description-value">@Model.LocalOffer?.Description</p>
-                <h2 class="govuk-heading-m">Connect a family to this service</h2>
-
-                <!-- Contact details -->
-                <!-- Phone-->
-                @if (!string.IsNullOrEmpty(@Model.Phone))
-                {
-                    <dl class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            Phone
-                        </dt>
-                        <dd class="govuk-summary-list__value" data-testid="detailsphone">
-                            <a href="tel:@Model.Phone">@Model.Phone</a>
-                        </dd>
-                    </dl>
-                }
-                
 
                 <!--Email-->
                 @if (!string.IsNullOrEmpty(@Model.LocalOffer?.LinkContacts?.ElementAt(0).Contact.Email))
@@ -126,9 +124,9 @@
                 }
                 
 
-                <!--Address-->
-                @if (!string.IsNullOrEmpty(@Model.Postal_code))
-                {
+            <!--Address-->
+            @if (!string.IsNullOrEmpty(@Model.Postal_code))
+            {
                 <dl class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                         Address
@@ -160,8 +158,8 @@
                         }
                     </dd>
                 </dl>
-                }
-            
+            }
+
 
             <!--Website-->
             @if (!string.IsNullOrEmpty(@Model.LocalOffer?.LinkContacts?.ElementAt(0).Contact?.Url))
@@ -175,9 +173,9 @@
                             @Model.LocalOffer?.LinkContacts?.ElementAt(0).Contact?.Url
                         </a>
                     </dd>
-                </dl>    
+                </dl>
             }
-            
+
             <form method="post">
                 <input asp-for="@Model.Name" type="hidden">
                 <input asp-for="@Model.ServiceId" type="hidden">
