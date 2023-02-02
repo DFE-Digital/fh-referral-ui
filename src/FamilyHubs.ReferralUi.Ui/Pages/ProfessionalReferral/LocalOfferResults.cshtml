@@ -185,7 +185,7 @@
                                     }
 
                                     <!-- Remove filter - ForChildrenAndYoungPeople -->
-                                    @if (Model.ForChildrenAndYoungPeople == true && Model.SearchAge != null)
+                                    @if (Model.ForChildrenAndYoungPeople == true && Model.SearchAge != null && int.Parse(Model.SearchAge) >= 0)
                                     {
                                         <h3 class="govuk-heading-s govuk-!-margin-bottom-1">For children and young people</h3>
 
