@@ -189,7 +189,7 @@
                                     }
 
                                     <!-- Remove filter - ForChildrenAndYoungPeople -->
-                                    @if (Model.ForChildrenAndYoungPeople == true && Model.SearchAge != null)
+                                    @if (Model.ForChildrenAndYoungPeople == true && Model.SearchAge != null && int.Parse(Model.SearchAge) >= 0)
                                     {
                                         <h3 class="govuk-heading-s govuk-!-margin-bottom-1">For children and young people</h3>
 
@@ -387,7 +387,7 @@
                                     </div>
 
                                     <!-- DONE - Language -->
-                                    <div class="filters-component__groups__group">
+                                    <div class="filters-component__groups__group no-border">
                                         <div>
                                             <div class="govuk-form-group">
                                                 <fieldset class="govuk-fieldset">
@@ -395,17 +395,10 @@
                                                     <select asp-for="SelectedLanguage" id="SelectedLanguage" asp-items="Model.Languages" class="govuk-select" data-testid="select-language">
                                                         <option value="" selected disabled>Select language</option>
                                                     </select>
-                                                    <br> <br>
                                                 </fieldset>
                                             </div>
                                         </div>
                                     </div>
-
-
-
-
-
-
                                 </div>
                             </div>
                         </div>
