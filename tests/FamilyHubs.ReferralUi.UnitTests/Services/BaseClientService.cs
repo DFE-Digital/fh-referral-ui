@@ -1,26 +1,10 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Builders;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralContacts;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralHolidaySchedule;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralRegularSchedule;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAreas;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAtLocations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceTaxonomys;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.Referrals;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.ServiceType;
 using Moq;
 using Moq.Protected;
 using System.Net;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLinkTaxonomies;
+using System.Xml.Linq;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Services;
 
@@ -42,9 +26,9 @@ public class BaseClientService
         return client;
     }
 
-    protected OpenReferralOrganisationWithServicesDto GetTestCountyCouncilDto()
+    protected OrganisationWithServicesDto GetTestCountyCouncilDto()
     {
-        var bristolCountyCouncil = new OpenReferralOrganisationWithServicesDto(
+        var bristolCountyCouncil = new OrganisationWithServicesDto(
             "56e62852-1b0b-40e5-ac97-54a67ea957dc",
             new(string.Empty, string.Empty, string.Empty),
             "Unit Test County Council",
@@ -52,7 +36,7 @@ public class BaseClientService
             null,
             new Uri("https://www.unittest.gov.uk/").ToString(),
             "https://www.unittest.gov.uk/",
-            new List<OpenReferralServiceDto>
+            new List<ServiceDto>
             {
                  GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc")
             }
@@ -61,65 +45,67 @@ public class BaseClientService
         return bristolCountyCouncil;
     }
 
-    protected OpenReferralServiceDto GetTestCountyCouncilServicesDto(string parentId)
+    protected ServiceDto GetTestCountyCouncilServicesDto(string parentId)
     {
         var contactId = Guid.NewGuid().ToString();
 
         ServicesDtoBuilder builder = new ServicesDtoBuilder();
-        OpenReferralServiceDto service = builder.WithMainProperties("3010521b-6e0a-41b0-b610-200edbbeeb14",
-                new ServiceTypeDto("1", "Information Sharing", ""),
-                parentId,
-                "Unit Test Service",
-                @"Unit Test Service Description",
-                null,
-                null,
-                null,
-                null,
-                null,
-                "active",
-                "www.unittestservice.com",
-                "support@unittestservice.com",
-                "",
-                false)
-            .WithServiceDelivery(new List<OpenReferralServiceDeliveryExDto>
+        ServiceDto service = builder.WithMainProperties(
+                id: "3010521b-6e0a-41b0-b610-200edbbeeb14",
+                serviceType: new ServiceTypeDto("1", "Information Sharing", ""),
+                organisationId: parentId,
+                name: "Unit Test Service",
+                description: @"Unit Test Service Description",
+                accreditations: null,
+                assuredDate: null,
+                attendingAccess: null,
+                attendingType: null,
+                deliverableType: null,
+                status: "active",
+                fees: null,
+                canFamilyChooseDeliveryLocation: false)
+            .WithServiceDelivery(new List<ServiceDeliveryDto>
                 {
-                    new OpenReferralServiceDeliveryExDto(Guid.NewGuid().ToString(),ServiceDelivery.Online)
+                    new ServiceDeliveryDto(Guid.NewGuid().ToString(),ServiceDeliveryType.Online)
                 })
-            .WithEligibility(new List<OpenReferralEligibilityDto>
+            .WithEligibility(new List<EligibilityDto>
                 {
-                    new OpenReferralEligibilityDto("Test9111Children","",0,13)
+                    new EligibilityDto("Test9111Children","",0,13)
                 })
-            .WithContact(new List<OpenReferralContactDto>()
+            .WithLinkContact(new List<LinkContactDto>
             {
-                new OpenReferralContactDto(
+                new LinkContactDto("L1", "3010521b-6e0a-41b0-b610-200edbbeeb14", "Service", 
+                new ContactDto(
                     contactId,
                     "Contact",
                     string.Empty,
                     "01827 65777",
-                    "01827 65777")
+                    "01827 65777",
+                    "url",
+                    "Email"))
             })
-            .WithCostOption(new List<OpenReferralCostOptionDto>())
-            .WithLanguages(new List<OpenReferralLanguageDto>()
+            .WithCostOption(new List<CostOptionDto>())
+            .WithLanguages(new List<LanguageDto>()
                 {
-                    new OpenReferralLanguageDto("1bb6c313-648d-4226-9e96-b7d37eaeb3dd", "English")
+                    new LanguageDto("1bb6c313-648d-4226-9e96-b7d37eaeb3dd", "English")
                 })
-            .WithServiceAreas(new List<OpenReferralServiceAreaDto>()
+            .WithServiceAreas(new List<ServiceAreaDto>()
                 {
-                    new OpenReferralServiceAreaDto(Guid.NewGuid().ToString(), "National", null,"http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                    new ServiceAreaDto(Guid.NewGuid().ToString(), "National", null,"http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 })
-            .WithServiceAtLocations(new List<OpenReferralServiceAtLocationDto>()
+            .WithServiceAtLocations(new List<ServiceAtLocationDto>()
                 {
-                    new OpenReferralServiceAtLocationDto(
+                    new ServiceAtLocationDto(
                         "Test1749",
-                        new OpenReferralLocationDto(
+                        new LocationDto(
                             "6ea31a4f-7dcc-4350-9fba-20525efe092f",
                             "",
                             "",
                             52.6312,
                             -1.66526,
-                            new List<OpenReferralPhysicalAddressDto>()
+                            new List<PhysicalAddressDto>()
                             {
-                                new OpenReferralPhysicalAddressDto(
+                                new PhysicalAddressDto(
                                     Guid.NewGuid().ToString(),
                                     "77 Sheepcote Lane",
                                     ", Stathe, Tamworth, Staffordshire, ",
@@ -128,47 +114,49 @@ public class BaseClientService
                                     null
                                     )
                             },
-                            new List<OpenReferralLinkTaxonomyDto>()
+                            new List<LinkTaxonomyDto>(),
+                            new List<LinkContactDto>()
                             //new List<Accessibility_For_Disabilities>()
                             ),
-                            new List<OpenReferralRegularScheduleDto>(),
-                            new List<OpenReferralHolidayScheduleDto>()
+                            new List<RegularScheduleDto>(),
+                            new List<HolidayScheduleDto>(),
+                            new List<LinkContactDto>()
 
                         )
 
                 })
-            .WithServiceTaxonomies(new List<OpenReferralServiceTaxonomyDto>()
+            .WithServiceTaxonomies(new List<ServiceTaxonomyDto>()
                 {
-                    new OpenReferralServiceTaxonomyDto
+                    new ServiceTaxonomyDto
                     ("UnitTest9107",
-                    new OpenReferralTaxonomyDto(
+                    new TaxonomyDto(
                         "UnitTest bccsource:Organisation",
                         "Organisation",
                         "Test BCC Data Sources",
                         null
                         )),
 
-                    new OpenReferralServiceTaxonomyDto
+                    new ServiceTaxonomyDto
                     ("UnitTest9108",
-                    new OpenReferralTaxonomyDto(
+                    new TaxonomyDto(
                         "UnitTest bccprimaryservicetype:38",
                         "Support",
                         "Test BCC Primary Services",
                         null
                         )),
 
-                    new OpenReferralServiceTaxonomyDto
+                    new ServiceTaxonomyDto
                     ("UnitTest9109",
-                    new OpenReferralTaxonomyDto(
+                    new TaxonomyDto(
                         "UnitTest bccagegroup:37",
                         "Children",
                         "Test BCC Age Groups",
                         null
                         )),
 
-                    new OpenReferralServiceTaxonomyDto
+                    new ServiceTaxonomyDto
                     ("UnitTest9110",
-                    new OpenReferralTaxonomyDto(
+                    new TaxonomyDto(
                         "UnitTestbccusergroup:56",
                         "Long Term Health Conditions",
                         "Test BCC User Groups",

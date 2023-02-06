@@ -1,12 +1,12 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
 
 namespace FamilyHubs.ReferralUi.Ui.Services;
 
 public interface IRedisCacheService
 {
     //Service
-    public OpenReferralServiceDto? RetrieveService();
-    public void StoreService(OpenReferralServiceDto serviceDto);
+    public ServiceDto? RetrieveService();
+    public void StoreService(ServiceDto serviceDto);
 
     //Navigation - last page name
     public string RetrieveLastPageName();

@@ -1,27 +1,26 @@
 ﻿using FamilyHubs.ReferralUi.Ui.Services.Api;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.SharedKernel;
 using FluentAssertions;
 using Newtonsoft.Json;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Services;
 
-public class WhenUsingOpenReferralOrganisationClientService : BaseClientService
+public class WhenUsingOrganisationClientService : BaseClientService
 {
     [Fact]
     public async Task ThenGetTaxonomyList()
     {
         //Arrange
-        List<OpenReferralTaxonomyDto> list = new()
+        List<TaxonomyDto> list = new()
         {
-            new OpenReferralTaxonomyDto(
+            new TaxonomyDto(
                         "UnitTest bccsource:Organisation",
                         "Organisation",
                         "Test BCC Data Sources",
                         null
                         ),
-            new OpenReferralTaxonomyDto(
+            new TaxonomyDto(
                         "UnitTest bccprimaryservicetype:38",
                         "Support",
                         "Test BCC Primary Services",
@@ -30,14 +29,14 @@ public class WhenUsingOpenReferralOrganisationClientService : BaseClientService
         };
 
 
-        PaginatedList<OpenReferralTaxonomyDto> paginatedList = new();
+        PaginatedList<TaxonomyDto> paginatedList = new();
         paginatedList.Items.AddRange(list);
         var json = JsonConvert.SerializeObject(paginatedList);
         var mockClient = GetMockClient(json);
-        OpenReferralOrganisationClientService openReferralOrganisationClientService = new(mockClient);
+        OrganisationClientService organisationClientService = new(mockClient);
 
         //Act
-        var result = await openReferralOrganisationClientService.GetTaxonomyList();
+        var result = await organisationClientService.GetTaxonomyList();
 
         //Assert
         result.Should().NotBeNull();
@@ -48,36 +47,36 @@ public class WhenUsingOpenReferralOrganisationClientService : BaseClientService
     public async Task ThenGetCategories()
     {
         //Arrange
-        var openReferralTaxonomies = new List<OpenReferralTaxonomyDto>()
+        var taxonomies = new List<TaxonomyDto>()
         {
-            new OpenReferralTaxonomyDto("16f3a451-e88d-4ad0-b53f-c8925d1cc9e4", "Activities, clubs and groups", "Activities, clubs and groups", null),
-            new OpenReferralTaxonomyDto("aafa1cc3-b984-4b10-89d5-27388c5432de", "Activities", "Activities", "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
+            new TaxonomyDto("16f3a451-e88d-4ad0-b53f-c8925d1cc9e4", "Activities, clubs and groups", "Activities, clubs and groups", null),
+            new TaxonomyDto("aafa1cc3-b984-4b10-89d5-27388c5432de", "Activities", "Activities", "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
         };
 
-        PaginatedList<OpenReferralTaxonomyDto> paginatedList = new PaginatedList<OpenReferralTaxonomyDto>(openReferralTaxonomies, openReferralTaxonomies.Count, 1, 1);
+        PaginatedList<TaxonomyDto> paginatedList = new PaginatedList<TaxonomyDto>(taxonomies, taxonomies.Count, 1, 1);
 
         var json = JsonConvert.SerializeObject(paginatedList);
         var mockClient = GetMockClient(json);
-        OpenReferralOrganisationClientService openReferralOrganisationClientService = new(mockClient);
+        OrganisationClientService organisationClientService = new(mockClient);
         
 
         //Act
-        var result = await openReferralOrganisationClientService.GetCategories();
+        var result = await organisationClientService.GetCategories();
 
         //Assert
         result.Should().NotBeNull();
-        result[0].Key.Should().BeEquivalentTo(openReferralTaxonomies[0]);
-        result[0].Value[0].Should().BeEquivalentTo(openReferralTaxonomies[1]);
+        result[0].Key.Should().BeEquivalentTo(taxonomies[0]);
+        result[0].Value[0].Should().BeEquivalentTo(taxonomies[1]);
 
     }
 
     [Fact]
-    public async Task ThenGetListOpenReferralOrganisations()
+    public async Task ThenGetListOrganisations()
     {
         //Arrange
-        List<OpenReferralOrganisationDto> list = new()
+        List<OrganisationDto> list = new()
         {
-            new OpenReferralOrganisationDto(
+            new OrganisationDto(
                 "56e62852-1b0b-40e5-ac97-54a67ea957dc",
                 new(string.Empty, string.Empty, string.Empty),
                 "Unit Test County Council",
@@ -88,10 +87,10 @@ public class WhenUsingOpenReferralOrganisationClientService : BaseClientService
         };
         var json = JsonConvert.SerializeObject(list);
         var mockClient = GetMockClient(json);
-        OpenReferralOrganisationClientService openReferralOrganisationClientService = new(mockClient);
+        OrganisationClientService organisationClientService = new(mockClient);
 
         //Act
-        var result = await openReferralOrganisationClientService.GetListOpenReferralOrganisations();
+        var result = await organisationClientService.GetListOrganisations();
 
         //Assert
         result.Should().NotBeNull();
@@ -99,16 +98,16 @@ public class WhenUsingOpenReferralOrganisationClientService : BaseClientService
     }
 
     [Fact]
-    public async Task ThenGetOpenReferralOrganisationById()
+    public async Task ThenGetOrganisationById()
     {
         //Arrange
         var organisation = GetTestCountyCouncilDto();
         var json = JsonConvert.SerializeObject(organisation);
         var mockClient = GetMockClient(json);
-        OpenReferralOrganisationClientService openReferralOrganisationClientService = new(mockClient);
+        OrganisationClientService organisationClientService = new(mockClient);
 
         //Act
-        var result = await openReferralOrganisationClientService.GetOpenReferralOrganisationById("56e62852-1b0b-40e5-ac97-54a67ea957dc");
+        var result = await organisationClientService.GetOrganisationById("56e62852-1b0b-40e5-ac97-54a67ea957dc");
 
         //Assert
         result.Should().NotBeNull();
@@ -121,10 +120,10 @@ public class WhenUsingOpenReferralOrganisationClientService : BaseClientService
         //Arrange
         var organisation = GetTestCountyCouncilDto();
         var mockClient = GetMockClient(organisation.Id);
-        OpenReferralOrganisationClientService openReferralOrganisationClientService = new(mockClient);
+        OrganisationClientService organisationClientService = new(mockClient);
 
         //Act
-        var result = await openReferralOrganisationClientService.CreateOrganisation(organisation);
+        var result = await organisationClientService.CreateOrganisation(organisation);
 
         //Assert
         result.Should().NotBeNull();
@@ -137,10 +136,10 @@ public class WhenUsingOpenReferralOrganisationClientService : BaseClientService
         //Arrange
         var organisation = GetTestCountyCouncilDto();
         var mockClient = GetMockClient(organisation.Id);
-        OpenReferralOrganisationClientService openReferralOrganisationClientService = new(mockClient);
+        OrganisationClientService organisationClientService = new(mockClient);
 
         //Act
-        var result = await openReferralOrganisationClientService.UpdateOrganisation(organisation);
+        var result = await organisationClientService.UpdateOrganisation(organisation);
 
         //Assert
         result.Should().NotBeNull();

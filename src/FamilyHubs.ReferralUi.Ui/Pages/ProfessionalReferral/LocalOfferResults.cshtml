@@ -49,6 +49,10 @@
                         <a class="govuk-link" asp-page="/ProfessionalReferral/Search" data-testid="postcodelink">
                             @Model.SearchPostCode
                         </a>
+                        @if (@Model.IsSearchTimeEnabled )
+                        {
+                            @Model.SearchTime
+                        }
                     </p>
                 </div>
 
@@ -419,18 +423,18 @@
                                         <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@Guid.NewGuid().ToString()" asp-route-serviceid="@item.Id" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
                                     </h2>
                                     <p class="govuk-caption-m">
-                                        @if (@item?.Service_at_locations?.FirstOrDefault()?.Location?.Physical_addresses?.FirstOrDefault() != null)
+                                        @if (@item?.ServiceAtLocations?.FirstOrDefault()?.Location?.PhysicalAddresses?.FirstOrDefault() != null)
                                         {
-                                            @Model.GetAddressAsString(@item?.Service_at_locations?.FirstOrDefault()?.Location?.Physical_addresses?.FirstOrDefault() ?? new ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses.OpenReferralPhysicalAddressDto())
+                                            @Model.GetAddressAsString(@item?.ServiceAtLocations?.FirstOrDefault()?.Location?.PhysicalAddresses?.FirstOrDefault()?? new FamilyHubs.ServiceDirectory.Shared.Dto.PhysicalAddressDto())
                                             ;
                                         }
                                     </p>
                                     <dl class="govuk-body-s dtmargins">
                                         <dt class="govuk-!-font-weight-bold">Category</dt>
                                         <dd>
-                                            @if (item != null && item.Service_taxonomys != null)
+                                            @if (item != null && item.ServiceTaxonomies != null)
                                             {
-                                                foreach (var serviceTaxonomy in item.Service_taxonomys)
+                                                foreach (var serviceTaxonomy in item.ServiceTaxonomies)
                                                 {
                                                     if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
                                                     {
@@ -442,9 +446,9 @@
                                     </dl>
                                     <dl class="govuk-body-s dtmargins">
                                         <dt class="govuk-!-font-weight-bold">Cost</dt>
-                                        @if (item?.Cost_options?.FirstOrDefault()?.Amount != null && item?.Cost_options?.FirstOrDefault()?.Amount > 0)
+                                        @if (item?.CostOptions?.FirstOrDefault()?.Amount != null && item?.CostOptions?.FirstOrDefault()?.Amount > 0)
                                         {
-                                            <dd>£@item?.Cost_options?.FirstOrDefault()?.Amount every @item?.Cost_options?.FirstOrDefault()?.Amount_description.ToLower()</dd>
+                                            <dd>£@item?.CostOptions?.FirstOrDefault()?.Amount every @item?.CostOptions?.FirstOrDefault()?.AmountDescription.ToLower()</dd>
                                         }
                                         else
                                         {
@@ -454,8 +458,9 @@
                                     <dl class="govuk-body-s dtmargins">
                                         <dt class="govuk-!-font-weight-bold">Delivery method</dt>
                                         <dd>
-                                            @if (item?.ServiceDelivery != null && item?.ServiceDelivery.Count > 0)
-                                                @Model.GetDeliveryMethodsAsString(item.ServiceDelivery)
+                                            @if (item?.ServiceDeliveries != null && item?.ServiceDeliveries.Count > 0)
+                                                @Model.GetDeliveryMethodsAsString(item.ServiceDeliveries)
+
 
 
                                         </dd>

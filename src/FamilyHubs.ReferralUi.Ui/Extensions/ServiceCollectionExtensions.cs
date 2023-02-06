@@ -9,7 +9,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddHttpClient<IAuthService, AuthService>(client =>
         {
-            client.BaseAddress = new Uri(configuration.GetValue<string>("AuthServiceUrl"));
+            client.BaseAddress = new Uri(configuration?.GetValue<string>("AuthServiceUrl")!);
         });
 
         services.AddHttpClient<IApiService, ApiService>(client =>
@@ -28,7 +28,7 @@ public static class ServiceCollectionExtensions
             client.BaseAddress = new Uri(configuration.GetValue<string>("ApplicationServiceApi:ServiceDirectoryUrl")!);
         }).AddHttpMessageHandler<AuthenticationDelegatingHandler>();
 
-        services.AddHttpClient<IOpenReferralOrganisationClientService, OpenReferralOrganisationClientService>(client =>
+        services.AddHttpClient<IOrganisationClientService, OrganisationClientService>(client =>
         {
             client.BaseAddress = new Uri(configuration.GetValue<string>("ApplicationServiceApi:ServiceDirectoryUrl")!);
         }).AddHttpMessageHandler<AuthenticationDelegatingHandler>();

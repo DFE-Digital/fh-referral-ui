@@ -1,9 +1,6 @@
 using EnumsNET;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -13,7 +10,7 @@ public class LocalOfferDetailModel : PageModel
 {
     private readonly ILocalOfferClientService _localOfferClientService;
 
-    public OpenReferralServiceDto LocalOffer { get; set; } = default!;
+    public ServiceDto LocalOffer { get; set; } = default!;
 
     public string? ReturnUrl { get; set; }
 
@@ -30,6 +27,8 @@ public class LocalOfferDetailModel : PageModel
     public string State_province { get; set; } = default!;
     public string Postal_code { get; set; } = default!;
     public string Phone { get; set; } = default!;
+    public string Website { get; set; } = default!;
+    public string Email { get; set; } = default!;
 
     public LocalOfferDetailModel(ILocalOfferClientService localOfferClientService, IConfiguration configuration)
     {
@@ -54,8 +53,8 @@ public class LocalOfferDetailModel : PageModel
         ReturnUrl = Request.Headers["Referer"].ToString();
         LocalOffer = await _localOfferClientService.GetLocalOfferById(serviceid);
         Name = LocalOffer.Name;
-        ExtractAddressParts(LocalOffer?.Service_at_locations?.FirstOrDefault()?.Location?.Physical_addresses?.FirstOrDefault() ?? new OpenReferralPhysicalAddressDto());
-        GetTelephone();
+        ExtractAddressParts(LocalOffer?.ServiceAtLocations?.FirstOrDefault()?.Location?.PhysicalAddresses?.FirstOrDefault() ?? new PhysicalAddressDto());
+        GetContactDetails();
 
         return Page();
     }
@@ -71,7 +70,7 @@ public class LocalOfferDetailModel : PageModel
     }
 
 
-    public string GetDeliveryMethodsAsString(ICollection<OpenReferralServiceDeliveryExDto>? serviceDeliveries)
+    public string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto>? serviceDeliveries)
     {
         var result = string.Empty;
 
@@ -81,8 +80,8 @@ public class LocalOfferDetailModel : PageModel
         foreach (var serviceDelivery in serviceDeliveries)
         {
             result = result +
-                    serviceDelivery.ServiceDelivery.AsString(EnumFormat.Description) != null ?
-                    serviceDelivery.ServiceDelivery.AsString(EnumFormat.Description) + "," :
+                    serviceDelivery.Name.AsString(EnumFormat.Description) != null ?
+                    serviceDelivery.Name.AsString(EnumFormat.Description) + "," :
                     String.Empty;
         }
 
@@ -95,7 +94,7 @@ public class LocalOfferDetailModel : PageModel
         return result;
     }
 
-    public string GetLanguagesAsString(ICollection<OpenReferralLanguageDto>? languageDtos)
+    public string GetLanguagesAsString(ICollection<LanguageDto>? languageDtos)
     {
         var result = string.Empty;
 
@@ -103,7 +102,7 @@ public class LocalOfferDetailModel : PageModel
             return result;
 
         foreach (var language in languageDtos)
-            result = result + language.Language + ",";
+            result = result + language.Name + ",";
 
         //Remove last comma if present
         if (result.EndsWith(","))
@@ -114,29 +113,42 @@ public class LocalOfferDetailModel : PageModel
         return result;
     }
 
-    public void ExtractAddressParts(OpenReferralPhysicalAddressDto addressDto)
+    public void ExtractAddressParts(PhysicalAddressDto addressDto)
     {
-        if (addressDto.Address_1 == string.Empty)
+        if (addressDto.Address1 == string.Empty)
             return;
 
-        Address_1 = addressDto.Address_1 + ",";
+        Address_1 = addressDto.Address1 + ",";
         City = addressDto.City != null ? addressDto.City + "," : string.Empty;
-        State_province = addressDto.State_province != null ? addressDto.State_province + "," : string.Empty;
-        Postal_code = addressDto.Postal_code;
+        State_province = addressDto.StateProvince != null ? addressDto.StateProvince + "," : string.Empty;
+        Postal_code = addressDto.PostCode;
     }
 
-    private void GetTelephone()
+    private void GetContactDetails()
     {
-        if (LocalOffer.Contacts == null)
-            return;
-
-        //if there are more then one contact with Name equal "Telephone" then bellow code will pick the last record
-        foreach (var contact in LocalOffer.Contacts)
+        //If delivery type is In-Person, get phone from service at location -> link contacts -> contact -> phone
+        if (GetDeliveryMethodsAsString(LocalOffer.ServiceDeliveries).Contains("In Person"))
         {
-            //Telephone
-            if (contact.Name == "Telephone")
-            {
-                Phone = contact.Telephone;
+            if (LocalOffer.ServiceAtLocations == null || 
+                LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts == null ||
+                LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts?.ElementAt(0).Contact == null)
+                return;
+
+            Phone = LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts?.ElementAt(0)?.Contact?.Telephone!;
+            Website = LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts?.ElementAt(0)?.Contact?.Url!;
+            Email = LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts?.ElementAt(0)?.Contact?.Email!;
+        }
+        else
+        {
+            if (LocalOffer.LinkContacts == null)
+                return;
+
+            //if there are more then one contact then bellow code will pick the last record
+            foreach (var linkcontact in LocalOffer.LinkContacts)
+            {   
+                Phone = linkcontact.Contact.Telephone ?? string.Empty;
+                Website = linkcontact.Contact.Url ?? string.Empty;
+                Email = linkcontact.Contact.Email ?? string.Empty;
             }
         }
     }

@@ -1,21 +1,14 @@
 using EnumsNET;
 using FamilyHubs.ReferralUi.Ui.Models;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
 using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.VisualBasic;
-using Newtonsoft.Json.Linq;
-using System;
-using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
@@ -23,10 +16,13 @@ public class LocalOfferResultsModel : PageModel
 {
     private readonly ILocalOfferClientService _localOfferClientService;
     private readonly IPostcodeLocationClientService _postcodeLocationClientService;
-    private readonly IOpenReferralOrganisationClientService _openReferralOrganisationClientService;
+    private readonly IOrganisationClientService _organisationClientService;
     private readonly bool _isReferralEnabled;
+    
+    public bool IsSearchTimeEnabled { get; private set; }
 
-    public Dictionary<int, string> DictServiceDelivery = new();
+
+    public Dictionary<int, string> DictServiceDelivery {  get; private set; }
 
     [BindProperty]
     public List<string> ServiceDeliverySelection { get; set; } = default!;
@@ -34,9 +30,9 @@ public class LocalOfferResultsModel : PageModel
     [BindProperty]
     public List<string> CostSelection { get; set; } = default!;
 
-    public List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>> NestedCategories { get; set; } = default!;
+    public List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>> NestedCategories { get; set; } = default!;
 
-    public List<OpenReferralTaxonomyDto> Categories { get; set; } = default!;
+    public List<TaxonomyDto> Categories { get; set; } = default!;
 
     [BindProperty]
     public List<string> CategorySelection { get; set; } = default!;
@@ -46,7 +42,7 @@ public class LocalOfferResultsModel : PageModel
     public double CurrentLatitude { get; set; }
     public double CurrentLongitude { get; set; }
 
-    public PaginatedList<OpenReferralServiceDto> SearchResults { get; set; } = default!;
+    public PaginatedList<ServiceDto> SearchResults { get; set; } = default!;
 
     public string SelectedDistance { get; set; } = "212892";
 
@@ -78,6 +74,8 @@ public class LocalOfferResultsModel : PageModel
     public string? OutCode { get; set; }
     public string? DistrictCode { get; set; }
 
+    public string SearchTime { get; private set; } = default!;
+
     public string SearchResultsSnippet
     {
         get
@@ -104,12 +102,14 @@ public class LocalOfferResultsModel : PageModel
         new SelectListItem { Value = "32186.9", Text = "20 miles" },
     };
 
-    public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService, IOpenReferralOrganisationClientService openReferralOrganisationClientService, IConfiguration configuration)
+    public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService, IOrganisationClientService organisationClientService, IConfiguration configuration)
     {
+        DictServiceDelivery = new();
         _localOfferClientService = localOfferClientService;
         _postcodeLocationClientService = postcodeLocationClientService;
-        _openReferralOrganisationClientService = openReferralOrganisationClientService;
+        _organisationClientService = organisationClientService;
         _isReferralEnabled = configuration.GetValue<bool>("IsReferralEnabled");
+        IsSearchTimeEnabled = configuration.GetValue<bool>("IsSearchTimeEnabled");
     }
 
     public async Task<IActionResult> OnGetAsync(string postCode,
@@ -120,14 +120,11 @@ public class LocalOfferResultsModel : PageModel
                                  string maximumAge,
                                  string searchText)
     {
-        if (_isReferralEnabled) 
+        if (_isReferralEnabled && User != null && User.Identity != null && !User.Identity.IsAuthenticated) 
         {
-            if (User != null && User.Identity != null && !User.Identity.IsAuthenticated) 
+            return RedirectToPage("/ProfessionalReferral/SignIn", new
             {
-                return RedirectToPage("/ProfessionalReferral/SignIn", new
-                {
-                });
-            }
+            });
         }
 
         SearchPostCode = postCode;
@@ -147,6 +144,7 @@ public class LocalOfferResultsModel : PageModel
         CreateServiceDeliveryDictionary();
         InitializeAgeRange();
         InitializeLanguages();
+        DateTime dtNow = DateTime.Now;
         SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing",
                                                                       "active",
                                                                       null,
@@ -164,6 +162,9 @@ public class LocalOfferResultsModel : PageModel
                                                                       null,
                                                                       null,
                                                                       null);
+        TimeSpan ts = DateTime.Now - dtNow;
+        SearchTime = $" Took: {ts.Milliseconds} milliseconds";
+
 
         return Page();
     }
@@ -195,7 +196,6 @@ public class LocalOfferResultsModel : PageModel
 
         if (!ModelState.IsValid)
         {
-            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             CreateServiceDeliveryDictionary();
             await GetCategoriesTreeAsync();
             GetCategories();
@@ -204,8 +204,6 @@ public class LocalOfferResultsModel : PageModel
             return Page();
         }
 
-        //Keep these as might be needed at a later stage
-        //SelectedDistance = Request.Form["SelectedDistance"];
         SearchText = Request.Form["SearchText"];
 
         if (SearchPostCode != null)
@@ -224,7 +222,7 @@ public class LocalOfferResultsModel : PageModel
             serviceDelivery = string.Join(',', ServiceDeliverySelection.ToArray());
 
         bool? isPaidFor = null;
-        if (CostSelection != null && CostSelection.Count() == 1)
+        if (CostSelection != null && CostSelection.Any())
         {
             switch (CostSelection[0])
             {
@@ -244,6 +242,7 @@ public class LocalOfferResultsModel : PageModel
 
         var taxonomies = string.Join(",", SubcategorySelection);
 
+        DateTime dtNow = DateTime.Now;
         SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing",
                                                                       "active",
                                                                       null,
@@ -263,6 +262,8 @@ public class LocalOfferResultsModel : PageModel
                                                                       taxonomies,
                                                                       SelectedLanguage == "All languages"? null: SelectedLanguage,
                                                                       CanFamilyChooseLocation);
+        TimeSpan ts = DateTime.Now - dtNow;
+        SearchTime = $" Took: {ts.Milliseconds} milliseconds";
 
         InitializeAgeRange();
         InitializeLanguages();
@@ -276,7 +277,7 @@ public class LocalOfferResultsModel : PageModel
 
     private void CreateServiceDeliveryDictionary()
     {
-        var myEnumDescriptions = from ServiceDelivery n in Enum.GetValues(typeof(ServiceDelivery))
+        var myEnumDescriptions = from ServiceDeliveryType n in Enum.GetValues(typeof(ServiceDeliveryType))
                                  select new { Id = (int)n, Name = Utility.GetEnumDescription(n) };
 
         foreach (var myEnumDescription in myEnumDescriptions)
@@ -287,35 +288,35 @@ public class LocalOfferResultsModel : PageModel
         }
     }
 
-    public string GetAddressAsString(OpenReferralPhysicalAddressDto addressDto)
+    public string GetAddressAsString(PhysicalAddressDto addressDto)
     {
         string result = string.Empty;
 
-        if (addressDto.Address_1 == null || addressDto.Address_1 == string.Empty)
+        if (addressDto.Address1 == null || addressDto.Address1 == string.Empty)
         {
             return result;
         }
 
-        result = result + (addressDto.Address_1 != null ? addressDto.Address_1.Replace("|", ",") + "," : string.Empty);
+        result = result + (addressDto.Address1 != null ? addressDto.Address1.Replace("|", ",") + "," : string.Empty);
         result = result + (addressDto.City != null ? addressDto.City + "," : string.Empty);
-        result = result + (addressDto.State_province != null ? addressDto.State_province + "," : string.Empty);
-        result = result + (addressDto.Postal_code != null ? addressDto.Postal_code : string.Empty);
+        result = result + (addressDto.StateProvince != null ? addressDto.StateProvince + "," : string.Empty);
+        result = result + (addressDto.PostCode != null ? addressDto.PostCode : string.Empty);
 
         return result;
     }
 
-    public string GetDeliveryMethodsAsString(ICollection<OpenReferralServiceDeliveryExDto> serviceDeliveries)
+    public string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto> serviceDeliveries)
     {
         string result = string.Empty;
 
         if (serviceDeliveries == null || serviceDeliveries.Count == 0)
             return result;
 
-        foreach (var serviceDelivery in serviceDeliveries)
+        foreach (var name in serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name))
         {   
             result = result +
-                serviceDelivery.ServiceDelivery.AsString(EnumFormat.Description) != null ?
-                serviceDelivery.ServiceDelivery.AsString(EnumFormat.Description)  + "," : 
+                name.AsString(EnumFormat.Description) != null ?
+                name.AsString(EnumFormat.Description)  + "," : 
                 String.Empty;
         }
 
@@ -331,15 +332,18 @@ public class LocalOfferResultsModel : PageModel
         return result;
     }
 
-    public string GetLanguagesAsString(ICollection<OpenReferralLanguageDto> languageDtos)
+    public string GetLanguagesAsString(ICollection<LanguageDto> languageDtos)
     {
         string result = string.Empty;
 
         if (languageDtos == null || languageDtos.Count == 0)
             return result;
 
-        foreach (var language in languageDtos)
-            result = result + (language.Language != null ? language.Language + "," : String.Empty);
+        StringBuilder sb = new();
+        foreach (var name in languageDtos.Select(language => language.Name))
+            sb.Append(name != null ? name + "," : String.Empty);
+        result= sb.ToString();
+            
 
         //Remove last comma if present
         if (result.EndsWith(","))
@@ -368,7 +372,7 @@ public class LocalOfferResultsModel : PageModel
         }
         catch
         {
-            return;
+            //If post code is not valid then just return
         }
     }
 
@@ -500,10 +504,10 @@ public class LocalOfferResultsModel : PageModel
 
     private async Task GetCategoriesTreeAsync()
     {
-        List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>> categories = await _openReferralOrganisationClientService.GetCategories();
+        List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>> categories = await _organisationClientService.GetCategories();
 
         if (categories != null)
-            NestedCategories = new List<KeyValuePair<OpenReferralTaxonomyDto, List<OpenReferralTaxonomyDto>>>(categories);
+            NestedCategories = new List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>(categories);
 
     }
 
@@ -512,7 +516,7 @@ public class LocalOfferResultsModel : PageModel
     /// </summary>
     private void GetCategories()
     {
-        Categories = new List<OpenReferralTaxonomyDto>();
+        Categories = new List<TaxonomyDto>();
         foreach (var category in NestedCategories)
         {
             Categories.Add(category.Key);

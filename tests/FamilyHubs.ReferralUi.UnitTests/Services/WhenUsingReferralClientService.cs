@@ -1,6 +1,6 @@
 ﻿using FamilyHubs.ReferralUi.Ui.Infrastructure.Configuration;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.Referrals;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.SharedKernel;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
