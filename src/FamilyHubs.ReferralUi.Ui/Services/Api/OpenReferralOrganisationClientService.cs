@@ -5,19 +5,19 @@ using System.Text.Json;
 
 namespace FamilyHubs.ReferralUi.Ui.Services.Api;
 
-public interface IOpenReferralOrganisationClientService
+public interface IOrganisationClientService
 {
     Task<PaginatedList<TaxonomyDto>> GetTaxonomyList(int pageNumber = 1, int pageSize = 10);
     Task<List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>> GetCategories();
-    Task<List<OrganisationDto>> GetListOpenReferralOrganisations();
-    Task<OrganisationWithServicesDto> GetOpenReferralOrganisationById(string id);
+    Task<List<OrganisationDto>> GetListOrganisations();
+    Task<OrganisationWithServicesDto> GetOrganisationById(string id);
     Task<string> CreateOrganisation(OrganisationWithServicesDto organisation);
     Task<string> UpdateOrganisation(OrganisationWithServicesDto organisation);
 }
 
-public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOrganisationClientService
+public class OrganisationClientService : ApiService, IOrganisationClientService
 {
-    public OpenReferralOrganisationClientService(HttpClient client)
+    public OrganisationClientService(HttpClient client)
     : base(client)
     {
 
@@ -39,7 +39,7 @@ public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOr
 
     }
 
-    public async Task<List<OrganisationDto>> GetListOpenReferralOrganisations()
+    public async Task<List<OrganisationDto>> GetListOrganisations()
     {
         var request = new HttpRequestMessage
         {
@@ -87,7 +87,7 @@ public class OpenReferralOrganisationClientService : ApiService, IOpenReferralOr
         return keyValuePairs;
     }
 
-    public async Task<OrganisationWithServicesDto> GetOpenReferralOrganisationById(string id)
+    public async Task<OrganisationWithServicesDto> GetOrganisationById(string id)
     {
         var request = new HttpRequestMessage
         {

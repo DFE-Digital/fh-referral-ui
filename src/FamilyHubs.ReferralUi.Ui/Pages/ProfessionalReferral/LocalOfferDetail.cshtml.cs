@@ -27,6 +27,8 @@ public class LocalOfferDetailModel : PageModel
     public string State_province { get; set; } = default!;
     public string Postal_code { get; set; } = default!;
     public string Phone { get; set; } = default!;
+    public string Website { get; set; } = default!;
+    public string Email { get; set; } = default!;
 
     public LocalOfferDetailModel(ILocalOfferClientService localOfferClientService, IConfiguration configuration)
     {
@@ -52,7 +54,7 @@ public class LocalOfferDetailModel : PageModel
         LocalOffer = await _localOfferClientService.GetLocalOfferById(serviceid);
         Name = LocalOffer.Name;
         ExtractAddressParts(LocalOffer?.ServiceAtLocations?.FirstOrDefault()?.Location?.PhysicalAddresses?.FirstOrDefault() ?? new PhysicalAddressDto());
-        GetTelephone();
+        GetContactDetails();
 
         return Page();
     }
@@ -122,18 +124,31 @@ public class LocalOfferDetailModel : PageModel
         Postal_code = addressDto.PostCode;
     }
 
-    private void GetTelephone()
+    private void GetContactDetails()
     {
-        if (LocalOffer.LinkContacts == null)
-            return;
-
-        //if there are more then one contact with Name equal "Telephone" then bellow code will pick the last record
-        foreach (var linkcontact in LocalOffer.LinkContacts)
+        //If delivery type is In-Person, get phone from service at location -> link contacts -> contact -> phone
+        if (GetDeliveryMethodsAsString(LocalOffer.ServiceDeliveries).Contains("In Person"))
         {
-            //Telephone
-            if (linkcontact.Contact.Name == "Telephone")
-            {
-                Phone = linkcontact.Contact.Telephone;
+            if (LocalOffer.ServiceAtLocations == null || 
+                LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts == null ||
+                LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts?.ElementAt(0).Contact == null)
+                return;
+
+            Phone = LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts?.ElementAt(0)?.Contact?.Telephone!;
+            Website = LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts?.ElementAt(0)?.Contact?.Url!;
+            Email = LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts?.ElementAt(0)?.Contact?.Email!;
+        }
+        else
+        {
+            if (LocalOffer.LinkContacts == null)
+                return;
+
+            //if there are more then one contact then bellow code will pick the last record
+            foreach (var linkcontact in LocalOffer.LinkContacts)
+            {   
+                Phone = linkcontact.Contact.Telephone ?? string.Empty;
+                Website = linkcontact.Contact.Url ?? string.Empty;
+                Email = linkcontact.Contact.Email ?? string.Empty;
             }
         }
     }

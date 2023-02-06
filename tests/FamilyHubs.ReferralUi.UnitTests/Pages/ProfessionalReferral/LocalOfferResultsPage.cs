@@ -15,7 +15,7 @@ public class LocalOfferResultsPage
     {
         var mockLocalOfferClientService = new Mock<ILocalOfferClientService>();
         var mockIPostcodeLocationClientService = new Mock<IPostcodeLocationClientService>();
-        var mockIOpenReferralOrganisationClientService = new Mock<IOpenReferralOrganisationClientService>();
+        var mockIOrganisationClientService = new Mock<IOrganisationClientService>();
 
 
         IEnumerable<KeyValuePair<string, string?>>? inMemorySettings = new List<KeyValuePair<string, string?>>()
@@ -27,7 +27,7 @@ public class LocalOfferResultsPage
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        pageModel = new LocalOfferResultsModel(mockLocalOfferClientService.Object, mockIPostcodeLocationClientService.Object, mockIOpenReferralOrganisationClientService.Object, configuration);
+        pageModel = new LocalOfferResultsModel(mockLocalOfferClientService.Object, mockIPostcodeLocationClientService.Object, mockIOrganisationClientService.Object, configuration);
     }
 
     [Theory]

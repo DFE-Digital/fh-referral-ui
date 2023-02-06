@@ -16,7 +16,7 @@ public class LocalOfferResultsModel : PageModel
 {
     private readonly ILocalOfferClientService _localOfferClientService;
     private readonly IPostcodeLocationClientService _postcodeLocationClientService;
-    private readonly IOpenReferralOrganisationClientService _openReferralOrganisationClientService;
+    private readonly IOrganisationClientService _organisationClientService;
     private readonly bool _isReferralEnabled;
     
     public bool IsSearchTimeEnabled { get; private set; }
@@ -102,12 +102,12 @@ public class LocalOfferResultsModel : PageModel
         new SelectListItem { Value = "32186.9", Text = "20 miles" },
     };
 
-    public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService, IOpenReferralOrganisationClientService openReferralOrganisationClientService, IConfiguration configuration)
+    public LocalOfferResultsModel(ILocalOfferClientService localOfferClientService, IPostcodeLocationClientService postcodeLocationClientService, IOrganisationClientService organisationClientService, IConfiguration configuration)
     {
         DictServiceDelivery = new();
         _localOfferClientService = localOfferClientService;
         _postcodeLocationClientService = postcodeLocationClientService;
-        _openReferralOrganisationClientService = openReferralOrganisationClientService;
+        _organisationClientService = organisationClientService;
         _isReferralEnabled = configuration.GetValue<bool>("IsReferralEnabled");
         IsSearchTimeEnabled = configuration.GetValue<bool>("IsSearchTimeEnabled");
     }
@@ -504,7 +504,7 @@ public class LocalOfferResultsModel : PageModel
 
     private async Task GetCategoriesTreeAsync()
     {
-        List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>> categories = await _openReferralOrganisationClientService.GetCategories();
+        List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>> categories = await _organisationClientService.GetCategories();
 
         if (categories != null)
             NestedCategories = new List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>(categories);
