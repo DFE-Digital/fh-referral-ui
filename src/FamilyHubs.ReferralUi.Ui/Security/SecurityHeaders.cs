@@ -79,7 +79,6 @@ public static class SecurityHeaders
                             "https://*.googletagmanager.com"
                         })
                         // this is needed for GTM
-                        //.UnsafeEval()
                         .UnsafeInline();
                     // if we wanted the nonce back, we'd add `.WithNonce();` here
 
