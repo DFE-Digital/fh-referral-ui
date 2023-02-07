@@ -59,7 +59,6 @@ public static class SecurityHeaders
 
                     builder.AddFontSrc()
                         .Self();
-                    //.From(new[] { "https://fonts.gstatic.com" });
 
                     builder.AddObjectSrc()
                         .None();
