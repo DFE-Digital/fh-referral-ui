@@ -65,7 +65,7 @@ public class LocalOfferResultsModel : PageModel
     public string? SearchText { get; set; }
 
     [BindProperty]
-    public string SearchPostCode { get; set; }
+    public string SearchPostCode { get; set; } = string.Empty;
 
     [BindProperty(SupportsGet = true)]
     public int CurrentPage { get; set; } = 1;
@@ -140,23 +140,30 @@ public class LocalOfferResultsModel : PageModel
         InitializeAgeRange();
         InitializeLanguages();
         DateTime dtNow = DateTime.Now;
-        SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing",
-                                                                      "active",
-                                                                      null,
-                                                                      null,
-                                                                      null,
-                                                                      DistrictCode ?? string.Empty,
-                                                                      (CurrentLatitude != 0.0D) ? CurrentLatitude : null,
-                                                                      (CurrentLongitude != 0.0D) ? CurrentLongitude : null,
-                                                                      (distance > 0.0D) ? distance : null,
-                                                                      CurrentPage,
-                                                                      PageSize,
-                                                                      SearchText ?? string.Empty,
-                                                                      null,
-                                                                      null,
-                                                                      null,
-                                                                      null,
-                                                                      null);
+
+        LocalOfferFilter localOfferFilter = new()
+        {
+            ServiceType = "Information Sharing",
+            Status = "active",
+            MinimumAge = null,
+            MaximumAge = null,
+            GivenAge = null,
+            DistrictCode = DistrictCode ?? string.Empty,
+            Latitude = (CurrentLatitude != 0.0D) ? CurrentLatitude : null,
+            Longtitude = (CurrentLongitude != 0.0D) ? CurrentLongitude : null,
+            Proximity = (distance > 0.0D) ? distance : null,
+            PageNumber = CurrentPage,
+            PageSize = PageSize,
+            Text = SearchText ?? string.Empty,
+            ServiceDeliveries = null,
+            IsPaidFor = null,
+            TaxonmyIds = null,
+            Languages = null,
+            CanFamilyChooseLocation = null
+        };
+
+        SearchResults = await _localOfferClientService.GetLocalOffers(localOfferFilter);
+                                                                     
         TimeSpan ts = DateTime.Now - dtNow;
         SearchTime = $" Took: {ts.Milliseconds} milliseconds";
 
@@ -207,25 +214,29 @@ public class LocalOfferResultsModel : PageModel
         var taxonomies = string.Join(",", SubcategorySelection);
 
         DateTime dtNow = DateTime.Now;
-        SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing",
-                                                                      "active",
-                                                                      null,
-                                                                      null,
-                                                                      (ForChildrenAndYoungPeople && searchAge >= 0) ? searchAge : null,
-                                                                      DistrictCode ?? string.Empty,
-                                                                      (CurrentLatitude != 0.0D) ? CurrentLatitude : null,
-                                                                      (CurrentLongitude != 0.0D) ? CurrentLongitude : null,
-                                                                      (distance > 0.0D) ? distance : null,
-                                                                      CurrentPage,
-                                                                      PageSize,
-                                                                      //1,
-                                                                      //99,
-                                                                      SearchText ?? string.Empty,
-                                                                      serviceDelivery,
-                                                                      isPaidFor,
-                                                                      taxonomies,
-                                                                      SelectedLanguage == "All languages"? null: SelectedLanguage,
-                                                                      CanFamilyChooseLocation);
+        LocalOfferFilter localOfferFilter = new()
+        {
+            ServiceType = "Information Sharing",
+            Status = "active",
+            MinimumAge = null,
+            MaximumAge = null,
+            GivenAge = (ForChildrenAndYoungPeople && searchAge >= 0) ? searchAge : null,
+            DistrictCode = DistrictCode ?? string.Empty,
+            Latitude = (CurrentLatitude != 0.0D) ? CurrentLatitude : null,
+            Longtitude = (CurrentLongitude != 0.0D) ? CurrentLongitude : null,
+            Proximity = (distance > 0.0D) ? distance : null,
+            PageNumber = CurrentPage,
+            PageSize = PageSize,
+            Text = SearchText ?? string.Empty,
+            ServiceDeliveries = serviceDelivery,
+            IsPaidFor = isPaidFor,
+            TaxonmyIds = taxonomies,
+            Languages = SelectedLanguage == "All languages" ? null : SelectedLanguage,
+            CanFamilyChooseLocation = CanFamilyChooseLocation
+        };
+
+        SearchResults = await _localOfferClientService.GetLocalOffers(localOfferFilter); 
+                                                                      
         TimeSpan ts = DateTime.Now - dtNow;
         SearchTime = $" Took: {ts.Milliseconds} milliseconds";
 
@@ -242,7 +253,7 @@ public class LocalOfferResultsModel : PageModel
     private bool? IsPaidFor()
     {
         bool? isPaidFor = null;
-        if (CostSelection != null && CostSelection.Any())
+        if (CostSelection != null && CostSelection.Count == 1)
         {
             switch (CostSelection[0])
             {

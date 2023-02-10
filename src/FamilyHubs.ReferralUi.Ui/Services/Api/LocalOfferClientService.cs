@@ -1,14 +1,13 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
+﻿using FamilyHubs.ReferralUi.Ui.Models;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.SharedKernel;
-using System;
 using System.Text.Json;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace FamilyHubs.ReferralUi.Ui.Services.Api;
 
 public interface ILocalOfferClientService
 {
-    Task<PaginatedList<ServiceDto>> GetLocalOffers(string serviceType, string status, int? minimum_age, int? maximum_age, int? given_age, string? districtCode, double? latitude, double? longtitude, double? proximity, int pageNumber, int pageSize, string text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation);
+    Task<PaginatedList<ServiceDto>> GetLocalOffers(LocalOfferFilter filter); // string serviceType, string status, int? minimum_age, int? maximum_age, int? given_age, string? districtCode, double? latitude, double? longtitude, double? proximity, int pageNumber, int pageSize, string text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation);
     Task<ServiceDto> GetLocalOfferById(string id);
     Task<List<ServiceDto>> GetServicesByOrganisationId(string id);
 }
@@ -21,44 +20,44 @@ public class LocalOfferClientService : ApiService, ILocalOfferClientService
 
     }
 
-    public async Task<PaginatedList<ServiceDto>> GetLocalOffers(string? serviceType, string status, int? minimum_age, int? maximum_age, int? given_age, string? districtCode, double? latitude, double? longtitude, double? proximity, int pageNumber, int pageSize, string text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation)
+    public async Task<PaginatedList<ServiceDto>> GetLocalOffers(LocalOfferFilter filter) // string? serviceType, string status, int? minimum_age, int? maximum_age, int? given_age, string? districtCode, double? latitude, double? longtitude, double? proximity, int pageNumber, int pageSize, string text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation)
     {
-        if (string.IsNullOrEmpty(status))
-            status = "active";
+        if (string.IsNullOrEmpty(filter.Status))
+            filter.Status = "active";
 
-        string url = GetPositionUrl(serviceType, latitude, longtitude, proximity, status, pageNumber, pageSize);
-        url = AddTextToUrl(url, text);
-        url = AddAgeToUrl(url, minimum_age, maximum_age, given_age);
+        string url = GetPositionUrl(filter.ServiceType, filter.Latitude, filter.Longtitude, filter.Proximity, filter.Status, filter.PageNumber, filter.PageSize);
+        url = AddTextToUrl(url, filter.Text);
+        url = AddAgeToUrl(url, filter.MinimumAge, filter.MaximumAge, filter.GivenAge);
         
 
-        if (serviceDeliveries != null)
+        if (filter.ServiceDeliveries != null)
         {
-            url += $"&serviceDeliveries={serviceDeliveries}";
+            url += $"&serviceDeliveries={filter.ServiceDeliveries}";
         }
 
-        if (isPaidFor != null)
+        if (filter.IsPaidFor != null)
         {
-            url += $"&isPaidFor={isPaidFor.Value}";
+            url += $"&isPaidFor={filter.IsPaidFor.Value}";
         }
 
-        if (taxonmyIds != null)
+        if (filter.TaxonmyIds != null)
         {
-            url += $"&taxonmyIds={taxonmyIds}";
+            url += $"&taxonmyIds={filter.TaxonmyIds}";
         }
 
-        if (districtCode != null)
+        if (filter.DistrictCode != null)
         {
-            url += $"&districtCode={districtCode}";
+            url += $"&districtCode={filter.DistrictCode}";
         }
 
-        if (languages != null)
+        if (filter.Languages != null)
         {
-            url += $"&languages={languages}";
+            url += $"&languages={filter.Languages}";
         }
 
-        if (canFamilyChooseLocation != null && canFamilyChooseLocation == true)
+        if (filter.CanFamilyChooseLocation != null && filter.CanFamilyChooseLocation == true)
         {
-            url += $"&canFamilyChooseLocation={canFamilyChooseLocation.Value}";
+            url += $"&canFamilyChooseLocation={filter.CanFamilyChooseLocation.Value}";
         }
 
         var request = new HttpRequestMessage
@@ -74,7 +73,7 @@ public class LocalOfferClientService : ApiService, ILocalOfferClientService
         return await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new PaginatedList<ServiceDto>();
     }
 
-    private string GetPositionUrl(string? serviceType, double? latitude, double? longtitude, double? proximity, string status, int pageNumber, int pageSize)
+    private static string GetPositionUrl(string? serviceType, double? latitude, double? longtitude, double? proximity, string status, int pageNumber, int pageSize)
     {
         string url = string.Empty;
         if (latitude != null && longtitude != null)

@@ -29,7 +29,7 @@ public class HeaderViewModel : IHeaderViewModel
         bool useLegacyStyles = false)
     {
         ArgumentNullException.ThrowIfNull(configuration);
-        UserContext = userContext ?? throw new ArgumentNullException("userContext");
+        UserContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
 
         _linkCollection = linkCollection ?? new LinkCollection();
         _linkHelper = linkHelper ?? new LinkHelper(_linkCollection);
