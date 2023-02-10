@@ -8,6 +8,7 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral
     {
         public void OnGet()
         {
+            //Standard GET method for page
         }
     }
 }

@@ -36,16 +36,9 @@ public class AuthenticationDelegatingHandler : DelegatingHandler
             tokenModel = await _authService.RefreshToken(tokenModel);
             if (tokenModel != null)
             {
-
                 var handler = new JwtSecurityTokenHandler();
                 var jwtSecurityToken = handler.ReadJwtToken(tokenModel.AccessToken);
-                var claims = jwtSecurityToken.Claims.ToList();
-
-                //Initialize a new instance of the ClaimsIdentity with the claims and authentication scheme    
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                //Initialize a new instance of the ClaimsPrincipal with ClaimsIdentity    
-                var principal = new ClaimsPrincipal(identity);
-
+                
                 _tokenService.SetToken(tokenModel.AccessToken ?? string.Empty, jwtSecurityToken.ValidTo, tokenModel.RefreshToken ?? string.Empty);
                 request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{_tokenService.GetToken()}");
                 response = await base.SendAsync(request, cancellationToken);

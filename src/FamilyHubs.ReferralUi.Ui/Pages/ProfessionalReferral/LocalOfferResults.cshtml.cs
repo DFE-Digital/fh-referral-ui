@@ -65,7 +65,7 @@ public class LocalOfferResultsModel : PageModel
     public string? SearchText { get; set; }
 
     [BindProperty]
-    public string? SearchPostCode { get; set; }
+    public string SearchPostCode { get; set; }
 
     [BindProperty(SupportsGet = true)]
     public int CurrentPage { get; set; } = 1;
@@ -136,11 +136,6 @@ public class LocalOfferResultsModel : PageModel
         SelectedDistance = distance.ToString();
         if (searchText != null)
             SearchText = searchText;
-        if (!int.TryParse(minimumAge, out int minAge))
-            minAge = 0;
-        if (!int.TryParse(maximumAge, out int maxAge))
-            maxAge = 99;
-
         CreateServiceDeliveryDictionary();
         InitializeAgeRange();
         InitializeLanguages();
@@ -169,30 +164,16 @@ public class LocalOfferResultsModel : PageModel
         return Page();
     }
 
+    
+
     public async Task<IActionResult> OnPostAsync(string? removeCostSelection, bool removeFilter, string? removeServiceDeliverySelection, 
                                                  string? removeSelectedLanguage, string? removeSearchAge, string? removecategorySelection,
                                                  string? removesubcategorySelection)
     {
-        if(removeFilter)
-        {
-            if(removeCostSelection != null) RemoveFilterCostSelection(removeCostSelection);
-            if (removeServiceDeliverySelection != null) RemoveFilterServiceDeliverySelection(removeServiceDeliverySelection);
-            if (removeSelectedLanguage != null) SelectedLanguage = null;
-            if (removeSearchAge != null)
-            {
-                SearchAge = null;
-                ForChildrenAndYoungPeople = false;
-            }
-                
-            if (removecategorySelection != null) RemoveFilterForCategory(removecategorySelection);
-            if (removesubcategorySelection != null) RemoveFilterForSubCategory(removesubcategorySelection);
 
-
-        }
-        if (ForChildrenAndYoungPeople && (SearchAge == null || !int.TryParse(SearchAge, out int searchAgeTest)))
-        {
-            ModelState.AddModelError(nameof(SearchAge), "Please select a valid search age");
-        }
+        RemoveFilters(removeCostSelection, removeFilter, removeServiceDeliverySelection,
+                      removeSelectedLanguage, removeSearchAge, removecategorySelection,
+                      removesubcategorySelection);
 
         if (!ModelState.IsValid)
         {
@@ -206,8 +187,7 @@ public class LocalOfferResultsModel : PageModel
 
         SearchText = Request.Form["SearchText"];
 
-        if (SearchPostCode != null)
-            await GetLocationDetails(SearchPostCode);
+        await GetLocationDetails(SearchPostCode);
         if (!double.TryParse(SelectedDistance, out double distance))
             distance = 0.0D;
         if (!ForChildrenAndYoungPeople)
@@ -217,28 +197,12 @@ public class LocalOfferResultsModel : PageModel
 
         CreateServiceDeliveryDictionary();
 
-        string? serviceDelivery = null;
-        if (ServiceDeliverySelection != null && ServiceDeliverySelection.Count>0)
-            serviceDelivery = string.Join(',', ServiceDeliverySelection.ToArray());
+        string? serviceDelivery = GetServiceDelivery();
 
-        bool? isPaidFor = null;
-        if (CostSelection != null && CostSelection.Any())
-        {
-            switch (CostSelection[0])
-            {
-                case "paid":
-                    isPaidFor = true;
-                    break;
-
-                case "free":
-                    isPaidFor = false;
-                    break;
-            }
-        }
-
+        bool? isPaidFor = IsPaidFor();
+       
         if (SelectedLanguage == "All languages")
             SelectedLanguage = null;
-
 
         var taxonomies = string.Join(",", SubcategorySelection);
 
@@ -273,6 +237,68 @@ public class LocalOfferResultsModel : PageModel
         ModelState.Clear();
         return Page();
 
+    }
+
+    private bool? IsPaidFor()
+    {
+        bool? isPaidFor = null;
+        if (CostSelection != null && CostSelection.Any())
+        {
+            switch (CostSelection[0])
+            {
+                case "paid":
+                    isPaidFor = true;
+                    break;
+
+                case "free":
+                    isPaidFor = false;
+                    break;
+            }
+        }
+
+        return isPaidFor;
+
+    }
+
+    private string? GetServiceDelivery()
+    {
+        string? serviceDelivery = null;
+        if (ServiceDeliverySelection != null && ServiceDeliverySelection.Count > 0)
+            serviceDelivery = string.Join(',', ServiceDeliverySelection.ToArray());
+
+        return serviceDelivery;
+    }
+
+    private void RemoveFilters(string? removeCostSelection, bool removeFilter, string? removeServiceDeliverySelection,
+                                                 string? removeSelectedLanguage, string? removeSearchAge, string? removecategorySelection,
+                                                 string? removesubcategorySelection)
+    {
+        if (removeFilter)
+        {
+            if (removeCostSelection != null) RemoveFilterCostSelection(removeCostSelection);
+            if (removeServiceDeliverySelection != null) RemoveFilterServiceDeliverySelection(removeServiceDeliverySelection);
+            if (removeSelectedLanguage != null) SelectedLanguage = null;
+            if (removeSearchAge != null)
+            {
+                SearchAge = null;
+                ForChildrenAndYoungPeople = false;
+            }
+
+            if (removecategorySelection != null) RemoveFilterForCategory(removecategorySelection);
+            if (removesubcategorySelection != null) RemoveFilterForSubCategory(removesubcategorySelection);
+
+
+        }
+
+        SetForChildrenAndYoungPeople();
+    }
+
+    private void SetForChildrenAndYoungPeople()
+    {
+        if (ForChildrenAndYoungPeople && (SearchAge == null || !int.TryParse(SearchAge, out int searchAgeTest)))
+        {
+            ModelState.AddModelError(nameof(SearchAge), "Please select a valid search age");
+        }
     }
 
     private void CreateServiceDeliveryDictionary()

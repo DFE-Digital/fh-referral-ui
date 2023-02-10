@@ -13,7 +13,7 @@ public class LocalOfferResultsOldModel : PageModel
     private readonly ILocalOfferClientService _localOfferClientService;
     private readonly IPostcodeLocationClientService _postcodeLocationClientService;
 
-    public Dictionary<int, string> DictServiceDelivery = new();
+    public Dictionary<int, string> DictServiceDelivery { get; private set; } = new();
 
     [BindProperty]
     public List<string> ServiceDeliverySelection { get; set; } = default!;
@@ -125,7 +125,7 @@ public class LocalOfferResultsOldModel : PageModel
         }
 
         bool? isPaidFor = null;
-        if (CostSelection != null && CostSelection.Count() == 1)
+        if (CostSelection != null && CostSelection.Count == 1)
         {
             switch(CostSelection[0])
             {

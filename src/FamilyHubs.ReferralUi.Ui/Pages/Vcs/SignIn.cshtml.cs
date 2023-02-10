@@ -11,6 +11,7 @@ public class SignInModel : PageModel
     public string Password { get; set; } = string.Empty;
     public void OnGet()
     {
+        //Standard GET method for page
     }
 
     public IActionResult OnPost()

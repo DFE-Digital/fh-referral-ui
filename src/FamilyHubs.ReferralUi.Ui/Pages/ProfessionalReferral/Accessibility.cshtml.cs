@@ -7,6 +7,7 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.Shared
     {
         public void OnGet()
         {
+            //Standard GET method for page
         }
     }
 }

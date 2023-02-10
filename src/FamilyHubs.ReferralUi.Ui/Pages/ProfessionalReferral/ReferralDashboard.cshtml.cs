@@ -20,7 +20,6 @@ public class ReferralDashboardModel : PageModel
 
     public async Task OnGet(string organisationId)
     {
-        var user = User;
         if (User.IsInRole("VCSAdmin")) 
         {
             if (string.IsNullOrEmpty(organisationId))

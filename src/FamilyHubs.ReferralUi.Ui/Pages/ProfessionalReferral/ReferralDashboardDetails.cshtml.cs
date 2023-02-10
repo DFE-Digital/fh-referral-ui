@@ -61,7 +61,7 @@ public class ReferralDashboardDetailsModel : PageModel
 
         if (!string.IsNullOrEmpty(SelectedStatus))
         {
-            var status = await _referralClientService.SetReferralStatusReferral(ReferralId, SelectedStatus);
+            await _referralClientService.SetReferralStatusReferral(ReferralId, SelectedStatus);
         }
 
         await Init(ReferralId);
@@ -96,10 +96,7 @@ public class ReferralDashboardDetailsModel : PageModel
         {
             ReferralId = referral.Id;
             Referral = referral;
-            if (referral != null)
-            {
-                ReasonForRejection = referral.ReasonForRejection ?? string.Empty;
-            }
+            ReasonForRejection = referral.ReasonForRejection ?? string.Empty;
             var currentStatus = Referral.Status.LastOrDefault();
             if (currentStatus != null)
             {

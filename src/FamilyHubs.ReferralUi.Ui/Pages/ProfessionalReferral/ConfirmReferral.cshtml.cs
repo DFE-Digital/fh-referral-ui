@@ -8,5 +8,6 @@ public class ConfirmReferralModel : PageModel
 {
     public void OnGet()
     {
+        //Standard GET method for page
     }
 }

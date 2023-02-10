@@ -3,6 +3,7 @@ using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
@@ -39,14 +40,11 @@ public class LocalOfferDetailModel : PageModel
     //Needs to pass dummy id so service id can be any string
     public async Task<IActionResult> OnGetAsync(string id, string serviceid)
     {
-        if (IsReferralEnabled)
+        if (IsReferralEnabled && User.Identity != null && !User.Identity.IsAuthenticated)
         {
-            if (User.Identity != null && !User.Identity.IsAuthenticated)
+            return RedirectToPage("/ProfessionalReferral/SignIn", new
             {
-                return RedirectToPage("/ProfessionalReferral/SignIn", new
-                {
-                });
-            }
+            });
         }
 
         ServiceId = serviceid;
@@ -77,11 +75,11 @@ public class LocalOfferDetailModel : PageModel
         if (serviceDeliveries == null || serviceDeliveries.Count == 0)
             return result;
 
-        foreach (var serviceDelivery in serviceDeliveries)
+        foreach (var name in serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name))
         {
             result = result +
-                    serviceDelivery.Name.AsString(EnumFormat.Description) != null ?
-                    serviceDelivery.Name.AsString(EnumFormat.Description) + "," :
+                    name.AsString(EnumFormat.Description) != null ?
+                    name.AsString(EnumFormat.Description) + "," :
                     String.Empty;
         }
 
@@ -101,8 +99,11 @@ public class LocalOfferDetailModel : PageModel
         if (languageDtos == null || languageDtos.Count == 0)
             return result;
 
+        StringBuilder stringBuilder = new();
         foreach (var language in languageDtos)
-            result = result + language.Name + ",";
+            stringBuilder.Append(language.Name + ",");
+         
+         result = stringBuilder.ToString();
 
         //Remove last comma if present
         if (result.EndsWith(","))
@@ -144,11 +145,11 @@ public class LocalOfferDetailModel : PageModel
                 return;
 
             //if there are more then one contact then bellow code will pick the last record
-            foreach (var linkcontact in LocalOffer.LinkContacts)
+            foreach (var linkcontact in LocalOffer.LinkContacts.Select(linkcontact => linkcontact.Contact))
             {   
-                Phone = linkcontact.Contact.Telephone ?? string.Empty;
-                Website = linkcontact.Contact.Url ?? string.Empty;
-                Email = linkcontact.Contact.Email ?? string.Empty;
+                Phone = linkcontact.Telephone ?? string.Empty;
+                Website = linkcontact.Url ?? string.Empty;
+                Email = linkcontact.Email ?? string.Empty;
             }
         }
     }

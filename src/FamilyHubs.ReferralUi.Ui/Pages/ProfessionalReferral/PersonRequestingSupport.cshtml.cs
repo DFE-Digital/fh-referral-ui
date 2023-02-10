@@ -14,6 +14,7 @@ public class PersonRequestingSupportModel : PageModel
 
     public void OnGet()
     {
+        //Standard GET method for page
     }
 
     public IActionResult OnPost()
