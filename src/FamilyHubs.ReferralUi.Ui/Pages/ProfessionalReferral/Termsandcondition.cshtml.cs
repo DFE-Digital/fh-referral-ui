@@ -5,9 +5,6 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral
 {
     public class TermsandconditionModel : PageModel
     {
-        public void OnGet()
-        {
-            //Standard GET method for page
-        }
+       
     }
 }

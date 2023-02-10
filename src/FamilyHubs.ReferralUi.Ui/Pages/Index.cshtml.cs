@@ -11,9 +11,4 @@ public class IndexModel : PageModel
     {
         IsReferralEnabled = configuration.GetValue<bool>("IsReferralEnabled");
     }
-
-    public void OnGet()
-    {
-        //Standard GET method for page
-    }
 }

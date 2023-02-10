@@ -12,11 +12,6 @@ public class PersonRequestingSupportModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public void OnGet()
-    {
-        //Standard GET method for page
-    }
-
     public IActionResult OnPost()
     {
         if (!ModelState.IsValid || IsTypeOfPerson == null)

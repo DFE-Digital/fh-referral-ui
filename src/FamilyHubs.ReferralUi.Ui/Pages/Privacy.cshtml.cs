@@ -9,10 +9,5 @@ public class PrivacyModel : PageModel
     {
        
     }
-
-    public void OnGet()
-    {
-        //Standard GET method for page
-    }
 }
 

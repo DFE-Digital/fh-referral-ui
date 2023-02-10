@@ -6,9 +6,6 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral
     [Authorize(Policy = "Referrer")]
     public class SafeguardingShutterModel : PageModel
     {
-        public void OnGet()
-        {
-            //Standard GET method for page
-        }
+        
     }
 }

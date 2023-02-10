@@ -9,11 +9,7 @@ public class SignInModel : PageModel
     public string Email { get; set; } = string.Empty;
     [BindProperty]
     public string Password { get; set; } = string.Empty;
-    public void OnGet()
-    {
-        //Standard GET method for page
-    }
-
+    
     public IActionResult OnPost()
     {
         return RedirectToPage("/Vcs/ShowReferralSummary", new

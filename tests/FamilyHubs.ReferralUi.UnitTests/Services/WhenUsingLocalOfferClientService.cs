@@ -3,9 +3,7 @@ using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.SharedKernel;
 using FluentAssertions;
-using Moq;
 using Newtonsoft.Json;
-using System.Drawing.Printing;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Services;
 
