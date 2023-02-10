@@ -2,8 +2,8 @@
 
 public record LocalOfferFilter
 {
-    public string ServiceType { get; init; }
-    public string Status { get; set; }
+    public string ServiceType { get; set; } = default!;
+    public string Status { get; set; } = default!;
     public int? MinimumAge { get; init; }
     public int? MaximumAge { get; init; }
     public int? GivenAge { get; init; }
@@ -13,7 +13,7 @@ public record LocalOfferFilter
     public double? Proximity { get; init; }
     public int PageNumber { get; init; }
     public int PageSize { get; init; }
-    public string Text { get; init; }
+    public string Text { get; set; } = default!;
     public string? ServiceDeliveries { get; init; }
     public bool? IsPaidFor { get; init; }
     public string? TaxonmyIds { get; init; }

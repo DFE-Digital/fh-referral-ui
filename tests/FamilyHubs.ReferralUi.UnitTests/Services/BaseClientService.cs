@@ -44,7 +44,7 @@ public class BaseClientService
         return bristolCountyCouncil;
     }
 
-    protected ServiceDto GetTestCountyCouncilServicesDto(string parentId)
+    protected static ServiceDto GetTestCountyCouncilServicesDto(string parentId)
     {
         var contactId = Guid.NewGuid().ToString();
 
