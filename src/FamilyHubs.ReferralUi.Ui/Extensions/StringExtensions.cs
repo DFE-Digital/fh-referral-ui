@@ -8,6 +8,6 @@ public static class StringExtensions
             return input;
 
         string sentence = input.ToLower();
-        return string.Concat(sentence[0].ToString().ToUpper(), sentence.AsSpan(1));
+        return $"{sentence[0].ToString().ToUpper()}{sentence.AsSpan(1)}";
     }
 }
