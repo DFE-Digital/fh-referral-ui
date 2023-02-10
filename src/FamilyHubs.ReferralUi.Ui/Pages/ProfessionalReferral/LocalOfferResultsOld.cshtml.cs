@@ -1,3 +1,4 @@
+using FamilyHubs.ReferralUi.Ui.Models;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
@@ -5,6 +6,7 @@ using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
@@ -13,7 +15,7 @@ public class LocalOfferResultsOldModel : PageModel
     private readonly ILocalOfferClientService _localOfferClientService;
     private readonly IPostcodeLocationClientService _postcodeLocationClientService;
 
-    public Dictionary<int, string> DictServiceDelivery = new();
+    public Dictionary<int, string> DictServiceDelivery { get; private set; } = new();
 
     [BindProperty]
     public List<string> ServiceDeliverySelection { get; set; } = default!;
@@ -81,7 +83,28 @@ public class LocalOfferResultsOldModel : PageModel
 
         CreateServiceDeliveryDictionary();
 
-        SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing", "active", minAge, maxAge, null, DistrictCode ?? string.Empty, (latitude != 0.0D) ? latitude : null, (longitude != 0.0D) ? longitude : null, (distance > 0.0D) ? distance : null, CurrentPage, PageSize, SearchText ?? string.Empty, null, null, null, null, null);
+        LocalOfferFilter localOfferFilter = new()
+        {
+            ServiceType = "Information Sharing",
+            Status = "active",
+            MinimumAge = minAge,
+            MaximumAge = maxAge,
+            GivenAge = null,
+            DistrictCode = DistrictCode ?? string.Empty,
+            Latitude = (latitude != 0.0D) ? latitude : null,
+            Longtitude = (longitude != 0.0D) ? longitude : null,
+            Proximity = (distance > 0.0D) ? distance : null,
+            PageNumber = CurrentPage,
+            PageSize = PageSize,
+            Text = SearchText ?? string.Empty,
+            ServiceDeliveries = null,
+            IsPaidFor = null,
+            TaxonmyIds = null,
+            Languages = null,
+            CanFamilyChooseLocation = null
+        };
+
+        SearchResults = await _localOfferClientService.GetLocalOffers(localOfferFilter);
 
     }
 
@@ -125,7 +148,7 @@ public class LocalOfferResultsOldModel : PageModel
         }
 
         bool? isPaidFor = null;
-        if (CostSelection != null && CostSelection.Count() == 1)
+        if (CostSelection != null && CostSelection.Count == 1)
         {
             switch(CostSelection[0])
             {
@@ -139,7 +162,28 @@ public class LocalOfferResultsOldModel : PageModel
             }
         }
 
-        SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing", "active", minimumAge, maximumAge, null, DistrictCode ?? string.Empty, (CurrentLatitude != 0.0D) ? CurrentLatitude : null, (CurrentLongitude != 0.0D) ? CurrentLongitude : null, (distance > 0.0D) ? distance : null, 1, 99, SearchText ?? string.Empty, serviceDelivery, isPaidFor, null, null, null);
+        LocalOfferFilter localOfferFilter = new()
+        {
+            ServiceType = "Information Sharing",
+            Status = "active",
+            MinimumAge = minimumAge,
+            MaximumAge = maximumAge,
+            GivenAge = null,
+            DistrictCode = DistrictCode ?? string.Empty,
+            Latitude = (CurrentLatitude != 0.0D) ? CurrentLatitude : null,
+            Longtitude = (CurrentLongitude != 0.0D) ? CurrentLongitude : null,
+            Proximity = (distance > 0.0D) ? distance : null,
+            PageNumber = 1,
+            PageSize = 99,
+            Text = SearchText ?? string.Empty,
+            ServiceDeliveries = serviceDelivery,
+            IsPaidFor = isPaidFor,
+            TaxonmyIds = null,
+            Languages = null,
+            CanFamilyChooseLocation = null
+        };
+
+        SearchResults = await _localOfferClientService.GetLocalOffers(localOfferFilter);
 
         return Page();
         

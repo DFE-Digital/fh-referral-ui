@@ -1,6 +1,7 @@
 ﻿using FamilyHubs.ReferralUi.Ui.Models.Configuration;
 using FamilyHubs.ReferralUi.Ui.Models.Links;
 using FamilyHubs.ReferralUi.Ui.Services;
+using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FamilyHubs.ReferralUi.Ui.Models;
@@ -18,7 +19,6 @@ public class HeaderViewModel : IHeaderViewModel
 
     private readonly ILinkCollection _linkCollection;
     private readonly ILinkHelper _linkHelper;
-    private readonly IUrlHelper _urlHelper;
 
     public HeaderViewModel(
         IHeaderConfiguration configuration,
@@ -26,18 +26,13 @@ public class HeaderViewModel : IHeaderViewModel
         string userName,
         ILinkCollection? linkCollection = null,
         ILinkHelper? linkHelper = null,
-        IUrlHelper? urlHelper = null,
         bool useLegacyStyles = false)
     {
-        ArgumentNullException.ThrowIfNull(configuration, nameof(configuration));
-        //ArgumentNullException.ThrowIfNull(userContext, nameof(userContext));
-
-        //if (configuration == null) throw new ArgumentNullException("configuration");
-        UserContext = userContext ?? throw new ArgumentNullException("userContext");
+        ArgumentNullException.ThrowIfNull(configuration);
+        UserContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
 
         _linkCollection = linkCollection ?? new LinkCollection();
         _linkHelper = linkHelper ?? new LinkHelper(_linkCollection);
-        _urlHelper = urlHelper ?? new UrlHelper();
         UseLegacyStyles = useLegacyStyles;
 
         MenuIsHidden = false;
@@ -47,29 +42,28 @@ public class HeaderViewModel : IHeaderViewModel
         AddOrUpdateLink(new GovUk(GovUkHref, isLegacy: UseLegacyStyles));
         
 
-        if (userContext != null && userContext.User != null && userContext.User.Identity != null)
+        if (userContext.User != null && userContext.User.Identity != null && userContext.User.Identity.IsAuthenticated)
         {
-            if (userContext.User.Identity.IsAuthenticated)
-            {
+            AddOrUpdateLinks(userName);
+        }
+    }
 
-                if (userContext.User.IsInRole("Professional"))
-                {
-                    AddOrUpdateLink(new HomeLink("/ProfessionalReferral/ProfessionalHomepage", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
-                }
-                else if (userContext.User.IsInRole("VCSAdmin"))
-                {
-                    AddOrUpdateLink(new HomeLink("/ProfessionalReferral/ReferralDashboard", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
-                }
-                else
-                {
-                    AddOrUpdateLink(new HomeLink("/Index", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
-                }
-
-                AddOrUpdateLink(new SignOutLink(userName, "/Logout", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
-            }
+    private void AddOrUpdateLinks(string userName) 
+    {
+        if (UserContext.User.IsInRole("Professional"))
+        {
+            AddOrUpdateLink(new HomeLink("/ProfessionalReferral/ProfessionalHomepage", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
+        }
+        else if (UserContext.User.IsInRole("VCSAdmin"))
+        {
+            AddOrUpdateLink(new HomeLink("/ProfessionalReferral/ReferralDashboard", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
+        }
+        else
+        {
+            AddOrUpdateLink(new HomeLink("/Index", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
         }
 
-
+        AddOrUpdateLink(new SignOutLink(userName, "/Logout", UseLegacyStyles ? "" : "govuk-header__link govuk-header__link--service-name"));
     }
 
     public void HideMenu()

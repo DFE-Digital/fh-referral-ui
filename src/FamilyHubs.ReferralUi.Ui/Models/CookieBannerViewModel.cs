@@ -19,8 +19,8 @@ public class CookieBannerViewModel : ICookieBannerViewModel
         IUserContext userContext,
         IUrlHelper? urlHelper = null)
     {
-        ArgumentNullException.ThrowIfNull(configuration, nameof(configuration));
-        ArgumentNullException.ThrowIfNull(userContext, nameof(userContext));
+        ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentNullException.ThrowIfNull(userContext);
 
         _urlHelper = urlHelper ?? new UrlHelper();
 

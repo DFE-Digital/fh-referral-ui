@@ -65,7 +65,7 @@ public class LocalOfferResultsModel : PageModel
     public string? SearchText { get; set; }
 
     [BindProperty]
-    public string? SearchPostCode { get; set; }
+    public string SearchPostCode { get; set; } = string.Empty;
 
     [BindProperty(SupportsGet = true)]
     public int CurrentPage { get; set; } = 1;
@@ -136,32 +136,34 @@ public class LocalOfferResultsModel : PageModel
         SelectedDistance = distance.ToString();
         if (searchText != null)
             SearchText = searchText;
-        if (!int.TryParse(minimumAge, out int minAge))
-            minAge = 0;
-        if (!int.TryParse(maximumAge, out int maxAge))
-            maxAge = 99;
-
         CreateServiceDeliveryDictionary();
         InitializeAgeRange();
         InitializeLanguages();
         DateTime dtNow = DateTime.Now;
-        SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing",
-                                                                      "active",
-                                                                      null,
-                                                                      null,
-                                                                      null,
-                                                                      DistrictCode ?? string.Empty,
-                                                                      (CurrentLatitude != 0.0D) ? CurrentLatitude : null,
-                                                                      (CurrentLongitude != 0.0D) ? CurrentLongitude : null,
-                                                                      (distance > 0.0D) ? distance : null,
-                                                                      CurrentPage,
-                                                                      PageSize,
-                                                                      SearchText ?? string.Empty,
-                                                                      null,
-                                                                      null,
-                                                                      null,
-                                                                      null,
-                                                                      null);
+
+        LocalOfferFilter localOfferFilter = new()
+        {
+            ServiceType = "Information Sharing",
+            Status = "active",
+            MinimumAge = null,
+            MaximumAge = null,
+            GivenAge = null,
+            DistrictCode = DistrictCode ?? string.Empty,
+            Latitude = (CurrentLatitude != 0.0D) ? CurrentLatitude : null,
+            Longtitude = (CurrentLongitude != 0.0D) ? CurrentLongitude : null,
+            Proximity = (distance > 0.0D) ? distance : null,
+            PageNumber = CurrentPage,
+            PageSize = PageSize,
+            Text = SearchText ?? string.Empty,
+            ServiceDeliveries = null,
+            IsPaidFor = null,
+            TaxonmyIds = null,
+            Languages = null,
+            CanFamilyChooseLocation = null
+        };
+
+        SearchResults = await _localOfferClientService.GetLocalOffers(localOfferFilter);
+                                                                     
         TimeSpan ts = DateTime.Now - dtNow;
         SearchTime = $" Took: {ts.Milliseconds} milliseconds";
 
@@ -169,30 +171,16 @@ public class LocalOfferResultsModel : PageModel
         return Page();
     }
 
+    
+
     public async Task<IActionResult> OnPostAsync(string? removeCostSelection, bool removeFilter, string? removeServiceDeliverySelection, 
                                                  string? removeSelectedLanguage, string? removeSearchAge, string? removecategorySelection,
                                                  string? removesubcategorySelection)
     {
-        if(removeFilter)
-        {
-            if(removeCostSelection != null) RemoveFilterCostSelection(removeCostSelection);
-            if (removeServiceDeliverySelection != null) RemoveFilterServiceDeliverySelection(removeServiceDeliverySelection);
-            if (removeSelectedLanguage != null) SelectedLanguage = null;
-            if (removeSearchAge != null)
-            {
-                SearchAge = null;
-                ForChildrenAndYoungPeople = false;
-            }
-                
-            if (removecategorySelection != null) RemoveFilterForCategory(removecategorySelection);
-            if (removesubcategorySelection != null) RemoveFilterForSubCategory(removesubcategorySelection);
 
-
-        }
-        if (ForChildrenAndYoungPeople && (SearchAge == null || !int.TryParse(SearchAge, out int searchAgeTest)))
-        {
-            ModelState.AddModelError(nameof(SearchAge), "Please select a valid search age");
-        }
+        RemoveFilters(removeCostSelection, removeFilter, removeServiceDeliverySelection,
+                      removeSelectedLanguage, removeSearchAge, removecategorySelection,
+                      removesubcategorySelection);
 
         if (!ModelState.IsValid)
         {
@@ -206,8 +194,7 @@ public class LocalOfferResultsModel : PageModel
 
         SearchText = Request.Form["SearchText"];
 
-        if (SearchPostCode != null)
-            await GetLocationDetails(SearchPostCode);
+        await GetLocationDetails(SearchPostCode);
         if (!double.TryParse(SelectedDistance, out double distance))
             distance = 0.0D;
         if (!ForChildrenAndYoungPeople)
@@ -217,12 +204,56 @@ public class LocalOfferResultsModel : PageModel
 
         CreateServiceDeliveryDictionary();
 
-        string? serviceDelivery = null;
-        if (ServiceDeliverySelection != null && ServiceDeliverySelection.Count>0)
-            serviceDelivery = string.Join(',', ServiceDeliverySelection.ToArray());
+        string? serviceDelivery = GetServiceDelivery();
 
+        bool? isPaidFor = IsPaidFor();
+       
+        if (SelectedLanguage == "All languages")
+            SelectedLanguage = null;
+
+        var taxonomies = string.Join(",", SubcategorySelection);
+
+        DateTime dtNow = DateTime.Now;
+        LocalOfferFilter localOfferFilter = new()
+        {
+            ServiceType = "Information Sharing",
+            Status = "active",
+            MinimumAge = null,
+            MaximumAge = null,
+            GivenAge = (ForChildrenAndYoungPeople && searchAge >= 0) ? searchAge : null,
+            DistrictCode = DistrictCode ?? string.Empty,
+            Latitude = (CurrentLatitude != 0.0D) ? CurrentLatitude : null,
+            Longtitude = (CurrentLongitude != 0.0D) ? CurrentLongitude : null,
+            Proximity = (distance > 0.0D) ? distance : null,
+            PageNumber = CurrentPage,
+            PageSize = PageSize,
+            Text = SearchText ?? string.Empty,
+            ServiceDeliveries = serviceDelivery,
+            IsPaidFor = isPaidFor,
+            TaxonmyIds = taxonomies,
+            Languages = SelectedLanguage == "All languages" ? null : SelectedLanguage,
+            CanFamilyChooseLocation = CanFamilyChooseLocation
+        };
+
+        SearchResults = await _localOfferClientService.GetLocalOffers(localOfferFilter); 
+                                                                      
+        TimeSpan ts = DateTime.Now - dtNow;
+        SearchTime = $" Took: {ts.Milliseconds} milliseconds";
+
+        InitializeAgeRange();
+        InitializeLanguages();
+        await GetCategoriesTreeAsync();
+        GetCategories();
+        InitialLoad = false;
+        ModelState.Clear();
+        return Page();
+
+    }
+
+    private bool? IsPaidFor()
+    {
         bool? isPaidFor = null;
-        if (CostSelection != null && CostSelection.Any())
+        if (CostSelection != null && CostSelection.Count == 1)
         {
             switch (CostSelection[0])
             {
@@ -236,43 +267,49 @@ public class LocalOfferResultsModel : PageModel
             }
         }
 
-        if (SelectedLanguage == "All languages")
-            SelectedLanguage = null;
+        return isPaidFor;
+
+    }
+
+    private string? GetServiceDelivery()
+    {
+        string? serviceDelivery = null;
+        if (ServiceDeliverySelection != null && ServiceDeliverySelection.Count > 0)
+            serviceDelivery = string.Join(',', ServiceDeliverySelection.ToArray());
+
+        return serviceDelivery;
+    }
+
+    private void RemoveFilters(string? removeCostSelection, bool removeFilter, string? removeServiceDeliverySelection,
+                                                 string? removeSelectedLanguage, string? removeSearchAge, string? removecategorySelection,
+                                                 string? removesubcategorySelection)
+    {
+        if (removeFilter)
+        {
+            if (removeCostSelection != null) RemoveFilterCostSelection(removeCostSelection);
+            if (removeServiceDeliverySelection != null) RemoveFilterServiceDeliverySelection(removeServiceDeliverySelection);
+            if (removeSelectedLanguage != null) SelectedLanguage = null;
+            if (removeSearchAge != null)
+            {
+                SearchAge = null;
+                ForChildrenAndYoungPeople = false;
+            }
+
+            if (removecategorySelection != null) RemoveFilterForCategory(removecategorySelection);
+            if (removesubcategorySelection != null) RemoveFilterForSubCategory(removesubcategorySelection);
 
 
-        var taxonomies = string.Join(",", SubcategorySelection);
+        }
 
-        DateTime dtNow = DateTime.Now;
-        SearchResults = await _localOfferClientService.GetLocalOffers("Information Sharing",
-                                                                      "active",
-                                                                      null,
-                                                                      null,
-                                                                      (ForChildrenAndYoungPeople && searchAge >= 0) ? searchAge : null,
-                                                                      DistrictCode ?? string.Empty,
-                                                                      (CurrentLatitude != 0.0D) ? CurrentLatitude : null,
-                                                                      (CurrentLongitude != 0.0D) ? CurrentLongitude : null,
-                                                                      (distance > 0.0D) ? distance : null,
-                                                                      CurrentPage,
-                                                                      PageSize,
-                                                                      //1,
-                                                                      //99,
-                                                                      SearchText ?? string.Empty,
-                                                                      serviceDelivery,
-                                                                      isPaidFor,
-                                                                      taxonomies,
-                                                                      SelectedLanguage == "All languages"? null: SelectedLanguage,
-                                                                      CanFamilyChooseLocation);
-        TimeSpan ts = DateTime.Now - dtNow;
-        SearchTime = $" Took: {ts.Milliseconds} milliseconds";
+        SetForChildrenAndYoungPeople();
+    }
 
-        InitializeAgeRange();
-        InitializeLanguages();
-        await GetCategoriesTreeAsync();
-        GetCategories();
-        InitialLoad = false;
-        ModelState.Clear();
-        return Page();
-
+    private void SetForChildrenAndYoungPeople()
+    {
+        if (ForChildrenAndYoungPeople && (SearchAge == null || !int.TryParse(SearchAge, out int searchAgeTest)))
+        {
+            ModelState.AddModelError(nameof(SearchAge), "Please select a valid search age");
+        }
     }
 
     private void CreateServiceDeliveryDictionary()

@@ -1,8 +1,8 @@
-﻿using FamilyHubs.ReferralUi.Ui.Services.Api;
+﻿using FamilyHubs.ReferralUi.Ui.Models;
+using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.SharedKernel;
 using FluentAssertions;
-using Moq;
 using Newtonsoft.Json;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Services;
@@ -24,8 +24,29 @@ public class WhenUsingLocalOfferClientService : BaseClientService
         var mockClient = GetMockClient(json);
         LocalOfferClientService localOfferClientService = new(mockClient);
 
+        LocalOfferFilter localOfferFilter = new()
+        {
+            ServiceType = "Information Sharing",
+            Status = "active",
+            MinimumAge = null,
+            MaximumAge = null,
+            GivenAge = null,
+            DistrictCode = "E06000023",
+            Latitude = 51.448006D,
+            Longtitude = -2.559788D,
+            Proximity = null,
+            PageNumber = 1,
+            PageSize = 99,
+            Text = string.Empty,
+            ServiceDeliveries = null,
+            IsPaidFor = null,
+            TaxonmyIds = null,
+            Languages = null,
+            CanFamilyChooseLocation = null
+        };
+
         //Act
-        var result = await localOfferClientService.GetLocalOffers(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<bool?>(), It.IsAny<string?>(), It.IsAny<string?>(), It.IsAny<bool?>());
+        var result = await localOfferClientService.GetLocalOffers(localOfferFilter);
 
         //Assert
         result.Should().NotBeNull();

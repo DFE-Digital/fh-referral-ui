@@ -1,15 +1,16 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
+﻿using FamilyHubs.ReferralUi.Ui.Models;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.SharedKernel;
+using System;
+using System.Text;
 using System.Text.Json;
 
 namespace FamilyHubs.ReferralUi.Ui.Services.Api;
 
 public interface ILocalOfferClientService
 {
-    Task<PaginatedList<ServiceDto>> GetLocalOffers(string serviceType, string status, int? minimum_age, int? maximum_age, int? given_age, string? districtCode, double? latitude, double? longtitude, double? proximity, int pageNumber, int pageSize, string text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation);
+    Task<PaginatedList<ServiceDto>> GetLocalOffers(LocalOfferFilter filter); 
     Task<ServiceDto> GetLocalOfferById(string id);
-    //Task<PaginatedList<TestItem>> GetTestCommand(double latitude, double logtitude, double meters);
-
     Task<List<ServiceDto>> GetServicesByOrganisationId(string id);
 }
 
@@ -21,72 +22,54 @@ public class LocalOfferClientService : ApiService, ILocalOfferClientService
 
     }
 
-    public async Task<PaginatedList<ServiceDto>> GetLocalOffers(string? serviceType, string status, int? minimum_age, int? maximum_age, int? given_age, string? districtCode, double? latitude, double? longtitude, double? proximity, int pageNumber, int pageSize, string text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation)
+    public async Task<PaginatedList<ServiceDto>> GetLocalOffers(LocalOfferFilter filter) 
     {
-        if (string.IsNullOrEmpty(status))
-            status = "active";
+        if (string.IsNullOrEmpty(filter.Status))
+            filter.Status = "active";
 
-        string url = string.Empty;
-        if (latitude != null && longtitude != null)
-        {
-            if (proximity != null)
-                url = $"api/services?serviceType={serviceType}&status={status}&latitude={latitude}&longtitude={longtitude}&proximity={proximity}&pageNumber={pageNumber}&pageSize={pageSize}&text={text}";
-            else
-                url = $"api/services?serviceType={serviceType}&status={status}&latitude={latitude}&longtitude={longtitude}&pageNumber={pageNumber}&pageSize={pageSize}&text={text}";
-        }
-            
-        else
-            url = $"api/services?serviceType={serviceType}&status={status}&pageNumber={pageNumber}&pageSize={pageSize}&text={text}";
+        StringBuilder urlBuilder = new();
 
-        if (minimum_age != null)
+        string url = GetPositionUrl(filter.ServiceType, filter.Latitude, filter.Longtitude, filter.Proximity, filter.Status, filter.PageNumber, filter.PageSize);
+
+        urlBuilder.Append( url );
+        AddTextToUrl(urlBuilder, filter.Text);
+        AddAgeToUrl(urlBuilder, filter.MinimumAge, filter.MaximumAge, filter.GivenAge);
+        
+
+        if (filter.ServiceDeliveries != null)
         {
-            url += $"&minimum_age={minimum_age}";
+            urlBuilder.Append($"&serviceDeliveries={filter.ServiceDeliveries}");
         }
 
-        if (maximum_age != null)
+        if (filter.IsPaidFor != null)
         {
-            url += $"&maximum_age={maximum_age}";
+            urlBuilder.Append($"&isPaidFor={filter.IsPaidFor.Value}");
         }
 
-        if (given_age != null)
+        if (filter.TaxonmyIds != null)
         {
-            url += $"&given_age={given_age}";
+            urlBuilder.Append($"&taxonmyIds={filter.TaxonmyIds}");
         }
 
-        if (serviceDeliveries != null)
+        if (filter.DistrictCode != null)
         {
-            url += $"&serviceDeliveries={serviceDeliveries}";
+            urlBuilder.Append($"&districtCode={filter.DistrictCode}");
         }
 
-        if (isPaidFor != null)
+        if (filter.Languages != null)
         {
-            url += $"&isPaidFor={isPaidFor.Value}";
+            urlBuilder.Append($"&languages={filter.Languages}");
         }
 
-        if (taxonmyIds != null)
+        if (filter.CanFamilyChooseLocation != null && filter.CanFamilyChooseLocation == true)
         {
-            url += $"&taxonmyIds={taxonmyIds}";
-        }
-
-        if (districtCode != null)
-        {
-            url += $"&districtCode={districtCode}";
-        }
-
-        if (languages != null)
-        {
-            url += $"&languages={languages}";
-        }
-
-        if (canFamilyChooseLocation != null && canFamilyChooseLocation == true)
-        {
-            url += $"&canFamilyChooseLocation={canFamilyChooseLocation.Value}";
+            urlBuilder.Append($"&canFamilyChooseLocation={filter.CanFamilyChooseLocation.Value}");
         }
 
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(_client.BaseAddress + url),
+            RequestUri = new Uri(_client.BaseAddress + urlBuilder.ToString()),
         };
 
         using var response = await _client.SendAsync(request);
@@ -94,6 +77,47 @@ public class LocalOfferClientService : ApiService, ILocalOfferClientService
         response.EnsureSuccessStatusCode();
 
         return await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new PaginatedList<ServiceDto>();
+    }
+
+    private static string GetPositionUrl(string? serviceType, double? latitude, double? longtitude, double? proximity, string status, int pageNumber, int pageSize)
+    {
+        
+        if (latitude != null && longtitude != null)
+        {
+            if (proximity != null)
+                return $"api/services?serviceType={serviceType}&status={status}&latitude={latitude}&longtitude={longtitude}&proximity={proximity}&pageNumber={pageNumber}&pageSize={pageSize}";
+            else
+                return $"api/services?serviceType={serviceType}&status={status}&latitude={latitude}&longtitude={longtitude}&pageNumber={pageNumber}&pageSize={pageSize}";
+        }
+        else
+            return $"api/services?serviceType={serviceType}&status={status}&pageNumber={pageNumber}&pageSize={pageSize}";
+
+    }
+
+    public void AddAgeToUrl(StringBuilder url, int? minimum_age, int? maximum_age, int? given_age)
+    {
+        if (minimum_age != null)
+        {
+            url.AppendLine($"&minimum_age={minimum_age}");
+        }
+
+        if (maximum_age != null)
+        {
+            url.AppendLine($"&maximum_age={maximum_age}");
+        }
+
+        if (given_age != null)
+        {
+            url.AppendLine($"&given_age={given_age}");
+        }
+    }
+
+    public void AddTextToUrl(StringBuilder url, string text)
+    {
+        if (!string.IsNullOrEmpty(text))
+        {
+            url.AppendLine($"&text={text}");
+        }
     }
 
     public async Task<ServiceDto> GetLocalOfferById(string id)

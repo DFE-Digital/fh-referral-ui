@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
 [Authorize(Policy = "Referrer")]
-public class ContactDetailsModel : PageModel
+public partial class ContactDetailsModel : PageModel
 {
     [BindProperty]
     public string ReferralId { get; set; } = default!;
@@ -78,18 +78,7 @@ public class ContactDetailsModel : PageModel
 
     public IActionResult OnPost()
     {
-        if (ContactSelection == null || !ContactSelection.Contains("email"))
-        {
-            this.Email = String.Empty;
-        }
-        if (ContactSelection == null || !ContactSelection.Contains("telephone"))
-        {
-            this.Telephone = String.Empty;
-        }
-        if (ContactSelection == null || !ContactSelection.Contains("textphone"))
-        {
-            this.Textphone = String.Empty;
-        }
+        SetDefaultContactSelection();
 
         if (ContactSelection == null || !ContactSelection.Any())
         {
@@ -107,53 +96,9 @@ public class ContactDetailsModel : PageModel
                 return Page();
             }
 
-            if (ContactSelection.Contains("email"))
-            {
-                if (string.IsNullOrWhiteSpace(Email))
-                {
-                    EmailValid = false;
-                    ValidationValid = false;
-                }
-                else if (!Regex.IsMatch(Email.ToString(), @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
-                {
-                    EmailValid = false;
-                    ValidationValid = false;
-                }
-            }
-
-            if (ContactSelection.Contains("telephone"))
-            {
-                if (string.IsNullOrWhiteSpace(Telephone))
-                {
-                    TelephoneValid = false;
-                    ValidationValid = false;
-                }
-                else if (!Regex.IsMatch(Telephone.ToString(), @"^[A-Za-z0-9]*$"))
-                {
-                    TelephoneValid = false;
-                    ValidationValid = false;
-                    ModelState.AddModelError("textphone", "Telephone is invalid (can not contain spaces)");
-                }
-
-            }
-
-            
-
-            if (ContactSelection.Contains("textphone"))
-            {
-                if (string.IsNullOrWhiteSpace(Textphone))
-                {
-                    TextphoneValid = false;
-                    ValidationValid = false;
-                }
-                else if (!Regex.IsMatch(Textphone.ToString(), @"^[A-Za-z0-9]*$"))
-                {
-                    TextphoneValid = false;
-                    ValidationValid = false;
-                    ModelState.AddModelError("textphone", "Textphone is invalid (can not contain spaces)");
-                }
-
-            }
+            CheckEmailContactSelection();
+            CheckTelephoneContactSelection();
+            CheckTextphoneContactSelection();
         }
 
         ModelState.Remove("ReferralId");
@@ -175,4 +120,71 @@ public class ContactDetailsModel : PageModel
             referralId = ReferralId,
         });
     }
+
+    private void SetDefaultContactSelection()
+    {
+        if (ContactSelection == null || !ContactSelection.Contains("email"))
+        {
+            Email = string.Empty;
+        }
+        if (ContactSelection == null || !ContactSelection.Contains("telephone"))
+        {
+            Telephone = string.Empty;
+        }
+        if (ContactSelection == null || !ContactSelection.Contains("textphone"))
+        {
+            Textphone = string.Empty;
+        }
+    }
+
+    private void CheckEmailContactSelection()
+    {
+        if (ContactSelection.Contains("email") && (string.IsNullOrWhiteSpace(Email) || !EmailRegex().IsMatch(Email.ToString())))
+        {
+            EmailValid = false;
+            ValidationValid = false;
+        }
+    }
+
+    private void CheckTelephoneContactSelection()
+    {
+        if (ContactSelection.Contains("telephone"))
+        {
+            if (string.IsNullOrWhiteSpace(Telephone))
+            {
+                TelephoneValid = false;
+                ValidationValid = false;
+            }
+            else if (!PhoneRegex().IsMatch(Telephone.ToString()))
+            {
+                TelephoneValid = false;
+                ValidationValid = false;
+                ModelState.AddModelError("textphone", "Telephone is invalid (can not contain spaces)");
+            }
+
+        }
+    }
+
+    private void CheckTextphoneContactSelection()
+    {
+        if (ContactSelection.Contains("textphone"))
+        {
+            if (string.IsNullOrWhiteSpace(Textphone))
+            {
+                TextphoneValid = false;
+                ValidationValid = false;
+            }
+            else if (!PhoneRegex().IsMatch(Textphone.ToString()))
+            {
+                TextphoneValid = false;
+                ValidationValid = false;
+                ModelState.AddModelError("textphone", "Textphone is invalid (can not contain spaces)");
+            }
+        }
+    }
+
+    [GeneratedRegex("^[A-Za-z0-9]*$")]
+    private static partial Regex PhoneRegex();
+    [GeneratedRegex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")]
+    private static partial Regex EmailRegex();
 }

@@ -7,8 +7,6 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral
     [Authorize(Policy = "Referrer")]
     public class ProfessionalHomepageModel : PageModel
     {
-        public void OnGet()
-        {
-        }
+        
     }
 }

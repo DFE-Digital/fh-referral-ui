@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
-public class SearchModel : PageModel
+public partial class SearchModel : PageModel
 {
     [BindProperty]
     public string SearchOption { get; set; } = default!;
@@ -28,13 +28,9 @@ public class SearchModel : PageModel
         _postcodeLocationClientService = postcodeLocationClientService;
     }
 
-    public void OnGet()
-    {
-    }
-
     public async Task<IActionResult> OnPost()
     {
-        var validPostcode = new Regex(@"([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})");
+        var validPostcode = PostcodeRegex();
         if (string.IsNullOrEmpty(Postcode))
         {
             PostcodeValid = false;
@@ -47,7 +43,7 @@ public class SearchModel : PageModel
         }
         try
         {
-            var postcodesIoResponse = await _postcodeLocationClientService.LookupPostcode(Postcode);
+            await _postcodeLocationClientService.LookupPostcode(Postcode);
 
             return RedirectToPage("LocalOfferResults", new 
             {
@@ -62,4 +58,7 @@ public class SearchModel : PageModel
         }
 
     }
+
+    [GeneratedRegex("([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})")]
+    private static partial Regex PostcodeRegex();
 }

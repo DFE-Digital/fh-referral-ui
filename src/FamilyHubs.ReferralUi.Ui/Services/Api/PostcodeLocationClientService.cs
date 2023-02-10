@@ -9,10 +9,11 @@ namespace FamilyHubs.ReferralUi.Ui.Services.Api
     }
     public class PostcodeLocationClientService : ApiService, IPostcodeLocationClientService
     {
+        private const string _postCodeUrl = "http://api.postcodes.io";
         public PostcodeLocationClientService(HttpClient client)
             : base(client)
         {
-            client.BaseAddress = new Uri("http://api.postcodes.io");
+            client.BaseAddress = new Uri(_postCodeUrl);
         }
 
         public async Task<PostcodesIoResponse> LookupPostcode(string postcode)
