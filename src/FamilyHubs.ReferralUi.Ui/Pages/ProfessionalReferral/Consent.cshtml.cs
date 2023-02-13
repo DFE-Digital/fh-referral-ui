@@ -10,15 +10,10 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 public class ConsentModel : PageModel
 {
     private readonly IRedisCacheService _redisCacheService;
-    public string ReferralId { get; set; } = default!;
 
     [BindProperty]
     public string IsConsentGiven { get; set; } = default!;
 
-    [BindProperty]
-    public string Id { get; set; } = default!;
-    [BindProperty]
-    public string Name { get; set; } = default!;
 
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
@@ -28,28 +23,21 @@ public class ConsentModel : PageModel
         _redisCacheService = redisCacheService;
     }
 
-    public void OnGet(string id, string name, string referralId)
+    public void OnGet()
     {
-        Id = id;
-        Name = name;
-        ReferralId = referralId;
-
         string userKey = _redisCacheService.GetUserKey();
         ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
-        Id = model.ServiceId;
-        Name = model.ServiceName;
-        ReferralId = model.ReferralId;
+        if (model.HaveConcent != null) 
+        {
+            IsConsentGiven = model.HaveConcent.Value ? "yes" : "no";
+        }
+        
     }
 
-    public IActionResult OnPost(string id, string name, string referralId)
+    public IActionResult OnPost()
     {
-        ModelState.Remove("ReferralId");
-
         if (!ModelState.IsValid || IsConsentGiven == null)
         {
-            Id = id;
-            Name = name;
-            ReferralId = referralId;
             ValidationValid = false;
             return Page();
         }
@@ -63,9 +51,6 @@ public class ConsentModel : PageModel
             _redisCacheService.StoreConnectWizzardViewModel(userKey, model);
             return RedirectToPage("/ProfessionalReferral/FamilyContact", new
             {
-                id = id,
-                name = name,
-                referralId = referralId
             });
         }
 

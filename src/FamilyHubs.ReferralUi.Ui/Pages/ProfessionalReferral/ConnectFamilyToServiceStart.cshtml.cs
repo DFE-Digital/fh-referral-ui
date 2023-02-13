@@ -27,13 +27,15 @@ public class ConnectFamilyToServiceStartModel : PageModel
         Name = name;
 
         string userKey = _redisCacheService.GetUserKey();
+        _redisCacheService.ResetConnectWizzardViewModel(userKey);
         ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
         if (string.IsNullOrEmpty(model.ServiceId)) 
         {
             model = new ConnectWizzardViewModel
             {
                 ServiceId = Id,
-                ServiceName = Name
+                ServiceName = Name,
+                ReferralId = User?.Identity?.Name ?? userKey.Replace("ConnectWizzardViewModel-", "")
             };
         }
 
@@ -45,8 +47,6 @@ public class ConnectFamilyToServiceStartModel : PageModel
     {
         return RedirectToPage("/ProfessionalReferral/Safeguarding", new
         {
-            id = Id,
-            name = Name
         });
     }
 }

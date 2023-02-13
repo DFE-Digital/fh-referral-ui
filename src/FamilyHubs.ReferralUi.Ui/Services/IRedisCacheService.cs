@@ -16,4 +16,5 @@ public interface IRedisCacheService
     string GetUserKey();
     internal void StoreConnectWizzardViewModel(string key, ConnectWizzardViewModel value);
     internal ConnectWizzardViewModel RetrieveConnectWizzardViewModel(string key);
+    internal void ResetConnectWizzardViewModel(string key);
 }

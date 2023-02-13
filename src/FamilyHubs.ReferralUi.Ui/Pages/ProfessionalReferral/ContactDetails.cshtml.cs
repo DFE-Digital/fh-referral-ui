@@ -14,40 +14,30 @@ public partial class ContactDetailsModel : PageModel
     private readonly IRedisCacheService _redisCacheService;
 
     [BindProperty]
-    public string ReferralId { get; set; } = default!;
-    [BindProperty]
-    public string FullName { get; set; } = default!;
-
-    [BindProperty]
     public List<string> ContactSelection { get; set; } = new List<string>();
-
 
     [BindProperty]
     [EmailAddress(ErrorMessage = "Please enter a valid email address")]
-    public string? Email { get; set; } = default!;
+    public string? Email { get; set; }
 
     [BindProperty]
     public bool EmailValid { get; set; } = true;
 
     [BindProperty]
     [Phone(ErrorMessage = "Please enter a valid phone number")]
-    public string? Telephone { get; set; } = default!;
+    public string? Telephone { get; set; }
 
     [BindProperty]
     public bool TelephoneValid { get; set; } = true;
 
+    public string FullName { get; set; } = default!;
+
     [BindProperty]
     [Phone(ErrorMessage = "Please enter a valid phone number")]
-    public string? Textphone { get; set; } = default!;
+    public string? Textphone { get; set; }
 
     [BindProperty]
     public bool TextphoneValid { get; set; } = true;
-
-
-    [BindProperty]
-    public string Id { get; set; } = default!;
-    [BindProperty]
-    public string Name { get; set; } = default!;
 
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
@@ -57,39 +47,25 @@ public partial class ContactDetailsModel : PageModel
         _redisCacheService = redisCacheService;
     }
 
-    public void OnGet(string id, string name, string fullName, string email, string telephone, string textphone, string referralId)
+    public void OnGet()
     {
-        Id = id;
-        Name = name;
-        FullName = fullName;
-        Email = email;
-        Telephone = telephone;
-        Textphone = textphone;
-        ReferralId = referralId;
-
         string userKey = _redisCacheService.GetUserKey();
         ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
-        Id = model.ServiceId;
-        Name = model.ServiceName;
-        ReferralId = model.ReferralId;
-        FullName = model.FullName;
-        Email = model.EmailAddress;
-        Telephone = model.Telephone;
-        Textphone = model.Textphone;
-
-        if (!string.IsNullOrEmpty(email))
+        FullName= model.FullName;
+        
+        if (!string.IsNullOrEmpty(model.EmailAddress))
         {
-            Email = email;
+            Email = model.EmailAddress;
             ContactSelection.Add("email");
         } 
-        if (!string.IsNullOrEmpty(telephone))
+        if (!string.IsNullOrEmpty(model.Telephone))
         {
-            Telephone = telephone;
+            Telephone = model.Telephone;
             ContactSelection.Add("telephone");
         }   
-        if (!string.IsNullOrEmpty(textphone))
+        if (!string.IsNullOrEmpty(model.Textphone))
         {
-            Textphone = textphone;
+            Textphone = model.Textphone;
             ContactSelection.Add("textphone");
         }
             
@@ -98,6 +74,10 @@ public partial class ContactDetailsModel : PageModel
     public IActionResult OnPost()
     {
         SetDefaultContactSelection();
+
+        string userKey = _redisCacheService.GetUserKey();
+        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        FullName = model.FullName;
 
         if (ContactSelection == null || !ContactSelection.Any())
         {
@@ -120,16 +100,12 @@ public partial class ContactDetailsModel : PageModel
             CheckTextphoneContactSelection();
         }
 
-        ModelState.Remove("ReferralId");
-
+        
         if (!ModelState.IsValid || !ValidationValid)
         {
             ValidationValid = false;
             return Page();
         }
-
-        string userKey = _redisCacheService.GetUserKey();
-        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
 
         model.EmailAddress = Email;
         model.Telephone = Telephone;
@@ -139,13 +115,6 @@ public partial class ContactDetailsModel : PageModel
 
         return RedirectToPage("/ProfessionalReferral/WhySupport", new
         {
-            id = Id,
-            name = Name,
-            fullName = FullName,
-            email = Email,
-            telephone = Telephone,
-            textphone = Textphone,
-            referralId = ReferralId,
         });
     }
 

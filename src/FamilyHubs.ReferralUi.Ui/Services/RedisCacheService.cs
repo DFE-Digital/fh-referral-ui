@@ -3,6 +3,7 @@ using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Helpers;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using static FamilyHubs.ReferralUi.Ui.Infrastructure.Configuration.TempStorageConfiguration;
 
 
@@ -67,6 +68,11 @@ public class RedisCacheService : IRedisCacheService
         _redisCache.SetStringValue(key, value.Encode());
     }
 
+    void IRedisCacheService.ResetConnectWizzardViewModel(string key)
+    {
+        _redisCache.SetStringValue(key, string.Empty);
+    }
+
     ConnectWizzardViewModel IRedisCacheService.RetrieveConnectWizzardViewModel(string key)
     {
         string value = _redisCache.GetStringValue($"{key}") ?? string.Empty;
@@ -75,6 +81,8 @@ public class RedisCacheService : IRedisCacheService
             return new ConnectWizzardViewModel();
         }
 
-        return ConnectWizzardViewModel.Decode(value);
+        ConnectWizzardViewModel? model = ConnectWizzardViewModel.Decode(value);
+        ArgumentNullException.ThrowIfNull(model);
+        return model;
     }
 }

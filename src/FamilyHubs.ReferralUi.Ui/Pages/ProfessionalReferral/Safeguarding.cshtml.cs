@@ -10,7 +10,6 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 public class SafeguardingModel : PageModel
 {
     private readonly IRedisCacheService _redisCacheService;
-    public string ReferralId { get; set; } = default!;
 
     [BindProperty]
     public string IsImmediateHarm { get; set; } = default!;
@@ -18,37 +17,25 @@ public class SafeguardingModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    [BindProperty]
-    public string Id { get; set; } = default!;
-    [BindProperty]
-    public string Name { get; set; } = default!;
 
     public SafeguardingModel(IRedisCacheService redisCacheService)
     {
         _redisCacheService = redisCacheService;
     }
-    public void OnGet(string id, string name, string referralId)
+    public void OnGet()
     {
-        Id = id;
-        Name = name;
-        ReferralId = referralId;
-
         string userKey = _redisCacheService.GetUserKey();
         ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
-        model.ServiceId = id;
-        model.ServiceName= name;
-        _redisCacheService.StoreConnectWizzardViewModel(userKey, model);
+        if (model.AnyoneInFamilyBeingHarmed != null)
+        {
+            IsImmediateHarm = model.AnyoneInFamilyBeingHarmed.Value ? "yes" : "no";
+        }
     }
 
-    public IActionResult OnPost(string id, string name, string referralId)
+    public IActionResult OnPost()
     {
-        ModelState.Remove("ReferralId");
-
         if (!ModelState.IsValid || IsImmediateHarm == null)
         {
-            Id = id;
-            Name = name;
-            ReferralId = referralId;
             ValidationValid = false;
             return Page();
         }
@@ -63,9 +50,6 @@ public class SafeguardingModel : PageModel
 
             return RedirectToPage("/ProfessionalReferral/Consent", new
             {
-                id = id,
-                name = name,
-                referralId = referralId
             });
         }
 

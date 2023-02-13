@@ -3,16 +3,11 @@
 @{
 }
 
-<a asp-page="/ProfessionalReferral/FamilyContact" asp-route-id="@Model.Id" asp-route-name="@Model.Name" asp-all-route-fullName="@Model.FullName" class="govuk-back-link">Back</a>
+<a asp-page="/ProfessionalReferral/FamilyContact" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
      <form method="post">
-
-         <input asp-for="@Model.Id" type="hidden" >
-         <input asp-for="@Model.Name" type="hidden">
-         <input asp-for="@Model.FullName" type="hidden" >
-         <input asp-for="@Model.ReferralId" type="hidden">
 
       <div class="govuk-form-group">
           <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
