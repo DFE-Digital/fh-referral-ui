@@ -1,3 +1,5 @@
+using FamilyHubs.ReferralUi.Ui.Models;
+using FamilyHubs.ReferralUi.Ui.Services;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.MassTransit;
@@ -11,6 +13,8 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 [Authorize(Policy = "Referrer")]
 public class CheckReferralDetailsModel : PageModel
 {
+    private readonly IRedisCacheService _redisCacheService;
+
     [BindProperty]
     public string ReferralId { get; set; } = default!;
 
@@ -18,13 +22,13 @@ public class CheckReferralDetailsModel : PageModel
     public string FullName { get; set; } = default!;
 
     [BindProperty]
-    public string Email { get; set; } = default!;
+    public string? Email { get; set; } = default!;
 
     [BindProperty]
-    public string Telephone { get; set; } = default!;
+    public string? Telephone { get; set; } = default!;
 
     [BindProperty]
-    public string Textphone { get; set; } = default!;
+    public string? Textphone { get; set; } = default!;
 
     [BindProperty]
     public string ReasonForSupport { get; set; } = default!;
@@ -37,11 +41,13 @@ public class CheckReferralDetailsModel : PageModel
     private readonly IConfiguration _configuration;
     private readonly ILocalOfferClientService _localOfferClientService;
     private readonly IReferralClientService _referralClientService;
-    public CheckReferralDetailsModel(IConfiguration configuration, ILocalOfferClientService localOfferClientService, IReferralClientService referralClientService)
+
+    public CheckReferralDetailsModel(IConfiguration configuration, ILocalOfferClientService localOfferClientService, IReferralClientService referralClientService, IRedisCacheService redisCacheService)
     {
         _referralClientService = referralClientService;
         _configuration = configuration;
         _localOfferClientService = localOfferClientService;
+        _redisCacheService = redisCacheService;
     }
 
     public void OnGet(string id, string name, string fullName, string email, string telephone, string textphone, string reasonForSupport, string referralId)
@@ -54,12 +60,27 @@ public class CheckReferralDetailsModel : PageModel
         Textphone= textphone;
         ReasonForSupport = reasonForSupport;
         ReferralId = referralId;
+
+        string userKey = _redisCacheService.GetUserKey();
+        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+
+        Id = model.ServiceId;
+        Name = model.ServiceName;
+        ReferralId = model.ReferralId;
+        FullName = model.FullName;
+        Email = model.EmailAddress;
+        Telephone = model.Telephone;
+        Textphone = model.Textphone;
+        ReasonForSupport = model.ReasonForSupport;
     }
 
     public async Task<IActionResult> OnPost()
     {
         // Save to API
         ServiceDto serviceDto = await _localOfferClientService.GetLocalOfferById(Id);
+
+        string userKey = _redisCacheService.GetUserKey();
+        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
 
         try
         {

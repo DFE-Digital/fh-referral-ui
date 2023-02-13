@@ -1,3 +1,5 @@
+using FamilyHubs.ReferralUi.Ui.Models;
+using FamilyHubs.ReferralUi.Ui.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,6 +11,8 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 [Authorize(Policy = "Referrer")]
 public partial class ContactDetailsModel : PageModel
 {
+    private readonly IRedisCacheService _redisCacheService;
+
     [BindProperty]
     public string ReferralId { get; set; } = default!;
     [BindProperty]
@@ -48,6 +52,11 @@ public partial class ContactDetailsModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
+    public ContactDetailsModel(IRedisCacheService redisCacheService)
+    {
+        _redisCacheService = redisCacheService;
+    }
+
     public void OnGet(string id, string name, string fullName, string email, string telephone, string textphone, string referralId)
     {
         Id = id;
@@ -57,6 +66,16 @@ public partial class ContactDetailsModel : PageModel
         Telephone = telephone;
         Textphone = textphone;
         ReferralId = referralId;
+
+        string userKey = _redisCacheService.GetUserKey();
+        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        Id = model.ServiceId;
+        Name = model.ServiceName;
+        ReferralId = model.ReferralId;
+        FullName = model.FullName;
+        Email = model.EmailAddress;
+        Telephone = model.Telephone;
+        Textphone = model.Textphone;
 
         if (!string.IsNullOrEmpty(email))
         {
@@ -108,6 +127,15 @@ public partial class ContactDetailsModel : PageModel
             ValidationValid = false;
             return Page();
         }
+
+        string userKey = _redisCacheService.GetUserKey();
+        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+
+        model.EmailAddress = Email;
+        model.Telephone = Telephone;
+        model.Textphone = Textphone;
+
+        _redisCacheService.StoreConnectWizzardViewModel(userKey, model);
 
         return RedirectToPage("/ProfessionalReferral/WhySupport", new
         {

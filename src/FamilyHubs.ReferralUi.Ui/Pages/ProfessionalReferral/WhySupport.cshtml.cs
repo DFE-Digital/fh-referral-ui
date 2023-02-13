@@ -1,3 +1,5 @@
+using FamilyHubs.ReferralUi.Ui.Models;
+using FamilyHubs.ReferralUi.Ui.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,19 +9,21 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 [Authorize(Policy = "Referrer")]
 public class WhySupportModel : PageModel
 {
+    private readonly IRedisCacheService _redisCacheService;
+
     [BindProperty]
     public string ReferralId { get; set; } = default!;
     [BindProperty]
     public string FullName { get; set; } = default!;
 
     [BindProperty]
-    public string Email { get; set; } = default!;
+    public string? Email { get; set; } = default!;
 
     [BindProperty]
-    public string Telephone { get; set; } = default!;
+    public string? Telephone { get; set; } = default!;
 
     [BindProperty]
-    public string Textphone { get; set; } = default!;
+    public string? Textphone { get; set; } = default!;
 
     [BindProperty]
     public string ReasonForSupport { get; set; } = default!;
@@ -32,6 +36,11 @@ public class WhySupportModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
+    public WhySupportModel(IRedisCacheService redisCacheService)
+    {
+        _redisCacheService = redisCacheService;
+    }
+
     public void OnGet(string id, string name, string fullName, string email, string telephone, string textphone, string reasonForSupport, string referralId)
     {
         Id = id;
@@ -41,6 +50,18 @@ public class WhySupportModel : PageModel
         Telephone = telephone;
         Textphone = textphone;
         ReferralId = referralId;
+
+        string userKey = _redisCacheService.GetUserKey();
+        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        Id = model.ServiceId;
+        Name = model.ServiceName;
+        ReferralId = model.ReferralId;
+        FullName = model.FullName;
+        Email = model.EmailAddress;
+        Telephone = model.Telephone;
+        Textphone = model.Textphone;
+        if (!string.IsNullOrEmpty(model.ReasonForSupport))
+            ReasonForSupport = model.ReasonForSupport;
 
         if (!string.IsNullOrEmpty(reasonForSupport))
             ReasonForSupport = reasonForSupport;
@@ -58,6 +79,11 @@ public class WhySupportModel : PageModel
             ValidationValid = false;
             return Page();
         }
+
+        string userKey = _redisCacheService.GetUserKey();
+        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        model.ReasonForSupport = ReasonForSupport;
+        _redisCacheService.StoreConnectWizzardViewModel(userKey, model);
 
         return RedirectToPage("/ProfessionalReferral/CheckReferralDetails", new
         {

@@ -1,15 +1,19 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
+﻿using FamilyHubs.ReferralUi.Ui.Models;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 
 namespace FamilyHubs.ReferralUi.Ui.Services;
 
 public interface IRedisCacheService
 {
     //Service
-    public ServiceDto? RetrieveService();
-    public void StoreService(ServiceDto serviceDto);
+    ServiceDto? RetrieveService();
+    void StoreService(ServiceDto serviceDto);
 
     //Navigation - last page name
-    public string RetrieveLastPageName();
-    public void StoreCurrentPageName(string? currPage);
-    public void ResetLastPageName();
+    string RetrieveLastPageName();
+    void StoreCurrentPageName(string? currPage);
+    void ResetLastPageName();
+    string GetUserKey();
+    internal void StoreConnectWizzardViewModel(string key, ConnectWizzardViewModel value);
+    internal ConnectWizzardViewModel RetrieveConnectWizzardViewModel(string key);
 }
