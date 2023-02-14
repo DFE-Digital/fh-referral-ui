@@ -88,7 +88,7 @@ public partial class ContactDetailsModel : PageModel
 
         if (ContactSelection != null)
         {
-            if (!ContactSelection.Contains("email") && !ContactSelection.Contains("phone") && !ContactSelection.Contains("website") && !ContactSelection.Contains("textphone"))
+            if (!ContactSelection.Contains("email") && !ContactSelection.Contains("telephone") && !ContactSelection.Contains("textphone"))
             {
                 ValidationValid = false;
                 ModelState.AddModelError("Select One Option", "Please select one option");
@@ -156,7 +156,7 @@ public partial class ContactDetailsModel : PageModel
             {
                 TelephoneValid = false;
                 ValidationValid = false;
-                ModelState.AddModelError("textphone", "Telephone is invalid (can not contain spaces)");
+                ModelState.AddModelError("telephone", "Telephone is invalid (can not contain spaces)");
             }
 
         }

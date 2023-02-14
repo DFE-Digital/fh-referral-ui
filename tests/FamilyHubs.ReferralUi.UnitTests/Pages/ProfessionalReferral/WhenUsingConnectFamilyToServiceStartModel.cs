@@ -1,14 +1,7 @@
-﻿using FamilyHubs.ReferralUi.Ui.Models;
-using FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
-using FamilyHubs.ReferralUi.Ui.Services;
+﻿using FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
@@ -61,8 +54,6 @@ public class WhenUsingConnectFamilyToServiceStartModel : BaseProfessionalReferra
         //Assert
         ArgumentNullException.ThrowIfNull(result);
         result.PageName.Should().Be("/ProfessionalReferral/Safeguarding");
-        
-
     }
 
 }

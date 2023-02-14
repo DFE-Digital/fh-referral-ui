@@ -23,7 +23,7 @@ public class BaseProfessionalReferralPage
             HaveConcent = true,
             FullName = "FullName",
             EmailAddress = "someone@email.com",
-            Telephone = "0121 222 3333",
+            Telephone = "01212223333",
             Textphone = "0712345678",
             ReasonForSupport = "Reason For Support"
         };
