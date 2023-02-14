@@ -129,6 +129,8 @@ public class CheckReferralDetailsModel : PageModel
                 }
                 
             }
+
+            _redisCacheService.ResetConnectWizzardViewModel(userKey);
         }
         catch
         {
