@@ -12,7 +12,7 @@ public class FamilyContactModel : PageModel
     private readonly IRedisCacheService _redisCacheService;
 
     [BindProperty]
-    public string FullName { get; set; } = default!;
+    public string FullName { get; set; } = string.Empty;
 
     [BindProperty]
     public bool ValidationValid { get; set; } = true;

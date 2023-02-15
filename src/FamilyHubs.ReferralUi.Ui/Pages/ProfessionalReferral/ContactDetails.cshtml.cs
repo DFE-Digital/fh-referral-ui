@@ -30,7 +30,7 @@ public partial class ContactDetailsModel : PageModel
     [BindProperty]
     public bool TelephoneValid { get; set; } = true;
 
-    public string FullName { get; set; } = default!;
+    public string FullName { get; set; } = string.Empty;
 
     [BindProperty]
     [Phone(ErrorMessage = "Please enter a valid phone number")]
