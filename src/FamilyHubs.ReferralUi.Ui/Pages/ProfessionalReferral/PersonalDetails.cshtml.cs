@@ -7,7 +7,7 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 public class PersonalDetailsModel : PageModel
 {
     [BindProperty]
-    public string FullName { get; set; } = default!;
+    public string FullName { get; set; } = string.Empty;
 
     [BindProperty]
     public string HasSpecialNeeds { get; set; } = default!;

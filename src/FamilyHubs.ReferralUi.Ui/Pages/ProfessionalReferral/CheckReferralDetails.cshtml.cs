@@ -1,3 +1,5 @@
+using FamilyHubs.ReferralUi.Ui.Models;
+using FamilyHubs.ReferralUi.Ui.Services;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.MassTransit;
@@ -11,6 +13,8 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 [Authorize(Policy = "Referrer")]
 public class CheckReferralDetailsModel : PageModel
 {
+    private readonly IRedisCacheService _redisCacheService;
+
     [BindProperty]
     public string ReferralId { get; set; } = default!;
 
@@ -18,13 +22,13 @@ public class CheckReferralDetailsModel : PageModel
     public string FullName { get; set; } = default!;
 
     [BindProperty]
-    public string Email { get; set; } = default!;
+    public string? Email { get; set; } = default!;
 
     [BindProperty]
-    public string Telephone { get; set; } = default!;
+    public string? Telephone { get; set; } = default!;
 
     [BindProperty]
-    public string Textphone { get; set; } = default!;
+    public string? Textphone { get; set; } = default!;
 
     [BindProperty]
     public string ReasonForSupport { get; set; } = default!;
@@ -37,49 +41,67 @@ public class CheckReferralDetailsModel : PageModel
     private readonly IConfiguration _configuration;
     private readonly ILocalOfferClientService _localOfferClientService;
     private readonly IReferralClientService _referralClientService;
-    public CheckReferralDetailsModel(IConfiguration configuration, ILocalOfferClientService localOfferClientService, IReferralClientService referralClientService)
+
+    public CheckReferralDetailsModel(IConfiguration configuration, ILocalOfferClientService localOfferClientService, IReferralClientService referralClientService, IRedisCacheService redisCacheService)
     {
         _referralClientService = referralClientService;
         _configuration = configuration;
         _localOfferClientService = localOfferClientService;
+        _redisCacheService = redisCacheService;
     }
 
-    public void OnGet(string id, string name, string fullName, string email, string telephone, string textphone, string reasonForSupport, string referralId)
+    public void OnGet()
     {
-        Id = id;
-        Name = name;
-        FullName = fullName;
-        Email = email;
-        Telephone = telephone;
-        Textphone= textphone;
-        ReasonForSupport = reasonForSupport;
-        ReferralId = referralId;
+        string userKey = _redisCacheService.GetUserKey();
+        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+
+        Id = model.ServiceId;
+        Name = model.ServiceName;
+        ReferralId = model.ReferralId;
+        FullName = model.FullName;
+        Email = model.EmailAddress;
+        Telephone = model.Telephone;
+        Textphone = model.Textphone;
+        ReasonForSupport = model.ReasonForSupport;
     }
 
     public async Task<IActionResult> OnPost()
     {
         // Save to API
-        ServiceDto serviceDto = await _localOfferClientService.GetLocalOfferById(Id);
+        string userKey = _redisCacheService.GetUserKey();
+        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+
+        ServiceDto serviceDto = await _localOfferClientService.GetLocalOfferById(model.ServiceId);
 
         try
         {
             bool isNewReferral = true;
             ReferralDto dto;
-            if (string.IsNullOrEmpty(ReferralId))
+            if (string.IsNullOrEmpty(model.ReferralId))
             {
-                dto = new(Guid.NewGuid().ToString(), serviceDto.OrganisationId, Id, Name, serviceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(serviceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial Connection") });
+                dto = new(Guid.NewGuid().ToString(), serviceDto.OrganisationId, serviceDto.Id, serviceDto.Name, serviceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(serviceDto), model.ReferralId, model.FullName, string.Empty, model.EmailAddress, model.Telephone, model.Textphone, model.ReasonForSupport, null, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial Connection") });
             }
             else
             {
-                ReferralDto? original = await _referralClientService.GetReferralById(ReferralId);
+                ReferralDto? original = null;
+                    
+                try
+                {
+                    original = await _referralClientService.GetReferralById(ReferralId);
+                }
+                catch
+                {
+                    //Original can not be found so just continue and add a new one
+                }
+                    
                 if (original != null) 
                 {
                     isNewReferral = false;
-                    dto = new(ReferralId, serviceDto.OrganisationId, Id, Name, serviceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(serviceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, original.Status);
+                    dto = new(model.ReferralId, serviceDto.OrganisationId, serviceDto.Id, serviceDto.Name, serviceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(serviceDto), model.ReferralId, model.FullName, string.Empty, model.EmailAddress, model.Telephone, model.Textphone, model.ReasonForSupport, null, original.Status);
                 }
                 else
                 {
-                    dto = new(Guid.NewGuid().ToString(), serviceDto.OrganisationId, Id, Name, serviceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(serviceDto), User?.Identity?.Name ?? "CurrentUser", FullName, string.Empty, Email, Telephone, Textphone, ReasonForSupport, null, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial Connection") });
+                    dto = new(Guid.NewGuid().ToString(), serviceDto.OrganisationId, serviceDto.Id, serviceDto.Name, serviceDto.Description ?? String.Empty, Newtonsoft.Json.JsonConvert.SerializeObject(serviceDto), model.ReferralId, model.FullName, string.Empty, model.EmailAddress, model.Telephone, model.Textphone, model.ReasonForSupport, null, new List<ReferralStatusDto> { new ReferralStatusDto(Guid.NewGuid().ToString(), "Initial Connection") });
                 } 
             }
 
@@ -107,22 +129,16 @@ public class CheckReferralDetailsModel : PageModel
                 }
                 
             }
+
+            _redisCacheService.ResetConnectWizzardViewModel(userKey);
         }
         catch
         {
             return Page();
         }
         
-
         return RedirectToPage("/ProfessionalReferral/ConfirmReferral", new
         {
-            id = Id,
-            name = Name,
-            fullName = FullName,
-            email = Email,
-            telephone = Telephone,
-            textphone = Textphone,
-            reasonForSupport = ReasonForSupport
         });
     }
 }

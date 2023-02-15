@@ -1,3 +1,5 @@
+using FamilyHubs.ReferralUi.Ui.Models;
+using FamilyHubs.ReferralUi.Ui.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,68 +11,61 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 [Authorize(Policy = "Referrer")]
 public partial class ContactDetailsModel : PageModel
 {
-    [BindProperty]
-    public string ReferralId { get; set; } = default!;
-    [BindProperty]
-    public string FullName { get; set; } = default!;
+    private readonly IRedisCacheService _redisCacheService;
 
     [BindProperty]
     public List<string> ContactSelection { get; set; } = new List<string>();
 
-
     [BindProperty]
     [EmailAddress(ErrorMessage = "Please enter a valid email address")]
-    public string? Email { get; set; } = default!;
+    public string? Email { get; set; }
 
     [BindProperty]
     public bool EmailValid { get; set; } = true;
 
     [BindProperty]
     [Phone(ErrorMessage = "Please enter a valid phone number")]
-    public string? Telephone { get; set; } = default!;
+    public string? Telephone { get; set; }
 
     [BindProperty]
     public bool TelephoneValid { get; set; } = true;
 
+    public string FullName { get; set; } = string.Empty;
+
     [BindProperty]
     [Phone(ErrorMessage = "Please enter a valid phone number")]
-    public string? Textphone { get; set; } = default!;
+    public string? Textphone { get; set; }
 
     [BindProperty]
     public bool TextphoneValid { get; set; } = true;
 
-
-    [BindProperty]
-    public string Id { get; set; } = default!;
-    [BindProperty]
-    public string Name { get; set; } = default!;
-
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public void OnGet(string id, string name, string fullName, string email, string telephone, string textphone, string referralId)
+    public ContactDetailsModel(IRedisCacheService redisCacheService)
     {
-        Id = id;
-        Name = name;
-        FullName = fullName;
-        Email = email;
-        Telephone = telephone;
-        Textphone = textphone;
-        ReferralId = referralId;
+        _redisCacheService = redisCacheService;
+    }
 
-        if (!string.IsNullOrEmpty(email))
+    public void OnGet()
+    {
+        string userKey = _redisCacheService.GetUserKey();
+        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        FullName= model.FullName;
+        
+        if (!string.IsNullOrEmpty(model.EmailAddress))
         {
-            Email = email;
+            Email = model.EmailAddress;
             ContactSelection.Add("email");
         } 
-        if (!string.IsNullOrEmpty(telephone))
+        if (!string.IsNullOrEmpty(model.Telephone))
         {
-            Telephone = telephone;
+            Telephone = model.Telephone;
             ContactSelection.Add("telephone");
         }   
-        if (!string.IsNullOrEmpty(textphone))
+        if (!string.IsNullOrEmpty(model.Textphone))
         {
-            Textphone = textphone;
+            Textphone = model.Textphone;
             ContactSelection.Add("textphone");
         }
             
@@ -79,6 +74,10 @@ public partial class ContactDetailsModel : PageModel
     public IActionResult OnPost()
     {
         SetDefaultContactSelection();
+
+        string userKey = _redisCacheService.GetUserKey();
+        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        FullName = model.FullName;
 
         if (ContactSelection == null || !ContactSelection.Any())
         {
@@ -89,7 +88,7 @@ public partial class ContactDetailsModel : PageModel
 
         if (ContactSelection != null)
         {
-            if (!ContactSelection.Contains("email") && !ContactSelection.Contains("phone") && !ContactSelection.Contains("website") && !ContactSelection.Contains("textphone"))
+            if (!ContactSelection.Contains("email") && !ContactSelection.Contains("telephone") && !ContactSelection.Contains("textphone"))
             {
                 ValidationValid = false;
                 ModelState.AddModelError("Select One Option", "Please select one option");
@@ -101,23 +100,21 @@ public partial class ContactDetailsModel : PageModel
             CheckTextphoneContactSelection();
         }
 
-        ModelState.Remove("ReferralId");
-
+        
         if (!ModelState.IsValid || !ValidationValid)
         {
             ValidationValid = false;
             return Page();
         }
 
+        model.EmailAddress = Email;
+        model.Telephone = Telephone;
+        model.Textphone = Textphone;
+
+        _redisCacheService.StoreConnectWizzardViewModel(userKey, model);
+
         return RedirectToPage("/ProfessionalReferral/WhySupport", new
         {
-            id = Id,
-            name = Name,
-            fullName = FullName,
-            email = Email,
-            telephone = Telephone,
-            textphone = Textphone,
-            referralId = ReferralId,
         });
     }
 
@@ -159,7 +156,7 @@ public partial class ContactDetailsModel : PageModel
             {
                 TelephoneValid = false;
                 ValidationValid = false;
-                ModelState.AddModelError("textphone", "Telephone is invalid (can not contain spaces)");
+                ModelState.AddModelError("telephone", "Telephone is invalid (can not contain spaces)");
             }
 
         }
