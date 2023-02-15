@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Ardalis.GuardClauses;
+using FamilyHubs.ReferralUi.Ui.Models;
+using Microsoft.Extensions.Caching.Memory;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace FamilyHubs.ReferralUi.Ui.Services.Api;
 
@@ -8,6 +11,7 @@ public interface ITokenService
     string GetRefreshToken();
     void SetToken(string tokenValue, DateTime validTo, string refreshToken);
     void ClearTokens();
+    string GetUsersOrganisationId();
 }
 
 public class TokenService : ITokenService
@@ -60,6 +64,24 @@ public class TokenService : ITokenService
         }
 
         return string.Empty;
+    }
+
+    public string GetUsersOrganisationId()
+    {
+        if (_memoryCache.TryGetValue("FamilyHubToken", out string? cacheValue) && !string.IsNullOrEmpty(cacheValue))
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(cacheValue);
+            var claims = jwtSecurityToken.Claims.ToList();
+
+            var claim = claims.FirstOrDefault(x => x.Type == "OpenReferralOrganisationId");
+            if (claim != null)
+            {
+                return claim.Value;
+            }
+        }
+
+        throw new NotFoundException("OrganisationId", "OrganisationId");
     }
 
     public void ClearTokens()
