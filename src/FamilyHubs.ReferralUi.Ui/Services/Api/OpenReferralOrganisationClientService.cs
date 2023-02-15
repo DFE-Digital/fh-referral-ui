@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel;
 using System.Text;
 using System.Text.Json;
@@ -75,7 +76,10 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         if (retVal == null)
             return keyValuePairs;
 
-        var topLevelCategories = retVal.Items.Where(x => x.Parent == null && !x.Name.Contains("bccusergroupTestDelete")).OrderBy(x => x.Name).ToList();
+        var topLevelCategories = retVal.Items
+            .Where(x => x.Parent == null && !x.Name.Contains("bccusergroupTestDelete") && x.TaxonomyType == TaxonomyType.ServiceCategory)
+            .OrderBy(x => x.Name)
+            .ToList();
 
         foreach (var topLevelCategory in topLevelCategories)
         {
