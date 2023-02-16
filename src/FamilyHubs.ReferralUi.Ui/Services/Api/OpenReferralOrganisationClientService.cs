@@ -62,7 +62,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(_client.BaseAddress + "api/taxonomies?pageNumber=1&pageSize=99999999"),
+            RequestUri = new Uri(_client.BaseAddress + "api/taxonomies?taxonomyType=ServiceCategory&pageNumber=1&pageSize=99999999"),
         };
 
         using var response = await _client.SendAsync(request);
