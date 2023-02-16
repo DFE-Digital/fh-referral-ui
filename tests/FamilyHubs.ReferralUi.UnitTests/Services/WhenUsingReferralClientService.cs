@@ -89,4 +89,42 @@ public class WhenUsingReferralClientService : BaseClientService
         result.Items[0].Referrer.Should().BeEquivalentTo(referral.Items[0].Referrer);
 
     }
+
+    [Fact]
+    public async Task ThenUpdateReferral()
+    {
+        //Arrange
+        var referral = GetReferralDto();
+        var mockClient = GetMockClient(referral.Id);
+        var mockCfg = new Mock<IOptions<ApiOptions>>();
+        mockCfg.Setup(x => x.Value).Returns(new ApiOptions());
+        ReferralClientService referralClientService = new(mockClient, mockCfg.Object);
+
+        //Act
+        var result = await referralClientService.UpdateReferral(referral);
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().BeEquivalentTo(referral.Id);
+
+    }
+
+    [Fact]
+    public async Task ThenSetReferralStatus()
+    {
+        //Arrange
+        var referral = GetReferralDto();
+        var mockClient = GetMockClient(referral.Id);
+        var mockCfg = new Mock<IOptions<ApiOptions>>();
+        mockCfg.Setup(x => x.Value).Returns(new ApiOptions());
+        ReferralClientService referralClientService = new(mockClient, mockCfg.Object);
+
+        //Act
+        var result = await referralClientService.SetReferralStatusReferral(referral.Id, "Test Status");
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().BeEquivalentTo(referral.Id);
+
+    }
 }
