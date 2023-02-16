@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel;
 using System.Text;
 using System.Text.Json;
@@ -7,7 +8,7 @@ namespace FamilyHubs.ReferralUi.Ui.Services.Api;
 
 public interface IOrganisationClientService
 {
-    Task<PaginatedList<TaxonomyDto>> GetTaxonomyList(int pageNumber = 1, int pageSize = 10);
+    
     Task<List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>> GetCategories();
     Task<List<OrganisationDto>> GetListOrganisations();
     Task<OrganisationWithServicesDto> GetOrganisationById(string id);
@@ -23,21 +24,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
 
     }
 
-    public async Task<PaginatedList<TaxonomyDto>> GetTaxonomyList(int pageNumber = 1, int pageSize = 10)
-    {
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Get,
-            RequestUri = new Uri(_client.BaseAddress + $"api/taxonomies?pageNumber={pageNumber}&pageSize={pageSize}"),
-        };
-
-        using var response = await _client.SendAsync(request);
-
-        response.EnsureSuccessStatusCode();
-
-        return await JsonSerializer.DeserializeAsync<PaginatedList<TaxonomyDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new PaginatedList<TaxonomyDto>();
-
-    }
+    
 
     public async Task<List<OrganisationDto>> GetListOrganisations()
     {
@@ -61,7 +48,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(_client.BaseAddress + "api/taxonomies?pageNumber=1&pageSize=99999999"),
+            RequestUri = new Uri(_client.BaseAddress + "api/taxonomies?taxonomyType=ServiceCategory&pageNumber=1&pageSize=99999999"),
         };
 
         using var response = await _client.SendAsync(request);
@@ -75,7 +62,10 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         if (retVal == null)
             return keyValuePairs;
 
-        var topLevelCategories = retVal.Items.Where(x => x.Parent == null && !x.Name.Contains("bccusergroupTestDelete")).OrderBy(x => x.Name).ToList();
+        var topLevelCategories = retVal.Items
+            .Where(x => x.Parent == null && !x.Name.Contains("bccusergroupTestDelete") && x.TaxonomyType == TaxonomyType.ServiceCategory)
+            .OrderBy(x => x.Name)
+            .ToList();
 
         foreach (var topLevelCategory in topLevelCategories)
         {

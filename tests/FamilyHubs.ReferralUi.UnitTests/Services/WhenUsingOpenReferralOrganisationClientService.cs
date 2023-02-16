@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -9,48 +10,13 @@ namespace FamilyHubs.ReferralUi.UnitTests.Services;
 public class WhenUsingOrganisationClientService : BaseClientService
 {
     [Fact]
-    public async Task ThenGetTaxonomyList()
-    {
-        //Arrange
-        List<TaxonomyDto> list = new()
-        {
-            new TaxonomyDto(
-                        "UnitTest bccsource:Organisation",
-                        "Organisation",
-                        "Test BCC Data Sources",
-                        null
-                        ),
-            new TaxonomyDto(
-                        "UnitTest bccprimaryservicetype:38",
-                        "Support",
-                        "Test BCC Primary Services",
-                        null
-                        )
-        };
-
-
-        PaginatedList<TaxonomyDto> paginatedList = new();
-        paginatedList.Items.AddRange(list);
-        var json = JsonConvert.SerializeObject(paginatedList);
-        var mockClient = GetMockClient(json);
-        OrganisationClientService organisationClientService = new(mockClient);
-
-        //Act
-        var result = await organisationClientService.GetTaxonomyList();
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(paginatedList);
-    }
-
-    [Fact]
     public async Task ThenGetCategories()
     {
         //Arrange
         var taxonomies = new List<TaxonomyDto>()
         {
-            new TaxonomyDto("16f3a451-e88d-4ad0-b53f-c8925d1cc9e4", "Activities, clubs and groups", "Activities, clubs and groups", null),
-            new TaxonomyDto("aafa1cc3-b984-4b10-89d5-27388c5432de", "Activities", "Activities", "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
+            new TaxonomyDto("16f3a451-e88d-4ad0-b53f-c8925d1cc9e4", "Activities, clubs and groups", TaxonomyType.ServiceCategory, null),
+            new TaxonomyDto("aafa1cc3-b984-4b10-89d5-27388c5432de", "Activities", TaxonomyType.ServiceCategory, "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
         };
 
         PaginatedList<TaxonomyDto> paginatedList = new PaginatedList<TaxonomyDto>(taxonomies, taxonomies.Count, 1, 1);

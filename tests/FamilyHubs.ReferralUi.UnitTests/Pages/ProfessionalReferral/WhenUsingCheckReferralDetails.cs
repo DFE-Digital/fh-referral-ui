@@ -266,7 +266,7 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
                                 new TaxonomyDto(
                                     "b60b7f3e-9ff4-48b2-bded-b00272ed3aba",
                                     "Family_hub 1",
-                                    null,
+                                    TaxonomyType.ServiceCategory,
                                     null
                                 )
                             )
@@ -341,7 +341,7 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
                     new TaxonomyDto(
                         "UnitTest bccsource:Organisation",
                         "Organisation",
-                        "Test BCC Data Sources",
+                        TaxonomyType.ServiceCategory,
                         null
                     )),
 
@@ -350,7 +350,7 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
                     new TaxonomyDto(
                         "UnitTest bccprimaryservicetype:38",
                         "Support",
-                        "Test BCC Primary Services",
+                        TaxonomyType.ServiceCategory,
                         null
                     )),
 
@@ -359,7 +359,7 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
                     new TaxonomyDto(
                         "UnitTest bccagegroup:37",
                         "Children",
-                        "Test BCC Age Groups",
+                        TaxonomyType.ServiceCategory,
                         null
                     )),
 
@@ -368,7 +368,7 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
                     new TaxonomyDto(
                         "UnitTestbccusergroup:56",
                         "Long Term Health Conditions",
-                        "Test BCC User Groups",
+                        TaxonomyType.ServiceCategory,
                         null
                     ))
             })
