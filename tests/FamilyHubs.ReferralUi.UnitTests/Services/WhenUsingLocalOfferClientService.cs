@@ -9,8 +9,11 @@ namespace FamilyHubs.ReferralUi.UnitTests.Services;
 
 public class WhenUsingLocalOfferClientService : BaseClientService
 {
-    [Fact]
-    public async Task ThenGetLocalOffers()
+    [Theory]
+    [InlineData(null,null,null)]
+    [InlineData(51.448006D, -2.559788D,null)]
+    [InlineData(51.448006D, -2.559788D, 10.0D)]
+    public async Task ThenGetLocalOffers(double? latitude, double? longtitude, double? proximity)
     {
         //Arrange
         List<ServiceDto> list = new()
@@ -27,22 +30,22 @@ public class WhenUsingLocalOfferClientService : BaseClientService
         LocalOfferFilter localOfferFilter = new()
         {
             ServiceType = "Information Sharing",
-            Status = "active",
-            MinimumAge = null,
-            MaximumAge = null,
-            GivenAge = null,
+            Status = default!,
+            MinimumAge = 1,
+            MaximumAge = 20,
+            GivenAge = 19,
             DistrictCode = "E06000023",
-            Latitude = 51.448006D,
-            Longtitude = -2.559788D,
-            Proximity = null,
+            Latitude = latitude,
+            Longtitude = longtitude,
+            Proximity = proximity,
             PageNumber = 1,
             PageSize = 99,
-            Text = string.Empty,
-            ServiceDeliveries = null,
-            IsPaidFor = null,
-            TaxonmyIds = null,
-            Languages = null,
-            CanFamilyChooseLocation = null
+            Text = "Some Value",
+            ServiceDeliveries = "Service Delivery",
+            IsPaidFor = false,
+            TaxonmyIds = "1",
+            Languages = "English",
+            CanFamilyChooseLocation = true
         };
 
         //Act

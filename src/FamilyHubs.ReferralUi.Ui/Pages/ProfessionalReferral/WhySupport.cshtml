@@ -3,19 +3,11 @@
 @{
 }
 
-<a asp-page="/ProfessionalReferral/ContactDetails" asp-route-id="@Model.Id" asp-route-name="@Model.Name" asp-route-fullName="@Model.FullName" asp-route-email="@Model.Email" asp-route-telephone="@Model.Telephone" asp-route-textphone="@Model.Textphone" class="govuk-back-link">Back</a>
+<a asp-page="/ProfessionalReferral/ContactDetails"  class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
     <h1 class="govuk-heading-l">Details about the family</h1>
     <form method="post">
-
-        <input asp-for="@Model.Id" type="hidden" >
-        <input asp-for="@Model.Name" type="hidden">
-        <input asp-for="@Model.FullName" type="hidden" >
-        <input asp-for="@Model.Email" type="hidden" >
-        <input asp-for="@Model.Telephone" type="hidden">
-        <input asp-for="@Model.Textphone" type="hidden">
-        <input asp-for="@Model.ReferralId" type="hidden">
 
       <div class="govuk-form-group">
           <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">

@@ -1,3 +1,5 @@
+using FamilyHubs.ReferralUi.Ui.Models;
+using FamilyHubs.ReferralUi.Ui.Services;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +13,7 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 public class ReferralDashboardDetailsModel : PageModel
 {
     private readonly IReferralClientService _referralClientService;
+    private readonly IRedisCacheService _redisCacheService;
 
     public ReferralDto Referral { get; set; } = default!;
 
@@ -34,9 +37,10 @@ public class ReferralDashboardDetailsModel : PageModel
         new SelectListItem("Connection Made", "Connection Made")
     };
 
-    public ReferralDashboardDetailsModel(IReferralClientService referralClientService)
+    public ReferralDashboardDetailsModel(IReferralClientService referralClientService, IRedisCacheService redisCacheService)
     {
         _referralClientService = referralClientService;
+        _redisCacheService = redisCacheService;
     }
     public async Task OnGet(string id)
     {
@@ -72,16 +76,25 @@ public class ReferralDashboardDetailsModel : PageModel
         ReferralDto? dto = await _referralClientService.GetReferralById(ReferralId);
         if (dto != null) 
         {
+            string userKey = _redisCacheService.GetUserKey();
+            ConnectWizzardViewModel model = new ConnectWizzardViewModel
+            {
+                ServiceId = dto.ServiceId,
+                ServiceName = dto.ServiceName,
+                ReferralId = dto.Id,
+                AnyoneInFamilyBeingHarmed = false,
+                HaveConcent = true,
+                FullName = dto.FullName,
+                EmailAddress = dto.Email,
+                Telephone = dto.Phone,
+                Textphone = dto.Text,
+                ReasonForSupport = dto.ReasonForSupport
+            };
+            
+            _redisCacheService.StoreConnectWizzardViewModel(userKey, model);
+
             return RedirectToPage("/ProfessionalReferral/CheckReferralDetails", new
             {
-                id = dto.ServiceId,
-                name = dto.ServiceName,
-                fullName = dto.FullName,
-                email = dto.Email,
-                telephone = dto.Phone,
-                textphone = dto.Text,
-                reasonForSupport = dto.ReasonForSupport,
-                referralId = dto.Id
             });
         }
 

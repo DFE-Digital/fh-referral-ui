@@ -35,14 +35,6 @@ public class ReferralDashboardModel : PageModel
             return;
         }
 
-        if (User != null && User.Identity != null)
-        {
-            ReferralList = await _referralClientService.GetReferralsByReferrer(User?.Identity?.Name ?? "BtlPro@email.com", 1, 999999);
-        }
-        else
-        {
-            ReferralList = await _referralClientService.GetReferralsByReferrer("BtlPro@email.com", 1, 999999);
-        }
-        
+        ReferralList = await _referralClientService.GetReferralsByReferrer(User?.Identity?.Name ?? string.Empty, 1, 999999);        
     }
 }
