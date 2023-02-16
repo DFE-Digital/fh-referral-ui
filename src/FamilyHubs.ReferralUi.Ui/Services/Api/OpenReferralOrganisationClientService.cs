@@ -8,7 +8,7 @@ namespace FamilyHubs.ReferralUi.Ui.Services.Api;
 
 public interface IOrganisationClientService
 {
-    Task<PaginatedList<TaxonomyDto>> GetTaxonomyList(int pageNumber = 1, int pageSize = 10);
+    
     Task<List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>> GetCategories();
     Task<List<OrganisationDto>> GetListOrganisations();
     Task<OrganisationWithServicesDto> GetOrganisationById(string id);
@@ -24,21 +24,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
 
     }
 
-    public async Task<PaginatedList<TaxonomyDto>> GetTaxonomyList(int pageNumber = 1, int pageSize = 10)
-    {
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Get,
-            RequestUri = new Uri(_client.BaseAddress + $"api/taxonomies?pageNumber={pageNumber}&pageSize={pageSize}"),
-        };
-
-        using var response = await _client.SendAsync(request);
-
-        response.EnsureSuccessStatusCode();
-
-        return await JsonSerializer.DeserializeAsync<PaginatedList<TaxonomyDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new PaginatedList<TaxonomyDto>();
-
-    }
+    
 
     public async Task<List<OrganisationDto>> GetListOrganisations()
     {

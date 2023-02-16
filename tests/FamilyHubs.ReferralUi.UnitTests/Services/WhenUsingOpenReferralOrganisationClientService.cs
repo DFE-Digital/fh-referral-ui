@@ -10,41 +10,6 @@ namespace FamilyHubs.ReferralUi.UnitTests.Services;
 public class WhenUsingOrganisationClientService : BaseClientService
 {
     [Fact]
-    public async Task ThenGetTaxonomyList()
-    {
-        //Arrange
-        List<TaxonomyDto> list = new()
-        {
-            new TaxonomyDto(
-                        "UnitTest bccsource:Organisation",
-                        "Organisation",
-                        TaxonomyType.ServiceCategory,
-                        null
-                        ),
-            new TaxonomyDto(
-                        "UnitTest bccprimaryservicetype:38",
-                        "Support",
-                        TaxonomyType.ServiceCategory,
-                        null
-                        )
-        };
-
-
-        PaginatedList<TaxonomyDto> paginatedList = new();
-        paginatedList.Items.AddRange(list);
-        var json = JsonConvert.SerializeObject(paginatedList);
-        var mockClient = GetMockClient(json);
-        OrganisationClientService organisationClientService = new(mockClient);
-
-        //Act
-        var result = await organisationClientService.GetTaxonomyList();
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(paginatedList);
-    }
-
-    [Fact]
     public async Task ThenGetCategories()
     {
         //Arrange
