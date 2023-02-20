@@ -5,7 +5,6 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Text;
@@ -351,14 +350,11 @@ public class LocalOfferResultsModel : PageModel
 
         foreach (var name in serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name))
         {   
-            result = result +
+            result += result +
                 name.AsString(EnumFormat.Description) != null ?
                 name.AsString(EnumFormat.Description)  + "," : 
                 String.Empty;
         }
-
-
-        
 
         //Remove last comma if present
         if (result.EndsWith(","))
