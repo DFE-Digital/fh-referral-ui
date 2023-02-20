@@ -77,7 +77,7 @@ public class LocalOfferDetailModel : PageModel
 
         foreach (var name in serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name))
         {
-            result = result +
+            result += result +
                     name.AsString(EnumFormat.Description) != null ?
                     name.AsString(EnumFormat.Description) + "," :
                     String.Empty;
@@ -116,7 +116,7 @@ public class LocalOfferDetailModel : PageModel
 
     public void ExtractAddressParts(PhysicalAddressDto addressDto)
     {
-        if (addressDto.Address1 == string.Empty)
+        if (string.IsNullOrEmpty(addressDto.Address1))
             return;
 
         Address_1 = addressDto.Address1 + ",";
