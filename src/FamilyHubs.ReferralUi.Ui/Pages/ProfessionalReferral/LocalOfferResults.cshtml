@@ -426,16 +426,18 @@
                                     <dl class="govuk-body-s dtmargins">
                                         <dt class="govuk-!-font-weight-bold">Category</dt>
                                         <dd>
+                                            <ul class="govuk-list govuk-list--bullet">
                                             @if (item != null && item.ServiceTaxonomies != null)
                                             {
                                                 foreach (var serviceTaxonomy in item.ServiceTaxonomies)
                                                 {
                                                     if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
                                                     {
-                                                        @serviceTaxonomy.Taxonomy.Name
+                                                        <li>@serviceTaxonomy.Taxonomy.Name</li>  
                                                     }
                                                 }
                                             }
+                                           </ul>
                                         </dd>
                                     </dl>
                                     <dl class="govuk-body-s dtmargins">
