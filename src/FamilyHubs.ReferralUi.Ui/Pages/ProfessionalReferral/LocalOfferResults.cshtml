@@ -444,7 +444,7 @@
                                         <dt class="govuk-!-font-weight-bold">Cost</dt>
                                         @if (item?.CostOptions?.FirstOrDefault()?.Amount != null && item?.CostOptions?.FirstOrDefault()?.Amount > 0)
                                         {
-                                            <dd>£@item?.CostOptions?.FirstOrDefault()?.Amount every @item?.CostOptions?.FirstOrDefault()?.AmountDescription.ToLower()</dd>
+                                            <dd>£@item?.CostOptions?.FirstOrDefault()?.Amount.ToString("0.00") every @item?.CostOptions?.FirstOrDefault()?.AmountDescription.ToLower()</dd>
                                         }
                                         else
                                         {
