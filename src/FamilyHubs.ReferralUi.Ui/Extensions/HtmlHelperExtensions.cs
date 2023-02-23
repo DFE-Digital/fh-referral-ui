@@ -12,7 +12,6 @@ public static class HtmlHelperExtensions
 {
     public static IHeaderViewModel GetHeaderViewModel(this IHtmlHelper html, bool hideMenu = false)
     {
-        var externalLinks = (html.ViewContext.HttpContext.RequestServices.GetService(typeof(IOptions<ExternalLinksConfiguration>)) as IOptions<ExternalLinksConfiguration>)?.Value;
         var authConfig = (html.ViewContext.HttpContext.RequestServices.GetService(typeof(IOptions<IdentityServerOptions>)) as IOptions<IdentityServerOptions>)?.Value;
         var requestRoot = html.ViewContext.HttpContext.Request.GetRequestUrlRoot();
         var requestPath = html.ViewContext.HttpContext.Request.Path;
@@ -22,7 +21,7 @@ public static class HtmlHelperExtensions
         UserManager<IdentityUser>? userManager = html.ViewContext.HttpContext.RequestServices.GetService(typeof(UserManager<IdentityUser>)) as UserManager<IdentityUser>;
         if (userManager != null)
         {
-            userName = userManager.GetUserName(html.ViewContext.HttpContext.User);
+            userName = userManager.GetUserName(html.ViewContext.HttpContext.User) ?? string.Empty;
         }
         else
         {
@@ -100,7 +99,7 @@ public static class HtmlHelperExtensions
     public static void AddCssClass(this TagHelperOutput output, string newClass)
     {
         //get current class value:
-        string? curClass = output.Attributes["class"]?.Value?.ToString(); //output.Attributes.FirstOrDefault(a => a.Name == "class")?.Value?.ToString();
+        string? curClass = output.Attributes["class"]?.Value?.ToString(); 
 
         //check if newClass is null or equal to current class, nothing to do
         if (string.IsNullOrWhiteSpace(newClass) || string.Equals(curClass, newClass, StringComparison.OrdinalIgnoreCase))

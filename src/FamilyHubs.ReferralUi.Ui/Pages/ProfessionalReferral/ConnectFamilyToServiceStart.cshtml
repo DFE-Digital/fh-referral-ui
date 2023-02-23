@@ -3,7 +3,7 @@
 @{
 }
 
-<a asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@Model.Id" asp-route-name="@Model.Name" class="govuk-back-link">Back</a>
+<a asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@Guid.NewGuid().ToString()" asp-route-serviceId="@Model.Id" asp-route-name="@Model.Name" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 

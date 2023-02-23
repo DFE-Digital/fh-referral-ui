@@ -1,0 +1,17 @@
+﻿.govuk-pagination__link {
+    background: transparent;
+    border: 0;
+    font-size: 1.1875rem;
+    line-height: 1.31579;
+    font-weight: 700;
+    padding: 0;
+    cursor: pointer;
+}
+
+.govuk-pagination__item--current .govuk-pagination__link {
+    color: #ffffff;
+}
+
+.govuk-link {
+    color: #1d70b8;
+}

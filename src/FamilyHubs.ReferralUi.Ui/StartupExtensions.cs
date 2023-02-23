@@ -1,9 +1,9 @@
 ﻿using FamilyHubs.ReferralUi.Ui.Extensions;
 using FamilyHubs.ReferralUi.Ui.Models;
-using FamilyHubs.ReferralUi.Ui.Security;
 using FamilyHubs.ReferralUi.Ui.Services;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Helpers;
+using FamilyHubs.SharedKernel.Security;
 using MassTransit;
 using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
@@ -55,7 +55,6 @@ public static class StartupExtensions
         services.AddAuthentication(options =>
         {
             options.DefaultScheme = "Cookies";
-            //options.DefaultChallengeScheme = "oidc";
         }).AddCookie("Cookies");
 
         services.AddAuthorization(options =>

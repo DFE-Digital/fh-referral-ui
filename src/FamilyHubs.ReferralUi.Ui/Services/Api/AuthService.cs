@@ -15,7 +15,7 @@ public class AuthService : ApiService, IAuthService
     public AuthService(HttpClient client, IConfiguration configuration)
         : base(client)
     {
-        //client.BaseAddress = new Uri("https://localhost:7108/");
+        
     }
 
     public async Task<AccessTokenModel> Login(string username, string password)
@@ -36,11 +36,6 @@ public class AuthService : ApiService, IAuthService
         using var response = await _client.SendAsync(request);
 
         response.EnsureSuccessStatusCode();
-
-        //var r1 = await response.Content.ReadAsStreamAsync();
-        //StreamReader reader = new StreamReader(r1);
-        //string text = reader.ReadToEnd();
-
 
         var result = await JsonSerializer.DeserializeAsync<AccessTokenModel>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new AccessTokenModel();
 
