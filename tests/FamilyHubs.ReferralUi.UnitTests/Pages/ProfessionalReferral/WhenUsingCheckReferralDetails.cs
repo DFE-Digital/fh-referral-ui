@@ -1,19 +1,12 @@
-﻿using FamilyHubs.ReferralUi.Ui.Models;
-using FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
+﻿using FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Builders;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
-using FluentAssertions.Common;
-using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
