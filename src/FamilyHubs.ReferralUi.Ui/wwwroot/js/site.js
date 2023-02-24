@@ -88,13 +88,14 @@
 			$('#cookies-page-save').click(function () {
 				if ($('#cookies-page-accepted').is(':checked')) {
 					cookiesAccept();
+					$('#cookies-saved-notification').removeClass('govuk-hidden');
+					$('html, body').animate({ scrollTop: 0 }, 'fast');
 				}
 				if ($('#cookies-page-rejected').is(':checked')) {
 					cookiesReject();
+					$('#cookies-saved-notification').removeClass('govuk-hidden');
+					$('html, body').animate({ scrollTop: 0 }, 'fast');
 				}
-
-				$('#cookies-saved-notification').removeClass('govuk-hidden');
-				$('html, body').animate({ scrollTop: 0 }, 'fast');
 			});
 		}
 	}
