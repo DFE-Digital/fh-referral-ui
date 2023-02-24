@@ -382,3 +382,5 @@ MigrationBackup/
 
 # Ignore Sonarqube folder
 .sonarqube/
+
+appsettings.*.json
