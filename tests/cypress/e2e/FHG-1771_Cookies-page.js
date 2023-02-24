@@ -35,7 +35,7 @@ Then("selects Yes option and saves", () => {
 });
 
 
-Then("the cookie is set and when page is refreshed Yes option stays selected", () => {
+Then("the cookie is set, success message is shown and when page is refreshed Yes option stays selected", () => {
     cy.getCookie('service_directory_cookies_policy').should('have.property', 'value', 'accept');
     cy.get('[data-testid="cookies-saved-notification"]').should('not.have.css', 'display', 'none');
     cy.reload();
@@ -49,7 +49,7 @@ Then("selects No option and saves", () => {
 });
 
 
-Then("the cookie is set and when page is refreshed No option stays selected", () => {
+Then("the cookie is set, success message is shown and when page is refreshed No option stays selected", () => {
     cy.getCookie('service_directory_cookies_policy').should('have.property', 'value', 'reject');
     cy.get('[data-testid="cookies-saved-notification"]').should('not.have.css', 'display', 'none');
     cy.reload();

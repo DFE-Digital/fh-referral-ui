@@ -14,14 +14,14 @@
 		Then user rejects cookies
 		Then option is set to no and stays selected after page refresh
 
-	Scenario: User accepts via Yes option
+	Scenario: User accepts via Yes option, success message is shown and options stays selected after page refresh
 		Given a user has arrived on cookies page
 		Then none of the cookies options are selected
 		Then selects Yes option and saves
-		Then the cookie is set and when page is refreshed Yes option stays selected
+		Then the cookie is set, success message is shown and when page is refreshed Yes option stays selected
 
-	Scenario: User accepts via No option
+	Scenario: User accepts via No option, success message is shown and options stays selected after page refresh
 		Given a user has arrived on cookies page
 		Then none of the cookies options are selected
 		Then selects No option and saves
-		Then the cookie is set and when page is refreshed No option stays selected
+		Then the cookie is set, success message is shown and when page is refreshed No option stays selected
