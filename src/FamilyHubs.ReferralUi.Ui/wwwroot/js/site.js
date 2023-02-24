@@ -26,21 +26,21 @@
 			date.setTime(date.getTime() + 24 * 60 * 60 * 1000 * 365);
 
 			let cookiesAccept = function () {
-				document.cookie = `cookies-accept=accept; expires=date; path=/`;
+				document.cookie = `service_directory_cookies_policy=accept; expires=date; path=/`;
 
-				$cookiesBannerMessage.addClass('govuk-visually-hidden');
-				$cookiesBannerConfirmation.removeClass('govuk-visually-hidden');
-				$cookiesBannerAccepted.removeClass('govuk-visually-hidden');
+				$cookiesBannerMessage.addClass('govuk-hidden');
+				$cookiesBannerConfirmation.removeClass('govuk-hidden');
+				$cookiesBannerAccepted.removeClass('govuk-hidden');
 				$('#cookies-page-accepted').prop('checked', true);
 			}
 
 			let cookiesReject = function () {
 				deleteCookies();
-				document.cookie = `cookies-accept=reject; expires=date; path=/`;
+				document.cookie = `service_directory_cookies_policy=reject; expires=date; path=/`;
 
-				$cookiesBannerMessage.addClass('govuk-visually-hidden');
-				$cookiesBannerConfirmation.removeClass('govuk-visually-hidden');
-				$cookiesBannerRejected.removeClass('govuk-visually-hidden');
+				$cookiesBannerMessage.addClass('govuk-hidden');
+				$cookiesBannerConfirmation.removeClass('govuk-hidden');
+				$cookiesBannerRejected.removeClass('govuk-hidden');
 				$('#cookies-page-rejected').prop('checked', true);
 			}
 
@@ -63,10 +63,10 @@
 				}
 			}
 
-			let cookie_value = getCookie('cookies-accept');
+			let cookie_value = getCookie('service_directory_cookies_policy');
 
 			if (typeof cookie_value === 'undefined') {
-				$cookiesBanner.removeClass('govuk-visually-hidden');
+				$cookiesBanner.removeClass('govuk-hidden');
 
 				$('#cookies-banner-accept').click(function () {
 					cookiesAccept();
@@ -77,7 +77,7 @@
 				});
 
 				$('#cookies-banner-close').click(function () {
-					$cookiesBanner.addClass('govuk-visually-hidden');
+					$cookiesBanner.addClass('govuk-hidden');
 				});
 			} else if (cookie_value === 'accept') {
 				$('#cookies-page-accepted').prop('checked', true);
