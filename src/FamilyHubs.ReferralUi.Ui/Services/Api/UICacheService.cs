@@ -1,4 +1,4 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api;
+﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
 using System.Text;
 using System.Text.Json;
 
@@ -33,7 +33,7 @@ public class UICacheService : ApiService, IUICacheService
         response.EnsureSuccessStatusCode();
 
         var retVal = await JsonSerializer.DeserializeAsync<UICacheDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
+        ArgumentNullException.ThrowIfNull(retVal);
 
         return retVal;
     }

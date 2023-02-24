@@ -14,7 +14,6 @@ Then("the user should see search results", () => {
 });
 
 When("a user selects Activities category", () => {
-    cy.get('[data-testid="activities,clubsandgroups"]').click();
     cy.get('[data-testid="activities"]').click();
     cy.get('[data-testid="button-apply-filters"]').click();
 });

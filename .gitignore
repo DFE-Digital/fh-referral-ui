@@ -349,3 +349,36 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 /src/FamilyHubs.ReferralUi.Ui/package-lock.json
+/tests/cypress/videos/startnow.feature.mp4
+/tests/cypress/videos/searchresultsdetails.feature.mp4
+/tests/cypress/videos/searchresults.feature.mp4
+/tests/cypress/videos/filtersearchresults.feature.mp4
+/tests/cypress/videos/fhg766_nofilterresults.feature.mp4
+/tests/cypress/videos/fhg544_clearfilters.feature.mp4
+/tests/cypress/videos/fhg543_filterbylanguage.feature.mp4
+/tests/cypress/videos/fhg541_filterbylocation.feature.mp4
+/tests/cypress/videos/fhg540_filterbydeliverymethod.feature.mp4
+/tests/cypress/videos/fhg539_filterbyage.feature.mp4
+/tests/cypress/videos/fhg490_searchpostcode.feature.mp4
+/tests/cypress/videos/fhg1032_nosearchresults.feature.mp4
+/tests/cypress/screenshots/startnow.feature/Start Now Page Tests -- start now page has a  start now button (failed).png
+/tests/cypress/screenshots/searchresultsdetails.feature/Search Results Details Tests -- Search Details page has cost value (failed).png
+/tests/cypress/screenshots/searchresultsdetails.feature/Search Results Details Tests -- Search Details page has back link to search results page (failed).png
+/tests/cypress/screenshots/searchresultsdetails.feature/Search Results Details Tests -- Search Details heading is 'Aid for Children with Tracheostomies' (failed).png
+/tests/cypress/screenshots/filtersearchresults.feature/Filter Local Offer Search Results Tests -- filtering search results using cost options should return valid results (failed).png
+/tests/cypress/screenshots/fhg543_filterbylanguage.feature/Filter Local Offer Search Results By Delivery methods Tests -- show local services offered in English (failed).png
+/tests/cypress/screenshots/fhg543_filterbylanguage.feature/Filter Local Offer Search Results By Delivery methods Tests -- show local services offered in Afrikaans (failed).png
+/tests/cypress/screenshots/fhg541_filterbylocation.feature/Filter Local Offer Search Results By family location choice -- show local services that offer option for families to choose the location (failed).png
+/tests/cypress/screenshots/fhg541_filterbylocation.feature/Filter Local Offer Search Results By family location choice -- filter should exist (failed).png
+/tests/cypress/screenshots/fhg540_filterbydeliverymethod.feature/Filter Local Offer Search Results By Delivery methods Tests -- show local services that offer telephone services (failed).png
+/tests/cypress/screenshots/fhg540_filterbydeliverymethod.feature/Filter Local Offer Search Results By Delivery methods Tests -- show local services that offer online services (failed).png
+/tests/cypress/screenshots/fhg540_filterbydeliverymethod.feature/Filter Local Offer Search Results By Delivery methods Tests -- show local services that offer in-person services (failed).png
+/tests/cypress/screenshots/fhg540_filterbydeliverymethod.feature/Filter Local Offer Search Results By Delivery methods Tests -- show local services that offer both in-person and online services (failed).png
+/tests/cypress/screenshots/fhg540_filterbydeliverymethod.feature/Filter Local Offer Search Results By Delivery methods Tests -- show local services that offer all three delivery methods (failed).png
+/tests/cypress/screenshots/fhg539_filterbyage.feature/Filter Local Offer Search Results By Age Tests -- show local services that offer children and young people services for the selected age (failed).png
+/tests/cypress/screenshots/fhg1032_nosearchresults.feature/Search Results Tests -- search using valid postcode with no results (failed).png
+/src/FamilyHubs.ReferralUi.Ui/wwwroot/css/application.css.map
+
+
+# Ignore Sonarqube folder
+.sonarqube/

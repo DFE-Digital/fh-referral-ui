@@ -14,9 +14,7 @@ Then("the user should see search results", () => {
 });
 
 When("a user selects Activities  & Hearing & Sight categories", () => {
-    cy.get('[data-testid="activities,clubsandgroups"]').click();
     cy.get('[data-testid="activities"]').click();
-    cy.get('[data-testid="health"]').click();
     cy.get('[data-testid="hearingandsight"]').click();
     cy.get('[data-testid="button-apply-filters"]').click();
 });
@@ -28,9 +26,7 @@ Then("we should get 3 results", () => {
 });
 
 When("a user selects Activities  & Hearing & Sight categories and Free option", () => {
-    cy.get('[data-testid="activities,clubsandgroups"]').click();
     cy.get('[data-testid="activities"]').click();
-    cy.get('[data-testid="health"]').click();
     cy.get('[data-testid="hearingandsight"]').click();
     cy.get('[data-testid="checkbox-free"]').click();
     cy.get('[data-testid="button-apply-filters"]').click();

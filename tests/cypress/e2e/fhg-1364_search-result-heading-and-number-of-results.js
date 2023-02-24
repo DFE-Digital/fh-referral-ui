@@ -18,7 +18,12 @@ Then("the user should see {string} title", (title) => {
 });
 
 Then("the user should see {string} message", (results) => {
-    cy.get('[data-testid="number-of-results"]').should("contain.text", results);
+
+    cy.get('.search-results').find('[role="listitem"]').its('length').then((count)=>{
+        var expectedString = results.replace('#', count);
+        cy.get('[data-testid="number-of-results"]').should("contain.text", expectedString);
+    });
+
 });
 
 Then("the user should see {string} poscode", (postcode) => {

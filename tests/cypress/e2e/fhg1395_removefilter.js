@@ -16,6 +16,6 @@ When("user searches using postcode {string} and filters using language {string}"
     cy.get('[data-testid="button-apply-filters"]').click();
 })
 
-Then("the user should see the language filter {language}", (language) => {
+Then("the user should see the language filter {string}", (language) => {
     cy.get(`[data-testid=${language}-remove]`).should("exist");
 });
