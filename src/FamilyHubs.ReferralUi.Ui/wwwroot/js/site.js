@@ -92,6 +92,9 @@
 				if ($('#cookies-page-rejected').is(':checked')) {
 					cookiesReject();
 				}
+
+				$('#cookies-saved-notification').removeClass('govuk-hidden');
+				$('html, body').animate({ scrollTop: 0 }, 'fast');
 			});
 		}
 	}

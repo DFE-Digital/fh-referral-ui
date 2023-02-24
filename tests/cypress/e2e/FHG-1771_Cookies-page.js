@@ -37,8 +37,10 @@ Then("selects Yes option and saves", () => {
 
 Then("the cookie is set and when page is refreshed Yes option stays selected", () => {
     cy.getCookie('service_directory_cookies_policy').should('have.property', 'value', 'accept');
+    cy.get('[data-testid="cookies-saved-notification"]').should('not.have.css', 'display', 'none');
     cy.reload();
     cy.get('[data-testid="cookies-accepted-option"]').should('be.checked');
+    cy.get('[data-testid="cookies-saved-notification"]').should('have.css', 'display', 'none');
 });
 
 Then("selects No option and saves", () => {
@@ -49,6 +51,9 @@ Then("selects No option and saves", () => {
 
 Then("the cookie is set and when page is refreshed No option stays selected", () => {
     cy.getCookie('service_directory_cookies_policy').should('have.property', 'value', 'reject');
+    cy.get('[data-testid="cookies-saved-notification"]').should('not.have.css', 'display', 'none');
     cy.reload();
     cy.get('[data-testid="cookies-rejected-option"]').should('be.checked');
+    cy.get('[data-testid="cookies-saved-notification"]').should('have.css', 'display', 'none');
+    
 });
