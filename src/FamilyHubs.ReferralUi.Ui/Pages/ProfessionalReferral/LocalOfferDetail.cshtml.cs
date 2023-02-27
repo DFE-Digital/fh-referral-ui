@@ -150,6 +150,16 @@ public class LocalOfferDetailModel : PageModel
                 Phone = linkcontact.Telephone ?? string.Empty;
                 Website = linkcontact.Url ?? string.Empty;
                 Email = linkcontact.Email ?? string.Empty;
+
+                if (string.IsNullOrEmpty(Website))
+                    continue;
+
+                if (Website.Length > 4 && string.Compare(Website.Substring(0,4),"http", StringComparison.OrdinalIgnoreCase) == 0) 
+                {
+                    continue;
+                }
+
+                Website = $"https://{Website}";
             }
         }
     }
