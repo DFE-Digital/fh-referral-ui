@@ -23,6 +23,7 @@ public class WhenUsingLocalOfferDetail
     [InlineData(default!)]
     [InlineData("url")]
     [InlineData("https://wwww.google.com")]
+    [InlineData("http://google.com")]
     public async Task ThenOnGetAsync_LocalOfferDetailWithReferralNotEnabled(string url)
     {
         //Arrange
@@ -61,6 +62,16 @@ public class WhenUsingLocalOfferDetail
         //Assert
         result.Should().NotBeNull();
         result.Should().BeOfType<PageResult>();
+        if(url == null)
+        {
+            localOfferDetailModel.Website.Should().BeEquivalentTo("");
+        }
+        else if (url == "url")
+            localOfferDetailModel.Website.Should().BeEquivalentTo("https://url");
+        else
+            localOfferDetailModel.Website.Should().BeEquivalentTo(url);
+
+
     }
 
     [Fact]
