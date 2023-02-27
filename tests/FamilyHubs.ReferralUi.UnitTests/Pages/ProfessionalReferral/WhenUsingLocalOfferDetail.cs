@@ -62,12 +62,10 @@ public class WhenUsingLocalOfferDetail
         //Assert
         result.Should().NotBeNull();
         result.Should().BeOfType<PageResult>();
-        if(url == null)
+        if(url == null || url == "url")
         {
             localOfferDetailModel.Website.Should().BeEquivalentTo("");
         }
-        else if (url == "url")
-            localOfferDetailModel.Website.Should().BeEquivalentTo("https://url");
         else
             localOfferDetailModel.Website.Should().BeEquivalentTo(url);
 

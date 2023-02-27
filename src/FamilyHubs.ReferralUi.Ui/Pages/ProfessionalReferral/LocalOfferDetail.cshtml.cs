@@ -4,6 +4,7 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
@@ -156,11 +157,27 @@ public class LocalOfferDetailModel : PageModel
 
                 if (Website.Length > 4 && string.Compare(Website.Substring(0,4),"http", StringComparison.OrdinalIgnoreCase) == 0) 
                 {
+                    if (!IsValidURL(Website))
+                    {
+                        Website = string.Empty;
+                    }
                     continue;
                 }
 
                 Website = $"https://{Website}";
+
+                if (!IsValidURL(Website))
+                {
+                    Website = string.Empty;
+                }
             }
         }
+    }
+
+    bool IsValidURL(string URL)
+    {
+        string Pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
+        Regex Rgx = new Regex(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        return Rgx.IsMatch(URL);
     }
 }
