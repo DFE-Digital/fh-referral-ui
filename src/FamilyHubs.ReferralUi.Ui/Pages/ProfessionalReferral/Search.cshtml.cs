@@ -41,13 +41,17 @@ public partial class SearchModel : PageModel
             ValidationValid = false;
             return Page();
         }
+
+        //int currentPage = 1;
+
         try
         {
             await _postcodeLocationClientService.LookupPostcode(Postcode);
 
-            return RedirectToPage("LocalOfferResults", new 
+            return RedirectToPage("LocalOfferResults", new
             {
                 Postcode,
+                currentPage = 1
                 //distance = 32186.9 //212892.0
             });
         }

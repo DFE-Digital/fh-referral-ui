@@ -68,7 +68,7 @@ public class LocalOfferResultsModel : PageModel
 
     [BindProperty(SupportsGet = true)]
     public int CurrentPage { get; set; } = 1;
-    public int PageSize { get; set; } = 10;
+    public int PageSize { get; set; } = 1;
 
     public string? OutCode { get; set; }
     public string? DistrictCode { get; set; }
