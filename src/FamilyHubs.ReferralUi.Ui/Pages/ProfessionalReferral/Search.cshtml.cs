@@ -41,9 +41,6 @@ public partial class SearchModel : PageModel
             ValidationValid = false;
             return Page();
         }
-
-        //int currentPage = 1;
-
         try
         {
             await _postcodeLocationClientService.LookupPostcode(Postcode);
