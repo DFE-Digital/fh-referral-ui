@@ -30,6 +30,8 @@ public class WhenUsingReferralDashboard
         email: "someone@email.com",
         phone: "01211112222",
         text: "01211112222",
+        dateRecieved: DateTime.UtcNow,
+        requestNumber: 1L,
         reasonForSupport: "Reason For Support",
         reasonForRejection: "Reason for Rejection",
         new List<ReferralStatusDto>()
@@ -44,10 +46,10 @@ public class WhenUsingReferralDashboard
             new Claim("OpenReferralOrganisationId", referralDto.OrganisationId),
         }, "mock"));
         referralDashboardModel.PageContext.HttpContext = new DefaultHttpContext() { User = user };
-        mockReferralClientService.Setup(x => x.GetReferralsByOrganisationId(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(paginatedList);
+        mockReferralClientService.Setup(x => x.GetReferralsByOrganisationId(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<bool?>())).ReturnsAsync(paginatedList);
 
         //Act
-        await referralDashboardModel.OnGet(default!);
+        await referralDashboardModel.OnGetAsync(default!);
 
         //Assert
         referralDashboardModel.ReferralList.Should().BeEquivalentTo(paginatedList);
@@ -72,6 +74,8 @@ public class WhenUsingReferralDashboard
         email: "someone@email.com",
         phone: "01211112222",
         text: "01211112222",
+        dateRecieved: DateTime.UtcNow,
+        requestNumber: 1L,
         reasonForSupport: "Reason For Support",
         reasonForRejection: "Reason for Rejection",
         new List<ReferralStatusDto>()
@@ -89,7 +93,7 @@ public class WhenUsingReferralDashboard
         mockReferralClientService.Setup(x => x.GetReferralsByReferrer(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(paginatedList);
 
         //Act
-        await referralDashboardModel.OnGet(default!);
+        await referralDashboardModel.OnGetAsync(default!);
 
         //Assert
         referralDashboardModel.ReferralList.Should().BeEquivalentTo(paginatedList);

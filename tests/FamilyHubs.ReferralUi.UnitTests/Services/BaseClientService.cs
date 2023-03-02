@@ -184,6 +184,8 @@ public class BaseClientService
                 "Robert.Brown@yahoo.co.uk",
                 "0131 222 3333",
                 "text",
+                DateTime.UtcNow,
+                1L,
                 "Requires help with child",
                 null,
                 new List<ReferralStatusDto> { new ReferralStatusDto("1d2c41ac-fade-4933-a810-d8a040f0b9ee", "Inital-Referral") }

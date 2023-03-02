@@ -20,6 +20,6 @@ public class ShowReferralSummaryModel : PageModel
     public async Task OnGet()
     {
         var organisationId = _tokenService.GetUsersOrganisationId();
-        ReferralList = await _referralClientService.GetReferralsByOrganisationId(organisationId, 1, 99);
+        ReferralList = await _referralClientService.GetReferralsByOrganisationId(organisationId, 1, 99, default!, default!);
     }
 }

@@ -16,10 +16,12 @@
 
     <!--[if !IE 8]><!-->
     @*<link rel="stylesheet" href="~/lib/govuk/govuk-frontend-4.3.0.min.css" />*@
+    <link rel="stylesheet" href="~/moj/moj-frontend.min.css" />
     <link rel="stylesheet" href="~/css/application.css" asp-append-version="true" />
     <!--<![endif]-->
     <!--[if IE 8]>
       <link rel="stylesheet" href="~/lib/govuk/govuk-frontend-ie8-4.3.0.min.css" />
+      <link rel="stylesheet" href="~/css/moj/moj-frontend-ie8.min.css" />
     <![endif]-->
     <!--<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />-->
     <!--<link rel="stylesheet" href="~/WebUI.styles.css" asp-append-version="true" />-->
@@ -64,10 +66,12 @@
     <script src="~/lib/govuk/govuk-frontend-4.3.0.min.js"></script>
     <script>
       window.GOVUKFrontend.initAll()
+        window.MOJFrontend.initAll()
     </script>
 
     
     @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    <script src="~/moj/moj-frontend.min.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)

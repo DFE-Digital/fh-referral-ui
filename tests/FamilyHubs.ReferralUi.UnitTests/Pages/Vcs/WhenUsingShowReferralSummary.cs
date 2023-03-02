@@ -28,6 +28,8 @@ public class WhenUsingShowReferralSummary
         email: "someone@email.com",
         phone: "01211112222",
         text: "01211112222",
+        dateRecieved: DateTime.UtcNow,
+        requestNumber: 1L,
         reasonForSupport: "Reason For Support",
         reasonForRejection: "Reason for Rejection",
         new List<ReferralStatusDto>()
@@ -35,7 +37,7 @@ public class WhenUsingShowReferralSummary
 
         PaginatedList<ReferralDto> paginatedList = new PaginatedList<ReferralDto>(items: new List<ReferralDto> { referralDto }, 1, 1, 2);
 
-        mockReferralClientService.Setup(x => x.GetReferralsByOrganisationId(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(paginatedList);
+        mockReferralClientService.Setup(x => x.GetReferralsByOrganisationId(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<bool?>())).ReturnsAsync(paginatedList);
         mockTokenService.Setup(x => x.GetUsersOrganisationId()).Returns(referralDto.OrganisationId);
         ShowReferralSummaryModel showReferralSummaryModel = new ShowReferralSummaryModel(mockReferralClientService.Object, mockTokenService.Object);
 

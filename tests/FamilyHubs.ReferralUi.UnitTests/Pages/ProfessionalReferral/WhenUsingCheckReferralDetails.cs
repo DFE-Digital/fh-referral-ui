@@ -94,6 +94,8 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
             email: default!,
             phone: default!,
             text: default!,
+            dateRecieved: DateTime.UtcNow,
+            requestNumber: 1L,
             reasonForSupport: string.Empty,
             reasonForRejection: string.Empty,
             new List<ReferralStatusDto>()));
@@ -136,6 +138,8 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
             email: default!,
             phone: default!,
             text: default!,
+            dateRecieved: DateTime.UtcNow,
+            requestNumber: 1L,
             reasonForSupport: string.Empty,
             reasonForRejection: string.Empty,
             new List<ReferralStatusDto>()));

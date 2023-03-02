@@ -6,15 +6,44 @@
 <a asp-page="/ProfessionalReferral/ProfessionalHomepage" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-6">Requests for support</h1>
+         <form method="post">
+            <input asp-for="@Model.OrganisationId" type="hidden">
+            <div class="govuk-form-group govuk-!-margin-bottom-0">
+                <label class="govuk-label govuk-label--m" for="width-20">
+                    Search by name of contact
+                </label>
+                <input class="govuk-input govuk-input--width-20" id="SearchText" name="SearchText" value="@Model.SearchText" type="text">
+                <button class="govuk-button" data-module="govuk-button">
+                    Search
+                </button>
+            </div>
+        </form>
+        @if (@Model.ReferralList.Items.Count == 1)
+        {
+            <p class="govuk-caption-m govuk-!-margin-bottom-1">Showing @Model.ReferralList.Items.Count request result</p>
+        }
+        else
+        {
+            <p class="govuk-caption-m govuk-!-margin-bottom-1">Showing @Model.ReferralList.Items.Count request results</p>
+        }
+
+    </div>
     
     <table class="govuk-table">
         <caption class="govuk-table__caption govuk-table__caption--l">Referrals</caption>
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">Name</th>
-            <th scope="col" class="govuk-table__header">Phone</th>
-            <th scope="col" class="govuk-table__header">Email</th>
-            <th scope="col" class="govuk-table__header">Service</th>
+            <th scope="col" class="govuk-table__header" aria-sort="ascending" style="width: 24%;">
+                <button type="button" data-index="0">Request Number</button>
+            </th>
+            <th scope="col" class="govuk-table__header" aria-sort="ascending" style="width: 24%;">
+                <button type="button" data-index="0">Date received</button>
+            </th>
+            <th scope="col" class="govuk-table__header">Contact</th>
+            <th scope="col" class="govuk-table__header">Requester</th>
             <th scope="col" class="govuk-table__header">Current Status</th>
             <th scope="col" class="govuk-table__header">Action</th>
         </tr>
@@ -23,11 +52,30 @@
             @foreach (var item in @Model.ReferralList.Items)
             {
                 <tr class="govuk-table__row">
-                <td class="govuk-table__header">@item.FullName</td>
-                <td class="govuk-table__cell">@item.Phone</td>
-                <td class="govuk-table__cell">@item.Email</td>
-                <td class="govuk-table__cell">@item.ServiceName</td>
-                <td class="govuk-table__cell">@item.Status?.LastOrDefault()?.Status</td>
+                <td class="govuk-table__header">@item.RequestNumber</td>
+                    <td class="govuk-table__cell">@item.DateRecieved?.ToString("dd MMMM yyyy")</td>
+                <td class="govuk-table__cell">@item.FullName</td>
+                <td class="govuk-table__cell">@item.Referrer</td>
+                <td class="govuk-table__cell">
+                
+                        @switch (@item.Status?.LastOrDefault()?.Status)
+                        {
+                            case "Accept Connection":
+                                <strong class="govuk-tag govuk-tag--green">Accepted</strong>
+                                break;
+                            case "Reject Connection":
+                                <strong class="govuk-tag govuk-tag--red">Declined</strong>
+                                break;
+                            case "Connection Made":
+                                <strong class="govuk-tag govuk-tag--yellow">Opened</strong>
+                                break;
+                            default:
+                                <strong class="govuk-tag govuk-tag--blue">New</strong>
+                                break;
+                        }
+
+                    
+                </td>
                 <td class="govuk-table__cell"><a asp-page="/ProfessionalReferral/ReferralDashboardDetails" asp-route-id="@item.Id">View Details</a></td>
                 </tr>
             }
