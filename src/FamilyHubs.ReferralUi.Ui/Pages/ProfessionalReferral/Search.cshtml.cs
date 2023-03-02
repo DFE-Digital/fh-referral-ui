@@ -49,7 +49,6 @@ public partial class SearchModel : PageModel
             {
                 Postcode,
                 currentPage = 1
-                //distance = 32186.9 //212892.0
             });
         }
         catch
