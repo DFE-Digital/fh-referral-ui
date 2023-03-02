@@ -16,3 +16,7 @@ Feature: Start Now Page Tests
      Given a user has arrived on the start now page
      When the user click on the child abuse link
      Then the page directed to child abuse url
+
+    Scenario: start page title is 'Connect families to support'
+    Given a user has arrived on the start now page
+    Then the page's title is 'Connect families to support'
