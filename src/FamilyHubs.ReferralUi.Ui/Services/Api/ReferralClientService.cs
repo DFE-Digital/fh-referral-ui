@@ -11,7 +11,7 @@ namespace FamilyHubs.ReferralUi.Ui.Services.Api;
 
 public interface IReferralClientService
 {
-    Task<PaginatedList<ReferralDto>> GetReferralsByReferrer(string referrer, int pageNumber, int pageSize);
+    Task<PaginatedList<ReferralDto>> GetReferralsByReferrer(string referrer, int pageNumber, int pageSize, string? searchText, bool? doNotListRejected);
     Task<string> CreateReferral(ReferralDto referralDto);
     Task<string> UpdateReferral(ReferralDto referralDto);
     Task<PaginatedList<ReferralDto>> GetReferralsByOrganisationId(string id, int pageNumber, int pageSize, string? searchText, bool? doNotListRejected);
@@ -28,12 +28,23 @@ public class ReferralClientService : ApiService, IReferralClientService
         client.BaseAddress = new Uri(settings.ReferralApiUrl);
     }
 
-    public async Task<PaginatedList<ReferralDto>> GetReferralsByReferrer(string referrer, int pageNumber, int pageSize)
+    public async Task<PaginatedList<ReferralDto>> GetReferralsByReferrer(string referrer, int pageNumber, int pageSize, string? searchText, bool? doNotListRejected)
     {
+        StringBuilder urlRequest = new StringBuilder();
+        urlRequest.Append($"api/referrals/{referrer}?pageNumber={pageNumber}&pageSize={pageSize}");
+        if (!string.IsNullOrEmpty(searchText))
+        {
+            urlRequest.Append($"&searchText={searchText}");
+        }
+        if (doNotListRejected != null)
+        {
+            urlRequest.Append($"&doNotListRejected={doNotListRejected}");
+        }
+
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(_client.BaseAddress + $"api/referrals/{referrer}?pageNumber={pageNumber}&pageSize={pageSize}"),
+            RequestUri = new Uri(_client.BaseAddress + urlRequest.ToString()),
         };
 
         using var response = await _client.SendAsync(request);

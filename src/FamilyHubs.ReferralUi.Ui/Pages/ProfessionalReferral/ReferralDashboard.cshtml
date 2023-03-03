@@ -7,9 +7,9 @@
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
+    <form method="post">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-l govuk-!-margin-bottom-6">Requests for support</h1>
-         <form method="post">
             <input asp-for="@Model.OrganisationId" type="hidden">
             <div class="govuk-form-group govuk-!-margin-bottom-0">
                 <label class="govuk-label govuk-label--m" for="width-20">
@@ -20,7 +20,7 @@
                     Search
                 </button>
             </div>
-        </form>
+        
         @if (@Model.ReferralList.Items.Count == 1)
         {
             <p class="govuk-caption-m govuk-!-margin-bottom-1">Showing @Model.ReferralList.Items.Count request result</p>
@@ -31,20 +31,23 @@
         }
 
     </div>
-    
-    <table class="govuk-table">
+
+     <table class="govuk-table" data-module="moj-sortable-table">
         <caption class="govuk-table__caption govuk-table__caption--l">Referrals</caption>
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header" aria-sort="ascending" style="width: 24%;">
-                <button type="button" data-index="0">Request Number</button>
-            </th>
-            <th scope="col" class="govuk-table__header" aria-sort="ascending" style="width: 24%;">
-                <button type="button" data-index="0">Date received</button>
+            <th scope="col" class="govuk-table__header" style="width: 20%;">Request number</th>
+            <th scope="col" class="govuk-table__header" aria-sort="@Model.DateRecievedStringSortDirection" style="width: 24%;">
+               <button type="submit" data-index="0" asp-route-sortDateRecieved="true" asp-route-dateRecievedDirection="@Model.DateRecievedStringSortDirection" asp-route-sortStatus="false">Date received</button>
             </th>
             <th scope="col" class="govuk-table__header">Contact</th>
-            <th scope="col" class="govuk-table__header">Requester</th>
-            <th scope="col" class="govuk-table__header">Current Status</th>
+            @if (User.IsInRole("VCSAdmin"))
+            {
+                <th scope="col" class="govuk-table__header">Requester</th>
+            }    
+            <th scope="col" class="govuk-table__header" aria-sort="@Model.StatusStringSortDirection" style="width: 8%;">
+                        <button type="button" data-index="0" asp-route-sortDateRecieved="false" asp-route-sortStatus="true" asp-route-statusDirection="@Model.StatusStringSortDirection">Status</button>
+            </th>
             <th scope="col" class="govuk-table__header">Action</th>
         </tr>
       </thead>
@@ -55,7 +58,10 @@
                 <td class="govuk-table__header">@item.RequestNumber</td>
                     <td class="govuk-table__cell">@item.DateRecieved?.ToString("dd MMMM yyyy")</td>
                 <td class="govuk-table__cell">@item.FullName</td>
-                <td class="govuk-table__cell">@item.Referrer</td>
+                @if (User.IsInRole("VCSAdmin"))
+                {
+                    <td class="govuk-table__cell">@item.Referrer</td>
+                }   
                 <td class="govuk-table__cell">
                 
                         @switch (@item.Status?.LastOrDefault()?.Status)
@@ -82,5 +88,42 @@
       </tbody>
 </table>
 
-   
+    @if (Model.ReferralList.TotalPages > 1)
+    {
+        <nav class="govuk-pagination" role="navigation" aria-label="results">
+            @if (Model.CurrentPage > 1)
+            {
+                <div class="govuk-pagination__prev">
+                    <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@(Model.CurrentPage-1)" rel="next">
+                        <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+                            <path d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"></path>
+                        </svg>
+                        <span class="govuk-pagination__link-title">Previous</span>
+                    </button>
+                </div>
+            }
+
+            <ul class="govuk-pagination__list">
+                @for (int i = 1; i <= Model.ReferralList.TotalPages; i++)
+                {
+                    <li class="govuk-pagination__item @(Model.ReferralList.PageNumber == i ? "govuk-pagination__item--current" : "") ">
+                        <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@i">@i</button>
+                    </li>
+                }
+            </ul>
+
+            @if (Model.CurrentPage < Model.ReferralList.TotalPages)
+            {
+                <div class="govuk-pagination__next">
+                    <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@(Model.CurrentPage+1)" rel="next">
+                        <span class="govuk-pagination__link-title">Next</span>
+                        <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+                            <path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
+                        </svg>
+                    </button>
+                </div>
+            }
+        </nav>
+    }
+    </form>
 </main>

@@ -90,7 +90,7 @@ public class WhenUsingReferralDashboard
             new Claim("OpenReferralOrganisationId", referralDto.OrganisationId),
         }, "mock"));
         referralDashboardModel.PageContext.HttpContext = new DefaultHttpContext() { User = user };
-        mockReferralClientService.Setup(x => x.GetReferralsByReferrer(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(paginatedList);
+        mockReferralClientService.Setup(x => x.GetReferralsByReferrer(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<bool?>())).ReturnsAsync(paginatedList);
 
         //Act
         await referralDashboardModel.OnGetAsync(default!);
