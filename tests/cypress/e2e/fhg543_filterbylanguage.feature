@@ -12,3 +12,7 @@ Feature: Filter Local Offer Search Results By Delivery methods Tests
 	Scenario: show local services offered in English
 	When user searches using postcode 'BS2 0SP' and filters using language 'English'
 	Then the user should see the service 'aidforchildrenwithtracheostomies'
+
+	Scenario: language dropdown should include 'Somali' language
+	When user searches using postcode 'BS2 0SP'
+	Then the user should see the language 'Somali' in language dropdown

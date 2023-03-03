@@ -21,3 +21,11 @@ Then("the user should see the service {string}", (service) => {
     cy.get('[data-testid="' + service +'"]').should("exist");
 });
 
+
+When("user searches using postcode {string}", (postcode) => {
+    cy.visit(`ProfessionalReferral/Search`);
+    cy.searchbypostcode(postcode);
+})
+Then("the user should see the language {string} in language dropdown", (language) => {
+    cy.get('[data-testid="select-language"]').select(language).should('have.value', language);
+});
