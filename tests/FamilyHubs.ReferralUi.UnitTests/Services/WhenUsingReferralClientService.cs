@@ -62,7 +62,7 @@ public class WhenUsingReferralClientService : BaseClientService
         ReferralClientService referralClientService = new(mockClient, mockCfg.Object);
 
         //Act
-        var result = await referralClientService.GetReferralsByOrganisationId(referral.Items[0].Id,1,1,default!,default!);
+        var result = await referralClientService.GetReferralsByOrganisationId(referral.Items[0].Id,1,1,"Robert",true);
 
         //Assert
         result.Should().NotBeNull();
@@ -82,7 +82,7 @@ public class WhenUsingReferralClientService : BaseClientService
         ReferralClientService referralClientService = new(mockClient, mockCfg.Object);
 
         //Act
-        var result = await referralClientService.GetReferralsByReferrer(referral.Items[0].Referrer, 1, 1, default!, default!);
+        var result = await referralClientService.GetReferralsByReferrer(referral.Items[0].Referrer, 1, 1, "Robert", true);
 
         //Assert
         result.Should().NotBeNull();
