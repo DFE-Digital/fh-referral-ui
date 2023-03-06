@@ -25,6 +25,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "e2e", "e2e", "{33EF0359-078
 		tests\cypress\e2e\fhg-1739-footer-links.js = tests\cypress\e2e\fhg-1739-footer-links.js
 		tests\cypress\e2e\fhg-1742_accessibility-statement.feature = tests\cypress\e2e\fhg-1742_accessibility-statement.feature
 		tests\cypress\e2e\fhg-1742_accessibility-statement.js = tests\cypress\e2e\fhg-1742_accessibility-statement.js
+		tests\cypress\e2e\FHG-1771_Cookies-page.feature = tests\cypress\e2e\FHG-1771_Cookies-page.feature
+		tests\cypress\e2e\FHG-1771_Cookies-page.js = tests\cypress\e2e\FHG-1771_Cookies-page.js
+		tests\cypress\e2e\FHG-1773_Cookies-banner.feature = tests\cypress\e2e\FHG-1773_Cookies-banner.feature
+		tests\cypress\e2e\FHG-1773_Cookies-banner.js = tests\cypress\e2e\FHG-1773_Cookies-banner.js
 		tests\cypress\e2e\fhg1032_nosearchresults.feature = tests\cypress\e2e\fhg1032_nosearchresults.feature
 		tests\cypress\e2e\fhg1032_nosearchresults.js = tests\cypress\e2e\fhg1032_nosearchresults.js
 		tests\cypress\e2e\fhg1042-filterbycategory.feature = tests\cypress\e2e\fhg1042-filterbycategory.feature
@@ -63,10 +67,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "e2e", "e2e", "{33EF0359-078
 		tests\cypress\e2e\searchresultsdetails.js = tests\cypress\e2e\searchresultsdetails.js
 		tests\cypress\e2e\startnow.feature = tests\cypress\e2e\startnow.feature
 		tests\cypress\e2e\startnow.js = tests\cypress\e2e\startnow.js
-		tests\cypress\e2e\FHG-1773_Cookies-banner.js = tests\cypress\e2e\FHG-1773_Cookies-banner.js
-		tests\cypress\e2e\FHG-1773_Cookies-banner.feature = tests\cypress\e2e\FHG-1773_Cookies-banner.feature
-		tests\cypress\e2e\FHG-1771_Cookies-page.js = tests\cypress\e2e\FHG-1771_Cookies-page.js
-		tests\cypress\e2e\FHG-1771_Cookies-page.feature = tests\cypress\e2e\FHG-1771_Cookies-page.feature
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "downloads", "downloads", "{75564816-EDB6-4BA6-BB96-64A9FFF9B38F}"
@@ -76,6 +76,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "support", "support", "{6EC6
 		tests\cypress\support\commands.js = tests\cypress\support\commands.js
 		tests\cypress\support\e2e.js = tests\cypress\support\e2e.js
 		tests\cypress\support\pages.js = tests\cypress\support\pages.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{3F514464-EAD3-4F55-8AEF-0A8286237A62}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Global
