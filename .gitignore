@@ -348,7 +348,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-/src/FamilyHubs.ReferralUi.Ui/package-lock.json
 /tests/cypress/videos/startnow.feature.mp4
 /tests/cypress/videos/searchresultsdetails.feature.mp4
 /tests/cypress/videos/searchresults.feature.mp4
