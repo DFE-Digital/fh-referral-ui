@@ -135,7 +135,6 @@ public class CheckReferralDetailsModel : PageModel
             ModelState.Remove(item);
         }
 
-        bool r1 =  ModelState.IsValid;
         string userKey = _redisCacheService.GetUserKey();
         ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
 
