@@ -16,6 +16,7 @@
     <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="1.1.28" />
     <PackageReference Include="FamilyHubs.SharedKernel" Version="1.0.5" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
+    <PackageReference Include="GovukNotify" Version="6.1.0" />
     <PackageReference Include="MassTransit" Version="8.0.11" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.11" />
 	  <PackageReference Include="Moq" Version="4.18.4" />

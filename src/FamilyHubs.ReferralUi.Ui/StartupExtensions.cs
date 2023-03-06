@@ -6,6 +6,8 @@ using FamilyHubs.ServiceDirectory.Shared.Helpers;
 using FamilyHubs.SharedKernel.Security;
 using MassTransit;
 using Microsoft.ApplicationInsights.Extensibility;
+using Notify.Client;
+using Notify.Interfaces;
 using Serilog;
 using Serilog.Events;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,6 +18,8 @@ public static class StartupExtensions
 {
     public static void ConfigureHost(this WebApplicationBuilder builder)
     {
+        builder.Services.Configure<GovNotifySetting>(builder.Configuration.GetSection("GovNotifySetting"));
+
         // ApplicationInsights
         builder.Host.UseSerilog((_, services, loggerConfiguration) =>
         {
@@ -46,6 +50,9 @@ public static class StartupExtensions
         services.AddTransient<IRedisCacheService, RedisCacheService>();
         services.AddTransient<AuthenticationDelegatingHandler>();
         services.AddTransient<ITokenService, TokenService>();
+
+        services.AddSingleton<IEmailSender, GovNotifySender>();
+        services.AddSingleton<IAsyncNotificationClient>(new NotificationClient(configuration["GovNotifySetting:APIKey"]));
 
         // Add services to the container.
         services.AddRazorPages();

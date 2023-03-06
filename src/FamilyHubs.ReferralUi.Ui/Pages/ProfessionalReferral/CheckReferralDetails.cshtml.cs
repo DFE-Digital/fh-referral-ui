@@ -7,6 +7,11 @@ using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using System.Text.Encodings.Web;
+using MassTransit.Internals.GraphValidation;
+using System.Net.Mail;
+using EnumsNET;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
@@ -38,23 +43,28 @@ public class CheckReferralDetailsModel : PageModel
     [BindProperty]
     public string Name { get; set; } = default!;
 
+    [BindProperty]
+    public string OrganisationEmail { get; set; } = default!;
+    public bool ValidationValid { get; set; } = true;
+
     private readonly IConfiguration _configuration;
     private readonly ILocalOfferClientService _localOfferClientService;
     private readonly IReferralClientService _referralClientService;
+    private readonly IEmailSender _emailSender;
+    private readonly ILogger<CheckReferralDetailsModel> _logger;
 
-    public CheckReferralDetailsModel(IConfiguration configuration, ILocalOfferClientService localOfferClientService, IReferralClientService referralClientService, IRedisCacheService redisCacheService)
+    public CheckReferralDetailsModel(IConfiguration configuration, ILocalOfferClientService localOfferClientService, IReferralClientService referralClientService, IRedisCacheService redisCacheService, IEmailSender emailSender, ILogger<CheckReferralDetailsModel> logger)
     {
         _referralClientService = referralClientService;
         _configuration = configuration;
         _localOfferClientService = localOfferClientService;
         _redisCacheService = redisCacheService;
+        _emailSender = emailSender;
+        _logger = logger;
     }
 
-    public void OnGet()
+    private void InitPage(ConnectWizzardViewModel model)
     {
-        string userKey = _redisCacheService.GetUserKey();
-        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
-
         Id = model.ServiceId;
         Name = model.ServiceName;
         ReferralId = model.ReferralId;
@@ -65,9 +75,67 @@ public class CheckReferralDetailsModel : PageModel
         ReasonForSupport = model.ReasonForSupport;
     }
 
+    public async Task OnGet()
+    {
+        string userKey = _redisCacheService.GetUserKey();
+        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        InitPage(model);
+        ServiceDto serviceDto = await _localOfferClientService.GetLocalOfferById(model.ServiceId);
+        PopulateOrganisationEmail(serviceDto);
+    }
+
+    private void PopulateOrganisationEmail(ServiceDto serviceDto)
+    {
+        
+        if (serviceDto != null)
+        {
+            if (GetDeliveryMethodsAsString(serviceDto.ServiceDeliveries).Contains("In Person"))
+                OrganisationEmail = serviceDto?.ServiceAtLocations?.ElementAt(0)?.LinkContacts?.ElementAt(0)?.Contact?.Email!;
+            else
+            {
+                var contact = serviceDto?.LinkContacts?.Select(linkcontact => linkcontact.Contact).FirstOrDefault();
+                if (contact != null)
+                {
+                    OrganisationEmail = contact.Email ?? default!; 
+                }
+            }
+        }
+    }
+
+    private string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto>? serviceDeliveries)
+    {
+        var result = string.Empty;
+
+        if (serviceDeliveries == null || serviceDeliveries.Count == 0)
+            return result;
+
+        foreach (var name in serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name))
+        {
+            result += result +
+                    name.AsString(EnumFormat.Description) != null ?
+                    name.AsString(EnumFormat.Description) + "," :
+                    String.Empty;
+        }
+
+        //Remove last comma if present
+        if (result.EndsWith(","))
+        {
+            result = result.Remove(result.Length - 1);
+        }
+
+        return result;
+    }
+
     public async Task<IActionResult> OnPost()
     {
         // Save to API
+        string[] ignore = { "Id", "Name", "FullName", "ReferralId", "ReasonForSupport" };
+        foreach(string item in ignore) 
+        {
+            ModelState.Remove(item);
+        }
+
+        bool r1 =  ModelState.IsValid;
         string userKey = _redisCacheService.GetUserKey();
         ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
 
@@ -127,18 +195,59 @@ public class CheckReferralDetailsModel : PageModel
                 {
                     await _referralClientService.UpdateReferral(dto);
                 }
-                
+
+                model.ReferralId = dto.Id;
+                _redisCacheService.StoreConnectWizzardViewModel(userKey,model);
+
+
+            }
+
+            if (!string.IsNullOrEmpty(OrganisationEmail))
+            {
+                await SendEmail(OrganisationEmail);
+            }
+
+            ValidationValid = ModelState.IsValid;
+            if (!ModelState.IsValid) 
+            {
+                InitPage(model);
+                return Page();
             }
 
             _redisCacheService.ResetConnectWizzardViewModel(userKey);
         }
-        catch
+        catch (Exception ex)
         {
+            _logger.LogError(ex, "Failed to complete CheckReferralDetailsModel.OnPost");
+            InitPage(model);
             return Page();
         }
         
         return RedirectToPage("/ProfessionalReferral/ConfirmReferral", new
         {
         });
+    }
+
+    private async Task SendEmail(string emailAddress)
+    {
+        try
+        {
+            var callbackUrl = Url.Page(
+                "/ProfessionalReferral/SignIn",
+            pageHandler: null,
+                values: new { },
+                protocol: Request.Scheme);
+
+            await _emailSender.SendEmailAsync(
+                emailAddress,
+                "New Connection",
+                $"You have received a new connection, please logon to view it here: {HtmlEncoder.Default.Encode(callbackUrl ?? string.Empty)}");
+        }
+        catch(Exception ex) 
+        {
+            _logger.LogError(ex, "Failed to send email via Gov Notify");
+            ModelState.AddModelError("OrganisationEmail", "Failed to send email via Gov Notify");
+        }
+        
     }
 }

@@ -98,6 +98,23 @@
       </dl>
 
     <form method="post">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Organisation Email Address
+                </dt>
+                @{
+                    if (Model.ValidationValid == false)
+                    {
+                        <p class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> Unable to send email to: @Model.OrganisationEmail
+                        </p>
+                    }
+                }
+                <dd class="govuk-summary-list__value">
+                    <input class="govuk-input @(Model.ValidationValid == false ? "govuk-input--error" : "")" type="text" spellcheck="false" autocomplete="OrganisationEmail" id="OrganisationEmail" name="OrganisationEmail" value="@Model.OrganisationEmail" asp-for="OrganisationEmail" maxlength="255">
+                </dd>
+            </div>
+
       <button class="govuk-button">
         Submit request for support
       </button>

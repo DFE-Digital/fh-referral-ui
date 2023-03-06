@@ -1,12 +1,20 @@
 ﻿using FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
+using FamilyHubs.ReferralUi.Ui.Services;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Builders;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
+using IUrlHelper = Microsoft.AspNetCore.Mvc.IUrlHelper;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
@@ -17,6 +25,7 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
     
     private readonly Mock<ILocalOfferClientService> _localOfferClientService;
     private readonly Mock<IReferralClientService> _referralClientService;
+    private readonly Mock<IEmailSender> _mockEmailSender;
 
     public WhenUsingCheckReferralDetails()
     {
@@ -32,12 +41,64 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
         
         _localOfferClientService = new Mock<ILocalOfferClientService>();
         _referralClientService = new Mock<IReferralClientService>();
+        _mockEmailSender = new Mock<IEmailSender>();
+        _mockEmailSender.Setup(x => x.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         _localOfferClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc"));
 
         _referralClientService.Setup(x => x.CreateReferral(It.IsAny<ReferralDto>())).ReturnsAsync(_connectWizzardViewModel.ReferralId);
         _referralClientService.Setup(x => x.UpdateReferral(It.IsAny<ReferralDto>())).ReturnsAsync(_connectWizzardViewModel.ReferralId);
 
-        _checkReferralDetailsModel = new CheckReferralDetailsModel(configuration, _localOfferClientService.Object, _referralClientService.Object,  _mockIRedisCacheService.Object);
+        _checkReferralDetailsModel = new CheckReferralDetailsModel(configuration, _localOfferClientService.Object, _referralClientService.Object,  _mockIRedisCacheService.Object, _mockEmailSender.Object, Mock.Of<ILogger<CheckReferralDetailsModel>>());
+
+        var mockUrlHelper = CreateMockUrlHelper();
+        mockUrlHelper.Setup(h => h.RouteUrl(It.IsAny<UrlRouteContext>()))
+            .Returns("callbackUrl");
+        var httpContext = new DefaultHttpContext()
+        {
+        };
+        var modelState = new ModelStateDictionary();
+        var actionContext = new ActionContext(httpContext, new Microsoft.AspNetCore.Routing.RouteData(), new PageActionDescriptor(), modelState);
+        var modelMetadataProvider = new EmptyModelMetadataProvider();
+        var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
+        // need page context for the page model
+        var pageContext = new PageContext(actionContext)
+        {
+            ViewData = viewData
+        };
+
+        _checkReferralDetailsModel.PageContext = pageContext;
+        _checkReferralDetailsModel.Url = mockUrlHelper.Object;
+    }
+
+    public static Mock<IUrlHelper> CreateMockUrlHelper(ActionContext context = default!)
+    {
+        context ??= GetActionContextForPage("/Page");
+
+        var urlHelper = new Mock<IUrlHelper>();
+        urlHelper.SetupGet(h => h.ActionContext)
+            .Returns(context);
+        return urlHelper;
+    }
+
+    public static ActionContext GetActionContextForPage(string page)
+    {
+        return new()
+        {
+            ActionDescriptor = new()
+            {
+                RouteValues = new Dictionary<string, string?>
+            {
+                { "page", page },
+            }
+            },
+            RouteData = new()
+            {
+                Values =
+            {
+                [ "page" ] = page
+            }
+            }
+        };
     }
 
     [Fact]
@@ -47,7 +108,7 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
         _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
 
         //Act
-        _checkReferralDetailsModel.OnGet();
+        _ = _checkReferralDetailsModel.OnGet();
 
         //Assert
         _checkReferralDetailsModel.Id.Should().Be(_connectWizzardViewModel.ServiceId);
@@ -65,6 +126,12 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
     public async Task ThenOnPostCheckReferralDetails()
     {
         //Arrange
+        var serviceDto = GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc");
+        if (serviceDto != null)
+        {
+            _checkReferralDetailsModel.OrganisationEmail = serviceDto?.ServiceAtLocations?.ElementAt(0)?.LinkContacts?.ElementAt(0)?.Contact?.Email ?? "someemail@email.com";
+        }
+        
         _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
 
 
@@ -80,6 +147,11 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
     public async Task ThenOnPostCheckReferralDetails_Updates()
     {
         //Arrange
+        var serviceDto = GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc");
+        if (serviceDto != null)
+        {
+            _checkReferralDetailsModel.OrganisationEmail = serviceDto?.ServiceAtLocations?.ElementAt(0)?.LinkContacts?.ElementAt(0)?.Contact?.Email ?? "someemail@email.com";
+        }
         _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
         _referralClientService.Setup(x => x.GetReferralById(It.IsAny<string>())).ReturnsAsync(new ReferralDto(
             id: _connectWizzardViewModel.ReferralId,
@@ -112,6 +184,11 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
     public async Task ThenOnPostCheckReferralDetails_WithMissingReferralId()
     {
         //Arrange
+        var serviceDto = GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc");
+        if (serviceDto != null)
+        {
+            _checkReferralDetailsModel.OrganisationEmail = serviceDto?.ServiceAtLocations?.ElementAt(0)?.LinkContacts?.ElementAt(0)?.Contact?.Email ?? "someemail@email.com";
+        }
         Ui.Models.ConnectWizzardViewModel model = new Ui.Models.ConnectWizzardViewModel
         {
             ServiceId = "ServiceId",
