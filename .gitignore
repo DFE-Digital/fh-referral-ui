@@ -382,3 +382,5 @@ MigrationBackup/
 .sonarqube/
 
 appsettings.*.json
+
+tmp/

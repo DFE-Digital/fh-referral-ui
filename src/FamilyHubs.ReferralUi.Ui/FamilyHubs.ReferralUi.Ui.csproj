@@ -36,11 +36,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+	  <Content Include="scripts\app.ts" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="scripts\" />
+		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
 	</ItemGroup>
 
 </Project>

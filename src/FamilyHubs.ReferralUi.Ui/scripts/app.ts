@@ -1,4 +1,12 @@
-﻿(function ($) {
+﻿export { };
+
+declare global {
+    interface Window {
+        fhgov: any;
+    }
+}
+
+(function ($) {
 	'use strict';
 	function fhgov() {
 		this.init = function () {
@@ -104,4 +112,5 @@
 }
 )(jQuery);
 
-fhgov.init();
+//todo: move into $(document).ready()?
+window.fhgov.init();
