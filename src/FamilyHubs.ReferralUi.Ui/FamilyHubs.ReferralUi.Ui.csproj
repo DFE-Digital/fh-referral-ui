@@ -38,5 +38,9 @@
 	<ItemGroup>
 		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
 	</ItemGroup>
-	
+
+	<ItemGroup>
+	  <Folder Include="scripts\" />
+	</ItemGroup>
+
 </Project>
