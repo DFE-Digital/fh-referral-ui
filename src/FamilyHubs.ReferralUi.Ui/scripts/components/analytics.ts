@@ -39,7 +39,7 @@ export default function initAnalytics(gaMeasurementId: string) {
     });
 
     //todo: if user has consented to analytics cookies
-    if (false)
+    if (false) {
         updateAnalyticsStorageConsent(true);
     }
 

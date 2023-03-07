@@ -3,8 +3,15 @@
 declare global {
     interface Window {
         fhgov: any;
+        GA_MEASUREMENT_ID: string;
+        GA_CONTAINER_ID: string;
+        dataLayer: any[];
     }
 }
+
+import initAnalytics from './components/analytics';
+
+initAnalytics(window.GA_MEASUREMENT_ID);
 
 (function ($) {
 	'use strict';
