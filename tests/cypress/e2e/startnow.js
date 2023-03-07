@@ -5,7 +5,11 @@ Given("a user has arrived on the start now page", () => {
 });
 
 Then("the heading should say {string}", (heading) => {
-    cy.get("h1").should("contain.text", heading);
+    cy.title().should("contain.text", heading);
+});
+
+Then("the page's title is {title}", (title) => {
+    cy.get("h1").should("equal", title);
 });
 
 Then("the page has a list class", () => {

@@ -19,8 +19,12 @@ namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
 public class WhenUsingLocalOfferDetail
 {
-    [Fact]
-    public async Task ThenOnGetAsync_LocalOfferDetailWithReferralNotEnabled()
+    [Theory]
+    [InlineData(default!)]
+    [InlineData("url")]
+    [InlineData("https://wwww.google.com")]
+    [InlineData("http://google.com")]
+    public async Task ThenOnGetAsync_LocalOfferDetailWithReferralNotEnabled(string url)
     {
         //Arrange
         IEnumerable<KeyValuePair<string, string?>>? inMemorySettings = new List<KeyValuePair<string, string?>>()
@@ -34,7 +38,16 @@ public class WhenUsingLocalOfferDetail
 
         Mock<ILocalOfferClientService> mockILocalOfferClientService = new Mock<ILocalOfferClientService>();
         ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(Guid.NewGuid().ToString());
-        mockILocalOfferClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
+        if (serviceDto != null && serviceDto.LinkContacts != null)
+        {
+            foreach (var linkcontact in serviceDto.LinkContacts.Select(linkcontact => linkcontact.Contact))
+            {
+                linkcontact.Url = url;
+            }
+        }
+
+        if (serviceDto != null)
+            mockILocalOfferClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
 
         LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockILocalOfferClientService.Object, configuration);
         DefaultHttpContext httpContext = new DefaultHttpContext();
@@ -44,11 +57,19 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.PageContext.HttpContext = httpContext;
 
         //Act 
-        var result = await localOfferDetailModel.OnGetAsync("NewId", serviceDto.Id) as PageResult;
+        var result = await localOfferDetailModel.OnGetAsync("NewId", (serviceDto != null) ? serviceDto.Id : string.Empty) as PageResult;
 
         //Assert
         result.Should().NotBeNull();
         result.Should().BeOfType<PageResult>();
+        if(url == null || url == "url")
+        {
+            localOfferDetailModel.Website.Should().BeEquivalentTo("");
+        }
+        else
+            localOfferDetailModel.Website.Should().BeEquivalentTo(url);
+
+
     }
 
     [Fact]

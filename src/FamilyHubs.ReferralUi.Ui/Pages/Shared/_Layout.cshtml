@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebUI</title>
+    <title>@ViewData["Title"] - Connect families to support</title>
     <meta name="description" content="@ViewData["Description"]">
 
     <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="~/lib/govuk/assets/images/favicon.ico" type="image/x-icon" />
@@ -29,7 +29,7 @@
             document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
 
-    @*@await Html.PartialAsync("_CookieBanner", Html.GetCookieBannerViewModel())*@
+    @await Html.PartialAsync("_CookieBanner", Html.GetCookieBannerViewModel())
     @await Html.PartialAsync("_Header", Html.GetHeaderViewModel())
 
     <div class="govuk-phase-banner govuk-width-container">
