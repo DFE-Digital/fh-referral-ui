@@ -492,7 +492,7 @@
                                         @for (int i = 1; i <= Model.SearchResults.TotalPages; i++)
                                         {
                                             <li class="govuk-pagination__item @(Model.SearchResults.PageNumber == i ? "govuk-pagination__item--current" : "") ">
-                                                <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@i" asp-route-currentPage="@i">@i</button>
+                                                <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@i" asp-route-currentPage="@i" data-testid="page_@i">@i</button>
                                             </li>
                                         }
                                     </ul>
