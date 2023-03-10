@@ -13,6 +13,5 @@ Then("the user should see and able to click on  footer link {string} links to {s
 
 Then("the user should see and able to click on feedback form redirect to form", () => {
     cy.get('[data-testid="feedback-link"]').should("exist");
-    cy.get('[data-testid="feedback-link"]').should("have.attr", "href","https://qfreeaccountssjc1.az1.qualtrics.com/jfe/form/SV_3aXYQWE1MKuhSya");
-
+    cy.get('[data-testid="feedback-link"]').should("have.attr", "href","https://dferesearch.fra1.qualtrics.com/jfe/form/SV_3911VGJ6TMfm8h8");
 });
