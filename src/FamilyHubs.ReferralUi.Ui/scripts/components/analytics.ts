@@ -1,5 +1,4 @@
 ﻿
-//todo: consent mode debugging/check: https://developers.google.com/tag-platform/devguides/consent-debugging
 import { areAnalyticsAccepted } from './cookie-functions'
 import { toOutcode } from './postcode'
 
@@ -10,8 +9,6 @@ function gtag(command: string, ...args: any[]): void {
 
 let GaMeasurementId: string = '';
 
-//todo: use prototype? (or class?)
-// (having an object (prototype/class) will ensure that GaMeasurementId will have already been set)
 export default function initAnalytics(gaMeasurementId: string) {
 
     // if the environment doesn't have a measurement id, don't load analytics
