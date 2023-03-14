@@ -1,6 +1,6 @@
 ﻿
 //todo: consent mode debugging/check: https://developers.google.com/tag-platform/devguides/consent-debugging
-
+import { areAnalyticsAccepted } from './cookie-functions'
 import { toOutcode } from './postcode'
 
 function gtag(command: string, ...args: any[]): void {
@@ -38,8 +38,7 @@ export default function initAnalytics(gaMeasurementId: string) {
         cookie_flags: 'secure'
     });
 
-    //todo: if user has consented to analytics cookies
-    if (false) {
+    if (areAnalyticsAccepted()) {
         updateAnalyticsStorageConsent(true);
     }
 
