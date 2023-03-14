@@ -31,7 +31,7 @@ export default function initAnalytics(gaMeasurementId: string) {
 
     // set the config for auto generated events other than page_view
     gtag('config', gaMeasurementId, {
-        send_page_view: false, //disable auto page_view measurement
+        send_page_view: true, 
         page_path: pageViewParams.page_path,
         page_location: pageViewParams.page_location,
         page_referrer: pageViewParams.referrer,
