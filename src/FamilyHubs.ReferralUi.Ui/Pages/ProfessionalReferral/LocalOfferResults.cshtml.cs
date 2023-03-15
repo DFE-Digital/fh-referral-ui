@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Text;
 using EnumsNET;
 using FamilyHubs.ReferralUi.Ui.Models;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
@@ -7,7 +9,6 @@ using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Text;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
@@ -17,11 +18,11 @@ public class LocalOfferResultsModel : PageModel
     private readonly IPostcodeLocationClientService _postcodeLocationClientService;
     private readonly IOrganisationClientService _organisationClientService;
     private readonly bool _isReferralEnabled;
-    
+
     public bool IsSearchTimeEnabled { get; private set; }
 
 
-    public Dictionary<int, string> DictServiceDelivery {  get; private set; }
+    public Dictionary<int, string> DictServiceDelivery { get; private set; }
 
     [BindProperty]
     public List<string> ServiceDeliverySelection { get; set; } = default!;
@@ -46,13 +47,13 @@ public class LocalOfferResultsModel : PageModel
     public string SelectedDistance { get; set; } = "212892";
 
     [BindProperty]
-    public bool ForChildrenAndYoungPeople { get; set; } = false;
+    public bool ForChildrenAndYoungPeople { get; set; }
     [BindProperty]
-    public string? SearchAge { get; set; } = default!;
+    public string? SearchAge { get; set; }
     public List<SelectListItem> AgeRange { get; set; } = default!;
 
     [BindProperty]
-    public string? SelectedLanguage { get; set; } = default!;
+    public string? SelectedLanguage { get; set; }
     public List<SelectListItem> Languages { get; set; } = default!;
 
     [BindProperty]
@@ -69,6 +70,8 @@ public class LocalOfferResultsModel : PageModel
     [BindProperty(SupportsGet = true)]
     public int CurrentPage { get; set; } = 1;
     public int PageSize { get; set; } = 10;
+    public IPagination Pagination { get; set; }
+    public int TotalResults { get; set; }
 
     public string? OutCode { get; set; }
     public string? DistrictCode { get; set; }
@@ -83,10 +86,8 @@ public class LocalOfferResultsModel : PageModel
             {
                 return $"Showing {SearchResults.TotalCount} search result for:";
             }
-            else
-            {
-                return $"Showing {SearchResults.TotalCount} search results for:";
-            }
+
+            return $"Showing {SearchResults.TotalCount} search results for:";
         }
     }
 
@@ -109,6 +110,7 @@ public class LocalOfferResultsModel : PageModel
         _organisationClientService = organisationClientService;
         _isReferralEnabled = configuration.GetValue<bool>("IsReferralEnabled");
         IsSearchTimeEnabled = configuration.GetValue<bool>("IsSearchTimeEnabled");
+        Pagination = new DontShowPagination();
     }
 
     public async Task<IActionResult> OnGetAsync(string postCode,
@@ -119,11 +121,9 @@ public class LocalOfferResultsModel : PageModel
                                  string maximumAge,
                                  string searchText)
     {
-        if (_isReferralEnabled && User != null && User.Identity != null && !User.Identity.IsAuthenticated) 
+        if (_isReferralEnabled && User.Identity != null && !User.Identity.IsAuthenticated)
         {
-            return RedirectToPage("/ProfessionalReferral/SignIn", new
-            {
-            });
+            return RedirectToPage("/ProfessionalReferral/SignIn", new { });
         }
 
         SearchPostCode = postCode;
@@ -132,13 +132,12 @@ public class LocalOfferResultsModel : PageModel
         GetCategories();
 
         //Keep these as might be needed at a later stage
-        SelectedDistance = distance.ToString();
-        if (searchText != null)
-            SearchText = searchText;
+        SelectedDistance = distance.ToString(CultureInfo.InvariantCulture);
+        SearchText = searchText;
         CreateServiceDeliveryDictionary();
         InitializeAgeRange();
         InitializeLanguages();
-        DateTime dtNow = DateTime.Now;
+        var dtNow = DateTime.Now;
 
         LocalOfferFilter localOfferFilter = new()
         {
@@ -148,9 +147,9 @@ public class LocalOfferResultsModel : PageModel
             MaximumAge = null,
             GivenAge = null,
             DistrictCode = DistrictCode ?? string.Empty,
-            Latitude = (CurrentLatitude != 0.0D) ? CurrentLatitude : null,
-            Longtitude = (CurrentLongitude != 0.0D) ? CurrentLongitude : null,
-            Proximity = (distance > 0.0D) ? distance : null,
+            Latitude = CurrentLatitude != 0.0D ? CurrentLatitude : null,
+            Longtitude = CurrentLongitude != 0.0D ? CurrentLongitude : null,
+            Proximity = distance > 0.0D ? distance : null,
             PageNumber = CurrentPage,
             PageSize = PageSize,
             Text = SearchText ?? string.Empty,
@@ -162,7 +161,11 @@ public class LocalOfferResultsModel : PageModel
         };
 
         SearchResults = await _localOfferClientService.GetLocalOffers(localOfferFilter);
-                                                                     
+
+        Pagination = new LargeSetPagination(SearchResults.TotalPages, CurrentPage);
+
+        TotalResults = SearchResults.TotalCount;
+
         TimeSpan ts = DateTime.Now - dtNow;
         SearchTime = $" Took: {ts.Milliseconds} milliseconds";
 
@@ -170,9 +173,9 @@ public class LocalOfferResultsModel : PageModel
         return Page();
     }
 
-    
 
-    public async Task<IActionResult> OnPostAsync(string? removeCostSelection, bool removeFilter, string? removeServiceDeliverySelection, 
+
+    public async Task<IActionResult> OnPostAsync(string? removeCostSelection, bool removeFilter, string? removeServiceDeliverySelection,
                                                  string? removeSelectedLanguage, string? removeSearchAge, string? removecategorySelection,
                                                  string? removesubcategorySelection)
     {
@@ -206,7 +209,7 @@ public class LocalOfferResultsModel : PageModel
         string? serviceDelivery = GetServiceDelivery();
 
         bool? isPaidFor = IsPaidFor();
-       
+
         if (SelectedLanguage == "All languages")
             SelectedLanguage = null;
 
@@ -219,11 +222,11 @@ public class LocalOfferResultsModel : PageModel
             Status = "active",
             MinimumAge = null,
             MaximumAge = null,
-            GivenAge = (ForChildrenAndYoungPeople && searchAge >= 0) ? searchAge : null,
+            GivenAge = ForChildrenAndYoungPeople && searchAge >= 0 ? searchAge : null,
             DistrictCode = DistrictCode ?? string.Empty,
-            Latitude = (CurrentLatitude != 0.0D) ? CurrentLatitude : null,
-            Longtitude = (CurrentLongitude != 0.0D) ? CurrentLongitude : null,
-            Proximity = (distance > 0.0D) ? distance : null,
+            Latitude = CurrentLatitude != 0.0D ? CurrentLatitude : null,
+            Longtitude = CurrentLongitude != 0.0D ? CurrentLongitude : null,
+            Proximity = distance > 0.0D ? distance : null,
             PageNumber = CurrentPage,
             PageSize = PageSize,
             Text = SearchText ?? string.Empty,
@@ -234,8 +237,12 @@ public class LocalOfferResultsModel : PageModel
             CanFamilyChooseLocation = CanFamilyChooseLocation
         };
 
-        SearchResults = await _localOfferClientService.GetLocalOffers(localOfferFilter); 
-                                                                      
+        SearchResults = await _localOfferClientService.GetLocalOffers(localOfferFilter);
+
+        Pagination = new LargeSetPagination(SearchResults.TotalPages, CurrentPage);
+
+        TotalResults = SearchResults.TotalCount;
+
         TimeSpan ts = DateTime.Now - dtNow;
         SearchTime = $" Took: {ts.Milliseconds} milliseconds";
 
@@ -246,13 +253,12 @@ public class LocalOfferResultsModel : PageModel
         InitialLoad = false;
         ModelState.Clear();
         return Page();
-
     }
 
     private bool? IsPaidFor()
     {
         bool? isPaidFor = null;
-        if (CostSelection != null && CostSelection.Count == 1)
+        if (CostSelection.Count == 1)
         {
             switch (CostSelection[0])
             {
@@ -273,7 +279,7 @@ public class LocalOfferResultsModel : PageModel
     private string? GetServiceDelivery()
     {
         string? serviceDelivery = null;
-        if (ServiceDeliverySelection != null && ServiceDeliverySelection.Count > 0)
+        if (ServiceDeliverySelection.Count > 0)
             serviceDelivery = string.Join(',', ServiceDeliverySelection.ToArray());
 
         return serviceDelivery;
@@ -305,7 +311,7 @@ public class LocalOfferResultsModel : PageModel
 
     private void SetForChildrenAndYoungPeople()
     {
-        if (ForChildrenAndYoungPeople && (SearchAge == null || !int.TryParse(SearchAge, out int searchAgeTest)))
+        if (ForChildrenAndYoungPeople && (SearchAge == null || !int.TryParse(SearchAge, out int _)))
         {
             ModelState.AddModelError(nameof(SearchAge), "Please select a valid search age");
         }
@@ -328,32 +334,29 @@ public class LocalOfferResultsModel : PageModel
     {
         string result = string.Empty;
 
-        if (addressDto.Address1 == null || addressDto.Address1 == string.Empty)
+        if (addressDto.Address1 == string.Empty)
         {
             return result;
         }
 
-        result = result + (addressDto.Address1 != null ? addressDto.Address1.Replace("|", ",") + "," : string.Empty);
-        result = result + (addressDto.City != null ? addressDto.City + "," : string.Empty);
-        result = result + (addressDto.StateProvince != null ? addressDto.StateProvince + "," : string.Empty);
-        result = result + (addressDto.PostCode != null ? addressDto.PostCode : string.Empty);
+        result += addressDto.Address1.Replace("|", ",") + ",";
+        result += !string.IsNullOrWhiteSpace(addressDto.City) ? addressDto.City + "," : string.Empty;
+        result += !string.IsNullOrWhiteSpace(addressDto.StateProvince) ? addressDto.StateProvince + "," : string.Empty;
+        result += addressDto.PostCode;
 
         return result;
     }
 
     public string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto> serviceDeliveries)
     {
-        string result = string.Empty;
+        var result = string.Empty;
 
-        if (serviceDeliveries == null || serviceDeliveries.Count == 0)
+        if (serviceDeliveries.Count == 0)
             return result;
 
         foreach (var name in serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name))
-        {   
-            result += result +
-                name.AsString(EnumFormat.Description) != null ?
-                name.AsString(EnumFormat.Description)  + "," : 
-                String.Empty;
+        {
+            result += name.AsString(EnumFormat.Description) + ",";
         }
 
         //Remove last comma if present
@@ -369,14 +372,14 @@ public class LocalOfferResultsModel : PageModel
     {
         string result = string.Empty;
 
-        if (languageDtos == null || languageDtos.Count == 0)
+        if (languageDtos.Count == 0)
             return result;
 
         StringBuilder sb = new();
         foreach (var name in languageDtos.Select(language => language.Name))
-            sb.Append(name != null ? name + "," : String.Empty);
-        result= sb.ToString();
-            
+            sb.Append(name + ",");
+        result = sb.ToString();
+
 
         //Remove last comma if present
         if (result.EndsWith(","))
@@ -389,19 +392,13 @@ public class LocalOfferResultsModel : PageModel
 
     private async Task GetLocationDetails(string postCode)
     {
-        if (postCode == null)
-            return;
-
         try
         {
-            PostcodesIoResponse postcodesIoResponse = await _postcodeLocationClientService.LookupPostcode(postCode);
-            if (postcodesIoResponse != null)
-            {
-                CurrentLatitude = postcodesIoResponse.Result.Latitude;
-                CurrentLongitude = postcodesIoResponse.Result.Longitude;
-                DistrictCode = postcodesIoResponse.Result.AdminArea;
-                OutCode = postcodesIoResponse.Result.OutCode;
-            }
+            var postcodesIoResponse = await _postcodeLocationClientService.LookupPostcode(postCode);
+            CurrentLatitude = postcodesIoResponse.Result.Latitude;
+            CurrentLongitude = postcodesIoResponse.Result.Longitude;
+            DistrictCode = postcodesIoResponse.Result.AdminArea;
+            OutCode = postcodesIoResponse.Result.OutCode;
         }
         catch
         {
@@ -411,7 +408,8 @@ public class LocalOfferResultsModel : PageModel
 
     private void InitializeAgeRange()
     {
-        AgeRange = new List<SelectListItem>() {
+        AgeRange = new List<SelectListItem>
+        {
             new SelectListItem{ Value="-1", Text="All ages" , Selected = true},
             new SelectListItem{ Value="0", Text="0 to 12 months" },
             new SelectListItem{ Value="1", Text="1 year old"},
@@ -439,94 +437,93 @@ public class LocalOfferResultsModel : PageModel
             new SelectListItem{ Value="23", Text="23 years old"},
             new SelectListItem{ Value="24", Text="24 years old"},
             new SelectListItem{ Value="25", Text="25 years old"},
-
         };
     }
 
     private void InitializeLanguages()
     {
-        Languages = new List<SelectListItem>() {
-        new SelectListItem { Value = "All languages", Text="All languages" , Selected = true},
-        new SelectListItem { Value = "Afrikaans", Text = "Afrikaans" },
-        new SelectListItem { Value = "Albanian", Text = "Albanian" },
-        new SelectListItem { Value = "Arabic", Text = "Arabic" },
-        new SelectListItem { Value = "Armenian", Text = "Armenian" },
-        new SelectListItem { Value = "Basque", Text = "Basque" },
-        new SelectListItem { Value = "Bengali", Text = "Bengali" },
-        new SelectListItem { Value = "Bulgarian", Text = "Bulgarian" },
-        new SelectListItem { Value = "Catalan", Text = "Catalan" },
-        new SelectListItem { Value = "Cambodian", Text = "Cambodian" },
-        new SelectListItem { Value = "Chinese (Mandarin)", Text = "Chinese (Mandarin)" },
-        new SelectListItem { Value = "Croatian", Text = "Croatian" },
-        new SelectListItem { Value = "Czech", Text = "Czech" },
-        new SelectListItem { Value = "Danish", Text = "Danish" },
-        new SelectListItem { Value = "Dutch", Text = "Dutch" },
-        new SelectListItem { Value = "English", Text = "English"},
-        new SelectListItem { Value = "Estonian", Text = "Estonian" },
-        new SelectListItem { Value = "Fiji", Text = "Fiji" },
-        new SelectListItem { Value = "Finnish", Text = "Finnish" },
-        new SelectListItem { Value = "French", Text = "French" },
-        new SelectListItem { Value = "Georgian", Text = "Georgian" },
-        new SelectListItem { Value = "German", Text = "German" },
-        new SelectListItem { Value = "Greek", Text = "Greek" },
-        new SelectListItem { Value = "Gujarati", Text = "Gujarati" },
-        new SelectListItem { Value = "Hebrew", Text = "Hebrew" },
-        new SelectListItem { Value = "Hindi", Text = "Hindi" },
-        new SelectListItem { Value = "Hungarian", Text = "Hungarian" },
-        new SelectListItem { Value = "Icelandic", Text = "Icelandic" },
-        new SelectListItem { Value = "Indonesian", Text = "Indonesian" },
-        new SelectListItem { Value = "Irish", Text = "Irish" },
-        new SelectListItem { Value = "Italian", Text = "Italian" },
-        new SelectListItem { Value = "Japanese", Text = "Japanese" },
-        new SelectListItem { Value = "Javanese", Text = "Javanese" },
-        new SelectListItem { Value = "Korean", Text = "Korean" },
-        new SelectListItem { Value = "Latin", Text = "Latin" },
-        new SelectListItem { Value = "Latvian", Text = "Latvian" },
-        new SelectListItem { Value = "Lithuanian", Text = "Lithuanian" },
-        new SelectListItem { Value = "Macedonian", Text = "Macedonian" },
-        new SelectListItem { Value = "Malay", Text = "Malay" },
-        new SelectListItem { Value = "Malayalam", Text = "Malayalam" },
-        new SelectListItem { Value = "Maltese", Text = "Maltese" },
-        new SelectListItem { Value = "Maori", Text = "Maori" },
-        new SelectListItem { Value = "Marathi", Text = "Marathi" },
-        new SelectListItem { Value = "Mongolian", Text = "Mongolian" },
-        new SelectListItem { Value = "Nepali", Text = "Nepali" },
-        new SelectListItem { Value = "Norwegian", Text = "Norwegian" },
-        new SelectListItem { Value = "Persian", Text = "Persian" },
-        new SelectListItem { Value = "Polish", Text = "Polish" },
-        new SelectListItem { Value = "Portuguese", Text = "Portuguese" },
-        new SelectListItem { Value = "Punjabi", Text = "Punjabi" },
-        new SelectListItem { Value = "Quechua", Text = "Quechua" },
-        new SelectListItem { Value = "Romanian", Text = "Romanian" },
-        new SelectListItem { Value = "Russian", Text = "Russian" },
-        new SelectListItem { Value = "Samoan", Text = "Samoan" },
-        new SelectListItem { Value = "Serbian", Text = "Serbian" },
-        new SelectListItem { Value = "Slovak", Text = "Slovak" },
-        new SelectListItem { Value = "Slovenian", Text = "Slovenian" },
-        new SelectListItem { Value = "Spanish", Text = "Spanish" },
-        new SelectListItem { Value = "Swahili", Text = "Swahili" },
-        new SelectListItem { Value = "Swedish ", Text = "Swedish " },
-        new SelectListItem { Value = "Tamil", Text = "Tamil" },
-        new SelectListItem { Value = "Tatar", Text = "Tatar" },
-        new SelectListItem { Value = "Telugu", Text = "Telugu" },
-        new SelectListItem { Value = "Thai", Text = "Thai" },
-        new SelectListItem { Value = "Tibetan", Text = "Tibetan" },
-        new SelectListItem { Value = "Tonga", Text = "Tonga" },
-        new SelectListItem { Value = "Turkish", Text = "Turkish" },
-        new SelectListItem { Value = "Ukrainian", Text = "Ukrainian" },
-        new SelectListItem { Value = "Urdu", Text = "Urdu" },
-        new SelectListItem { Value = "Uzbek", Text = "Uzbek" },
-        new SelectListItem { Value = "Vietnamese", Text = "Vietnamese" },
-        new SelectListItem { Value = "Welsh", Text = "Welsh" },
-        new SelectListItem { Value = "Xhosa", Text = "Xhosa" },
-
+        Languages = new List<SelectListItem>
+        {
+            new SelectListItem { Value = "All languages", Text="All languages" , Selected = true},
+            new SelectListItem { Value = "Afrikaans", Text = "Afrikaans" },
+            new SelectListItem { Value = "Albanian", Text = "Albanian" },
+            new SelectListItem { Value = "Arabic", Text = "Arabic" },
+            new SelectListItem { Value = "Armenian", Text = "Armenian" },
+            new SelectListItem { Value = "Basque", Text = "Basque" },
+            new SelectListItem { Value = "Bengali", Text = "Bengali" },
+            new SelectListItem { Value = "Bulgarian", Text = "Bulgarian" },
+            new SelectListItem { Value = "Catalan", Text = "Catalan" },
+            new SelectListItem { Value = "Cambodian", Text = "Cambodian" },
+            new SelectListItem { Value = "Chinese (Mandarin)", Text = "Chinese (Mandarin)" },
+            new SelectListItem { Value = "Croatian", Text = "Croatian" },
+            new SelectListItem { Value = "Czech", Text = "Czech" },
+            new SelectListItem { Value = "Danish", Text = "Danish" },
+            new SelectListItem { Value = "Dutch", Text = "Dutch" },
+            new SelectListItem { Value = "English", Text = "English"},
+            new SelectListItem { Value = "Estonian", Text = "Estonian" },
+            new SelectListItem { Value = "Fiji", Text = "Fiji" },
+            new SelectListItem { Value = "Finnish", Text = "Finnish" },
+            new SelectListItem { Value = "French", Text = "French" },
+            new SelectListItem { Value = "Georgian", Text = "Georgian" },
+            new SelectListItem { Value = "German", Text = "German" },
+            new SelectListItem { Value = "Greek", Text = "Greek" },
+            new SelectListItem { Value = "Gujarati", Text = "Gujarati" },
+            new SelectListItem { Value = "Hebrew", Text = "Hebrew" },
+            new SelectListItem { Value = "Hindi", Text = "Hindi" },
+            new SelectListItem { Value = "Hungarian", Text = "Hungarian" },
+            new SelectListItem { Value = "Icelandic", Text = "Icelandic" },
+            new SelectListItem { Value = "Indonesian", Text = "Indonesian" },
+            new SelectListItem { Value = "Irish", Text = "Irish" },
+            new SelectListItem { Value = "Italian", Text = "Italian" },
+            new SelectListItem { Value = "Japanese", Text = "Japanese" },
+            new SelectListItem { Value = "Javanese", Text = "Javanese" },
+            new SelectListItem { Value = "Korean", Text = "Korean" },
+            new SelectListItem { Value = "Latin", Text = "Latin" },
+            new SelectListItem { Value = "Latvian", Text = "Latvian" },
+            new SelectListItem { Value = "Lithuanian", Text = "Lithuanian" },
+            new SelectListItem { Value = "Macedonian", Text = "Macedonian" },
+            new SelectListItem { Value = "Malay", Text = "Malay" },
+            new SelectListItem { Value = "Malayalam", Text = "Malayalam" },
+            new SelectListItem { Value = "Maltese", Text = "Maltese" },
+            new SelectListItem { Value = "Maori", Text = "Maori" },
+            new SelectListItem { Value = "Marathi", Text = "Marathi" },
+            new SelectListItem { Value = "Mongolian", Text = "Mongolian" },
+            new SelectListItem { Value = "Nepali", Text = "Nepali" },
+            new SelectListItem { Value = "Norwegian", Text = "Norwegian" },
+            new SelectListItem { Value = "Persian", Text = "Persian" },
+            new SelectListItem { Value = "Polish", Text = "Polish" },
+            new SelectListItem { Value = "Portuguese", Text = "Portuguese" },
+            new SelectListItem { Value = "Punjabi", Text = "Punjabi" },
+            new SelectListItem { Value = "Quechua", Text = "Quechua" },
+            new SelectListItem { Value = "Romanian", Text = "Romanian" },
+            new SelectListItem { Value = "Russian", Text = "Russian" },
+            new SelectListItem { Value = "Samoan", Text = "Samoan" },
+            new SelectListItem { Value = "Serbian", Text = "Serbian" },
+            new SelectListItem { Value = "Slovak", Text = "Slovak" },
+            new SelectListItem { Value = "Slovenian", Text = "Slovenian" },
+            new SelectListItem { Value = "Spanish", Text = "Spanish" },
+            new SelectListItem { Value = "Swahili", Text = "Swahili" },
+            new SelectListItem { Value = "Swedish ", Text = "Swedish " },
+            new SelectListItem { Value = "Tamil", Text = "Tamil" },
+            new SelectListItem { Value = "Tatar", Text = "Tatar" },
+            new SelectListItem { Value = "Telugu", Text = "Telugu" },
+            new SelectListItem { Value = "Thai", Text = "Thai" },
+            new SelectListItem { Value = "Tibetan", Text = "Tibetan" },
+            new SelectListItem { Value = "Tonga", Text = "Tonga" },
+            new SelectListItem { Value = "Turkish", Text = "Turkish" },
+            new SelectListItem { Value = "Ukrainian", Text = "Ukrainian" },
+            new SelectListItem { Value = "Urdu", Text = "Urdu" },
+            new SelectListItem { Value = "Uzbek", Text = "Uzbek" },
+            new SelectListItem { Value = "Vietnamese", Text = "Vietnamese" },
+            new SelectListItem { Value = "Welsh", Text = "Welsh" },
+            new SelectListItem { Value = "Xhosa", Text = "Xhosa" },
         };
     }
 
 
     public async Task ClearFilters()
     {
-        await OnGetAsync(SearchPostCode ?? String.Empty,
+        await OnGetAsync(SearchPostCode,
                 0.0D,
                 0.0D,
                 0.0D,
@@ -537,11 +534,9 @@ public class LocalOfferResultsModel : PageModel
 
     private async Task GetCategoriesTreeAsync()
     {
-        List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>> categories = await _organisationClientService.GetCategories();
+        var categories = await _organisationClientService.GetCategories();
 
-        if (categories != null)
-            NestedCategories = new List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>(categories);
-
+        NestedCategories = new List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>(categories);
     }
 
     /// <summary>
