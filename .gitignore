@@ -348,7 +348,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-/src/FamilyHubs.ReferralUi.Ui/package-lock.json
 /tests/cypress/videos/startnow.feature.mp4
 /tests/cypress/videos/searchresultsdetails.feature.mp4
 /tests/cypress/videos/searchresults.feature.mp4
@@ -377,10 +376,11 @@ MigrationBackup/
 /tests/cypress/screenshots/fhg540_filterbydeliverymethod.feature/Filter Local Offer Search Results By Delivery methods Tests -- show local services that offer all three delivery methods (failed).png
 /tests/cypress/screenshots/fhg539_filterbyage.feature/Filter Local Offer Search Results By Age Tests -- show local services that offer children and young people services for the selected age (failed).png
 /tests/cypress/screenshots/fhg1032_nosearchresults.feature/Search Results Tests -- search using valid postcode with no results (failed).png
-/src/FamilyHubs.ReferralUi.Ui/wwwroot/css/application.css.map
 
 
 # Ignore Sonarqube folder
 .sonarqube/
 
 appsettings.*.json
+
+tmp/
