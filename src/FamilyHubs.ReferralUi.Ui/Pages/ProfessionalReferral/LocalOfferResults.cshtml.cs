@@ -501,6 +501,7 @@ public class LocalOfferResultsModel : PageModel
             new SelectListItem { Value = "Serbian", Text = "Serbian" },
             new SelectListItem { Value = "Slovak", Text = "Slovak" },
             new SelectListItem { Value = "Slovenian", Text = "Slovenian" },
+        	new SelectListItem { Value = "Somali", Text = "Somali" },
             new SelectListItem { Value = "Spanish", Text = "Spanish" },
             new SelectListItem { Value = "Swahili", Text = "Swahili" },
             new SelectListItem { Value = "Swedish ", Text = "Swedish " },
