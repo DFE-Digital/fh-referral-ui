@@ -45,10 +45,10 @@ public partial class SearchModel : PageModel
         {
             await _postcodeLocationClientService.LookupPostcode(Postcode);
 
-            return RedirectToPage("LocalOfferResults", new 
+            return RedirectToPage("LocalOfferResults", new
             {
                 Postcode,
-                //distance = 32186.9 //212892.0
+                currentPage = 1
             });
         }
         catch
