@@ -25,14 +25,11 @@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Category</th>
                         <td class="govuk-table__cell">
-                            @if (@Model.LocalOffer != null && @Model.LocalOffer.ServiceTaxonomies != null)
+                            @if (@Model.LocalOffer != null && @Model.LocalOffer.Taxonomies != null)
                             {
-                                foreach (var serviceTaxonomy in @Model.LocalOffer.ServiceTaxonomies)
+                                foreach (var serviceTaxonomy in @Model.LocalOffer.Taxonomies)
                                 {
-                                    if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
-                                    {
-                                        @serviceTaxonomy.Taxonomy.Name
-                                    }
+                                        @serviceTaxonomy.Name
                                 }
                             }
                         </td>
@@ -60,7 +57,7 @@
                     </tr>
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">For children and young people</th>
-                        @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.EligibilityDescription != null)
+                        @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.EligibilityType != null)
                         {
                             @if (@Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MaximumAge > 100)
                             {
@@ -179,7 +176,7 @@
             <form method="post">
                 <input asp-for="@Model.Name" type="hidden">
                 <input asp-for="@Model.ServiceId" type="hidden">
-                @if (Model.IsReferralEnabled && Model?.LocalOffer?.ServiceType?.Name == "Information Sharing")
+                @if (Model.IsReferralEnabled && Model?.LocalOffer?.ServiceType == ServiceDirectory.Shared.Enums.ServiceType.InformationSharing)
                 {
                     <button type="submit" class="govuk-button">
                         Connect family to service

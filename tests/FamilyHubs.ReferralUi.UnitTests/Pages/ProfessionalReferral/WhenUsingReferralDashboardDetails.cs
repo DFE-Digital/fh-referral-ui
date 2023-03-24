@@ -84,6 +84,8 @@ public class WhenUsingReferralDashboardDetails : BaseProfessionalReferralPage
         email: "someone@email.com",
         phone: "01211112222",
         text: "01211112222",
+         dateRecieved: null,
+          requestNumber: 0,
         reasonForSupport: "Reason For Support",
         reasonForRejection: "Reason for Rejection",
         new List<ReferralStatusDto>()
@@ -125,6 +127,8 @@ public class WhenUsingReferralDashboardDetails : BaseProfessionalReferralPage
         email: "someone@email.com",
         phone: "01211112222",
         text: "01211112222",
+        dateRecieved: null,
+         requestNumber: 0,
         reasonForSupport: "Reason For Support",
         reasonForRejection: "Reason for Rejection",
         new List<ReferralStatusDto>()

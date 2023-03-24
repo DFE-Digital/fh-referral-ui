@@ -33,10 +33,10 @@ public static class ServiceCollectionExtensions
             client.BaseAddress = new Uri(configuration.GetValue<string>("ApplicationServiceApi:ServiceDirectoryUrl")!);
         }).AddHttpMessageHandler<AuthenticationDelegatingHandler>();
 
-        services.AddHttpClient<IUICacheService, UICacheService>(client =>
-        {
-            client.BaseAddress = new Uri(configuration.GetValue<string>("ApplicationServiceApi:ServiceDirectoryUrl")!);
-        }).AddHttpMessageHandler<AuthenticationDelegatingHandler>();
+        //services.AddHttpClient<IUICacheService, UICacheService>(client =>
+        //{
+        //    client.BaseAddress = new Uri(configuration.GetValue<string>("ApplicationServiceApi:ServiceDirectoryUrl")!);
+        //}).AddHttpMessageHandler<AuthenticationDelegatingHandler>();
 
         services.AddHttpClient<IReferralClientService, ReferralClientService>(client =>
         {

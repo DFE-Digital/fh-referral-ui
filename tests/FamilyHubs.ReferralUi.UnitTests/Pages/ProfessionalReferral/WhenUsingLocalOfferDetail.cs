@@ -38,9 +38,9 @@ public class WhenUsingLocalOfferDetail
 
         Mock<ILocalOfferClientService> mockILocalOfferClientService = new Mock<ILocalOfferClientService>();
         ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(Guid.NewGuid().ToString());
-        if (serviceDto != null && serviceDto.LinkContacts != null)
+        if (serviceDto != null && serviceDto.Contacts != null)
         {
-            foreach (var linkcontact in serviceDto.LinkContacts.Select(linkcontact => linkcontact.Contact))
+            foreach (var linkcontact in serviceDto.Contacts.Select(linkcontact => linkcontact))
             {
                 linkcontact.Url = url;
             }
@@ -57,7 +57,7 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.PageContext.HttpContext = httpContext;
 
         //Act 
-        var result = await localOfferDetailModel.OnGetAsync("NewId", (serviceDto != null) ? serviceDto.Id : string.Empty) as PageResult;
+        var result = await localOfferDetailModel.OnGetAsync("NewId", (serviceDto != null) ? serviceDto.Id.ToString() : string.Empty) as PageResult;
 
         //Assert
         result.Should().NotBeNull();
@@ -88,9 +88,11 @@ public class WhenUsingLocalOfferDetail
         Mock<ILocalOfferClientService> mockILocalOfferClientService = new Mock<ILocalOfferClientService>();
         ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(Guid.NewGuid().ToString());
         List<ServiceDeliveryDto> deliveryDtoList = new List<ServiceDeliveryDto>(serviceDto.ServiceDeliveries ?? new List<ServiceDeliveryDto>());
-        deliveryDtoList.Add(new ServiceDeliveryDto(Guid.NewGuid().ToString(), ServiceDirectory.Shared.Enums.ServiceDeliveryType.InPerson));
+        deliveryDtoList.Add(new ServiceDeliveryDto
+        {
+        });
         serviceDto.ServiceDeliveries = deliveryDtoList;
-        serviceDto.ServiceAtLocations = default!;
+        //serviceDto.ServiceAtLocations = default!;
         mockILocalOfferClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
 
         LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockILocalOfferClientService.Object, configuration);
@@ -101,7 +103,7 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.PageContext.HttpContext = httpContext;
 
         //Act 
-        var result = await localOfferDetailModel.OnGetAsync("NewId", serviceDto.Id) as PageResult;
+        var result = await localOfferDetailModel.OnGetAsync("NewId", serviceDto.Id.ToString()) as PageResult;
 
         //Assert
         result.Should().NotBeNull();
@@ -138,7 +140,7 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.PageContext.HttpContext = httpContext;
 
         //Act 
-        var result = await localOfferDetailModel.OnGetAsync("NewId", serviceDto.Id) as PageResult;
+        var result = await localOfferDetailModel.OnGetAsync("NewId", serviceDto.Id.ToString()) as PageResult;
 
         //Assert
         result.Should().NotBeNull();
@@ -177,7 +179,7 @@ public class WhenUsingLocalOfferDetail
 
 
         //Act 
-        var result = await localOfferDetailModel.OnGetAsync("NewId", serviceDto.Id) as RedirectToPageResult;
+        var result = await localOfferDetailModel.OnGetAsync("NewId", serviceDto.Id.ToString()) as RedirectToPageResult;
 
         //Assert
         result.Should().NotBeNull();
@@ -204,7 +206,7 @@ public class WhenUsingLocalOfferDetail
         
 
         //Act 
-        var result = localOfferDetailModel.OnPost("NewId", serviceDto.Id, serviceDto.Name) as RedirectToPageResult;
+        var result = localOfferDetailModel.OnPost("NewId", serviceDto.Id.ToString(), serviceDto.Name) as RedirectToPageResult;
 
         //Assert
         result.Should().NotBeNull();
@@ -279,8 +281,8 @@ public class WhenUsingLocalOfferDetail
         LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockILocalOfferClientService.Object, configuration);
         List<LanguageDto> languageDtos = new List<LanguageDto>
         {
-            new LanguageDto(Guid.NewGuid().ToString(), "English" ),
-            new LanguageDto(Guid.NewGuid().ToString(), "French" ),
+            new LanguageDto{Id = 1, Name = "English" },
+             new LanguageDto{Id = 2, Name = "French" }
         };
 
         //Act

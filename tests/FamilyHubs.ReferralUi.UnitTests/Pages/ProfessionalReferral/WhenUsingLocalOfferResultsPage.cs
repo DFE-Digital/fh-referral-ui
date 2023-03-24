@@ -295,13 +295,18 @@ public class WhenUsingLocalOfferResultsPage
     public void ThenOnGetAddressAsString()
     {
         //Arrange
-        PhysicalAddressDto physicalAddressDto = new(
-            id: "TestAddress",
-            address1: "30 Street Name | District",
-            city: "City",
-            postCode: "BS1 2XU",
-            country: "United Kingdom",
-            stateProvince: "County");
+        var physicalAddressDto = new LocationDto
+        {
+            LocationType = LocationType.FamilyHub,
+            Name = "Physical Address",
+            Longitude = -2.559788,
+            Latitude =  51.448006,
+            Address1 = "30 Street Name | District",
+            City =  "City",
+            PostCode = "BS1 2XU",
+            Country = "United Kingdom",
+            StateProvince = "County"
+        };
 
         //Act
         var result = _pageModel.GetAddressAsString(physicalAddressDto);
@@ -315,16 +320,20 @@ public class WhenUsingLocalOfferResultsPage
     public void ThenOnGetAddressAsString_WithEmptyAddress1()
     {
         //Arrange
-        PhysicalAddressDto physicalAddressDto = new(
-            id: "TestAddress",
-            address1: default!,
-            city: "City",
-            postCode: "BS1 2XU",
-            country: "United Kingdom",
-            stateProvince: "County");
-
+        var locationDto = new LocationDto
+        {
+            LocationType = LocationType.FamilyHub,
+            Name = "Physical Address",
+            Longitude = -2.559788,
+            Latitude = 51.448006,
+            Address1 = "30 Street Name | District",
+            City = "City",
+            PostCode = "BS1 2XU",
+            Country = "United Kingdom",
+            StateProvince = "County"
+        };
         //Act
-        var result = _pageModel.GetAddressAsString(physicalAddressDto);
+        var result = _pageModel.GetAddressAsString(locationDto);
 
         //Assert
         result.Should().NotBeNull();
@@ -337,9 +346,9 @@ public class WhenUsingLocalOfferResultsPage
         //Arrange
         List<ServiceDeliveryDto> serviceDeliveries = new()
         {
-            new ServiceDeliveryDto("1", ServiceDeliveryType.Online),
-            new ServiceDeliveryDto("2", ServiceDeliveryType.Telephone),
-            new ServiceDeliveryDto("3", ServiceDeliveryType.InPerson),
+            new ServiceDeliveryDto{  Id =1, Name = ServiceDeliveryType.Online},
+             new ServiceDeliveryDto{  Id =2, Name = ServiceDeliveryType.Telephone},
+              new ServiceDeliveryDto{  Id =3, Name = ServiceDeliveryType.InPerson}
         };
 
         //Act
@@ -370,9 +379,9 @@ public class WhenUsingLocalOfferResultsPage
         //Arrange
         List<LanguageDto> languages = new()
         {
-            new LanguageDto("1", "English"),
-            new LanguageDto("2", "French"),
-            new LanguageDto("3", "German"),
+            new LanguageDto{ Id= 1, Name = "English"},
+             new LanguageDto{ Id= 2, Name = "French"},
+              new LanguageDto{ Id= 3, Name = "German"}
         };
 
         //Act
@@ -486,26 +495,26 @@ public class WhenUsingLocalOfferResultsPage
     {
         var list = new List<TaxonomyDto>()
         {
-            new TaxonomyDto("16f3a451-e88d-4ad0-b53f-c8925d1cc9e4", "Activities, clubs and groups", ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory, null),
-            new TaxonomyDto("aafa1cc3-b984-4b10-89d5-27388c5432de", "Activities", ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory, "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
-            new TaxonomyDto("3c207700-dc08-43bc-94ab-80c3d36d2e12", "Before and after school clubs", ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory, "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
-            new TaxonomyDto("022ae22f-8be6-4b20-99a6-faf2b9e0291a", "Holiday clubs and schemes", ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory, "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
-            new TaxonomyDto("4d362474-79cc-449a-bafe-b128ab3b4f63", "Music, arts and dance", ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory, "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
-            new TaxonomyDto("27ae8b5f-3249-40b0-b12c-e0b4b664d758", "Parent, baby and toddler groups", ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory, "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
-            new TaxonomyDto("85cc81bd-c81a-4565-94fc-094bc605489e", "Pre-school playgroup", ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory, "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
-            new TaxonomyDto("e48bd335-ac3c-44ce-a0f7-57c91a823a2f", "Sports and recreation", ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory, "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4")
+            new TaxonomyDto {Name ="Activities, clubs and groups" , TaxonomyType= ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory},
+            new TaxonomyDto { Name = "Activities", TaxonomyType = ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory },
+             new TaxonomyDto { Name = "Before and after school clubs", TaxonomyType = ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory },
+              new TaxonomyDto { Name = "Holiday clubs and schemes", TaxonomyType = ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory },
+              new TaxonomyDto { Name = "Music, arts and dance", TaxonomyType = ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory },
+               new TaxonomyDto { Name = "Parent, baby and toddler groups", TaxonomyType = ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory },
+               new TaxonomyDto { Name = "Pre-school playgroup", TaxonomyType = ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory },
+               new TaxonomyDto { Name = "Sports and recreation", TaxonomyType = ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory }
         };
 
         List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>> keyValuePairs = new();
 
         var topLevelCategories = list
-            .Where(x => x.Parent == null && !x.Name.Contains("bccusergroupTestDelete") && x.TaxonomyType == TaxonomyType.ServiceCategory)
+            .Where(x => x.ParentId == null && !x.Name.Contains("bccusergroupTestDelete") && x.TaxonomyType == TaxonomyType.ServiceCategory)
             .OrderBy(x => x.Name)
             .ToList();
 
         foreach (var topLevelCategory in topLevelCategories)
         {
-            var subCategories = list.Where(x => x.Parent == topLevelCategory.Id).OrderBy(x => x.Name).ToList();
+            var subCategories = list.Where(x => x.ParentId == topLevelCategory.Id).OrderBy(x => x.Name).ToList();
             var pair = new KeyValuePair<TaxonomyDto, List<TaxonomyDto>>(topLevelCategory, subCategories);
             keyValuePairs.Add(pair);
         }

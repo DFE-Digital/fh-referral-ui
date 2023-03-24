@@ -4,6 +4,7 @@ using FamilyHubs.ServiceDirectory.Shared.Enums;
 using Moq;
 using Moq.Protected;
 using System.Net;
+using System.Xml.Linq;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Services;
 
@@ -27,20 +28,8 @@ public class BaseClientService
 
     protected OrganisationWithServicesDto GetTestCountyCouncilDto()
     {
-        var bristolCountyCouncil = new OrganisationWithServicesDto(
-            "56e62852-1b0b-40e5-ac97-54a67ea957dc",
-            new(string.Empty, string.Empty, string.Empty),
-            "Unit Test County Council",
-            "Unit Test County Council",
-            null,
-            new Uri("https://www.unittest.gov.uk/").ToString(),
-            "https://www.unittest.gov.uk/",
-            new List<ServiceDto>
-            {
-                 GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc")
-            }
-            );
-
+        var bristolCountyCouncil = new OrganisationWithServicesDto {
+        OrganisationType = OrganisationType.NotSet, Name = "Unit Test County Council", Description = "Unit Test County Council", AdminAreaCode = ""  };
         return bristolCountyCouncil;
     }
 
@@ -152,15 +141,12 @@ public class BaseClientService
                         TaxonomyType.ServiceCategory,
                         null
                         )),
-
-                    new ServiceTaxonomyDto
-                    ("UnitTest9110",
                     new TaxonomyDto(
                         "UnitTestbccusergroup:56",
                         "Long Term Health Conditions",
                         TaxonomyType.ServiceCategory,
                         null
-                        ))
+                        )
                 })
             .Build();
 
@@ -184,6 +170,8 @@ public class BaseClientService
                 "Robert.Brown@yahoo.co.uk",
                 "0131 222 3333",
                 "text",
+                null,
+                0,
                 "Requires help with child",
                 null,
                 new List<ReferralStatusDto> { new ReferralStatusDto("1d2c41ac-fade-4933-a810-d8a040f0b9ee", "Inital-Referral") }

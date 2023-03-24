@@ -63,13 +63,13 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
             return keyValuePairs;
 
         var topLevelCategories = retVal.Items
-            .Where(x => x.Parent == null && !x.Name.Contains("bccusergroupTestDelete") && x.TaxonomyType == TaxonomyType.ServiceCategory)
+            .Where(x => x.ParentId == null && !x.Name.Contains("bccusergroupTestDelete") && x.TaxonomyType == TaxonomyType.ServiceCategory)
             .OrderBy(x => x.Name)
             .ToList();
 
         foreach (var topLevelCategory in topLevelCategories)
         {
-            var subCategories = retVal.Items.Where(x => x.Parent == topLevelCategory.Id).OrderBy(x => x.Name).ToList();
+            var subCategories = retVal.Items.Where(x => x.ParentId == topLevelCategory.Id).OrderBy(x => x.Name).ToList();
             var pair = new KeyValuePair<TaxonomyDto, List<TaxonomyDto>>(topLevelCategory, subCategories);
             keyValuePairs.Add(pair);
         }
@@ -91,16 +91,12 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         response.EnsureSuccessStatusCode();
 
 
-        return await JsonSerializer.DeserializeAsync<OrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new OrganisationWithServicesDto(
-            Guid.NewGuid().ToString()
-            , new(string.Empty, string.Empty, string.Empty)
-            , ""
-            , null
-            , null
-            , null
-            , null
-            , null
-            );
+        return await JsonSerializer.DeserializeAsync<OrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new OrganisationWithServicesDto{ 
+        Description = "",
+        AdminAreaCode =  "",
+        Name ="",
+        OrganisationType = OrganisationType.NotSet
+        };
     }
 
     public async Task<string> CreateOrganisation(OrganisationWithServicesDto organisation)

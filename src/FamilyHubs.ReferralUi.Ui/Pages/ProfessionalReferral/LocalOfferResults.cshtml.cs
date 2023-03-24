@@ -324,9 +324,11 @@ public class LocalOfferResultsModel : PageModel
         }
     }
 
-    public string GetAddressAsString(PhysicalAddressDto addressDto)
+    public string GetAddressAsString(LocationDto? addressDto)
     {
         string result = string.Empty;
+
+        if (addressDto == null) return result;
 
         if (addressDto.Address1 == null || addressDto.Address1 == string.Empty)
         {

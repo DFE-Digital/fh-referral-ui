@@ -15,8 +15,8 @@ public class WhenUsingOrganisationClientService : BaseClientService
         //Arrange
         var taxonomies = new List<TaxonomyDto>()
         {
-            new TaxonomyDto("16f3a451-e88d-4ad0-b53f-c8925d1cc9e4", "Activities, clubs and groups", TaxonomyType.ServiceCategory, null),
-            new TaxonomyDto("aafa1cc3-b984-4b10-89d5-27388c5432de", "Activities", TaxonomyType.ServiceCategory, "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
+               new TaxonomyDto {Name ="Activities, clubs and groups" , TaxonomyType= ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory},
+            new TaxonomyDto { Name = "Activities", TaxonomyType = ServiceDirectory.Shared.Enums.TaxonomyType.ServiceCategory }
         };
 
         PaginatedList<TaxonomyDto> paginatedList = new PaginatedList<TaxonomyDto>(taxonomies, taxonomies.Count, 1, 1);
@@ -42,14 +42,7 @@ public class WhenUsingOrganisationClientService : BaseClientService
         //Arrange
         List<OrganisationDto> list = new()
         {
-            new OrganisationDto(
-                "56e62852-1b0b-40e5-ac97-54a67ea957dc",
-                new(string.Empty, string.Empty, string.Empty),
-                "Unit Test County Council",
-                "Unit Test County Council",
-                null,
-                new Uri("https://www.unittest.gov.uk/").ToString(),
-                "https://www.unittest.gov.uk/")
+            new OrganisationDto{OrganisationType = OrganisationType.NotSet, Name= "Unit Test County Council", Description =  "Unit Test County Council", AdminAreaCode = "" }
         };
         var json = JsonConvert.SerializeObject(list);
         var mockClient = GetMockClient(json);
@@ -85,7 +78,7 @@ public class WhenUsingOrganisationClientService : BaseClientService
     {
         //Arrange
         var organisation = GetTestCountyCouncilDto();
-        var mockClient = GetMockClient(organisation.Id);
+        var mockClient = GetMockClient(organisation.Id.ToString());
         OrganisationClientService organisationClientService = new(mockClient);
 
         //Act
@@ -93,7 +86,7 @@ public class WhenUsingOrganisationClientService : BaseClientService
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(organisation.Id);
+        result.Should().BeEquivalentTo(organisation.Id.ToString());
     }
 
     [Fact]
@@ -101,7 +94,7 @@ public class WhenUsingOrganisationClientService : BaseClientService
     {
         //Arrange
         var organisation = GetTestCountyCouncilDto();
-        var mockClient = GetMockClient(organisation.Id);
+        var mockClient = GetMockClient(organisation.Id.ToString());
         OrganisationClientService organisationClientService = new(mockClient);
 
         //Act
@@ -109,6 +102,6 @@ public class WhenUsingOrganisationClientService : BaseClientService
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(organisation.Id);
+        result.Should().BeEquivalentTo(organisation.Id.ToString());
     }
 }

@@ -1,6 +1,7 @@
 using EnumsNET;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text;
@@ -31,7 +32,6 @@ public class LocalOfferDetailModel : PageModel
     public string Phone { get; set; } = default!;
     public string Website { get; set; } = default!;
     public string Email { get; set; } = default!;
-
     public LocalOfferDetailModel(ILocalOfferClientService localOfferClientService, IConfiguration configuration)
     {
         _localOfferClientService = localOfferClientService;
@@ -52,7 +52,7 @@ public class LocalOfferDetailModel : PageModel
         ReturnUrl = Request.Headers["Referer"].ToString();
         LocalOffer = await _localOfferClientService.GetLocalOfferById(serviceid);
         Name = LocalOffer.Name;
-        ExtractAddressParts(LocalOffer?.ServiceAtLocations?.FirstOrDefault()?.Location?.PhysicalAddresses?.FirstOrDefault() ?? new PhysicalAddressDto());
+       if(LocalOffer?.Locations != null && LocalOffer?.Locations.Count != 0) ExtractAddressParts(LocalOffer.Locations.FirstOrDefault());
         GetContactDetails();
 
         return Page();
@@ -111,11 +111,11 @@ public class LocalOfferDetailModel : PageModel
         {
             result = result.Remove(result.Length - 1);
         }
-
+         
         return result;
     }
 
-    public void ExtractAddressParts(PhysicalAddressDto addressDto)
+    public void ExtractAddressParts(LocationDto addressDto)
     {
         if (string.IsNullOrEmpty(addressDto.Address1))
             return;
@@ -131,22 +131,24 @@ public class LocalOfferDetailModel : PageModel
         //If delivery type is In-Person, get phone from service at location -> link contacts -> contact -> phone
         if (GetDeliveryMethodsAsString(LocalOffer.ServiceDeliveries).Contains("In Person"))
         {
-            if (LocalOffer.ServiceAtLocations == null || 
-                LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts == null ||
-                LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts?.ElementAt(0).Contact == null)
+            if (LocalOffer.Locations == null || LocalOffer.Locations.Count == 0 )
                 return;
+            var location = LocalOffer.Locations.FirstOrDefault();
 
-            Phone = LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts?.ElementAt(0)?.Contact?.Telephone!;
-            Website = LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts?.ElementAt(0)?.Contact?.Url!;
-            Email = LocalOffer.ServiceAtLocations.ElementAt(0)?.LinkContacts?.ElementAt(0)?.Contact?.Email!;
+            if (location?.Contacts == null || location?.Contacts.Count == 0)
+                return;
+            var contact = location?.Contacts.FirstOrDefault();
+            Phone = contact?.Telephone!;
+            Website = contact?.Url!;
+            Email = contact?.Email!;
         }
         else
         {
-            if (LocalOffer.LinkContacts == null)
+            if (LocalOffer.Contacts == null)
                 return;
 
             //if there are more then one contact then bellow code will pick the last record
-            foreach (var linkcontact in LocalOffer.LinkContacts.Select(linkcontact => linkcontact.Contact))
+            foreach (var linkcontact in LocalOffer.Contacts.Select(linkcontact => linkcontact))
             {   
                 Phone = linkcontact.Telephone ?? string.Empty;
                 Website = linkcontact.Url ?? string.Empty;

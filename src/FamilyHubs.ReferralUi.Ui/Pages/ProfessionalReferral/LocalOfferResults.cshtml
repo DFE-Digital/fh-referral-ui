@@ -97,7 +97,7 @@
                                                 <li>
                                                     <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removesubcategorySelection" value="@subcategorySelection" data-testid="@subcategorySelection-remove">
                                                         <span class="govuk-visually-hidden">Remove this filter</span>
-                                                        @Model.Categories.FirstOrDefault(c => c.Id == subcategorySelection)?.Name
+                                                        @Model.Categories.FirstOrDefault(c => c.Id.ToString() == subcategorySelection)?.Name
                                                     </button>
                                                 </li>
                                             </ul>
@@ -244,7 +244,7 @@
                                                                                        name="SubcategorySelection" data-testid="@subcategory.Name.ToLower().Replace(" ", "")"
                                                                                        type="checkbox"
                                                                                        value="@subcategory.Id"
-                                                                                       @(Model.SubcategorySelection != null && Model.SubcategorySelection.Any(x => x == subcategory.Id) ? "checked" : "")>
+                                                                                       @(Model.SubcategorySelection != null && Model.SubcategorySelection.Any(x => x == subcategory.Id.ToString()) ? "checked" : "")>
                                                                                 <label class="govuk-label govuk-checkboxes__label" for="@subcategory.Name.ToLower().Replace(" ", "")">
                                                                                     @subcategory.Name
                                                                                 </label>
@@ -417,24 +417,23 @@
                                         <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@Guid.NewGuid().ToString()" asp-route-serviceid="@item.Id" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
                                     </h2>
                                     <p class="govuk-caption-m">
-                                        @if (@item?.ServiceAtLocations?.FirstOrDefault()?.Location?.PhysicalAddresses?.FirstOrDefault() != null)
+                                        @if (@item?.Locations?.FirstOrDefault() != null)
                                         {
-                                            @Model.GetAddressAsString(@item?.ServiceAtLocations?.FirstOrDefault()?.Location?.PhysicalAddresses?.FirstOrDefault()?? new FamilyHubs.ServiceDirectory.Shared.Dto.PhysicalAddressDto())
+                                             @Model.GetAddressAsString(@item?.Locations?.FirstOrDefault())
                                             ;
+                                           
                                         }
                                     </p>
                                     <dl class="govuk-body-s dtmargins">
                                         <dt class="govuk-!-font-weight-bold">Category</dt>
                                         <dd>
                                             <ul class="govuk-list govuk-list--bullet govuk-body-s">
-                                            @if (item != null && item.ServiceTaxonomies != null)
+                                            @if (item != null && item.Taxonomies != null)
                                             {
-                                                foreach (var serviceTaxonomy in item.ServiceTaxonomies)
+                                                foreach (var serviceTaxonomy in item.Taxonomies)
                                                 {
-                                                    if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
-                                                    {
-                                                        <li>@serviceTaxonomy.Taxonomy.Name</li>  
-                                                    }
+                                                        <li>@serviceTaxonomy.Name</li>  
+                                                    
                                                 }
                                             }
                                            </ul>
@@ -444,7 +443,7 @@
                                         <dt class="govuk-!-font-weight-bold">Cost</dt>
                                         @if (item?.CostOptions?.FirstOrDefault()?.Amount != null && item?.CostOptions?.FirstOrDefault()?.Amount > 0)
                                         {
-                                            <dd>£@item?.CostOptions?.FirstOrDefault()?.Amount.ToString("0.00") every @item?.CostOptions?.FirstOrDefault()?.AmountDescription.ToLower()</dd>
+                                            <dd>£@item?.CostOptions?.FirstOrDefault()?.Amount every @item?.CostOptions?.FirstOrDefault()?.AmountDescription.ToLower()</dd>
                                         }
                                         else
                                         {

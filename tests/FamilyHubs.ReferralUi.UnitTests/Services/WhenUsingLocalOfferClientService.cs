@@ -67,7 +67,7 @@ public class WhenUsingLocalOfferClientService : BaseClientService
         LocalOfferClientService localOfferClientService = new(mockClient);
 
         //Act
-        var result = await localOfferClientService.GetLocalOfferById(service.Id);
+        var result = await localOfferClientService.GetLocalOfferById(service.Id.ToString());
 
         //Assert
         result.Should().NotBeNull();
