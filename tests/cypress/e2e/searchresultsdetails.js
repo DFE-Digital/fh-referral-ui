@@ -24,3 +24,12 @@ Then("user clicks on the back button he should be redirected to search results p
     cy.get('[data-testid="back-button"]').click()
     cy.get('[data-testid="aidforchildrenwithtracheostomies"]').should("exist");
 });
+
+When("user navigates to {string} and click on the service {string}", (page, service) => {
+    cy.get('[data-testid="' + page + '"]').click();
+    cy.get('[data-testid="' + service + '"]').click();
+});
+Then("user clicks on the back button he should be redirected to search results page two and be able to see the service {string}", (service) => {
+    cy.get('[data-testid="back-button"]').click()
+    cy.get('[data-testid="' + service + '"]').should("exist");
+});

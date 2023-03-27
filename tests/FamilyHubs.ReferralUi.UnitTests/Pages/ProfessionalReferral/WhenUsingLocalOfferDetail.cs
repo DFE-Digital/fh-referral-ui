@@ -319,6 +319,39 @@ public class WhenUsingLocalOfferDetail
         
     }
 
+    [Fact]
+    public async Task ThenOnGetAsync_ReturnUrl_MustBeSetToRefererHeaderForNavigation()
+    {
+        //Arrange
+        IEnumerable<KeyValuePair<string, string?>>? inMemorySettings = new List<KeyValuePair<string, string?>>()
+        {
+            new KeyValuePair<string, string?>("IsReferralEnabled", "false")
+        };
+
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings)
+            .Build();
+
+        Mock<ILocalOfferClientService> mockILocalOfferClientService = new Mock<ILocalOfferClientService>();
+        ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(Guid.NewGuid().ToString());
+        mockILocalOfferClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
+
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockILocalOfferClientService.Object, configuration);
+        DefaultHttpContext httpContext = new DefaultHttpContext();
+        httpContext.Request.Scheme = "http";
+        httpContext.Request.Host = new HostString("localhost");
+        httpContext.Request.Headers["Referer"] = "postcode/1";
+        localOfferDetailModel.PageContext.HttpContext = httpContext;
+        var expectedReturnUrl = "postcode/1";
+
+        //Act 
+        var result = await localOfferDetailModel.OnGetAsync("NewId", serviceDto.Id) as PageResult;
+
+        //Assert
+        localOfferDetailModel.Should().NotBeNull();
+        Assert.Equal(expectedReturnUrl, localOfferDetailModel?.ReturnUrl?.ToString());
+    }
+
     public static ServiceDto GetTestCountyCouncilServicesDtoWithInPerson(string parentId)
     {
         var contactId = Guid.NewGuid().ToString();

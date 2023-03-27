@@ -1,0 +1,14 @@
+﻿@inject IConfiguration Configuration
+
+@{
+    string gaMeasurementId = Configuration.GetValue<string>("GA_MEASUREMENT_ID") ?? string.Empty;
+    string gaContainerId = Configuration.GetValue<string>("GA_CONTAINER_ID") ?? string.Empty;
+
+    if (gaMeasurementId != "")
+    {
+        <script>
+            window.GA_MEASUREMENT_ID = '@gaMeasurementId';
+            window.GA_CONTAINER_ID = '@gaContainerId';
+        </script>
+    }
+}

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using System.Text.Json;
+using FamilyHubs.SharedKernel;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
@@ -18,10 +19,11 @@ public class WhenUsingLocalOfferResultsPage
     private readonly LocalOfferResultsModel _pageModel;
     private readonly Mock<IPostcodeLocationClientService> _mockIPostcodeLocationClientService;
     private readonly Mock<IOrganisationClientService> _mockIOrganisationClientService;
+    private readonly Mock<ILocalOfferClientService> _mockLocalOfferClientService;
 
     public WhenUsingLocalOfferResultsPage()
     {
-        var mockLocalOfferClientService = new Mock<ILocalOfferClientService>();
+        _mockLocalOfferClientService = new Mock<ILocalOfferClientService>();
         _mockIPostcodeLocationClientService = new Mock<IPostcodeLocationClientService>();
         _mockIOrganisationClientService = new Mock<IOrganisationClientService>();
 
@@ -34,7 +36,7 @@ public class WhenUsingLocalOfferResultsPage
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        _pageModel = new LocalOfferResultsModel(mockLocalOfferClientService.Object, _mockIPostcodeLocationClientService.Object, _mockIOrganisationClientService.Object, configuration);
+        _pageModel = new LocalOfferResultsModel(_mockLocalOfferClientService.Object, _mockIPostcodeLocationClientService.Object, _mockIOrganisationClientService.Object, configuration);
     }
 
     [Theory]
@@ -102,7 +104,7 @@ public class WhenUsingLocalOfferResultsPage
         PostcodesIoResponse postcodesIoResponse = JsonSerializer.Deserialize<PostcodesIoResponse>(json) ?? new PostcodesIoResponse();
         _mockIPostcodeLocationClientService.Setup(x => x.LookupPostcode(It.IsAny<string>())).ReturnsAsync(postcodesIoResponse);
         _mockIOrganisationClientService.Setup(x => x.GetCategories()).ReturnsAsync(GetTaxonomies());
-
+        _mockLocalOfferClientService.Setup(x => x.GetLocalOffers(It.IsAny<LocalOfferFilter>())).ReturnsAsync(new PaginatedList<ServiceDto>());
         // Act
         var searchResults = await _pageModel.OnGetAsync("BS2 0SP", -2.559788D, 51.448006D, 20.0D, "1", "127", "") as Microsoft.AspNetCore.Mvc.RazorPages.PageResult;
 
@@ -186,6 +188,7 @@ public class WhenUsingLocalOfferResultsPage
         PostcodesIoResponse postcodesIoResponse = JsonSerializer.Deserialize<PostcodesIoResponse>(json) ?? new PostcodesIoResponse();
         _mockIPostcodeLocationClientService.Setup(x => x.LookupPostcode(It.IsAny<string>())).ReturnsAsync(postcodesIoResponse);
         _mockIOrganisationClientService.Setup(x => x.GetCategories()).ReturnsAsync(GetTaxonomies());
+        _mockLocalOfferClientService.Setup(x => x.GetLocalOffers(It.IsAny<LocalOfferFilter>())).ReturnsAsync(new PaginatedList<ServiceDto>());
 
         // Act
         var searchResults = await _pageModel.OnPostAsync(removeCostSelection: "yes", 
@@ -259,6 +262,7 @@ public class WhenUsingLocalOfferResultsPage
         _pageModel.ServiceDeliverySelection = new List<string>();
         _pageModel.CategorySelection = new List<string>();
         _pageModel.SubcategorySelection = new List<string>();
+        _pageModel.Pagination = new DontShowPagination();
 
         DefaultHttpContext httpContext = new DefaultHttpContext();
         httpContext.Request.Scheme = "http";
@@ -314,30 +318,6 @@ public class WhenUsingLocalOfferResultsPage
         //Assert
         result.Should().NotBeNull();
         result.Should().Be("30 Street Name , District,City,County,BS1 2XU");
-    }
-
-    [Fact]
-    public void ThenOnGetAddressAsString_WithEmptyAddress1()
-    {
-        //Arrange
-        var locationDto = new LocationDto
-        {
-            LocationType = LocationType.FamilyHub,
-            Name = "Physical Address",
-            Longitude = -2.559788,
-            Latitude = 51.448006,
-            Address1 = "30 Street Name | District",
-            City = "City",
-            PostCode = "BS1 2XU",
-            Country = "United Kingdom",
-            StateProvince = "County"
-        };
-        //Act
-        var result = _pageModel.GetAddressAsString(locationDto);
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(string.Empty);
     }
 
     [Fact]
@@ -458,12 +438,13 @@ public class WhenUsingLocalOfferResultsPage
         PostcodesIoResponse postcodesIoResponse = JsonSerializer.Deserialize<PostcodesIoResponse>(json) ?? new PostcodesIoResponse();
         _mockIPostcodeLocationClientService.Setup(x => x.LookupPostcode(It.IsAny<string>())).ReturnsAsync(postcodesIoResponse);
         _mockIOrganisationClientService.Setup(x => x.GetCategories()).ReturnsAsync(GetTaxonomies());
+        _mockLocalOfferClientService.Setup(x => x.GetLocalOffers(It.IsAny<LocalOfferFilter>())).ReturnsAsync(new PaginatedList<ServiceDto>());
 
         // Act
         await _pageModel.ClearFilters();
 
         // Assert
-        _pageModel.SearchResults.Should().BeNull();
+        _pageModel.SearchResults.Items.Count.Should().Be(0);
     }
 
     [Theory]

@@ -36,7 +36,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Content Include="scripts\app.ts" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
 	</ItemGroup>
-	
+
 </Project>
