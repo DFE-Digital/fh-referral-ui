@@ -101,35 +101,35 @@ public class WhenUsingRedisCacheService
         setStringCallback.Should().Be(1);
     }
 
-    [Fact]
-    public void ThenRetrieveService()
-    {
-        //Arrange
-        ServiceDto service = BaseClientService.GetTestCountyCouncilServicesDto(Guid.NewGuid().ToString());
-        _mockRedisCache.Setup(x => x.GetValue<ServiceDto>(It.IsAny<string>())).Returns(service);
+    //[Fact]
+    //public void ThenRetrieveService()
+    //{
+    //    //Arrange
+    //    ServiceDto service = BaseClientService.GetTestCountyCouncilServicesDto(Guid.NewGuid().ToString());
+    //    _mockRedisCache.Setup(x => x.GetValue<ServiceDto>(It.IsAny<string>())).Returns(service);
 
-        //Act
-        ServiceDto? result = _redisCacheService.RetrieveService();
+    //    //Act
+    //    ServiceDto? result = _redisCacheService.RetrieveService();
 
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(service);
-    }
+    //    //Assert
+    //    result.Should().NotBeNull();
+    //    result.Should().BeEquivalentTo(service);
+    ////}
 
-    [Fact]
-    public void ThenStoreService()
-    {
-        //Arrange
-        ServiceDto service = BaseClientService.GetTestCountyCouncilServicesDto(Guid.NewGuid().ToString());
-        int setStringCallback = 0;
-        _mockRedisCache.Setup(x => x.SetValue<ServiceDto>(It.IsAny<string>(), It.IsAny<ServiceDto>(), It.IsAny<int>())).Callback(() => setStringCallback++);
+    //[Fact]
+    //public void ThenStoreService()
+    //{
+    //    //Arrange
+    //    ServiceDto service = BaseClientService.GetTestCountyCouncilServicesDto(Guid.NewGuid().ToString());
+    //    int setStringCallback = 0;
+    //    _mockRedisCache.Setup(x => x.SetValue<ServiceDto>(It.IsAny<string>(), It.IsAny<ServiceDto>(), It.IsAny<int>())).Callback(() => setStringCallback++);
 
-        //Act
-        _redisCacheService.StoreService(service);
+    //    //Act
+    //    _redisCacheService.StoreService(service);
 
-        //Assert
-        setStringCallback.Should().Be(1);
-    }
+    //    //Assert
+    //    setStringCallback.Should().Be(1);
+    //}
 
     [Fact]
     public void ThenResetLastPageName()

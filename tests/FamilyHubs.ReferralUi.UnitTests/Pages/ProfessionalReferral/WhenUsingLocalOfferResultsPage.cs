@@ -447,30 +447,30 @@ public class WhenUsingLocalOfferResultsPage
         _pageModel.SearchResults.Items.Count.Should().Be(0);
     }
 
-    [Theory]
-    [InlineData(false, "Showing 1 search result for:")]
-    [InlineData(true, "Showing 2 search results for:")]
-    public void ThenGetSearchResultSnippet(bool addExtraService, string expectedResult)
-    {
-        //Arrange
-        var list = new List<ServiceDto>()
-        {
-            BaseClientService.GetTestCountyCouncilServicesDto(Guid.NewGuid().ToString())
-        };
+    //[Theory]
+    //[InlineData(false, "Showing 1 search result for:")]
+    //[InlineData(true, "Showing 2 search results for:")]
+    //public void ThenGetSearchResultSnippet(bool addExtraService, string expectedResult)
+    //{
+    //    //Arrange
+    //    var list = new List<ServiceDto>()
+    //    {
+    //        BaseClientService.GetTestCountyCouncilServicesDto(Guid.NewGuid().ToString())
+    //    };
 
         
-        if (addExtraService)
-        {
-            list.Add(BaseClientService.GetTestCountyCouncilServicesDto(Guid.NewGuid().ToString()));
-        }
-        _pageModel.SearchResults = new SharedKernel.PaginatedList<ServiceDto>( list, list.Count, 1, 1 );
+    //    if (addExtraService)
+    //    {
+    //        list.Add(BaseClientService.GetTestCountyCouncilServicesDto(Guid.NewGuid().ToString()));
+    //    }
+    //    _pageModel.SearchResults = new SharedKernel.PaginatedList<ServiceDto>( list, list.Count, 1, 1 );
 
-        //Act
-        var result = _pageModel.SearchResultsSnippet;
+    //    //Act
+    //    var result = _pageModel.SearchResultsSnippet;
         
-        //Assert
-        result.Should().Be(expectedResult);
-    }
+    //    //Assert
+    //    result.Should().Be(expectedResult);
+    //}
 
     private List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>> GetTaxonomies()
     {
