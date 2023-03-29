@@ -1,0 +1,71 @@
+﻿@page
+@model SearchModel
+@{
+    ViewData["Title"] = "Search page";
+    ViewData["Description"] = "Description TBC";
+}
+
+@section Back {
+    <a href="/" class="govuk-back-link" data-testid="back-button">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @if (!Model.ValidationValid || !Model.PostcodeValid)
+        {
+            <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">
+                    There is a problem
+                </h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list" data-testid="errorslist">
+                        @if (Model.PostcodeValid == false)
+                        {
+                            <li>
+                                <a href="#Postcode">There is a problem. Enter a valid postcode, for example SW1A 2AA.</a>
+                            </li>
+                        }
+                        @if (Model.ValidationValid == false)
+                        {
+                            <li>
+                                <a href="#Postcode">There is a problem. Enter a valid postcode, for example SW1A 2AA. </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+        <div class="@(Model.PostcodeValid == false || Model.ValidationValid == false ? "govuk-form-group--error" : "")">
+            <h1 class="govuk-heading-l">Search for services by postcode</h1>
+            <p class="govuk-details">
+                We will use the postcode you enter to find services in that local authority area.
+            </p>
+            @if (Model.PostcodeValid == false)
+            {
+                <p class="govuk-error-message" data-testid="empty-error">
+                    <span class="govuk-visually-hidden">Error:</span> There is a problem. Enter a valid postcode, for example SW1A 2AA.
+                </p>
+            }
+            @if (Model.ValidationValid == false)
+            {
+                <p class="govuk-error-message" data-testid="invalid-error">
+                    <span class="govuk-visually-hidden">Error:</span> There is a problem. Enter a valid postcode, for example SW1A 2AA.
+                </p>
+            }
+            <form method="post">
+                <div class="govuk-form-group" id="search-options">
+                    <label class="govuk-label govuk-label--s" for="Postcode">
+                        Enter a postcode
+                    </label>
+                    <div id="account-number-hint" class="govuk-hint">
+                        For example SW1A 2AA
+                    </div>
+                    <input class="govuk-input govuk-input--width-10" id="Postcode" name="Postcode" type="text" spellcheck="false" value="@Model.Postcode" data-testid="postcode-value">
+                </div>
+                <button type="submit" class="govuk-button govuk-!-padding-left-3 govuk-!-padding-right-3" data-testid="button-search">
+                    Search
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

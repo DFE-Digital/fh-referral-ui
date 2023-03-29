@@ -384,3 +384,5 @@ MigrationBackup/
 appsettings.*.json
 
 tmp/
+
+.idea
