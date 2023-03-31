@@ -15,7 +15,7 @@
 <!-- Hidden fields -->
 <input asp-for="@Model.SearchPostCode" type="hidden"/>
 
-@if (Model.SearchResults != null && Model.SearchResults.TotalCount == 0 && Model.InitialLoad)
+@if (Model.SearchResults.TotalCount == 0 && Model.InitialLoad)
 {
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-l">No results found</h1>
@@ -288,10 +288,10 @@ else
                                                 </div>
                                                 <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="ExpandForChildrenAndYoungPeopleLabel">
                                                     <div class="govuk-form-group">
-                                                        <label class="govuk-label" for="ageNumber">
+                                                        <label class="govuk-label" for="SearchAge">
                                                             Age
                                                         </label>
-                                                        <select asp-for="SearchAge" asp-items="Model.AgeRange" class="govuk-select" data-testid="select-children">
+                                                        <select asp-for="SearchAge" id="SearchAge" asp-items="Model.AgeRange" class="govuk-select" data-testid="select-children">
                                                             <option value="" selected disabled>Select age</option>
                                                         </select>
                                                     </div>
@@ -357,7 +357,7 @@ else
 
         <!-- DONE - Search Results -->
         <div class="govuk-grid-column-two-thirds vacancies_index">
-            @if (Model.SearchResults == null || Model.SearchResults.TotalCount == 0)
+            @if (Model.SearchResults.TotalCount == 0)
             {
                 <h2 class="govuk-heading-m" data-testid="noservicesfound">No services found</h2>
                 <p data-testid="trysearchingagain">Try searching again by changing or removing filters you applied.</p>
@@ -372,54 +372,51 @@ else
                                 <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@Guid.NewGuid().ToString()" asp-route-serviceid="@item.Id" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
                             </h2>
                             <p class="govuk-caption-m">
-                                @if (item?.Locations?.FirstOrDefault() != null)
+                                @if (item.Locations.FirstOrDefault() != null)
                                 {
-                                    @Model.GetAddressAsString(item?.Locations?.FirstOrDefault())
+                                    @Model.GetAddressAsString(item.Locations.FirstOrDefault())
                                 }
                             </p>
-                            <dl class="govuk-body-s dtmargins">
-                                <dt class="govuk-!-font-weight-bold">Category</dt>
-                                <dd>
-                                    <ul class="govuk-list govuk-list--bullet govuk-body-s">
-                                        @if (item != null && item.Taxonomies != null)
-                                        {
-                                            foreach (var serviceTaxonomy in item.Taxonomies)
+                            @if(item.Taxonomies.Any())
+                            {
+                                <dl class="govuk-body-s dtmargins">
+                                    <dt class="govuk-!-font-weight-bold">Category</dt>
+                                    <dd>
+                                        <ul class="govuk-list govuk-list--bullet govuk-body-s">
+                                            @foreach (var serviceTaxonomy in item.Taxonomies)
                                             {
                                                 <li>@serviceTaxonomy.Name</li>
                                             }
-                                        }
-                                    </ul>
-                                </dd>
-                            </dl>
+                                        </ul>
+                                    </dd>
+                                </dl>
+                            }
                             <dl class="govuk-body-s dtmargins">
                                 <dt class="govuk-!-font-weight-bold">Cost</dt>
-                                @if (item?.CostOptions?.FirstOrDefault()?.Amount != null && item.CostOptions?.FirstOrDefault()?.Amount > 0)
+                                @if (item.CostOptions.FirstOrDefault()?.Amount != null && item.CostOptions.FirstOrDefault()?.Amount > 0)
                                 {
-                                    <dd>£@item?.CostOptions?.FirstOrDefault()?.Amount every @item?.CostOptions?.FirstOrDefault()?.AmountDescription?.ToLower()</dd>
+                                    <dd>£@item.CostOptions.FirstOrDefault()?.Amount every @item.CostOptions.FirstOrDefault()?.AmountDescription?.ToLower()</dd>
                                 }
                                 else
                                 {
                                     <dd>Free</dd>
                                 }
                             </dl>
-                            <dl class="govuk-body-s dtmargins">
+
+                            @if (item.ServiceDeliveries.Count > 0)
+                            {
+                                <dl class="govuk-body-s dtmargins">
                                 <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-                                <dd>
-                                    @if (item?.ServiceDeliveries != null && item.ServiceDeliveries.Count > 0)
-                                    {
-                                        @Model.GetDeliveryMethodsAsString(item.ServiceDeliveries)
-                                    }
-                                </dd>
+                                <dd>@Model.GetDeliveryMethodsAsString(item.ServiceDeliveries)</dd>
                             </dl>
-                            <dl class="govuk-body-s dtmargins">
-                                <dt class="govuk-!-font-weight-bold">Language</dt>
-                                <dd>
-                                    @if (item?.Languages != null && item.Languages.Count > 0)
-                                    {
-                                        @Model.GetLanguagesAsString(item.Languages)
-                                    }
-                                </dd>
-                            </dl>
+                            }
+                            @if (item.Languages.Any(l => !string.IsNullOrWhiteSpace(l.Name)))
+                            {
+                                <dl class="govuk-body-s dtmargins">
+                                    <dt class="govuk-!-font-weight-bold">Language</dt>
+                                    <dd>@Model.GetLanguagesAsString(item.Languages)</dd>
+                                </dl>
+                            }
                         </li>
                     }
                 </ul>

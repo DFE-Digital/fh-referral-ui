@@ -113,7 +113,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
 
     private static string GetPositionUrl(string? serviceType, double? latitude, double? longitude, double? proximity, string status, int pageNumber, int pageSize)
     {
-        return $"api/services?serviceType={serviceType}&status={status}&pageNumber={pageNumber}&pageSize={pageSize}{(
+        return $"api/services?serviceType={serviceType}&status={status}&pageNumber={pageNumber}&pageSize={pageSize}&isFamilyHub=false{(
                 latitude != null ? $"&latitude={latitude}" : string.Empty)}{(
                 longitude != null ? $"&longitude={longitude}" : string.Empty)}{(
                 proximity != null ? $"&proximity={proximity}" : string.Empty)}";
