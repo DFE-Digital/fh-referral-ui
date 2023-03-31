@@ -14,11 +14,7 @@ This repos has been built using the "Clean Architecture Design" taken from Steve
 
 ## Local running
 
-You need two others repos running locally
-
-fh-service-directory-api
-
-fh-service-referral-api
+You need fh-service-directory-api repos running locally
 
 ## CSS & JavaScript
 
