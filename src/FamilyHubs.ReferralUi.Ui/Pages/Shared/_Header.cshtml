@@ -20,6 +20,20 @@
                 </a>
             </div>
             <div class="govuk-header__content">
+                <nav class="govuk-header__navigation govuk-header__navigation--end" aria-label="Menu">
+                    <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide menu" aria-expanded="false" hidden="">Menu</button>
+                    <ul id="navigation" class="govuk-header__navigation-list">
+                        @if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="govuk-header__navigation-item">
+                                @Html.Raw(Model.RenderLink<HomeLink>())
+                            </li>
+                            <li class="govuk-header__navigation-item">
+                                @Html.Raw(Model.RenderLink<SignOutLink>())
+                            </li>
+                        }
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
