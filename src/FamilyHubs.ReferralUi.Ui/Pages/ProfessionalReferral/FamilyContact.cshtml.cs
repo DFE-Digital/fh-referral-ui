@@ -11,6 +11,11 @@ public class FamilyContactModel : PageModel
 {
     private readonly IRedisCacheService _redisCacheService;
 
+    public string Id { get; set; }
+
+    public string Name { get; set; }
+
+
     [BindProperty]
     public string FullName { get; set; } = string.Empty;
 
@@ -26,6 +31,9 @@ public class FamilyContactModel : PageModel
     {
         string userKey = _redisCacheService.GetUserKey();
         ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+
+        Id = model.ServiceId;
+        Name = model.ServiceName;
        
         if (!string.IsNullOrEmpty(model.FullName))
             FullName = model.FullName;

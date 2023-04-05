@@ -3,11 +3,13 @@
 @{
 }
 
-<a asp-page="/ProfessionalReferral/Safeguarding" class="govuk-back-link">Back</a>
+<a href="/ProfessionalReferral/ConnectFamilyToServiceStart?id=@Model.Id&name=@Model.Name" class="govuk-back-link">Back</a>
 
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
     <form method="post">
+        <input asp-for="@Model.Name" type="hidden">
+        <input asp-for="@Model.Id" type="hidden">
       <div class="govuk-form-group">
           <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
         <fieldset class="govuk-fieldset">

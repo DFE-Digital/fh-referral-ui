@@ -121,11 +121,6 @@ public class LocalOfferResultsModel : PageModel
                                  string maximumAge,
                                  string searchText)
     {
-        if (_isReferralEnabled && User.Identity != null && !User.Identity.IsAuthenticated)
-        {
-            return RedirectToPage("/ProfessionalReferral/SignIn", new { });
-        }
-
         SearchPostCode = postCode;
         await GetLocationDetails(SearchPostCode);
         await GetCategoriesTreeAsync();

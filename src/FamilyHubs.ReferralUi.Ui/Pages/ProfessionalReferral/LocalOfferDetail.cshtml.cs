@@ -14,8 +14,6 @@ public class LocalOfferDetailModel : PageModel
 
     public ServiceDto LocalOffer { get; set; } = default!;
 
-    public string? ReturnUrl { get; set; }
-
     public bool IsReferralEnabled { get; private set; }
 
     [BindProperty]
@@ -41,15 +39,7 @@ public class LocalOfferDetailModel : PageModel
     //Needs to pass dummy id so service id can be any string
     public async Task<IActionResult> OnGetAsync(string id, string serviceid)
     {
-        if (IsReferralEnabled && User.Identity != null && !User.Identity.IsAuthenticated)
-        {
-            return RedirectToPage("/ProfessionalReferral/SignIn", new
-            {
-            });
-        }
-
         ServiceId = serviceid;
-        ReturnUrl = Request.Headers["Referer"].ToString();
         LocalOffer = await _localOfferClientService.GetLocalOfferById(serviceid);
         Name = LocalOffer.Name;
         ExtractAddressParts(LocalOffer?.ServiceAtLocations?.FirstOrDefault()?.Location?.PhysicalAddresses?.FirstOrDefault() ?? new PhysicalAddressDto());

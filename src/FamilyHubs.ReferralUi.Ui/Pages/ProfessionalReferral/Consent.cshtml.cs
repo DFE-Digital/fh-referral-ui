@@ -1,15 +1,18 @@
 using FamilyHubs.ReferralUi.Ui.Models;
 using FamilyHubs.ReferralUi.Ui.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
-[Authorize(Policy = "Referrer")]
 public class ConsentModel : PageModel
 {
     private readonly IRedisCacheService _redisCacheService;
+
+    [BindProperty]
+    public string Id { get; set; } = default!;
+    [BindProperty]
+    public string Name { get; set; } = default!;
 
     [BindProperty]
     public string IsConsentGiven { get; set; } = default!;
@@ -23,18 +26,13 @@ public class ConsentModel : PageModel
         _redisCacheService = redisCacheService;
     }
 
-    public void OnGet()
+    public void OnGet(string id, string name)
     {
-        string userKey = _redisCacheService.GetUserKey();
-        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
-        if (model.HaveConcent != null) 
-        {
-            IsConsentGiven = model.HaveConcent.Value ? "yes" : "no";
-        }
-        
+        Id = id;
+        Name = name;
     }
 
-    public IActionResult OnPost()
+    public IActionResult OnPost(string id, string name)
     {
         if (!ModelState.IsValid || IsConsentGiven == null)
         {
@@ -42,20 +40,31 @@ public class ConsentModel : PageModel
             return Page();
         }
 
-        string userKey = _redisCacheService.GetUserKey();
-        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
-
+        
         if (string.Compare(IsConsentGiven, "yes", StringComparison.OrdinalIgnoreCase) == 0)
         {
-            model.HaveConcent = true;
+            if (User.Identity != null && !User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/ProfessionalReferral/SignIn", new
+                {
+                    id,
+                    name
+                });
+
+            }
+
+            string userKey = _redisCacheService.GetUserKey();
+            ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+            model.ServiceId = Id;
+            model.ServiceName = name;
+            model.HaveConcent = false;
             _redisCacheService.StoreConnectWizzardViewModel(userKey, model);
+
             return RedirectToPage("/ProfessionalReferral/FamilyContact", new
             {
             });
-        }
 
-        model.HaveConcent = false;
-        _redisCacheService.StoreConnectWizzardViewModel(userKey, model);
+        }
 
         return RedirectToPage("/ProfessionalReferral/ConsentShutter", new
         {

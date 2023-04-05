@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using StackExchange.Redis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Xml.Linq;
+using FamilyHubs.ReferralUi.Ui.Models;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
@@ -14,6 +16,12 @@ public class SignInModel : PageModel
 {
     private readonly IAuthService _authenticationService;
     private readonly ITokenService _tokenService;
+    private readonly IRedisCacheService _redisCacheService;
+
+    [BindProperty]
+    public string Id { get; set; } = default!;
+    [BindProperty]
+    public string Name { get; set; } = default!;
 
     [BindProperty]
     public string Email { get; set; } = string.Empty;
@@ -22,13 +30,20 @@ public class SignInModel : PageModel
 
     public bool ValidationValid { get; set; } = true;
 
-    public SignInModel(IAuthService authenticationService, ITokenService tokenService)
+    public SignInModel(IAuthService authenticationService, ITokenService tokenService, IRedisCacheService redisCacheService)
     {
         _authenticationService = authenticationService;
         _tokenService = tokenService;
+        _redisCacheService = redisCacheService;
     }
 
-    public async Task<IActionResult> OnPost()
+    public void OnGet(string id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
+
+    public async Task<IActionResult> OnPost(string id, string name)
     {
         Guid organisationId = new Guid("72e653e8-1d05-4821-84e9-9177571a6013");
 
@@ -63,6 +78,13 @@ public class SignInModel : PageModel
                 {
                     IsPersistent = false //Input.RememberMe,
                 });
+
+                string userKey = _redisCacheService.GetUserKey();
+                ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+                model.HaveConcent = true;
+                model.ServiceId = id;
+                model.ServiceName = name;
+                _redisCacheService.StoreConnectWizzardViewModel(userKey, model);
             }
         }
         catch (Exception)
@@ -72,23 +94,20 @@ public class SignInModel : PageModel
             return Page();
         }
 
-        if (User != null && User.IsInRole("Professional")) 
+        if (User != null && User.IsInRole("Professional"))
         {
-            return RedirectToPage("/ProfessionalReferral/ProfessionalHomepage", new
+            return RedirectToPage("/ProfessionalReferral/FamilyContact", new
             {
-            });
-        }
-
-        if (User != null && User.IsInRole("VCSAdmin"))
-        {
-            return RedirectToPage("/ProfessionalReferral/ReferralDashboard", new
-            {
-                organisationId = organisationId
             });
         }
 
         return RedirectToPage("/ProfessionalReferral/Search", new
         {
         });
+
+        
+
+
+        
     }
 }

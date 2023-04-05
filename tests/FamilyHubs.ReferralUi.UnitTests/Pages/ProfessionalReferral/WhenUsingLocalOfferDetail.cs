@@ -116,7 +116,6 @@ public class WhenUsingLocalOfferDetail
     public async Task ThenOnGetAsync_WithServiceAtLocationContainingInPerson()
     {
         //Arrange
-        //Arrange
         IEnumerable<KeyValuePair<string, string?>>? inMemorySettings = new List<KeyValuePair<string, string?>>()
         {
             new KeyValuePair<string, string?>("IsReferralEnabled", "false")
@@ -163,26 +162,25 @@ public class WhenUsingLocalOfferDetail
             .Build();
 
         Mock<ILocalOfferClientService> mockILocalOfferClientService = new Mock<ILocalOfferClientService>();
-        ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(Guid.NewGuid().ToString());
-        
+        ServiceDto serviceDto = GetTestCountyCouncilServicesDtoWithInPerson(Guid.NewGuid().ToString());
+        mockILocalOfferClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
+
         LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockILocalOfferClientService.Object, configuration);
-
-        var identity = new ClaimsIdentity(); // empty claims identity will set IsAuthenticted = false
-        var claimsPrincipal = new ClaimsPrincipal(identity);
-        var mockPrincipal = new Mock<IPrincipal>();
-        mockPrincipal.Setup(x => x.Identity).Returns(identity);
-        var mockHttpContext = new Mock<HttpContext>();
-        mockHttpContext.Setup(m => m.User).Returns(claimsPrincipal);
-        localOfferDetailModel.PageContext.HttpContext = mockHttpContext.Object;
-
+        DefaultHttpContext httpContext = new DefaultHttpContext();
+        httpContext.Request.Scheme = "http";
+        httpContext.Request.Host = new HostString("localhost");
+        httpContext.Request.Headers["Referer"] = "Referer";
+        localOfferDetailModel.PageContext.HttpContext = httpContext;
 
         //Act 
-        var result = await localOfferDetailModel.OnGetAsync("NewId", serviceDto.Id) as RedirectToPageResult;
+        var result = await localOfferDetailModel.OnGetAsync("NewId", serviceDto.Id) as PageResult;
 
         //Assert
         result.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(result);
-        result.PageName.Should().Be("/ProfessionalReferral/SignIn");
+        result.Should().BeOfType<PageResult>();
+        localOfferDetailModel.Phone.Should().Be("Telephone");
+        localOfferDetailModel.Website.Should().Be("Url");
+        localOfferDetailModel.Email.Should().Be("Email");
     }
 
     [Fact]
@@ -315,39 +313,6 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.Address_1.Should().BeNullOrEmpty();
         localOfferDetailModel.Postal_code.Should().BeNullOrEmpty();
         
-    }
-
-    [Fact]
-    public async Task ThenOnGetAsync_ReturnUrl_MustBeSetToRefererHeaderForNavigation()
-    {
-        //Arrange
-        IEnumerable<KeyValuePair<string, string?>>? inMemorySettings = new List<KeyValuePair<string, string?>>()
-        {
-            new KeyValuePair<string, string?>("IsReferralEnabled", "false")
-        };
-
-        IConfiguration configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(inMemorySettings)
-            .Build();
-
-        Mock<ILocalOfferClientService> mockILocalOfferClientService = new Mock<ILocalOfferClientService>();
-        ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(Guid.NewGuid().ToString());
-        mockILocalOfferClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
-
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockILocalOfferClientService.Object, configuration);
-        DefaultHttpContext httpContext = new DefaultHttpContext();
-        httpContext.Request.Scheme = "http";
-        httpContext.Request.Host = new HostString("localhost");
-        httpContext.Request.Headers["Referer"] = "postcode/1";
-        localOfferDetailModel.PageContext.HttpContext = httpContext;
-        var expectedReturnUrl = "postcode/1";
-
-        //Act 
-        var result = await localOfferDetailModel.OnGetAsync("NewId", serviceDto.Id) as PageResult;
-
-        //Assert
-        localOfferDetailModel.Should().NotBeNull();
-        Assert.Equal(expectedReturnUrl, localOfferDetailModel?.ReturnUrl?.ToString());
     }
 
     public static ServiceDto GetTestCountyCouncilServicesDtoWithInPerson(string parentId)

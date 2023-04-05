@@ -1,14 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages;
 
+[ExcludeFromCodeCoverage]
 public class IndexModel : PageModel
 {
-    public bool IsReferralEnabled { get; set; } = false;
-
-    public IndexModel(IConfiguration configuration, ILogger<IndexModel> logger)
-    {
-        IsReferralEnabled = configuration.GetValue<bool>("IsReferralEnabled");
-    }
 }

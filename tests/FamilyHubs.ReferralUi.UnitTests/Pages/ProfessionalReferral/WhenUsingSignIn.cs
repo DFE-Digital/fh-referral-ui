@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.ReferralUi.Ui.Models;
 using FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
+using FamilyHubs.ReferralUi.Ui.Services;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authentication;
@@ -16,9 +17,35 @@ namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
 public class WhenUsingSignIn
 {
+    private readonly Mock<IRedisCacheService> _mockIRedisCacheService;
+    internal readonly Ui.Models.ConnectWizzardViewModel _connectWizzardViewModel;
+    public WhenUsingSignIn()
+    {
+        _connectWizzardViewModel = new Ui.Models.ConnectWizzardViewModel
+        {
+            ServiceId = "ServiceId",
+            ServiceName = "ServiceName",
+            ReferralId = "ReferralId",
+            AnyoneInFamilyBeingHarmed = false,
+            HaveConcent = true,
+            FullName = "FullName",
+            EmailAddress = "someone@email.com",
+            Telephone = "01212223333",
+            Textphone = "0712345678",
+            ReasonForSupport = "Reason For Support"
+        };
+
+        _mockIRedisCacheService = new Mock<IRedisCacheService>(MockBehavior.Strict);
+        _mockIRedisCacheService.Setup(x => x.GetUserKey()).Returns("UserKey");
+        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockIRedisCacheService.Setup(x => x.StoreConnectWizzardViewModel(It.IsAny<string>(), It.IsAny<Ui.Models.ConnectWizzardViewModel>()));
+        _mockIRedisCacheService.Setup(x => x.ResetConnectWizzardViewModel(It.IsAny<string>()));
+    }
+
+
     [Theory]
-    [InlineData("Professional", "/ProfessionalReferral/ProfessionalHomepage")]
-    [InlineData("VCSAdmin", "/ProfessionalReferral/ReferralDashboard")]
+    [InlineData("Professional", "/ProfessionalReferral/FamilyContact")]
+    [InlineData("VCSAdmin", "/ProfessionalReferral/Search")]
     [InlineData("", "/ProfessionalReferral/Search")]
     public async Task ThenSignInAsProfessional(string role, string pageName)
     {
@@ -43,7 +70,7 @@ public class WhenUsingSignIn
         mockAuthenticationService.Setup(x => x.Login(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(accessTokenModel);
         mockTokenService.Setup(x => x.SetToken(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<string>()));
 
-        SignInModel signInModel = new SignInModel(mockAuthenticationService.Object, mockTokenService.Object);
+        SignInModel signInModel = new SignInModel(mockAuthenticationService.Object, mockTokenService.Object, _mockIRedisCacheService.Object);
         var user = new ClaimsPrincipal(new ClaimsIdentity(
         GetClaimsForRole(role).ToArray(), 
         "mock"));
@@ -54,7 +81,7 @@ public class WhenUsingSignIn
         };
 
         //Act
-        var result = await signInModel.OnPost() as RedirectToPageResult;
+        var result = await signInModel.OnPost("Id", "ServiceName") as RedirectToPageResult;
 
         //Assert
         ArgumentNullException.ThrowIfNull(result);
@@ -78,7 +105,7 @@ public class WhenUsingSignIn
         mockAuthenticationService.Setup(x => x.Login(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(accessTokenModel);
         mockTokenService.Setup(x => x.SetToken(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<string>()));
 
-        SignInModel signInModel = new SignInModel(mockAuthenticationService.Object, mockTokenService.Object);
+        SignInModel signInModel = new SignInModel(mockAuthenticationService.Object, mockTokenService.Object, _mockIRedisCacheService.Object);
         var user = new ClaimsPrincipal(new ClaimsIdentity(
         GetClaimsForRole("Other").ToArray(),
         "mock"));
@@ -89,7 +116,7 @@ public class WhenUsingSignIn
 
 
         //Act
-        Func<Task> act = async () => { await signInModel.OnPost(); };
+        Func<Task> act = async () => { await signInModel.OnPost("Id", "ServiceName"); };
         
 
         //Assert
