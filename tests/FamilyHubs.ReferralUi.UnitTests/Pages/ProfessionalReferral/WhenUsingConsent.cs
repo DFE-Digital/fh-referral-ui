@@ -63,7 +63,7 @@ public class WhenUsingConsent : BaseProfessionalReferralPage
     {
         //Arrange
         var mockClaimPrincipal = new Mock<ClaimsPrincipal>();
-#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8602 // Possible null reference assignment.
         mockClaimPrincipal.Setup(x => x.Identity.IsAuthenticated).Returns(false);
 #pragma warning restore CS8601 // Possible null reference assignment.
 

@@ -11,7 +11,7 @@ public class WhenUsingConnectFamilyToServiceStartModel : BaseProfessionalReferra
     
     public WhenUsingConnectFamilyToServiceStartModel()
     {
-        _connectFamilyToServiceStartModel = new ConnectFamilyToServiceStartModel(_mockIRedisCacheService.Object);
+        _connectFamilyToServiceStartModel = new ConnectFamilyToServiceStartModel();
     }
 
     [Fact]
