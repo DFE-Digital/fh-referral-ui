@@ -53,7 +53,7 @@ public class WhenUsingConnectFamilyToServiceStartModel : BaseProfessionalReferra
 
         //Assert
         ArgumentNullException.ThrowIfNull(result);
-        result.PageName.Should().Be("/ProfessionalReferral/Safeguarding");
+        result.PageName.Should().Be("/ProfessionalReferral/Consent");
     }
 
 }

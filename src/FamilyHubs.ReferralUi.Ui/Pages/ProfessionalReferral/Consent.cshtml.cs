@@ -43,7 +43,7 @@ public class ConsentModel : PageModel
         
         if (string.Compare(IsConsentGiven, "yes", StringComparison.OrdinalIgnoreCase) == 0)
         {
-            if (User.Identity != null && !User.Identity.IsAuthenticated)
+            if (User!= null && User.Identity != null && !User.Identity.IsAuthenticated)
             {
                 return RedirectToPage("/ProfessionalReferral/SignIn", new
                 {
