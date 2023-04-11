@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using FamilyHubs.Referral.Core.Services;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace FamilyHubs.Referral.Core.ApiClients;
@@ -10,15 +10,16 @@ public interface ITokenService
     void SetToken(string tokenValue, DateTime validTo, string refreshToken);
     void ClearTokens();
     string GetUsersOrganisationId();
+    string GetUserKey();
 }
 
 public class TokenService : ITokenService
 {
-    private readonly IMemoryCache _memoryCache;
+    private readonly IRedisCacheService _redisCacheService;
 
-    public TokenService(IMemoryCache memoryCache)
+    public TokenService(IRedisCacheService redisCacheService)
     {
-        _memoryCache = memoryCache;
+        _redisCacheService = redisCacheService;
     }
 
     public void SetToken(string tokenValue, DateTime validTo, string refreshToken)
@@ -26,50 +27,30 @@ public class TokenService : ITokenService
         if (string.IsNullOrEmpty(tokenValue) || string.IsNullOrEmpty(refreshToken))
             return;
 
-        //api seems to be subtracting 60 mins
-        TimeZoneInfo tzi = TimeZoneInfo.Local;
-        TimeSpan offset = tzi.GetUtcOffset(validTo);
-        DateTime validDate = DateTime.Now.Add(offset);
-
-        if (!DateTime.Now.IsDaylightSavingTime())
-        {
-            validDate = validDate.AddHours(1);
-        }
-
-        TimeSpan ts = validDate - DateTime.Now;
-
-        var cacheEntryOptions = new MemoryCacheEntryOptions()
-            .SetSlidingExpiration(ts);
-
-        _memoryCache.Set("FamilyHubToken", tokenValue, cacheEntryOptions);
-        _memoryCache.Set("FamilyHubRefreshToken", refreshToken, cacheEntryOptions);
+        _redisCacheService.StoreStringValue("FamilyHubToken", tokenValue);
+        _redisCacheService.StoreStringValue("FamilyHubRefreshToken", refreshToken);
     }
 
     public string GetToken()
     {
-        if (_memoryCache.TryGetValue("FamilyHubToken", out string? cacheValue) && !string.IsNullOrEmpty(cacheValue))
-        {
-            return cacheValue;
-        }
-
-        return string.Empty;
+        return _redisCacheService.RetrieveStringValue("FamilyHubToken");
     }
     public string GetRefreshToken()
     {
-        if (_memoryCache.TryGetValue("FamilyHubRefreshToken", out string? cacheValue) && !string.IsNullOrEmpty(cacheValue))
-        {
-            return cacheValue;
-        }
+        string refreshToken = _redisCacheService.RetrieveStringValue("FamilyHubRefreshToken");
+        if (!string.IsNullOrEmpty(refreshToken))
+            return refreshToken;
 
         return string.Empty;
     }
 
     public string GetUsersOrganisationId()
     {
-        if (_memoryCache.TryGetValue("FamilyHubToken", out string? cacheValue) && !string.IsNullOrEmpty(cacheValue))
+        string token = _redisCacheService.RetrieveStringValue("FamilyHubToken");
+        if (!string.IsNullOrEmpty(token))
         {
             var handler = new JwtSecurityTokenHandler();
-            var jwtSecurityToken = handler.ReadJwtToken(cacheValue);
+            var jwtSecurityToken = handler.ReadJwtToken(token);
             var claims = jwtSecurityToken.Claims.ToList();
 
             var claim = claims.FirstOrDefault(x => x.Type == "OpenReferralOrganisationId");
@@ -84,8 +65,18 @@ public class TokenService : ITokenService
 
     public void ClearTokens()
     {
-        _memoryCache.Remove("FamilyHubToken");
-        _memoryCache.Remove("FamilyHubRefreshToken");
+        _redisCacheService.StoreStringValue("FamilyHubToken", default!);
+        _redisCacheService.StoreStringValue("FamilyHubRefreshToken", default!);
+    }
+
+    public string GetUserKey()
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jwtSecurityToken = handler.ReadJwtToken(GetToken());
+        var claims = jwtSecurityToken.Claims.ToList();
+        var claim = claims.FirstOrDefault(x => x.Type == "UserId");
+        ArgumentNullException.ThrowIfNull(claim);
+        return $"ConnectWizzardViewModel-{claim.Value}";
     }
 }
 

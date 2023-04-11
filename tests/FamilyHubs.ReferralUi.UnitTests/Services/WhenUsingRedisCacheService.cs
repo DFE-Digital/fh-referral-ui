@@ -17,7 +17,6 @@ namespace FamilyHubs.ReferralUi.UnitTests.Services;
 public class WhenUsingRedisCacheService
 {
     private readonly Mock<IRedisCache> _mockRedisCache;
-    private readonly Mock<ITokenService> _mockTokenService;
     private readonly IRedisCacheService _redisCacheService;
     public WhenUsingRedisCacheService()
     {
@@ -30,34 +29,11 @@ public class WhenUsingRedisCacheService
             .AddInMemoryCollection(inMemorySettings)
             .Build();
         _mockRedisCache = new Mock<IRedisCache>();
-        _mockTokenService = new Mock<ITokenService>();
 
-        _redisCacheService = new RedisCacheService(_mockRedisCache.Object, configuration, _mockTokenService.Object);
+        _redisCacheService = new RedisCacheService(_mockRedisCache.Object, configuration);
     }
 
-    [Fact]
-    public void ThenGetUserKey()
-    {
-        //Arrange
-        var authClaims = new List<Claim>
-        {
-                    new Claim("UserId", "123"),
-                    new Claim(ClaimTypes.Name, "TestUser"),
-                    new Claim(ClaimTypes.Role, "Role"),
-                    new Claim("OpenReferralOrganisationId", "2d2124ea-3bb0-4802-b694-db02db5e7756"),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        };
-        JwtSecurityToken tokenItem = CreateToken(authClaims);
-        var token = new JwtSecurityTokenHandler().WriteToken(tokenItem);
-        _mockTokenService.Setup(x => x.GetToken()).Returns(token);
-
-        //Act
-        var result = _redisCacheService.GetUserKey();
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().Be("ConnectWizzardViewModel-123");
-    }
+    
 
     [Fact]
     public void ThenResetOrganisationWithService()
@@ -223,5 +199,33 @@ public class WhenUsingRedisCacheService
             );
 
         return token;
+    }
+
+
+    [Fact]
+    public void ThenRetrieveStringValue()
+    {
+        //Arrange
+        _mockRedisCache.Setup(x => x.GetStringValue(It.IsAny<string>())).Returns("TestValue");
+
+        //Act
+        string result = _redisCacheService.RetrieveStringValue("Key");
+
+        //Assert
+        result.Should().Be("TestValue");
+    }
+
+    [Fact]
+    public void ThenStoreStringValue()
+    {
+        //Arrange
+        int setStringCallback = 0;
+        _mockRedisCache.Setup(x => x.SetStringValue(It.IsAny<string>(), It.IsAny<string>())).Callback(() => setStringCallback++);
+
+        //Act
+        _redisCacheService.StoreStringValue("Key", "TestValue");
+
+        //Assert
+        setStringCallback.Should().Be(1);
     }
 }

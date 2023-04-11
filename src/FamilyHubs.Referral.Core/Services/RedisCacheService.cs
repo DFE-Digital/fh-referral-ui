@@ -11,23 +11,11 @@ public class RedisCacheService : IRedisCacheService
 {
     private readonly IRedisCache _redisCache;
     private readonly int _timespanMinites;
-    private readonly ITokenService _tokenService;
 
-    public RedisCacheService(IRedisCache redisCache, IConfiguration configuration, ITokenService tokenService)
+    public RedisCacheService(IRedisCache redisCache, IConfiguration configuration)
     {
         _redisCache = redisCache;
         _timespanMinites = configuration.GetValue<int>("SessionTimeOutMinutes");
-        _tokenService = tokenService;
-    }
-
-    public string GetUserKey()
-    {
-        var handler = new JwtSecurityTokenHandler();
-        var jwtSecurityToken = handler.ReadJwtToken(_tokenService.GetToken());
-        var claims = jwtSecurityToken.Claims.ToList();
-        var claim = claims.FirstOrDefault(x => x.Type == "UserId");
-        ArgumentNullException.ThrowIfNull(claim);
-        return $"ConnectWizzardViewModel-{claim.Value}";
     }
 
     public void ResetOrganisationWithService()
@@ -61,17 +49,17 @@ public class RedisCacheService : IRedisCacheService
         _redisCache.SetStringValue(TempStorageConfiguration.KeyCurrentPage, String.Empty, _timespanMinites);
     }
 
-    void IRedisCacheService.StoreConnectWizzardViewModel(string key, ConnectWizzardViewModel value)
+    public void StoreConnectWizzardViewModel(string key, ConnectWizzardViewModel value)
     {
         _redisCache.SetStringValue(key, value.Encode());
     }
 
-    void IRedisCacheService.ResetConnectWizzardViewModel(string key)
+    public void ResetConnectWizzardViewModel(string key)
     {
         _redisCache.SetStringValue(key, string.Empty);
     }
 
-    ConnectWizzardViewModel IRedisCacheService.RetrieveConnectWizzardViewModel(string key)
+    public ConnectWizzardViewModel RetrieveConnectWizzardViewModel(string key)
     {
         string value = _redisCache.GetStringValue($"{key}") ?? string.Empty;
         if (string.IsNullOrEmpty(value))
@@ -82,6 +70,24 @@ public class RedisCacheService : IRedisCacheService
         ConnectWizzardViewModel? model = ConnectWizzardViewModel.Decode(value);
         ArgumentNullException.ThrowIfNull(model);
         return model;
+    }
+
+    public void StoreStringValue(string key, string value)
+    {
+        _redisCache.SetStringValue(key, value);
+    }
+
+    public string RetrieveStringValue(string key)
+    {
+        try
+        {
+            return _redisCache.GetStringValue(key);
+        }
+        catch
+        {
+            return string.Empty;
+        }
+        
     }
 }
 

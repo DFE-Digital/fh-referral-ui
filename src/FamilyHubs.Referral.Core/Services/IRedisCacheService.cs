@@ -13,9 +13,10 @@ public interface IRedisCacheService
     string RetrieveLastPageName();
     void StoreCurrentPageName(string? currPage);
     void ResetLastPageName();
-    string GetUserKey();
     void ResetOrganisationWithService();
     void StoreConnectWizzardViewModel(string key, ConnectWizzardViewModel value);
-    public ConnectWizzardViewModel RetrieveConnectWizzardViewModel(string key);
+    ConnectWizzardViewModel RetrieveConnectWizzardViewModel(string key);
     void ResetConnectWizzardViewModel(string key);
+    void StoreStringValue(string key, string value);
+    string RetrieveStringValue(string key);
 }
