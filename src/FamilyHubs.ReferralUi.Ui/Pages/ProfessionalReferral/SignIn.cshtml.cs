@@ -1,14 +1,12 @@
+using FamilyHubs.ReferralUi.Ui.Models;
 using FamilyHubs.ReferralUi.Ui.Services;
 using FamilyHubs.ReferralUi.Ui.Services.Api;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using StackExchange.Redis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Xml.Linq;
-using FamilyHubs.ReferralUi.Ui.Models;
 
 namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
@@ -16,7 +14,7 @@ public class SignInModel : PageModel
 {
     private readonly IAuthService _authenticationService;
     private readonly ITokenService _tokenService;
-    private readonly IRedisCacheService _redisCacheService;
+    private readonly ICacheService _cacheService;
 
     [BindProperty]
     public string Id { get; set; } = default!;
@@ -30,11 +28,11 @@ public class SignInModel : PageModel
 
     public bool ValidationValid { get; set; } = true;
 
-    public SignInModel(IAuthService authenticationService, ITokenService tokenService, IRedisCacheService redisCacheService)
+    public SignInModel(IAuthService authenticationService, ITokenService tokenService, ICacheService cacheService)
     {
         _authenticationService = authenticationService;
         _tokenService = tokenService;
-        _redisCacheService = redisCacheService;
+        _cacheService = cacheService;
     }
 
     public void OnGet(string id, string name)
@@ -79,12 +77,12 @@ public class SignInModel : PageModel
                     IsPersistent = false //Input.RememberMe,
                 });
 
-                string userKey = _redisCacheService.GetUserKey();
-                ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+                string userKey = _cacheService.GetUserKey();
+                ConnectWizzardViewModel model = _cacheService.RetrieveConnectWizzardViewModel(userKey);
                 model.HaveConcent = true;
                 model.ServiceId = id;
                 model.ServiceName = name;
-                _redisCacheService.StoreConnectWizzardViewModel(userKey, model);
+                _cacheService.StoreConnectWizzardViewModel(userKey, model);
             }
         }
         catch (Exception)

@@ -37,14 +37,14 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
         _referralClientService.Setup(x => x.CreateReferral(It.IsAny<ReferralDto>())).ReturnsAsync(_connectWizzardViewModel.ReferralId);
         _referralClientService.Setup(x => x.UpdateReferral(It.IsAny<ReferralDto>())).ReturnsAsync(_connectWizzardViewModel.ReferralId);
 
-        _checkReferralDetailsModel = new CheckReferralDetailsModel(configuration, _localOfferClientService.Object, _referralClientService.Object,  _mockIRedisCacheService.Object);
+        _checkReferralDetailsModel = new CheckReferralDetailsModel(configuration, _localOfferClientService.Object, _referralClientService.Object,  _mockICacheService.Object);
     }
 
     [Fact]
     public void ThenOnGetCheckReferralDetails()
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
 
         //Act
         _checkReferralDetailsModel.OnGet();
@@ -65,7 +65,7 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
     public async Task ThenOnPostCheckReferralDetails()
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
 
 
         //Act
@@ -80,7 +80,7 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
     public async Task ThenOnPostCheckReferralDetails_Updates()
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
         _referralClientService.Setup(x => x.GetReferralById(It.IsAny<string>())).ReturnsAsync(new ReferralDto(
             id: _connectWizzardViewModel.ReferralId,
             organisationId: "56e62852-1b0b-40e5-ac97-54a67ea957dc",
@@ -122,7 +122,7 @@ public class WhenUsingCheckReferralDetails : BaseProfessionalReferralPage
             Textphone = "0712345678",
             ReasonForSupport = "Reason For Support"
         };
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(model);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(model);
         _referralClientService.Setup(x => x.GetReferralById(It.IsAny<string>())).ReturnsAsync(new ReferralDto(
             id: _connectWizzardViewModel.ReferralId,
             organisationId: "56e62852-1b0b-40e5-ac97-54a67ea957dc",

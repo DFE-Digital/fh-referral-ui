@@ -42,13 +42,22 @@ public static class StartupExtensions
 
         services.AddWebUiServices(configuration);
 
-        services.AddTransient<IRedisCache, RedisCache>();
-        services.AddTransient<IRedisCacheService, RedisCacheService>();
+        services.AddTransient<ICacheService, CacheService>();
         services.AddTransient<AuthenticationDelegatingHandler>();
         services.AddTransient<ITokenService, TokenService>();
 
         // Add services to the container.
         services.AddRazorPages();
+
+        // Add Session middleware
+        services.AddDistributedMemoryCache();
+
+        services.AddSession(options =>
+        {
+            options.IdleTimeout = TimeSpan.FromMinutes(configuration.GetValue<int>("SessionTimeOutMinutes"));
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+        });
 
         JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
@@ -105,6 +114,8 @@ public static class StartupExtensions
         app.UseAuthentication();
 
         app.UseAuthorization();
+
+        app.UseSession();
 
         app.MapRazorPages();
 

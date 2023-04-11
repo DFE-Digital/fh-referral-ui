@@ -12,14 +12,14 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
 
     public WhenUsingContactDetails()
     {
-        _contactDetailsModel = new ContactDetailsModel(_mockIRedisCacheService.Object);
+        _contactDetailsModel = new ContactDetailsModel(_mockICacheService.Object);
     }
 
     [Fact]
     public void ThenOnGetContactDetails()
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
 
         //Act
         _contactDetailsModel.OnGet();
@@ -35,7 +35,7 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
     public void ThenOnPostContactDetails_WithNoContactsEntered()
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
 
         //Act
         _contactDetailsModel.OnPost();
@@ -48,7 +48,7 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
     public void ThenOnPostContactDetails_WithContactsEnteredIncorrectly()
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
         _contactDetailsModel.ContactSelection = new List<string>
         {
             "telephone"
@@ -66,7 +66,7 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
     public void ThenOnPostContactDetails_WithModelError()
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
         _contactDetailsModel.Telephone = _connectWizzardViewModel.Telephone;
         _contactDetailsModel.ContactSelection = new List<string>
         {
@@ -89,7 +89,7 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
     public void ThenOnPostContactDetails_WithContactsEntered(string contactMethod)
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
         _contactDetailsModel.ContactSelection = new List<string>();
         
         switch (contactMethod)
@@ -130,7 +130,7 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
     public void ThenOnPostContactDetails_WithContactsEntered_ButIncorrect(string contactMethod, string contactEntry)
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
         _contactDetailsModel.ContactSelection = new List<string>();
 
         switch (contactMethod)

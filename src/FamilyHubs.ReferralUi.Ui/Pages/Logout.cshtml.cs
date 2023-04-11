@@ -11,14 +11,11 @@ public class LogoutModel : PageModel
 {
     private readonly ITokenService _tokenService;
     private readonly IAuthService _authService;
-    //Still to be incorporated
-    //private readonly IRedisCacheService _redisCacheService;
 
-    public LogoutModel(ITokenService tokenService, IAuthService authService) //, IRedisCacheService redisCacheService)
+    public LogoutModel(ITokenService tokenService, IAuthService authService)
     {
         _tokenService = tokenService;
         _authService = authService;
-        //_redisCacheService = redisCacheService;
     }
 
     public async Task<IActionResult> OnGet(string? returnUrl = null)

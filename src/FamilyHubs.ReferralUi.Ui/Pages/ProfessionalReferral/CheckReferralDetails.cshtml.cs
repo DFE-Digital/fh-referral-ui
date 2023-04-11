@@ -13,7 +13,7 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 [Authorize(Policy = "Referrer")]
 public class CheckReferralDetailsModel : PageModel
 {
-    private readonly IRedisCacheService _redisCacheService;
+    private readonly ICacheService _cacheService;
 
     [BindProperty]
     public string ReferralId { get; set; } = default!;
@@ -42,18 +42,18 @@ public class CheckReferralDetailsModel : PageModel
     private readonly ILocalOfferClientService _localOfferClientService;
     private readonly IReferralClientService _referralClientService;
 
-    public CheckReferralDetailsModel(IConfiguration configuration, ILocalOfferClientService localOfferClientService, IReferralClientService referralClientService, IRedisCacheService redisCacheService)
+    public CheckReferralDetailsModel(IConfiguration configuration, ILocalOfferClientService localOfferClientService, IReferralClientService referralClientService, ICacheService cacheService)
     {
         _referralClientService = referralClientService;
         _configuration = configuration;
         _localOfferClientService = localOfferClientService;
-        _redisCacheService = redisCacheService;
+        _cacheService = cacheService;
     }
 
     public void OnGet()
     {
-        string userKey = _redisCacheService.GetUserKey();
-        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        string userKey = _cacheService.GetUserKey();
+        ConnectWizzardViewModel model = _cacheService.RetrieveConnectWizzardViewModel(userKey);
 
         Id = model.ServiceId;
         Name = model.ServiceName;
@@ -68,8 +68,8 @@ public class CheckReferralDetailsModel : PageModel
     public async Task<IActionResult> OnPost()
     {
         // Save to API
-        string userKey = _redisCacheService.GetUserKey();
-        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        string userKey = _cacheService.GetUserKey();
+        ConnectWizzardViewModel model = _cacheService.RetrieveConnectWizzardViewModel(userKey);
 
         ServiceDto serviceDto = await _localOfferClientService.GetLocalOfferById(model.ServiceId);
 
@@ -130,7 +130,7 @@ public class CheckReferralDetailsModel : PageModel
                 
             }
 
-            _redisCacheService.ResetConnectWizzardViewModel(userKey);
+            _cacheService.ResetConnectWizzardViewModel(userKey);
         }
         catch
         {

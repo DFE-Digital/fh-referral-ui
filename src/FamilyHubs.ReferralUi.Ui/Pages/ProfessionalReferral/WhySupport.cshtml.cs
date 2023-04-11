@@ -9,7 +9,7 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 [Authorize(Policy = "Referrer")]
 public class WhySupportModel : PageModel
 {
-    private readonly IRedisCacheService _redisCacheService;
+    private readonly ICacheService _cacheService;
 
     [BindProperty]
     public string ReasonForSupport { get; set; } = default!;
@@ -17,15 +17,15 @@ public class WhySupportModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public WhySupportModel(IRedisCacheService redisCacheService)
+    public WhySupportModel(ICacheService cacheService)
     {
-        _redisCacheService = redisCacheService;
+        _cacheService = cacheService;
     }
 
     public void OnGet()
     {
-        string userKey = _redisCacheService.GetUserKey();
-        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        string userKey = _cacheService.GetUserKey();
+        ConnectWizzardViewModel model = _cacheService.RetrieveConnectWizzardViewModel(userKey);
         if (!string.IsNullOrEmpty(model.ReasonForSupport))
             ReasonForSupport = model.ReasonForSupport;
     }
@@ -38,10 +38,10 @@ public class WhySupportModel : PageModel
             return Page();
         }
 
-        string userKey = _redisCacheService.GetUserKey();
-        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        string userKey = _cacheService.GetUserKey();
+        ConnectWizzardViewModel model = _cacheService.RetrieveConnectWizzardViewModel(userKey);
         model.ReasonForSupport = ReasonForSupport;
-        _redisCacheService.StoreConnectWizzardViewModel(userKey, model);
+        _cacheService.StoreConnectWizzardViewModel(userKey, model);
 
         return RedirectToPage("/ProfessionalReferral/CheckReferralDetails", new
         {

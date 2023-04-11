@@ -19,7 +19,7 @@ public class WhenUsingConnectFamilyToServiceStartModel : BaseProfessionalReferra
     {
         //Arrange
         _connectWizzardViewModel.ServiceId = default!;
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
 
         //Act
         _connectFamilyToServiceStartModel.OnGet("ServiceId", "ServiceName");
@@ -34,7 +34,7 @@ public class WhenUsingConnectFamilyToServiceStartModel : BaseProfessionalReferra
     public void ThenOnGetConnectFamilyToServiceStart()
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
 
         //Act
         _connectFamilyToServiceStartModel.OnGet("ServiceId", "ServiceName");

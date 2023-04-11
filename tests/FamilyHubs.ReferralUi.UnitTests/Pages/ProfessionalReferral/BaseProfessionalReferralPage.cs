@@ -6,7 +6,7 @@ namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 public class BaseProfessionalReferralPage
 {
     internal readonly Ui.Models.ConnectWizzardViewModel _connectWizzardViewModel;
-    protected readonly Mock<IRedisCacheService> _mockIRedisCacheService;
+    protected readonly Mock<ICacheService> _mockICacheService;
     public BaseProfessionalReferralPage()
     {
         _connectWizzardViewModel = new Ui.Models.ConnectWizzardViewModel
@@ -23,9 +23,9 @@ public class BaseProfessionalReferralPage
             ReasonForSupport = "Reason For Support"
         };
 
-        _mockIRedisCacheService = new Mock<IRedisCacheService>(MockBehavior.Strict);
-        _mockIRedisCacheService.Setup(x => x.GetUserKey()).Returns("UserKey");
-        _mockIRedisCacheService.Setup(x => x.StoreConnectWizzardViewModel(It.IsAny<string>(), It.IsAny<Ui.Models.ConnectWizzardViewModel>()));
-        _mockIRedisCacheService.Setup(x => x.ResetConnectWizzardViewModel(It.IsAny<string>()));
+        _mockICacheService = new Mock<ICacheService>(MockBehavior.Strict);
+        _mockICacheService.Setup(x => x.GetUserKey()).Returns("UserKey");
+        _mockICacheService.Setup(x => x.StoreConnectWizzardViewModel(It.IsAny<string>(), It.IsAny<Ui.Models.ConnectWizzardViewModel>()));
+        _mockICacheService.Setup(x => x.ResetConnectWizzardViewModel(It.IsAny<string>()));
     }
 }

@@ -13,7 +13,7 @@ public class WhenUsingConsent : BaseProfessionalReferralPage
 
     public WhenUsingConsent()
     {
-        _consentModel = new ConsentModel(_mockIRedisCacheService.Object);
+        _consentModel = new ConsentModel(_mockICacheService.Object);
     }
 
     [Fact]
@@ -31,7 +31,7 @@ public class WhenUsingConsent : BaseProfessionalReferralPage
     public void ThenOnGetConsent_With_IsConsentGiven_NotSelected()
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
         _consentModel.IsConsentGiven = default!;
 
         //Act
@@ -47,7 +47,7 @@ public class WhenUsingConsent : BaseProfessionalReferralPage
     public void ThenOnGetConsent_With_IsImmediateHarm_Selected(string isConsentGiven, string pageName)
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
         _consentModel.IsConsentGiven = isConsentGiven;
 
         //Act
@@ -72,7 +72,7 @@ public class WhenUsingConsent : BaseProfessionalReferralPage
             User = mockClaimPrincipal.Object
         };
 
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
         _consentModel.IsConsentGiven = "yes";
 
         //Act

@@ -17,7 +17,7 @@ namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
 public class WhenUsingSignIn
 {
-    private readonly Mock<IRedisCacheService> _mockIRedisCacheService;
+    private readonly Mock<ICacheService> _mockICacheService;
     internal readonly Ui.Models.ConnectWizzardViewModel _connectWizzardViewModel;
     public WhenUsingSignIn()
     {
@@ -35,11 +35,11 @@ public class WhenUsingSignIn
             ReasonForSupport = "Reason For Support"
         };
 
-        _mockIRedisCacheService = new Mock<IRedisCacheService>(MockBehavior.Strict);
-        _mockIRedisCacheService.Setup(x => x.GetUserKey()).Returns("UserKey");
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
-        _mockIRedisCacheService.Setup(x => x.StoreConnectWizzardViewModel(It.IsAny<string>(), It.IsAny<Ui.Models.ConnectWizzardViewModel>()));
-        _mockIRedisCacheService.Setup(x => x.ResetConnectWizzardViewModel(It.IsAny<string>()));
+        _mockICacheService = new Mock<ICacheService>(MockBehavior.Strict);
+        _mockICacheService.Setup(x => x.GetUserKey()).Returns("UserKey");
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.StoreConnectWizzardViewModel(It.IsAny<string>(), It.IsAny<Ui.Models.ConnectWizzardViewModel>()));
+        _mockICacheService.Setup(x => x.ResetConnectWizzardViewModel(It.IsAny<string>()));
     }
 
 
@@ -70,7 +70,7 @@ public class WhenUsingSignIn
         mockAuthenticationService.Setup(x => x.Login(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(accessTokenModel);
         mockTokenService.Setup(x => x.SetToken(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<string>()));
 
-        SignInModel signInModel = new SignInModel(mockAuthenticationService.Object, mockTokenService.Object, _mockIRedisCacheService.Object);
+        SignInModel signInModel = new SignInModel(mockAuthenticationService.Object, mockTokenService.Object, _mockICacheService.Object);
         var user = new ClaimsPrincipal(new ClaimsIdentity(
         GetClaimsForRole(role).ToArray(), 
         "mock"));
@@ -105,7 +105,7 @@ public class WhenUsingSignIn
         mockAuthenticationService.Setup(x => x.Login(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(accessTokenModel);
         mockTokenService.Setup(x => x.SetToken(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<string>()));
 
-        SignInModel signInModel = new SignInModel(mockAuthenticationService.Object, mockTokenService.Object, _mockIRedisCacheService.Object);
+        SignInModel signInModel = new SignInModel(mockAuthenticationService.Object, mockTokenService.Object, _mockICacheService.Object);
         var user = new ClaimsPrincipal(new ClaimsIdentity(
         GetClaimsForRole("Other").ToArray(),
         "mock"));

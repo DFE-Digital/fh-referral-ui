@@ -11,14 +11,14 @@ public class WhenUsingFamilyContact : BaseProfessionalReferralPage
 
     public WhenUsingFamilyContact()
     {
-        _familyContactModel = new FamilyContactModel(_mockIRedisCacheService.Object);
+        _familyContactModel = new FamilyContactModel(_mockICacheService.Object);
     }
 
     [Fact]
     public void ThenOnGetFamilyContact()
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
 
         //Act
         _familyContactModel.OnGet();
@@ -33,7 +33,7 @@ public class WhenUsingFamilyContact : BaseProfessionalReferralPage
     public void ThenOnGetFamilyContact_With_FullName_NotCorrect(string fullName)
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
         _familyContactModel.FullName = fullName;
         _familyContactModel.ModelState.AddModelError("FullName", "");
 
@@ -48,7 +48,7 @@ public class WhenUsingFamilyContact : BaseProfessionalReferralPage
     public void ThenOnGetFamilyContact_With_FullName()
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
         
         //Act
         var result = _familyContactModel.OnPost() as RedirectToPageResult;

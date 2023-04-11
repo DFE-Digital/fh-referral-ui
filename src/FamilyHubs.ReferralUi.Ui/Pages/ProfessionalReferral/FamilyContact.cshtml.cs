@@ -9,7 +9,7 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 [Authorize(Policy = "Referrer")]
 public class FamilyContactModel : PageModel
 {
-    private readonly IRedisCacheService _redisCacheService;
+    private readonly ICacheService _cacheService;
 
     public string Id { get; set; } = default!;
 
@@ -22,15 +22,15 @@ public class FamilyContactModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public FamilyContactModel(IRedisCacheService redisCacheService)
+    public FamilyContactModel(ICacheService cacheService)
     {
-        _redisCacheService = redisCacheService;
+        _cacheService = cacheService;
     }
 
     public void OnGet()
     {
-        string userKey = _redisCacheService.GetUserKey();
-        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        string userKey = _cacheService.GetUserKey();
+        ConnectWizzardViewModel model = _cacheService.RetrieveConnectWizzardViewModel(userKey);
 
         Id = model.ServiceId;
         Name = model.ServiceName;
@@ -49,10 +49,10 @@ public class FamilyContactModel : PageModel
             return Page();
         }
 
-        string userKey = _redisCacheService.GetUserKey();
-        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        string userKey = _cacheService.GetUserKey();
+        ConnectWizzardViewModel model = _cacheService.RetrieveConnectWizzardViewModel(userKey);
         model.FullName = FullName;
-        _redisCacheService.StoreConnectWizzardViewModel(userKey, model);
+        _cacheService.StoreConnectWizzardViewModel(userKey, model);
 
         return RedirectToPage("/ProfessionalReferral/ContactDetails", new
         {

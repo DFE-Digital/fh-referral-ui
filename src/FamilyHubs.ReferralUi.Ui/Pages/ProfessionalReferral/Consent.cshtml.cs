@@ -7,7 +7,7 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
 public class ConsentModel : PageModel
 {
-    private readonly IRedisCacheService _redisCacheService;
+    private readonly ICacheService _cacheService;
 
     [BindProperty]
     public string Id { get; set; } = default!;
@@ -21,9 +21,9 @@ public class ConsentModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public ConsentModel(IRedisCacheService redisCacheService)
+    public ConsentModel(ICacheService cacheService)
     {
-        _redisCacheService = redisCacheService;
+        _cacheService = cacheService;
     }
 
     public void OnGet(string id, string name)
@@ -53,12 +53,12 @@ public class ConsentModel : PageModel
 
             }
 
-            string userKey = _redisCacheService.GetUserKey();
-            ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+            string userKey = _cacheService.GetUserKey();
+            ConnectWizzardViewModel model = _cacheService.RetrieveConnectWizzardViewModel(userKey);
             model.ServiceId = Id;
             model.ServiceName = name;
             model.HaveConcent = false;
-            _redisCacheService.StoreConnectWizzardViewModel(userKey, model);
+            _cacheService.StoreConnectWizzardViewModel(userKey, model);
 
             return RedirectToPage("/ProfessionalReferral/FamilyContact", new
             {

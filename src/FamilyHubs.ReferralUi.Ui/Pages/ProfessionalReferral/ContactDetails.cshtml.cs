@@ -11,7 +11,7 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 [Authorize(Policy = "Referrer")]
 public partial class ContactDetailsModel : PageModel
 {
-    private readonly IRedisCacheService _redisCacheService;
+    private readonly ICacheService _cacheService;
 
     [BindProperty]
     public List<string> ContactSelection { get; set; } = new List<string>();
@@ -42,15 +42,15 @@ public partial class ContactDetailsModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public ContactDetailsModel(IRedisCacheService redisCacheService)
+    public ContactDetailsModel(ICacheService cacheService)
     {
-        _redisCacheService = redisCacheService;
+        _cacheService = cacheService;
     }
 
     public void OnGet()
     {
-        string userKey = _redisCacheService.GetUserKey();
-        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        string userKey = _cacheService.GetUserKey();
+        ConnectWizzardViewModel model = _cacheService.RetrieveConnectWizzardViewModel(userKey);
         FullName= model.FullName;
         
         if (!string.IsNullOrEmpty(model.EmailAddress))
@@ -75,8 +75,8 @@ public partial class ContactDetailsModel : PageModel
     {
         SetDefaultContactSelection();
 
-        string userKey = _redisCacheService.GetUserKey();
-        ConnectWizzardViewModel model = _redisCacheService.RetrieveConnectWizzardViewModel(userKey);
+        string userKey = _cacheService.GetUserKey();
+        ConnectWizzardViewModel model = _cacheService.RetrieveConnectWizzardViewModel(userKey);
         FullName = model.FullName;
 
         if (ContactSelection == null || !ContactSelection.Any())
@@ -111,7 +111,7 @@ public partial class ContactDetailsModel : PageModel
         model.Telephone = Telephone;
         model.Textphone = Textphone;
 
-        _redisCacheService.StoreConnectWizzardViewModel(userKey, model);
+        _cacheService.StoreConnectWizzardViewModel(userKey, model);
 
         return RedirectToPage("/ProfessionalReferral/WhySupport", new
         {

@@ -12,14 +12,14 @@ public class WhenUsingWhySupport : BaseProfessionalReferralPage
 
     public WhenUsingWhySupport()
     {
-        _whySupportModel = new WhySupportModel(_mockIRedisCacheService.Object);
+        _whySupportModel = new WhySupportModel(_mockICacheService.Object);
     }
 
     [Fact]
     public void ThenOnGetWhySupport()
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
 
         //Act
         _whySupportModel.OnGet();
@@ -34,7 +34,7 @@ public class WhenUsingWhySupport : BaseProfessionalReferralPage
     public void ThenOnGetWhySupport_With_ReasonForSupport_NotCorrect(string reasonForSupport)
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
         _whySupportModel.ReasonForSupport = reasonForSupport;
         _whySupportModel.ModelState.AddModelError("ReasonForSupport", "");
 
@@ -49,7 +49,7 @@ public class WhenUsingWhySupport : BaseProfessionalReferralPage
     public void ThenOnGetWhySupport_With_ReasonForSupport()
     {
         //Arrange
-        _mockIRedisCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
         _whySupportModel.ReasonForSupport = _connectWizzardViewModel.ReasonForSupport;
 
         //Act
