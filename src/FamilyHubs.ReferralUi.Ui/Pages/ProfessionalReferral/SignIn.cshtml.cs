@@ -14,7 +14,7 @@ public class SignInModel : PageModel
 {
     private readonly IAuthService _authenticationService;
     private readonly ITokenService _tokenService;
-    private readonly ICacheService _cacheService;
+    private readonly IRedisCacheService _cacheService;
 
     [BindProperty]
     public string Id { get; set; } = default!;
@@ -28,7 +28,7 @@ public class SignInModel : PageModel
 
     public bool ValidationValid { get; set; } = true;
 
-    public SignInModel(IAuthService authenticationService, ITokenService tokenService, ICacheService cacheService)
+    public SignInModel(IAuthService authenticationService, ITokenService tokenService, IRedisCacheService cacheService)
     {
         _authenticationService = authenticationService;
         _tokenService = tokenService;

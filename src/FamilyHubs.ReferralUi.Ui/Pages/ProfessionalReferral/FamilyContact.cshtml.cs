@@ -9,7 +9,7 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 [Authorize(Policy = "Referrer")]
 public class FamilyContactModel : PageModel
 {
-    private readonly ICacheService _cacheService;
+    private readonly IRedisCacheService _cacheService;
 
     public string Id { get; set; } = default!;
 
@@ -22,7 +22,7 @@ public class FamilyContactModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public FamilyContactModel(ICacheService cacheService)
+    public FamilyContactModel(IRedisCacheService cacheService)
     {
         _cacheService = cacheService;
     }

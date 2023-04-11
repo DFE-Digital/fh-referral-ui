@@ -13,7 +13,7 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 [Authorize(Policy = "Referrer")]
 public class CheckReferralDetailsModel : PageModel
 {
-    private readonly ICacheService _cacheService;
+    private readonly IRedisCacheService _cacheService;
 
     [BindProperty]
     public string ReferralId { get; set; } = default!;
@@ -42,7 +42,7 @@ public class CheckReferralDetailsModel : PageModel
     private readonly ILocalOfferClientService _localOfferClientService;
     private readonly IReferralClientService _referralClientService;
 
-    public CheckReferralDetailsModel(IConfiguration configuration, ILocalOfferClientService localOfferClientService, IReferralClientService referralClientService, ICacheService cacheService)
+    public CheckReferralDetailsModel(IConfiguration configuration, ILocalOfferClientService localOfferClientService, IReferralClientService referralClientService, IRedisCacheService cacheService)
     {
         _referralClientService = referralClientService;
         _configuration = configuration;

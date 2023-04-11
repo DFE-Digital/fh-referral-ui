@@ -7,7 +7,7 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 
 public class ConsentModel : PageModel
 {
-    private readonly ICacheService _cacheService;
+    private readonly IRedisCacheService _cacheService;
 
     [BindProperty]
     public string Id { get; set; } = default!;
@@ -21,7 +21,7 @@ public class ConsentModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public ConsentModel(ICacheService cacheService)
+    public ConsentModel(IRedisCacheService cacheService)
     {
         _cacheService = cacheService;
     }

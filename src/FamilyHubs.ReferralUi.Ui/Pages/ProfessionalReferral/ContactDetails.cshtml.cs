@@ -11,7 +11,7 @@ namespace FamilyHubs.ReferralUi.Ui.Pages.ProfessionalReferral;
 [Authorize(Policy = "Referrer")]
 public partial class ContactDetailsModel : PageModel
 {
-    private readonly ICacheService _cacheService;
+    private readonly IRedisCacheService _cacheService;
 
     [BindProperty]
     public List<string> ContactSelection { get; set; } = new List<string>();
@@ -42,7 +42,7 @@ public partial class ContactDetailsModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public ContactDetailsModel(ICacheService cacheService)
+    public ContactDetailsModel(IRedisCacheService cacheService)
     {
         _cacheService = cacheService;
     }

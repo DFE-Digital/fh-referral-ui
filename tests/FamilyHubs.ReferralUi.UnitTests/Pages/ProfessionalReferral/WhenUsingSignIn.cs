@@ -17,7 +17,7 @@ namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
 public class WhenUsingSignIn
 {
-    private readonly Mock<ICacheService> _mockICacheService;
+    private readonly Mock<IRedisCacheService> _mockICacheService;
     internal readonly Ui.Models.ConnectWizzardViewModel _connectWizzardViewModel;
     public WhenUsingSignIn()
     {
@@ -35,7 +35,7 @@ public class WhenUsingSignIn
             ReasonForSupport = "Reason For Support"
         };
 
-        _mockICacheService = new Mock<ICacheService>(MockBehavior.Strict);
+        _mockICacheService = new Mock<IRedisCacheService>(MockBehavior.Strict);
         _mockICacheService.Setup(x => x.GetUserKey()).Returns("UserKey");
         _mockICacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
         _mockICacheService.Setup(x => x.StoreConnectWizzardViewModel(It.IsAny<string>(), It.IsAny<Ui.Models.ConnectWizzardViewModel>()));

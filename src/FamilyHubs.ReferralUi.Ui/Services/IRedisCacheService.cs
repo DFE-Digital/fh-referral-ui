@@ -3,7 +3,7 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 
 namespace FamilyHubs.ReferralUi.Ui.Services;
 
-public interface ICacheService
+public interface IRedisCacheService
 {
     //Service
     ServiceDto? RetrieveService();
