@@ -1,4 +1,6 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
+using FamilyHubs.Referral.Core.Services;
+using FamilyHubs.ServiceDirectory.Shared.Helpers;
 using FamilyHubs.SharedKernel.Security;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +38,10 @@ public static class StartupExtensions
         services.AddHttpClients(configuration);
 
         services.AddWebUiServices(configuration);
+
+        services.AddTransient<IRedisCache, RedisCache>();
+        services.AddTransient<IRedisCacheService, RedisCacheService>();
+        services.AddTransient<ITokenService, TokenService>();
 
         // Add services to the container.
         services.AddRazorPages();
