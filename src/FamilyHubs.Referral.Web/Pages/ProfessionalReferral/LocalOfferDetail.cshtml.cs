@@ -46,6 +46,16 @@ public class LocalOfferDetailModel : PageModel
         return Page();
     }
 
+    public IActionResult OnPost(string id, string serviceId, string name)
+    {
+        return RedirectToPage("/ProfessionalReferral/Safeguarding", new
+        {
+            id = serviceId,
+            name
+        });
+
+    }
+
     public string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto>? serviceDeliveries)
     {
         var result = string.Empty;
@@ -53,13 +63,16 @@ public class LocalOfferDetailModel : PageModel
         if (serviceDeliveries == null || serviceDeliveries.Count == 0)
             return result;
 
+        StringBuilder sb = new StringBuilder();
         foreach (var name in serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name))
         {
-            result += result +
-                    (!string.IsNullOrWhiteSpace(name.AsString(EnumFormat.Description)) ?
+            sb.Append((!string.IsNullOrWhiteSpace(name.AsString(EnumFormat.Description)) ?
                     name.AsString(EnumFormat.Description) + "," :
-                    string.Empty);
+                    string.Empty));
+            
         }
+
+        result = sb.ToString();
 
         //Remove last comma if present
         if (result.EndsWith(","))
