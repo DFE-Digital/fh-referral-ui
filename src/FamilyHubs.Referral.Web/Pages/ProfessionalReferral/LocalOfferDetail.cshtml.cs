@@ -40,7 +40,7 @@ public class LocalOfferDetailModel : PageModel
         ReturnUrl = Request.Headers["Referer"].ToString();
         LocalOffer = await _organisationClientService.GetLocalOfferById(serviceid);
         Name = LocalOffer.Name;
-        if (LocalOffer.Locations.Count != 0) ExtractAddressParts(LocalOffer.Locations.First());
+        if (LocalOffer.Locations != null && LocalOffer.Locations.Count != 0) ExtractAddressParts(LocalOffer.Locations.First());
         GetContactDetails();
 
         return Page();
@@ -134,6 +134,8 @@ public class LocalOfferDetailModel : PageModel
         }
         else
         {
+            if (LocalOffer.Contacts == null)
+                return;
             //if there are more then one contact then bellow code will pick the last record
             foreach (var contactDto in LocalOffer.Contacts)
             {
