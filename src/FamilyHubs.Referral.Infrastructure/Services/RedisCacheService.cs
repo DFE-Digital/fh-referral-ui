@@ -7,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace FamilyHubs.Referral.Core.Services;
 
-public class RedisCacheService : IRedisCacheService
+public class RedisCacheService : IDistributedCacheService
 {
     private readonly IRedisCache _redisCache;
     private readonly int _timespanMinites;

@@ -17,7 +17,7 @@ namespace FamilyHubs.ReferralUi.UnitTests.Services;
 public class WhenUsingRedisCacheService
 {
     private readonly Mock<IRedisCache> _mockRedisCache;
-    private readonly IRedisCacheService _redisCacheService;
+    private readonly IDistributedCacheService _redisCacheService;
     public WhenUsingRedisCacheService()
     {
         IEnumerable<KeyValuePair<string, string?>>? inMemorySettings = new List<KeyValuePair<string, string?>>()

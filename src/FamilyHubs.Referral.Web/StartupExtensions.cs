@@ -40,7 +40,7 @@ public static class StartupExtensions
         services.AddWebUiServices(configuration);
 
         services.AddTransient<IRedisCache, RedisCache>();
-        services.AddTransient<IRedisCacheService, RedisCacheService>();
+        services.AddTransient<IDistributedCacheService, RedisCacheService>();
         services.AddTransient<ITokenService, TokenService>();
 
         // Add services to the container.

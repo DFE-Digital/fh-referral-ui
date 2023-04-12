@@ -3,21 +3,12 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace FamilyHubs.Referral.Core.ApiClients;
 
-public interface ITokenService
-{
-    string GetToken();
-    string GetRefreshToken();
-    void SetToken(string tokenValue, DateTime validTo, string refreshToken);
-    void ClearTokens();
-    string GetUsersOrganisationId();
-    string GetUserKey();
-}
 
 public class TokenService : ITokenService
 {
-    private readonly IRedisCacheService _redisCacheService;
+    private readonly IDistributedCacheService _redisCacheService;
 
-    public TokenService(IRedisCacheService redisCacheService)
+    public TokenService(IDistributedCacheService redisCacheService)
     {
         _redisCacheService = redisCacheService;
     }

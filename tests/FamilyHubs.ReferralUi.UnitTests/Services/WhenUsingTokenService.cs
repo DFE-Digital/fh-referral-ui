@@ -30,7 +30,7 @@ public class WhenUsingTokenService
         JwtSecurityToken tokenItem = CreateToken(authClaims);
         var token = new JwtSecurityTokenHandler().WriteToken(tokenItem);
         
-        Mock<IRedisCacheService> mockRedisCacheService = new Mock<IRedisCacheService>();
+        Mock<IDistributedCacheService> mockRedisCacheService = new Mock<IDistributedCacheService>();
         int setCallback = 0;
         mockRedisCacheService.Setup(x => x.StoreStringValue(It.IsAny<string>(), It.IsAny<string>())).Callback(() => setCallback++);
         TokenService tokenService = new TokenService(mockRedisCacheService.Object);
@@ -56,7 +56,7 @@ public class WhenUsingTokenService
         JwtSecurityToken tokenItem = CreateToken(authClaims);
         var token = new JwtSecurityTokenHandler().WriteToken(tokenItem);
 
-        Mock<IRedisCacheService> mockRedisCacheService = new Mock<IRedisCacheService>();
+        Mock<IDistributedCacheService> mockRedisCacheService = new Mock<IDistributedCacheService>();
         int setCallback = 0;
         mockRedisCacheService.Setup(x => x.StoreStringValue(It.IsAny<string>(), It.IsAny<string>())).Callback(() => setCallback++);
         TokenService tokenService = new TokenService(mockRedisCacheService.Object);
@@ -81,7 +81,7 @@ public class WhenUsingTokenService
         };
         JwtSecurityToken tokenItem = CreateToken(authClaims);
         var token = new JwtSecurityTokenHandler().WriteToken(tokenItem);
-        Mock<IRedisCacheService> mockRedisCacheService = new Mock<IRedisCacheService>();
+        Mock<IDistributedCacheService> mockRedisCacheService = new Mock<IDistributedCacheService>();
         int setCallback = 0;
         mockRedisCacheService.Setup(x => x.StoreStringValue(It.IsAny<string>(), It.IsAny<string>())).Callback(() => setCallback++);
         TokenService tokenService = new TokenService(mockRedisCacheService.Object);
@@ -107,7 +107,7 @@ public class WhenUsingTokenService
         };
         JwtSecurityToken tokenItem = CreateToken(authClaims);
         var token = new JwtSecurityTokenHandler().WriteToken(tokenItem);
-        Mock<IRedisCacheService> mockRedisCacheService = new Mock<IRedisCacheService>();
+        Mock<IDistributedCacheService> mockRedisCacheService = new Mock<IDistributedCacheService>();
         int setCallback = 0;
         mockRedisCacheService.Setup(x => x.RetrieveStringValue(It.IsAny<string>())).Callback(() => setCallback++).Returns(token);
         TokenService tokenService = new TokenService(mockRedisCacheService.Object);
@@ -125,7 +125,7 @@ public class WhenUsingTokenService
     public void ThenGetTokenReturnsEmpty()
     {
         // Arrange
-        Mock<IRedisCacheService> mockRedisCacheService = new Mock<IRedisCacheService>();
+        Mock<IDistributedCacheService> mockRedisCacheService = new Mock<IDistributedCacheService>();
         int setCallback = 0;
         mockRedisCacheService.Setup(x => x.RetrieveStringValue(It.IsAny<string>())).Callback(() => setCallback++).Returns(string.Empty);
         TokenService tokenService = new TokenService(mockRedisCacheService.Object);
@@ -142,7 +142,7 @@ public class WhenUsingTokenService
     public void ThenGetRefeshToken()
     {
         // Arrange
-        Mock<IRedisCacheService> mockRedisCacheService = new Mock<IRedisCacheService>();
+        Mock<IDistributedCacheService> mockRedisCacheService = new Mock<IDistributedCacheService>();
         int setCallback = 0;
         mockRedisCacheService.Setup(x => x.RetrieveStringValue(It.IsAny<string>())).Callback(() => setCallback++).Returns("RefreshToken");
         TokenService tokenService = new TokenService(mockRedisCacheService.Object);
@@ -159,7 +159,7 @@ public class WhenUsingTokenService
     public void ThenGetRefreshTokenReturnsEmpty()
     {
         // Arrange
-        Mock<IRedisCacheService> mockRedisCacheService = new Mock<IRedisCacheService>();
+        Mock<IDistributedCacheService> mockRedisCacheService = new Mock<IDistributedCacheService>();
         int setCallback = 0;
         mockRedisCacheService.Setup(x => x.RetrieveStringValue(It.IsAny<string>())).Callback(() => setCallback++).Returns(string.Empty);
         TokenService tokenService = new TokenService(mockRedisCacheService.Object);
@@ -180,7 +180,7 @@ public class WhenUsingTokenService
     {
         // Arrange
         int setCallback = 0;
-        Mock<IRedisCacheService> mockRedisCacheService = new Mock<IRedisCacheService>();
+        Mock<IDistributedCacheService> mockRedisCacheService = new Mock<IDistributedCacheService>();
         mockRedisCacheService.Setup(x => x.RetrieveStringValue(It.IsAny<string>())).Callback(() => setCallback++).Returns(string.Empty);
         TokenService tokenService = new TokenService(mockRedisCacheService.Object);
 
@@ -205,7 +205,7 @@ public class WhenUsingTokenService
         JwtSecurityToken tokenItem = CreateToken(authClaims);
         var token = new JwtSecurityTokenHandler().WriteToken(tokenItem);
         int setCallback = 0;
-        Mock<IRedisCacheService> mockRedisCacheService = new Mock<IRedisCacheService>();
+        Mock<IDistributedCacheService> mockRedisCacheService = new Mock<IDistributedCacheService>();
         mockRedisCacheService.Setup(x => x.RetrieveStringValue(It.IsAny<string>())).Callback(() => setCallback++).Returns(token);
         TokenService tokenService = new TokenService(mockRedisCacheService.Object);
 
@@ -224,7 +224,7 @@ public class WhenUsingTokenService
     public void ThenClearTokens()
     {
         // Arrange
-        Mock<IRedisCacheService> mockRedisCacheService = new Mock<IRedisCacheService>();
+        Mock<IDistributedCacheService> mockRedisCacheService = new Mock<IDistributedCacheService>();
         int setCallback = 0;
         mockRedisCacheService.Setup(x => x.StoreStringValue(It.IsAny<string>(), It.IsAny<string>())).Callback(() => setCallback++);
         TokenService tokenService = new TokenService(mockRedisCacheService.Object);
@@ -251,7 +251,7 @@ public class WhenUsingTokenService
         JwtSecurityToken tokenItem = CreateToken(authClaims);
         var token = new JwtSecurityTokenHandler().WriteToken(tokenItem);
         int setCallback = 0;
-        Mock<IRedisCacheService> mockRedisCacheService = new Mock<IRedisCacheService>();
+        Mock<IDistributedCacheService> mockRedisCacheService = new Mock<IDistributedCacheService>();
         mockRedisCacheService.Setup(x => x.RetrieveStringValue(It.IsAny<string>())).Callback(() => setCallback++).Returns(token);
         TokenService tokenService = new TokenService(mockRedisCacheService.Object);
 
