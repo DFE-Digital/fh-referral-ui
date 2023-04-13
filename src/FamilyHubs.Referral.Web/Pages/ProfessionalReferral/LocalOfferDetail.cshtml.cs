@@ -40,7 +40,7 @@ public class LocalOfferDetailModel : PageModel
         ReturnUrl = Request.Headers["Referer"].ToString();
         LocalOffer = await _organisationClientService.GetLocalOfferById(serviceid);
         Name = LocalOffer.Name;
-        if (LocalOffer.Locations != null && LocalOffer.Locations.Count != 0) ExtractAddressParts(LocalOffer.Locations.First());
+        if (LocalOffer.Locations != null && LocalOffer.Locations.Any()) ExtractAddressParts(LocalOffer.Locations.First());
         GetContactDetails();
 
         return Page();
@@ -63,16 +63,7 @@ public class LocalOfferDetailModel : PageModel
         if (serviceDeliveries == null || serviceDeliveries.Count == 0)
             return result;
 
-        StringBuilder sb = new StringBuilder();
-        foreach (var name in serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name))
-        {
-            sb.Append((!string.IsNullOrWhiteSpace(name.AsString(EnumFormat.Description)) ?
-                    name.AsString(EnumFormat.Description) + "," :
-                    string.Empty));
-            
-        }
-
-        result = sb.ToString();
+        result = string.Join(',', serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name).ToArray());
 
         //Remove last comma if present
         if (result.EndsWith(","))
