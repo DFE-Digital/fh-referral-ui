@@ -1,12 +1,10 @@
 ﻿
 .interrupt-panel {
-    padding: 30px;
+    @include govuk-responsive-padding(6);
+    /*todo: $govuk-brand-colour might be better*/
     background: #005ea5;
-    color: #fff !important;
-    overflow: hidden;
-    width: auto;
 }
 
-.interrupt-panel h1, .interrupt-panel p, .interrupt-panel h2, .interrupt-panel ul {
-    color: #fff !important;
+.interrupt-panel h1, .interrupt-panel p {
+    color: govuk-colour("white");
 }
