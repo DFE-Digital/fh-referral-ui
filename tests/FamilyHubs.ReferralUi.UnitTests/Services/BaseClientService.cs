@@ -33,72 +33,99 @@ public class BaseClientService
 
     public static ServiceDto GetTestCountyCouncilServicesDto(long parentId)
     {
-        var serviceId = "9066bccb-79cb-401f-818f-86ad23b022cf";
-
-        var service = new ServiceDto
+        ServiceDto service = new()
         {
-            OrganisationId = 1,
-            ServiceOwnerReferenceId = serviceId,
-            ServiceType = ServiceType.InformationSharing,
-            Name = "Test Organisation for Children with Tracheostomies",
-            Description = @"Test1 Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
-            ServiceDeliveries = new List<ServiceDeliveryDto>
-            {
-                new ServiceDeliveryDto
-                {
-                    Name = ServiceDeliveryType.Online,
-                }
-            },
-            Eligibilities = new List<EligibilityDto>
-            {
-                new EligibilityDto
-                {
-                    MaximumAge = 13,
-                    MinimumAge = 0
-                }
-            },
-            Contacts = new List<ContactDto>
-            {
-                new ContactDto
-                {
-                    Name =  "Service",
-                    Title = string.Empty,
-                    Telephone = "01827 65770",
-                    TextPhone = "01827 65770",
-                    Url = "www.testservice1.com",
-                    Email = "support@testservice1.com"
-                }
-            },
-            Languages = new List<LanguageDto>
-            {
-                new LanguageDto
-                {
-                    Name = "English"
-                }
-            },
-            ServiceAreas = new List<ServiceAreaDto>
+            Id = 1,
+            OrganisationId = parentId,
+            ServiceType = ServiceType.FamilyExperience,
+            Name = "Unit Test Service",
+            Description = "Unit Test Service Description",
+            Accreditations = null,
+            AssuredDate = DateTime.Now,
+            AttendingAccess = AttendingAccessType.NotSet,
+            AttendingType = AttendingType.NotSet,
+            DeliverableType = DeliverableType.NotSet,
+            Status = ServiceStatusType.Active,
+            Fees = null,
+            CanFamilyChooseDeliveryLocation = false,
+            ServiceOwnerReferenceId = "e4f18752-f4f9-4476-9d4f-a9644c599a53",
+            ServiceAreas = new List<ServiceAreaDto>()
             {
                 new ServiceAreaDto
                 {
+                    Id = 2,
                     ServiceAreaName = "National",
-                    Extent = null,
                     Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
+                    ServiceId = 1,
+
                 }
             },
-            Locations = new List<LocationDto>
+            Contacts = new List<ContactDto>()
+            {
+                new ContactDto
+                {
+                    Id = 3,
+                    ServiceId = 1,
+                    Title = "Mr",
+                    Name = "Contact",
+                    Email = "Contact@email.com",
+                    Telephone = "01827 65777",
+                    TextPhone = "01827 65777",
+                    Url = "www.google.com"
+                }
+            },
+            Eligibilities = new List<EligibilityDto>()
+            {
+                new EligibilityDto
+                {
+                    Id = 4,
+                    ServiceId = 1,
+                    EligibilityType = EligibilityType.NotSet,
+                    MinimumAge = 1,
+                    MaximumAge = 13,
+                }
+            },
+            CostOptions = new List<CostOptionDto>(),
+            Languages = new List<LanguageDto>()
+            {
+                new LanguageDto
+                {
+                    Id = 5,
+                    ServiceId = 1,
+                    Name = "English",
+                }
+            },
+            ServiceDeliveries = new List<ServiceDeliveryDto>(),
+            HolidaySchedules = new List<HolidayScheduleDto>(),
+            RegularSchedules = new List<RegularScheduleDto>(),
+            Locations = new List<LocationDto>()
             {
                 new LocationDto
                 {
-                    Name = "Test",
-                    Description = "",
+                    Id = 6,
+                    HolidaySchedules = new List<HolidayScheduleDto>(),
+                    RegularSchedules = new List<RegularScheduleDto>(),
+                    Name = "Shepcoat",
+                    Address1 = "77 Sheepcote Lane",
+                    Address2 = "Stathe",
+                    City = "Tamworth",
+                    PostCode = "B77 3JN",
+                    StateProvince = "Staffordshire",
+                    Country = "England",
                     Latitude = 52.6312,
                     Longitude = -1.66526,
-                    Address1 = "76 Sheepcote Lane",
-                    City = ", Stathe, Tamworth, Staffordshire, ",
-                    PostCode = "B77 3JN",
-                    Country = "England",
-                    StateProvince = "null",
-                    LocationType = LocationType.FamilyHub
+                    LocationType = LocationType.NotSet,
+                }
+            },
+            Fundings = new List<FundingDto>(),
+            Taxonomies = new List<TaxonomyDto>()
+            {
+                new TaxonomyDto
+                {
+                    Id = 7,
+                    Name = "UnitTest bccprimaryservicetype:38",
+                    TaxonomyType = TaxonomyType.ServiceCategory,
+
                 }
             }
         };
