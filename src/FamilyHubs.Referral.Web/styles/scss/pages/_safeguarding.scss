@@ -1,8 +1,7 @@
 ﻿
 .interrupt-panel {
     @include govuk-responsive-padding(6);
-    /*todo: $govuk-brand-colour might be better*/
-    background: #005ea5;
+    background: $govuk-brand-colour;
 }
 
 .interrupt-panel h1, .interrupt-panel p {
