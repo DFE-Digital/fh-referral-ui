@@ -2,4 +2,4 @@
 
 ## Release notes
 
-## Release instructions
+## Deployment instructions
