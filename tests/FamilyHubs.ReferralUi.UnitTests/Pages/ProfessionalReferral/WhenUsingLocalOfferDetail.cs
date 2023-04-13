@@ -178,7 +178,7 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.Website.Should().Be("https://www.testservice1.com");
         localOfferDetailModel.Email.Should().Be("support@testservice1.com");
     }
-    
+
     [Fact]
     public void ThenOnPostAsync_ReturnsRedirectToPageResult()
     {
