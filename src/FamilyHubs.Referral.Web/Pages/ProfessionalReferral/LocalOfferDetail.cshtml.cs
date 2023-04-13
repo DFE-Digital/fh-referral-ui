@@ -5,6 +5,7 @@ using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Primitives;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -36,7 +37,8 @@ public class LocalOfferDetailModel : PageModel
     public async Task<IActionResult> OnGetAsync(string serviceid)
     {
         ServiceId = serviceid;
-        ReturnUrl = Request.Headers["Referer"].ToString() ?? "";
+        var referer = Request.Headers["Referer"];
+        ReturnUrl = StringValues.IsNullOrEmpty(referer) ? Url.Page("Search") : referer.ToString();
         LocalOffer = await _organisationClientService.GetLocalOfferById(serviceid);
         Name = LocalOffer.Name;
         if (LocalOffer.Locations != null && LocalOffer.Locations.Any()) ExtractAddressParts(LocalOffer.Locations.First());
