@@ -2,7 +2,7 @@
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.SafeguardingModel
 
 @section Back {
-    <a asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@Guid.NewGuid().ToString()" asp-route-serviceId="@Model.Id" asp-route-name="@Model.Name" class="govuk-back-link">Back</a>
+    <a asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-serviceId="@Model.Id" asp-route-name="@Model.Name" class="govuk-back-link">Back</a>
 }
 
 <div class="govuk-grid-row">

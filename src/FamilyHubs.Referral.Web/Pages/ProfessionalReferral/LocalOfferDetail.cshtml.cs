@@ -33,8 +33,7 @@ public class LocalOfferDetailModel : PageModel
         _organisationClientService = organisationClientService;
     }
 
-    //Needs to pass dummy id so service id can be any string
-    public async Task<IActionResult> OnGetAsync(string id, string serviceid)
+    public async Task<IActionResult> OnGetAsync(string serviceid)
     {
         ServiceId = serviceid;
         try
