@@ -65,12 +65,6 @@ public class LocalOfferDetailModel : PageModel
 
         result = string.Join(',', serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name).ToArray());
 
-        //Remove last comma if present
-        if (result.EndsWith(","))
-        {
-            result = result.Remove(result.Length - 1);
-        }
-
         return result;
     }
 
