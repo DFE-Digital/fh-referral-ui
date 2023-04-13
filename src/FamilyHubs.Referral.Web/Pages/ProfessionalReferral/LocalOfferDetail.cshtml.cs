@@ -37,7 +37,14 @@ public class LocalOfferDetailModel : PageModel
     public async Task<IActionResult> OnGetAsync(string id, string serviceid)
     {
         ServiceId = serviceid;
-        ReturnUrl = Request.Headers["Referer"].ToString();
+        try
+        {
+            ReturnUrl = Request.Headers["Referer"].ToString();
+        }
+        catch
+        {
+            ReturnUrl = "/ProfessionalReferral/LocalOfferResults/BS2%200SP?currentPage=1";
+        }
         LocalOffer = await _organisationClientService.GetLocalOfferById(serviceid);
         Name = LocalOffer.Name;
         if (LocalOffer.Locations != null && LocalOffer.Locations.Any()) ExtractAddressParts(LocalOffer.Locations.First());
