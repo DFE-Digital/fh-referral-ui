@@ -52,7 +52,7 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.PageContext.HttpContext = httpContext;
 
         //Act 
-        var result = await localOfferDetailModel.OnGetAsync("NewId", (serviceDto != null) ? serviceDto.Id.ToString() : string.Empty) as PageResult;
+        var result = await localOfferDetailModel.OnGetAsync((serviceDto != null) ? serviceDto.Id.ToString() : string.Empty) as PageResult;
 
         //Assert
         result.Should().NotBeNull();
@@ -97,7 +97,7 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.PageContext.HttpContext = httpContext;
 
         //Act 
-        var result = await localOfferDetailModel.OnGetAsync("NewId", serviceDto.Id.ToString()) as PageResult;
+        var result = await localOfferDetailModel.OnGetAsync(serviceDto.Id.ToString()) as PageResult;
 
         //Assert
         result.Should().NotBeNull();
@@ -133,7 +133,7 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.PageContext.HttpContext = httpContext;
 
         //Act 
-        var result = await localOfferDetailModel.OnGetAsync("NewId", serviceDto.Id.ToString()) as PageResult;
+        var result = await localOfferDetailModel.OnGetAsync(serviceDto.Id.ToString()) as PageResult;
 
         //Assert
         result.Should().NotBeNull();
@@ -169,7 +169,7 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.PageContext.HttpContext = httpContext;
 
         //Act 
-        var result = await localOfferDetailModel.OnGetAsync("NewId", serviceDto.Id.ToString()) as PageResult;
+        var result = await localOfferDetailModel.OnGetAsync(serviceDto.Id.ToString()) as PageResult;
 
         //Assert
         result.Should().NotBeNull();
