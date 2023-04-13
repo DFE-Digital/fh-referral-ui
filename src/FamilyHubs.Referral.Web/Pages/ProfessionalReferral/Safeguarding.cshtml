@@ -1,47 +1,5 @@
 ﻿@page
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.SafeguardingModel
-@{
-}
-
-<style>
-    a.nhs:link {
-        color: white;
-        background-color: transparent;
-        text-decoration: none;
-    }
-
-    a.nhs:visited {
-        color: white;
-        background-color: transparent;
-        text-decoration: none;
-    }
-
-    a.nhs:hover {
-        color: white;
-        background-color: transparent;
-        text-decoration: underline;
-    }
-
-    a.nhs:active {
-        color: black;
-        background-color: transparent;
-        text-decoration: underline;
-    }
-
-    .interrupt-panel {
-        width: 100%;
-        padding: 30px;
-        background: #005ea5;
-        color: #fff !important;
-        overflow: hidden;
-        width: auto;
-    }
-
-        .interrupt-panel h1, .interrupt-panel p, .interrupt-panel h2, .interrupt-panel ul {
-            color: #fff !important;
-        }
-
-</style>
 
 @section Back {
     <a asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@Guid.NewGuid().ToString()" asp-route-serviceId="@Model.Id" asp-route-name="@Model.Name" class="govuk-back-link">Back</a>
@@ -53,7 +11,7 @@
             <h1 class="govuk-heading-l">
                 Do not use this service to report safeguarding concerns
             </h1>
-            <p>Use the <a href="https://nhssafeguarding.app/?nocache=0.23461449202295054" id="nhs-app" class="nhs">NHS safeguarding app</a> for guidance on reporting safeguarding concerns.</p>
+            <p>Use the <a href="https://nhssafeguarding.app/?nocache=0.23461449202295054" id="nhs-safeguarding" class="govuk-link--inverse">NHS safeguarding app</a> for guidance on reporting safeguarding concerns.</p>
         </div>
 
         <form method="post" novalidate data-validate='my-form-validation'>
