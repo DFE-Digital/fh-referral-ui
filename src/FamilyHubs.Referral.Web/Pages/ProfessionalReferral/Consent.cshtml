@@ -10,25 +10,25 @@
 <form method="post">
     <input asp-for="@Model.Name" type="hidden">
     <input asp-for="@Model.Id" type="hidden">
-
-    @if (!Model.ValidationValid)
-    {
-        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">
-                There is a problem
-            </h2>
-            <div class="govuk-error-summary__body">
-                <ul class="govuk-list govuk-error-summary__list">
-                    <li>
-                        <a href="#service-name" data-testid="enter-service-name-error">Select whether you have permission from the family to share details.</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    }
-
     <div class="govuk-form-group">
         <div class="govuk-form-group ">
+
+            @if (!Model.ValidationValid)
+            {
+                <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">
+                        There is a problem
+                    </h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            <li>
+                                <a href="#service-name" data-testid="enter-service-name-error">Select whether you have permission from the family to share details.</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+
             <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                     <h1 class="govuk-fieldset__heading">
@@ -75,7 +75,7 @@
             </fieldset>
         </div>
     </div>
-    <button type="submit" class="govuk-button">
+    <button type="submit" class="govuk-button" data-module="govuk-button">
         Continue
     </button>
 </form>
