@@ -35,16 +35,7 @@ public class ConsentModel : PageModel
 
         if (string.Compare(IsConsentGiven, "yes", StringComparison.OrdinalIgnoreCase) == 0)
         {
-            if (User != null && User.Identity != null && !User.Identity.IsAuthenticated)
-            {
-                return RedirectToPage("/ProfessionalReferral/SignIn", new
-                {
-                    id,
-                    name
-                });
-
-            }
-
+            
             return RedirectToPage("/ProfessionalReferral/FamilyContact", new
             {
                 id,
