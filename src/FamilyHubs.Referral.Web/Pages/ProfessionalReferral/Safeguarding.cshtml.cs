@@ -5,6 +5,8 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class SafeguardingModel : PageModel
 {
+    public string BackUrl { get; set; } = default!;
+
     [BindProperty]
     public string Id { get; set; } = default!;
     [BindProperty]
@@ -13,14 +15,8 @@ public class SafeguardingModel : PageModel
     {
         Id = id;
         Name = name;
-    }
 
-    public IActionResult OnPost(string id, string name)
-    {
-        return RedirectToPage("/ProfessionalReferral/Consent", new
-        {
-            id,
-            name
-        });
+        string encodeName = Uri.EscapeDataString(name);
+        BackUrl = $"/ProfessionalReferral/Consent?id={id}&name={encodeName}";
     }
 }
