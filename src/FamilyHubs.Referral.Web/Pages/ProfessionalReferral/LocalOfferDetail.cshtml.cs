@@ -95,9 +95,9 @@ public class LocalOfferDetailModel : PageModel
         if (string.IsNullOrEmpty(addressDto.Address1))
             return;
 
-        Address1 = addressDto.Address1 + ",";
-        City = !string.IsNullOrWhiteSpace(addressDto.City) ? addressDto.City + "," : string.Empty;
-        StateProvince = !string.IsNullOrWhiteSpace(addressDto.StateProvince) ? addressDto.StateProvince + "," : string.Empty;
+        Address1 = addressDto.Address1.Replace(",", "") + ",";
+        City = !string.IsNullOrWhiteSpace(addressDto.City) ? addressDto.City.Replace(",", "") + "," : string.Empty;
+        StateProvince = !string.IsNullOrWhiteSpace(addressDto.StateProvince) ? addressDto.StateProvince.Replace(",", "") + "," : string.Empty;
         PostalCode = addressDto.PostCode;
     }
 
