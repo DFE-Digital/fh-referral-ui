@@ -16,7 +16,7 @@ If you need to work with SASS and have it build automatically if any changes hav
 - **sections** - used for site sections, such as header etc.
 
 ## Folder structure
-When name your sass files, please start with an undersscore **"_"** i.e. "_header.scss"
+When name your sass files, please start with an underscore **"_"** i.e. "_header.scss"
 
 
 # To do
