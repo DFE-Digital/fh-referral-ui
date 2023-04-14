@@ -11,7 +11,24 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+
         <form method="post">
+            <input asp-for="@Model.BackUrl" type="hidden">
+            @if (Model.ValidationValid == false)
+            {
+                <div class="govuk-error-summary" data-module="govuk-error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">
+                        There is a problem
+                    </h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            <li>
+                                <a href="#consent" data-testid="enter-service-name-error">You must enter the persons full name.</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
             <div class="govuk-form-group">
             
                 <h1 class="govuk-label-wrapper">
@@ -21,31 +38,23 @@
                 </h1>
                 <div id="event-name-hint" class="govuk-hint">
                     This must be a person aged 16 or over.
-                </div
+                </div>
 
-                @{
-                    if (Model.ValidationValid == false)
+                
+                
+                <div class="govuk-form-group  @(Model.ValidationValid == false ? "govuk-form-group--error" : "") ">
+                    @if (Model.ValidationValid == false)
                     {
-                        <div class="govuk-error-summary" data-module="govuk-error-summary">
-                            <h2 class="govuk-error-summary__title" id="error-summary-title">
-                                There is a problem
-                            </h2>
-                            <div class="govuk-error-summary__body">
-                                <ul class="govuk-list govuk-error-summary__list">
-                                    <li>
-                                        <a href="#consent" data-testid="enter-service-name-error">You must enter the persons full name.</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                        <p class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> Enter a full name.
+                        </p>
                     }
-                }
-                <div class="govuk-form-group">
                     <label class="govuk-label" for="FullName">
                         Full name
                     </label>
                     <input class="govuk-input @(Model.ValidationValid == false ? "govuk-input--error" : "")" type="text" spellcheck="false" autocomplete="FullName" id="FullName" name="FullName" value="@Model.FullName" asp-for="FullName" maxlength="255">
                 </div>
+                <br />
                 <button type="submit" class="govuk-button" data-module="govuk-button">
                     Continue
                 </button>

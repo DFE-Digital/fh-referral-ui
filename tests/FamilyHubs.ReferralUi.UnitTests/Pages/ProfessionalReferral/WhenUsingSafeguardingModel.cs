@@ -20,17 +20,4 @@ public class WhenUsingSafeguardingModel
         safeguardingModel.Name.Should().Be("Name");
 
     }
-
-    public void ThenOnPostSetsIdAndName()
-    {
-        //Arrange
-        SafeguardingModel safeguardingModel = new SafeguardingModel();
-
-        //Act
-        var result = safeguardingModel.OnPost("Id", "ServiceName") as RedirectToPageResult;
-
-        //Assert
-        ArgumentNullException.ThrowIfNull(result);
-        result.PageName.Should().Be("/ProfessionalReferral/Consent");
-    }
 }

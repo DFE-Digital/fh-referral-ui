@@ -10,6 +10,7 @@ public class SupportDetailsModel : PageModel
 {
     private readonly IDistributedCacheService _distributedCacheService;
 
+    [BindProperty]
     public string BackUrl { get; set; } = default!;
 
     [BindProperty]
