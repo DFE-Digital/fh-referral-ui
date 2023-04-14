@@ -173,16 +173,16 @@ public class WhenUsingRedisCacheService
     {
         ConnectWizzardViewModel expectedResult = new()
         {
-            ReferralId = Guid.NewGuid().ToString(),
+            //ReferralId = Guid.NewGuid().ToString(),
             ServiceId = Guid.NewGuid().ToString(),
             ServiceName = "ServiceName",
-            FullName = "Fullname",
-            Telephone = "Telephone",
-            Textphone = "Textphone",
-            EmailAddress = "EmailAddress",
-            AnyoneInFamilyBeingHarmed = false,
+            //FullName = "Fullname",
+            //Telephone = "Telephone",
+            //Textphone = "Textphone",
+            //EmailAddress = "EmailAddress",
+            //AnyoneInFamilyBeingHarmed = false,
             HaveConcent = true,
-            ReasonForSupport = "ReasonForSupport"
+            //ReasonForSupport = "ReasonForSupport"
         };
         _mockRedisCache.Setup(x => x.GetStringValue(It.IsAny<string>())).Returns(expectedResult.Encode());
 

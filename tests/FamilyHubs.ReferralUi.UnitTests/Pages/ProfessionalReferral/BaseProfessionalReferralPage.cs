@@ -14,14 +14,14 @@ public class BaseProfessionalReferralPage
         {
             ServiceId = "ServiceId",
             ServiceName = "ServiceName",
-            ReferralId = "ReferralId",
-            AnyoneInFamilyBeingHarmed = false,
+            //ReferralId = "ReferralId",
+            //AnyoneInFamilyBeingHarmed = false,
             HaveConcent = true,
-            FullName = "FullName",
-            EmailAddress = "someone@email.com",
-            Telephone = "01212223333",
-            Textphone = "0712345678",
-            ReasonForSupport = "Reason For Support"
+            //FullName = "FullName",
+            //EmailAddress = "someone@email.com",
+            //Telephone = "01212223333",
+            //Textphone = "0712345678",
+            //ReasonForSupport = "Reason For Support"
         };
 
         _mockICacheService = new Mock<IDistributedCacheService>(MockBehavior.Strict);

@@ -7,14 +7,14 @@ public class ConnectWizzardViewModel
 {
     public string ServiceId { get; set; } = string.Empty;
     public string ServiceName { get; set; } = string.Empty;
-    public string ReferralId { get; set; } = string.Empty;
-    public bool? AnyoneInFamilyBeingHarmed { get; set; }
+    //public string ReferralId { get; set; } = string.Empty;
+    //public bool? AnyoneInFamilyBeingHarmed { get; set; }
     public bool? HaveConcent { get; set; }
-    public string FullName { get; set; } = string.Empty; //Name of Family Contact
-    public string? EmailAddress { get; set; }
-    public string? Telephone { get; set; }
-    public string? Textphone { get; set; }
-    public string ReasonForSupport { get; set; } = string.Empty;
+    //public string FullName { get; set; } = string.Empty; //Name of Family Contact
+    //public string? EmailAddress { get; set; }
+    //public string? Telephone { get; set; }
+    //public string? Textphone { get; set; }
+    //public string ReasonForSupport { get; set; } = string.Empty;
 
     public string Encode(byte xorConstant = 0x62)
     {
