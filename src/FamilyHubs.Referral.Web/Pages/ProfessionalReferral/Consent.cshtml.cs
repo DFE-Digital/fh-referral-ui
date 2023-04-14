@@ -36,7 +36,7 @@ public class ConsentModel : PageModel
         {
             
 
-            return RedirectToPage("/ProfessionalReferral/FamilyContact", new
+            return RedirectToPage("/ProfessionalReferral/SupportDetails", new
             {
                 id,
                 name
