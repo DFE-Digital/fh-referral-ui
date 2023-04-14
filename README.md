@@ -49,3 +49,9 @@ The entry point for the site's JavaScript is `scripts\app.ts`.
 To debug the JavaScript in Visual Studio, set breakpoints in the JavaScript files under the `Script documents` folder in the Solution Explorer when debugging.
 
 (Note, we might switch to [environment-based bundling and minification at a later point](https://learn.microsoft.com/en-us/aspnet/core/client-side/bundling-and-minification?view=aspnetcore-6.0).)
+
+## TODO
+
+find and connect differences.
+find opens feedback page in same tab, connect opens in new tab.
+which is correct?
