@@ -14,13 +14,4 @@ public class SafeguardingModel : PageModel
         Id = id;
         Name = name;
     }
-
-    public IActionResult OnPost(string id, string name) 
-    {
-        return RedirectToPage("/ProfessionalReferral/Consent", new
-        {
-            id,
-            name
-        });
-    }
 }
