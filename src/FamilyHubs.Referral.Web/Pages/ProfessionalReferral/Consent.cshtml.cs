@@ -11,7 +11,7 @@ public class ConsentModel : PageModel
     public string Name { get; set; } = default!;
 
     [BindProperty]
-    public string IsConsentGiven { get; set; } = default!;
+    public string Consent { get; set; } = default!;
 
 
     [BindProperty]
@@ -25,14 +25,14 @@ public class ConsentModel : PageModel
 
     public IActionResult OnPost(string id, string name)
     {
-        if (!ModelState.IsValid || IsConsentGiven == null)
+        if (!ModelState.IsValid || Consent == null)
         {
             ValidationValid = false;
             return Page();
         }
 
 
-        if (string.Compare(IsConsentGiven, "yes", StringComparison.OrdinalIgnoreCase) == 0)
+        if (string.Compare(Consent, "yes", StringComparison.OrdinalIgnoreCase) == 0)
         {
             
 

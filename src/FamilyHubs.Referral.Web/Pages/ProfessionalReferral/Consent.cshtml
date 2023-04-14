@@ -13,14 +13,14 @@
 
         @if (!Model.ValidationValid)
         {
-            <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+            <div class="govuk-error-summary" data-module="govuk-error-summary">
                 <h2 class="govuk-error-summary__title" id="error-summary-title">
                     There is a problem
                 </h2>
                 <div class="govuk-error-summary__body">
                     <ul class="govuk-list govuk-error-summary__list">
                         <li>
-                            <a href="#service-name" data-testid="enter-service-name-error">Select whether you have permission from the family to share details.</a>
+                            <a href="#consent" data-testid="enter-service-name-error">Select whether you have permission from the family to share details.</a>
                         </li>
                     </ul>
                 </div>
@@ -34,18 +34,21 @@
             <input asp-for="@Model.Name" type="hidden">
             <input asp-for="@Model.Id" type="hidden">
             <p>You must have permission from the family to give their details to the service.</p>
-            <p class="govuk-body">Those details include:</p>
+            <p>Those details include:</p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>who to contact in the family</li>
                 <li>ways to contact the family</li>
                 <li>why the family needs help </li>
             </ul>
             <p>You can come back and connect the family to the service once you have permission.</p>
+
             <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset">
-                    <h2 class="govuk-heading-m">
-                        Do you have permission from the family?
-                    </h2>
+                <fieldset class="govuk-fieldset" aria-describedby="changed-name-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            Do you have permission from the family?
+                        </h1>
+                    </legend>
                     <div class="govuk-radios govuk-radios--inline @(Model.ValidationValid == false ? "govuk-form-group--error" : "")" data-module="govuk-radios">
                         @{
                             if (Model.ValidationValid == false)
@@ -56,19 +59,18 @@
                             }
                         }
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="consent" name="IsConsentGiven" type="radio" value="yes" @(Model.IsConsentGiven != null && Model.IsConsentGiven == "yes" ? "checked" : "")>
+                            <input class="govuk-radios__input" id="consent" name="Consent" type="radio" value="yes" @(Model.Consent != null && Model.Consent == "yes" ? "checked" : "")>
                             <label class="govuk-label govuk-radios__label" for="consent">
                                 Yes
                             </label>
                         </div>
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="consent-2" name="IsConsentGiven" type="radio" value="no" @(Model.IsConsentGiven != null && Model.IsConsentGiven == "no" ? "checked" : "")>
+                            <input class="govuk-radios__input" id="consent-2" name="Consent" type="radio" value="no" @(Model.Consent != null && Model.Consent == "no" ? "checked" : "")>
                             <label class="govuk-label govuk-radios__label" for="consent-2">
                                 No
                             </label>
                         </div>
                     </div>
-
                 </fieldset>
             </div>
             <button type="submit" class="govuk-button" data-module="govuk-button">

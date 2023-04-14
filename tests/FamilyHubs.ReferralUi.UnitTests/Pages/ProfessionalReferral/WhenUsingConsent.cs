@@ -27,7 +27,7 @@ public class WhenUsingConsent
     public void ThenOnGetConsent_With_IsConsentGiven_NotSelected()
     {
         //Arrange
-        _consentModel.IsConsentGiven = default!;
+        _consentModel.Consent = default!;
 
         //Act
         _consentModel.OnPost("Id", "ServiceName");
@@ -42,7 +42,7 @@ public class WhenUsingConsent
     public void ThenOnGetConsent_With_IsImmediateHarm_Selected(string isConsentGiven, string pageName)
     {
         //Arrange
-        _consentModel.IsConsentGiven = isConsentGiven;
+        _consentModel.Consent = isConsentGiven;
 
         //Act
         var result = _consentModel.OnPost("Id", "ServiceName") as RedirectToPageResult;

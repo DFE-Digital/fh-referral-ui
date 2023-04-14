@@ -2,6 +2,7 @@
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.SafeguardingModel
 @{
     ViewData["Title"] = "Safeguarding";
+    string serviceName = System.Web.HttpUtility.UrlEncode(Model.Name);
 }
 
 @section Back {
@@ -19,9 +20,9 @@
 
         <form method="post" novalidate>
             <div class="govuk-form-group">
-                <a href="/ProfessionalReferral/Consent?id=@Model.Id&name=&@Model.Name" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+                <button type="submit" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
                     Continue
-                </a>
+                </button>
             </div>
         </form>
     </div>
