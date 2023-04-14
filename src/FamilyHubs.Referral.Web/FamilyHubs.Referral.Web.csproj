@@ -46,16 +46,16 @@
 		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\FamilyHubs.Referral.Core\FamilyHubs.Referral.Core.csproj" />
-	</ItemGroup>
-
   <ItemGroup>
     <Folder Include="wwwroot\lib\govuk\assets\js\" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FamilyHubs.Referral.Infrastructure\FamilyHubs.Referral.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
