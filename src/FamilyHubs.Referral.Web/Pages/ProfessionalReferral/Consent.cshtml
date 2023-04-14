@@ -42,14 +42,14 @@
             </ul>
             <p>You can come back and connect the family to the service once you have permission.</p>
 
-            <div class="govuk-form-group">
+            <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <h1 class="govuk-fieldset__heading">
                             Do you have permission from the family?
                         </h1>
                     </legend>
-                    <div class="govuk-radios govuk-radios--inline @(Model.ValidationValid == false ? "govuk-form-group--error" : "")" data-module="govuk-radios">
+                    <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
                         @{
                             if (Model.ValidationValid == false)
                             {
