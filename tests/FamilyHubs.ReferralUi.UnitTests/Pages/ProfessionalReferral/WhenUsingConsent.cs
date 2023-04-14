@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
-public class WhenUsingConsent : BaseProfessionalReferralPage
+public class WhenUsingConsent
 {
     private readonly ConsentModel _consentModel;
 
     public WhenUsingConsent()
     {
-        _consentModel = new ConsentModel(_mockICacheService.Object);
+        _consentModel = new ConsentModel();
     }
     [Fact]
     public void ThenOnGetConsent()
