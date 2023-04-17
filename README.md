@@ -59,4 +59,4 @@ find opens feedback page in same tab, connect opens in new tab.
 which is correct?
 lib/govuk/assets/images/govuk-crest.png
 
-open / close filter button doesn't work.
+open / close filter button doesn't work - create a component from the find site.
