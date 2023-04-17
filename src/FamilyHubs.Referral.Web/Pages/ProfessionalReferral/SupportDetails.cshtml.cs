@@ -23,15 +23,15 @@ public class SupportDetailsModel : PageModel
         _distributedCacheService = distributedCacheService;
     }
 
-    public void OnGet(string id, string name)
+    public void OnGet(string serviceId, string serviceName)
     {
-        string encodeName = Uri.EscapeDataString(name);
-        BackUrl = $"/ProfessionalReferral/Consent?id={id}&name={encodeName}";
+        string encodeName = Uri.EscapeDataString(serviceName);
+        BackUrl = $"/ProfessionalReferral/Consent?id={serviceId}&name={encodeName}";
 
         ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
 
-        model.ServiceId = id;
-        model.ServiceName = name;
+        model.ServiceId = serviceId;
+        model.ServiceName = serviceName;
 
         if (!string.IsNullOrEmpty(model.FullName))
             FullName = model.FullName;
