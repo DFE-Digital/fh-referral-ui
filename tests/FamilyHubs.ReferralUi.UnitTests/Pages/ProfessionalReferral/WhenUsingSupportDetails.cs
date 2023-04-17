@@ -19,7 +19,7 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
         _supportDetailsModel.OnGet("Id", "Some Name With Spaces");
 
         //Assert
-        _supportDetailsModel.BackUrl.Should().Be("/ProfessionalReferral/Consent?id=Id&name=Some%20Name%20With%20Spaces");
+        _supportDetailsModel.BackUrl.Should().Be("/ProfessionalReferral/Consent?serviceId=Id&serviceName=Some%20Name%20With%20Spaces");
         
     }
 
