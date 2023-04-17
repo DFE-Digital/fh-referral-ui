@@ -5,7 +5,7 @@
 }
 
 @section Back {
-    <a href="/ProfessionalReferral/ConnectFamilyToServiceStart?id=@Model.Id&name=@Model.Name" class="govuk-back-link">Back</a>
+    <a href="/ProfessionalReferral/Safeguarding?serviceId=@Model.ServiceId&serviceName=@Model.ServiceName" class="govuk-back-link">Back</a>
 }
 
 <div class="govuk-grid-row">
@@ -31,8 +31,8 @@
             Permission to share details
         </h1>
         <form method="post">
-            <input asp-for="@Model.Name" type="hidden">
-            <input asp-for="@Model.Id" type="hidden">
+            <input asp-for="@Model.ServiceName" type="hidden">
+            <input asp-for="@Model.ServiceId" type="hidden">
             <p>You must have permission from the family to give their details to the service.</p>
             <p>Those details include:</p>
             <ul class="govuk-list govuk-list--bullet">

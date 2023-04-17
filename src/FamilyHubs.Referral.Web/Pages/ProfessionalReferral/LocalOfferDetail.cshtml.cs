@@ -33,12 +33,12 @@ public class LocalOfferDetailModel : PageModel
         _organisationClientService = organisationClientService;
     }
 
-    public async Task<IActionResult> OnGetAsync(string serviceid)
+    public async Task<IActionResult> OnGetAsync(string serviceId)
     {
-        ServiceId = serviceid;
+        ServiceId = serviceId;
         var referer = Request.Headers["Referer"];
         ReturnUrl = StringValues.IsNullOrEmpty(referer) ? Url.Page("Search") : referer.ToString();
-        LocalOffer = await _organisationClientService.GetLocalOfferById(serviceid);
+        LocalOffer = await _organisationClientService.GetLocalOfferById(serviceId);
         Name = LocalOffer.Name;
         if (LocalOffer.Locations != null && LocalOffer.Locations.Any()) ExtractAddressParts(LocalOffer.Locations.First());
         GetContactDetails();
@@ -50,8 +50,8 @@ public class LocalOfferDetailModel : PageModel
     {
         return RedirectToPage("/ProfessionalReferral/Safeguarding", new
         {
-            id = serviceId,
-            name
+            serviceId,
+            serviceName = name
         });
 
     }

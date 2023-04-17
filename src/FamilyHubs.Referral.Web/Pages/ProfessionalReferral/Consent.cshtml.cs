@@ -6,9 +6,9 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class ConsentModel : PageModel
 { 
     [BindProperty]
-    public string Id { get; set; } = default!;
+    public string ServiceId { get; set; } = default!;
     [BindProperty]
-    public string Name { get; set; } = default!;
+    public string ServiceName { get; set; } = default!;
 
     [BindProperty]
     public string Consent { get; set; } = default!;
@@ -17,13 +17,13 @@ public class ConsentModel : PageModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public void OnGet(string id, string name)
+    public void OnGet(string serviceId, string serviceName)
     {
-        Id = id;
-        Name = name;
+        ServiceId = serviceId;
+        ServiceName = serviceName;
     }
 
-    public IActionResult OnPost(string id, string name)
+    public IActionResult OnPost(string serviceId, string serviceName)
     {
         if (!ModelState.IsValid || Consent == null)
         {
@@ -38,8 +38,8 @@ public class ConsentModel : PageModel
 
             return RedirectToPage("/ProfessionalReferral/SupportDetails", new
             {
-                id,
-                name
+                serviceId,
+                serviceName
             });
 
         }

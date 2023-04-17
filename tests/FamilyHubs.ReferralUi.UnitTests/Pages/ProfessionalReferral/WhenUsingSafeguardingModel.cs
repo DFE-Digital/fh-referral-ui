@@ -16,8 +16,8 @@ public class WhenUsingSafeguardingModel
         safeguardingModel.OnGet("Id", "Name");
 
         //Assert
-        safeguardingModel.Id.Should().Be("Id");
-        safeguardingModel.Name.Should().Be("Name");
+        safeguardingModel.ServiceId.Should().Be("Id");
+        safeguardingModel.ServiceName.Should().Be("Name");
 
     }
 }
