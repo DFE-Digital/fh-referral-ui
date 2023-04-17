@@ -50,8 +50,8 @@ public class LocalOfferDetailModel : PageModel
     {
         return RedirectToPage("/ProfessionalReferral/Safeguarding", new
         {
-            id = serviceId,
-            name
+            serviceId,
+            serviceName = name
         });
 
     }

@@ -19,8 +19,8 @@ public class WhenUsingConsent
         _consentModel.OnGet("Id", "Name");
 
         //Assert
-        _consentModel.Id.Should().Be("Id");
-        _consentModel.Name.Should().Be("Name");
+        _consentModel.ServiceId.Should().Be("Id");
+        _consentModel.ServiceName.Should().Be("Name");
     }
 
     [Fact]
