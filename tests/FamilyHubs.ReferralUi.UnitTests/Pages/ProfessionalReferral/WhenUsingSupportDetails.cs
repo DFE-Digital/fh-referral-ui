@@ -35,7 +35,7 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
 
         //Assert
         ArgumentNullException.ThrowIfNull(result);
-        result.PageName.Should().Be("/ProfessionalReferral/ContactDetails");
+        result.PageName.Should().Be("/ProfessionalReferral/WhySupport");
     }
 
     [Theory]

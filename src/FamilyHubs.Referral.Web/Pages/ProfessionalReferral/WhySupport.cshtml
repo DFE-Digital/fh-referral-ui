@@ -1,0 +1,57 @@
+﻿@page
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.WhySupportModel
+@{
+}
+
+@section Back {
+    <a asp-page="/ProfessionalReferral/SupportDetails" class="govuk-back-link">Back</a>
+}
+
+    <h1 class="govuk-heading-l">Reason for the connection request</h1>
+    <form method="post">
+        <div class="govuk-form-group">
+            <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
+
+                <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
+                <p>Use this to give the service details about the family, for example:</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>why the family needs help</li>
+                        <li>other organisations currently working with the family</li>
+                        <li>if any family members have mental health conditions or special educational needs or disabilities</li>
+                        <li>important things to note such as domestic abuse</li>
+                    </ul>
+
+                    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
+                        <div class="govuk-form-group">
+                            <h1 class="govuk-label-wrapper">
+                                <label class="govuk-label govuk-label--m" for="with-hint">
+                                    What do you want to tell the service?
+                                </label>
+                            </h1>
+
+                            @{
+                                if (Model.ValidationValid == false)
+                                {
+                                    <p class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> You must enter a Reason For Support
+                                    </p>
+                                }
+                            }
+
+                        <textarea asp-for="TextAreaValue" class="govuk-textarea govuk-js-character-count" rows="10" id="with-hint"></textarea>
+                        </div>
+
+                        <div id="with-hint-info" class="govuk-hint govuk-character-count__message">
+                            You can enter up to 500 characters
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    <button type="submit" class="govuk-button" data-module="govuk-button">
+            Continue
+        </button>
+    </form>
+
+
