@@ -13,7 +13,7 @@
     <div class="govuk-grid-column-two-thirds">
         <form method="post">
             <input asp-for="@Model.BackUrl" type="hidden">
-            @await Html.PartialAsync("../Shared/_TextBoxDetail", Model.PartialTextBoxViewModel) 
+            <partial name="../Shared/_TextBoxDetail" for="PartialTextBoxViewModel">
         </form>
     </div>
 </div>
