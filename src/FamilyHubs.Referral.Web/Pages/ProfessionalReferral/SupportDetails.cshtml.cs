@@ -26,7 +26,7 @@ public class SupportDetailsModel : PageModel
     public void OnGet(string serviceId, string serviceName)
     {
         string encodeName = Uri.EscapeDataString(serviceName);
-        BackUrl = $"/ProfessionalReferral/Consent?id={serviceId}&name={encodeName}";
+        BackUrl = $"/ProfessionalReferral/Consent?serviceId={serviceId}&serviceName={encodeName}";
 
         ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
 
