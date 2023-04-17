@@ -12,11 +12,18 @@ public class SupportDetailsModel : PageModel
     [BindProperty]
     public string BackUrl { get; set; } = default!;
 
-    [BindProperty]
-    public string FullName { get; set; } = string.Empty;
+    public PartialTextBoxViewModel PartialTextBoxViewModel { get; set; } = new PartialTextBoxViewModel()
+    {
+        HeadingText = "Who should the service contact in the family?",
+        HintText = "This must be a person aged 16 or over.",
+        TextBoxLabel = "Full name",
+        MainErrorText = "Enter a full name",
+        TextBoxErrorText = "Enter a full name",
+    };
+
 
     [BindProperty]
-    public bool ValidationValid { get; set; } = true;
+    public string TextBoxValue { get; set; } = string.Empty;
 
     public SupportDetailsModel(IDistributedCacheService distributedCacheService)
     {
@@ -34,21 +41,26 @@ public class SupportDetailsModel : PageModel
         model.ServiceName = name;
 
         if (!string.IsNullOrEmpty(model.FullName))
-            FullName = model.FullName;
+        {
+            PartialTextBoxViewModel.TextBoxValue = model.FullName;
+            TextBoxValue = model.FullName;
+        }
+            
     }
 
     public IActionResult OnPost()
     {
         if (!ModelState.IsValid)
         {
-            if (FullName == null || FullName.Trim().Length == 0 || FullName.Length > 255)
-                ValidationValid = false;
+            PartialTextBoxViewModel.TextBoxValue = TextBoxValue;
+            if (TextBoxValue == null || TextBoxValue.Trim().Length == 0 || TextBoxValue.Length > 255)
+                PartialTextBoxViewModel.ValidationValid = false;
 
             return Page();
         }
 
         ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
-        model.FullName = FullName;
+        model.FullName = TextBoxValue;
         _distributedCacheService.StoreConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel, model);
 
         return RedirectToPage("/ProfessionalReferral/ContactDetails", new

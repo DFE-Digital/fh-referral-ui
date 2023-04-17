@@ -27,7 +27,7 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
     public void ThenOnPostSupportDetails()
     {
         //Arrange
-        _supportDetailsModel.FullName = "Joe Blogs";
+        _supportDetailsModel.TextBoxValue = "Joe Blogs";
 
         //Act
         var result = _supportDetailsModel.OnPost() as RedirectToPageResult;
@@ -44,7 +44,7 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
     public void ThenOnPostSupportDetailsWithEmptyFullName(string value)
     {
         //Arrange
-        _supportDetailsModel.FullName = value;
+        _supportDetailsModel.TextBoxValue = value;
         _supportDetailsModel.ModelState.AddModelError("FullName", "Enter a full name");
 
         //Act
@@ -52,6 +52,6 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
 
 
         //Assert
-        _supportDetailsModel.ValidationValid.Should().BeFalse();
+        _supportDetailsModel.PartialTextBoxViewModel.ValidationValid.Should().BeFalse();
     }
 }
