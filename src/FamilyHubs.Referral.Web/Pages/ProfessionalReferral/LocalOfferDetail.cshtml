@@ -7,7 +7,15 @@
 }
 
 @section Back {
-    <a href="@Model.ReturnUrl" class="govuk-back-link" data-testid="back-button">Back</a>
+    @if (!string.IsNullOrEmpty(@Model.ReturnUrl) && @Model.ReturnUrl.Contains("Safeguarding"))
+    {
+        <a href="/ProfessionalReferral/LocalOfferResults/@Model.PostalCode?currentPage=1" class="govuk-back-link" data-testid="back-button">Back</a>
+    }
+    else
+    {
+        <a href="@Model.ReturnUrl" class="govuk-back-link" data-testid="back-button">Back</a>
+    }
+
 }
 
 <div class="govuk-grid-row">
