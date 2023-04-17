@@ -5,8 +5,6 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class SafeguardingModel : PageModel
 {
-    public string BackUrl { get; set; } = default!;
-
     [BindProperty]
     public string ServiceId { get; set; } = default!;
     [BindProperty]
