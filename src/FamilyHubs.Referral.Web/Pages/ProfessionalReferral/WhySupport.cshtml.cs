@@ -9,6 +9,9 @@ public class WhySupportModel : PageModel
 {
     private readonly IDistributedCacheService _distributedCacheService;
 
+    public string ServiceId { get; private set; } = default!;
+    public string ServiceName { get; private set; } = default!;
+
     [BindProperty]
     public string TextAreaValue { get; set; } = default!;
 
@@ -21,6 +24,8 @@ public class WhySupportModel : PageModel
     public void OnGet()
     {
         ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
+        ServiceId = model.ServiceId;
+        ServiceName = model.ServiceName;    
         if (!string.IsNullOrEmpty(model.ReasonForSupport))
             TextAreaValue = model.ReasonForSupport;
     }

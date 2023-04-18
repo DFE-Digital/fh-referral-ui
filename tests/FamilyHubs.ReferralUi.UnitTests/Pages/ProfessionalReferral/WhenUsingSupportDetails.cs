@@ -1,6 +1,8 @@
 ﻿using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
@@ -15,12 +17,19 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
     [Fact]
     public void ThenOnGetSupportDetails()
     {
-        //Arrange & Act
+        //Arrange
+        Mock<ISession> mockSession = new Mock<ISession>();
+        var httpContext = new DefaultHttpContext() { Session = mockSession.Object };
+        _supportDetailsModel.PageContext.HttpContext = httpContext;
+
+
+        //Act
         _supportDetailsModel.OnGet("Id", "Some Name With Spaces");
 
         //Assert
-        _supportDetailsModel.BackUrl.Should().Be("/ProfessionalReferral/Consent?serviceId=Id&serviceName=Some%20Name%20With%20Spaces");
-        
+        _supportDetailsModel.ServiceId.Should().Be("Id");
+        _supportDetailsModel.ServiceName.Should().Be("Some Name With Spaces");
+
     }
 
     [Fact]
