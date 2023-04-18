@@ -8,6 +8,8 @@
     <a asp-page="/ProfessionalReferral/SupportDetails" asp-route-serviceId="@Model.ServiceId" asp-route-serviceName="@Model.ServiceName" class="govuk-back-link">Back</a>
 }
 
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Reason for the connection request</h1>
     <form method="post">
         <div class="govuk-form-group">
@@ -50,9 +52,10 @@
                 </div>
             </div>
         </div>
-    <button type="submit" class="govuk-button" data-module="govuk-button">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
             Continue
         </button>
     </form>
-
+    </div>
+</div>
 
