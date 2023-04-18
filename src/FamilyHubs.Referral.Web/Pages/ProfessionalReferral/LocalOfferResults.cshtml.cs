@@ -182,13 +182,13 @@ public class LocalOfferResultsModel : PageModel
     }
 
     public async Task<IActionResult> OnGetAsync(
-        string postCode, string? searchText, string? searchAge,
+        string postcode, string? searchText, string? searchAge,
         string? selectedLanguage, string? subcategorySelection,
         string? costSelection, string? serviceDeliverySelection,
         int? currentPage, bool forChildrenAndYoungPeople
         )
     {
-        SearchPostCode = postCode;
+        SearchPostCode = postcode;
         SearchText = searchText;
         SearchAge = searchAge;
         SelectedLanguage = selectedLanguage == "All languages" ? null : selectedLanguage;
