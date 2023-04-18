@@ -58,7 +58,7 @@ public class SupportDetailsModel : PageModel
         if (!ModelState.IsValid)
         {
             PartialTextBoxViewModel.TextBoxValue = TextBoxValue;
-            if (string.IsNullOrWhiteSpace(TextBoxValue.Trim()))
+            if (string.IsNullOrWhiteSpace(TextBoxValue?.Trim()))
                 PartialTextBoxViewModel.ValidationValid = false;
 
             return Page();
