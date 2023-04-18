@@ -9,8 +9,8 @@ public class SupportDetailsModel : PageModel
 {
     private readonly IDistributedCacheService _distributedCacheService;
 
-    [BindProperty]
-    public string BackUrl { get; set; } = default!;
+    public string ServiceId { get; private set; } = default!;
+    public string ServiceName { get; private set; } = default!;
 
     public PartialTextBoxViewModel PartialTextBoxViewModel { get; set; } = new PartialTextBoxViewModel()
     {
@@ -32,13 +32,16 @@ public class SupportDetailsModel : PageModel
 
     public void OnGet(string serviceId, string serviceName)
     {
-        string encodeName = Uri.EscapeDataString(serviceName);
-        BackUrl = $"/ProfessionalReferral/Consent?serviceId={serviceId}&serviceName={encodeName}";
+        //Fixes Session Changing between requests 
+        this.HttpContext.Session.Set("What", new byte[] { 1, 2, 3, 4, 5 });
+
+        ServiceId = serviceId;
+        ServiceName = serviceName;
 
         ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
-
         model.ServiceId = serviceId;
         model.ServiceName = serviceName;
+        _distributedCacheService.StoreConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel, model);
 
         if (!string.IsNullOrEmpty(model.FullName))
         {
@@ -63,7 +66,7 @@ public class SupportDetailsModel : PageModel
         model.FullName = TextBoxValue;
         _distributedCacheService.StoreConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel, model);
 
-        return RedirectToPage("/ProfessionalReferral/ContactDetails", new
+        return RedirectToPage("/ProfessionalReferral/WhySupport", new
         {
         });
 
