@@ -1,5 +1,4 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
-using FamilyHubs.SharedKernel.Security;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
