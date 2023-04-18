@@ -1,3 +1,4 @@
+using FamilyHubs.Referral.Core.Helper;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Core.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ public class SupportDetailsModel : PageModel
 
     public PartialTextBoxViewModel PartialTextBoxViewModel { get; set; } = new PartialTextBoxViewModel()
     {
+        ErrorId = "error-summary-title",
         HeadingText = "Who should the service contact in the family?",
         HintText = "This must be a person aged 16 or over.",
         TextBoxLabel = "Full name",
@@ -56,10 +58,15 @@ public class SupportDetailsModel : PageModel
         if (!ModelState.IsValid)
         {
             PartialTextBoxViewModel.TextBoxValue = TextBoxValue;
-            if (TextBoxValue == null || TextBoxValue.Trim().Length == 0 || TextBoxValue.Length > 255)
+            if (string.IsNullOrWhiteSpace(TextBoxValue.Trim()))
                 PartialTextBoxViewModel.ValidationValid = false;
 
             return Page();
+        }
+
+        if (TextBoxValue.Length > 255)
+        {
+            TextBoxValue = TextBoxValue.Truncate(252) ?? string.Empty;
         }
 
         ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);

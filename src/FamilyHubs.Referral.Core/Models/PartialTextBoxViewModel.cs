@@ -4,11 +4,12 @@ namespace FamilyHubs.Referral.Core.Models;
 
 public class PartialTextBoxViewModel
 {
-    public string HeadingText { get; set; } = default!;
-    public string HintText { get; set; } = default!;
-    public string TextBoxLabel { get; set; } = default!;
-    public string MainErrorText { get; set; } = default!;
-    public string TextBoxErrorText { get; set; } = default!;
-    public string TextBoxValue { get; set; } = string.Empty;
+    public required string ErrorId { get; init; }
+    public required string HeadingText { get; set; }
+    public required string HintText { get; set; }
+    public required string TextBoxLabel { get; set; }
+    public required string MainErrorText { get; set; }
+    public required string TextBoxErrorText { get; set; }
+    public string? TextBoxValue { get; set; }
     public bool ValidationValid { get; set; } = true;
 }

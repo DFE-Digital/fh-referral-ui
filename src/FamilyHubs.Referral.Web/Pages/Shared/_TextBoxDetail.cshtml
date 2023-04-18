@@ -2,15 +2,17 @@
 @if (Model.ValidationValid == false)
 {
     <div class="govuk-error-summary" data-module="govuk-error-summary">
-        <h2 class="govuk-error-summary__title" id="error-summary-title">
-            There is a problem
-        </h2>
-        <div class="govuk-error-summary__body">
-            <ul class="govuk-list govuk-error-summary__list">
-                <li>
-                    <a href="#consent" data-testid="enter-service-name-error">@Model.MainErrorText</a>
-                </li>
-            </ul>
+        <div role="alert">
+            <h2 class="govuk-error-summary__title" id="@Model.ErrorId">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li>
+                        <a href="#TextBoxValue" data-testid="enter-service-name-error">@Model.MainErrorText</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 }
@@ -41,7 +43,7 @@
         <label class="govuk-label" for="TextBoxValue">
             @Model.TextBoxLabel
         </label>
-        <input class="govuk-input @(Model.ValidationValid == false ? "govuk-input--error" : "")" type="text" spellcheck="false" autocomplete="TextBoxValue" id="TextBoxValue" name="TextBoxValue" value="@Model.TextBoxValue" asp-for="TextBoxValue" maxlength="255">
+        <input class="govuk-input @(Model.ValidationValid == false ? "govuk-input--error" : "")" type="text" spellcheck="false" autocomplete="TextBoxValue" id="TextBoxValue" name="TextBoxValue" value="@Model.TextBoxValue" asp-for="TextBoxValue" >
     </div>
     <br />
     <button type="submit" class="govuk-button" data-module="govuk-button">
