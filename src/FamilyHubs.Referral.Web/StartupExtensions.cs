@@ -53,7 +53,6 @@ public static class StartupExtensions
         services.AddDistributedMemoryCache();
         services.AddSession(options => {
             options.IdleTimeout = TimeSpan.FromMinutes(configuration.GetValue<int>("SessionTimeOutMinutes"));
-            options.Cookie.IsEssential = true;
         });
 
         services.AddTransient<IRedisCache, RedisCache>();
