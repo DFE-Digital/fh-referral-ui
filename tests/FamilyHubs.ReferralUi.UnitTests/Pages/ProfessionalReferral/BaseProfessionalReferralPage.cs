@@ -15,6 +15,11 @@ public class BaseProfessionalReferralPage
             ServiceId = "ServiceId",
             ServiceName = "ServiceName",
             FullName = "FullName",
+            ReasonForSupport = "Reason For Support",
+            EmailSelected = true,
+            TelephoneSelected = true,
+            TextPhoneSelected = true,
+            LetterSelected = true,
         };
 
         _mockICacheService = new Mock<IDistributedCacheService>(MockBehavior.Strict);

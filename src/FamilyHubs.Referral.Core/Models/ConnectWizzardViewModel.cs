@@ -9,6 +9,10 @@ public class ConnectWizzardViewModel
     public string ServiceName { get; set; } = string.Empty;
     public string FullName { get; set; } = string.Empty; //Name of the contact
     public string ReasonForSupport { get; set; } = default!;
+    public bool EmailSelected { get; set; }
+    public bool TelephoneSelected { get; set; }
+    public bool TextPhoneSelected { get; set; }
+    public bool LetterSelected { get; set; }
 
     public string Encode(byte xorConstant = 0x62)
     {
