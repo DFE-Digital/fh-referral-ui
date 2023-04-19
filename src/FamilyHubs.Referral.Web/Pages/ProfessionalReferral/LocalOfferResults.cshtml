@@ -1,9 +1,8 @@
-﻿@page "{postCode}"
+﻿@page
 @using FamilyHubs.Referral.Web.Extensions
 @model LocalOfferResultsModel
 @{
     ViewData["Title"] = "Search results";
-    ViewData["Description"] = "Description TBC";
 }
 
 @section Back {
@@ -13,18 +12,20 @@
 <form method="post">
 
 <!-- Hidden fields -->
-<input asp-for="@Model.SearchPostCode" type="hidden"/>
+<input asp-for="@Model.postcode" type="hidden"/>
 
 @if (Model.SearchResults.TotalCount == 0 && Model.InitialLoad)
 {
-    <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-l">No results found</h1>
-        <p class="govuk-caption-m">
-            Sorry, there are no activities, groups or services listed in your area yet.
-        </p>
-        <p class="govuk-caption-m">
-            You can <a href="https://www.gov.uk/find-local-council" data-testid="">check your council’s website</a> for your local family support services.
-        </p>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-l">No results found</h1>
+            <p class="govuk-caption-m">
+                Sorry, there are no activities, groups or services listed in your area yet.
+            </p>
+            <p class="govuk-caption-m">
+                You can <a href="https://www.gov.uk/find-local-council" data-testid="">check your council’s website</a> for your local family support services.
+            </p>
+        </div>
     </div>
 }
 else
@@ -32,7 +33,7 @@ else
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Services, groups and activities in this area</h1>
-            <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/ProfessionalReferral/Search">@Model.SearchPostCode</a></span>
+            <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/ProfessionalReferral/Search">@Model.postcode</a></span>
         </div>
     </div>
 
@@ -72,7 +73,7 @@ else
                                 {
                                     <ul class="moj-filter-tags filters-component__remove-tags">
                                         <li>
-                                            <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removesubcategorySelection" value="@subcategorySelection" data-testid="@subcategorySelection-remove">
+                                            <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removesubcategorySelection" value="@subcategorySelection" data-testid="@subcategorySelection-remove">
                                                 <span class="govuk-visually-hidden">Remove this filter</span>
                                                 @Model.Categories.FirstOrDefault(c => c.Id.ToString() == subcategorySelection)?.Name
                                             </button>
@@ -89,7 +90,7 @@ else
                                 {
                                     <ul class="moj-filter-tags filters-component__remove-tags">
                                         <li>
-                                            <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeCostSelection" value="@costSelected" data-testid="@costSelected-remove">
+                                            <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeCostSelection" value="@costSelected" data-testid="@costSelected-remove">
                                                 <span class="govuk-visually-hidden">Remove this filter</span>
                                                 @(costSelected == "paid" ? "Pay to use" : costSelected.ToSentenceCase())
                                             </button>
@@ -108,7 +109,7 @@ else
                                     {
                                         <ul class="moj-filter-tags filters-component__remove-tags">
                                             <li>
-                                                <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
+                                                <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
                                                     <span class="govuk-visually-hidden">Remove this filter</span>
                                                     In Person
                                                 </button>
@@ -119,7 +120,7 @@ else
                                     {
                                         <ul class="moj-filter-tags filters-component__remove-tags">
                                             <li>
-                                                <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
+                                                <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
                                                     <span class="govuk-visually-hidden">Remove this filter</span>
                                                     Online
                                                 </button>
@@ -130,7 +131,7 @@ else
                                     {
                                         <ul class="moj-filter-tags filters-component__remove-tags">
                                             <li>
-                                                <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
+                                                <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
                                                     <span class="govuk-visually-hidden">Remove this filter</span>
                                                     Telephone
                                                 </button>
@@ -146,7 +147,7 @@ else
                                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Language</h3>
                                 <ul class="moj-filter-tags filters-component__remove-tags">
                                     <li>
-                                        <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeSelectedLanguage" value="@Model.SelectedLanguage" data-testid="@Model.SelectedLanguage-remove">
+                                        <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeSelectedLanguage" value="@Model.SelectedLanguage" data-testid="@Model.SelectedLanguage-remove">
                                             <span class="govuk-visually-hidden">Remove this filter</span>
                                             @Model.SelectedLanguage
                                         </button>
@@ -160,7 +161,7 @@ else
                                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1">For children and young people</h3>
                                 <ul class="moj-filter-tags filters-component__remove-tags">
                                     <li>
-                                        <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeSearchAge" value="@Model.SearchAge" data-testid="@Model.SearchAge-remove">
+                                        <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeSearchAge" value="@Model.SearchAge" data-testid="@Model.SearchAge-remove">
                                             <span class="govuk-visually-hidden">Remove this filter</span>Age @Model.SearchAge
                                         </button>
                                     </li>
