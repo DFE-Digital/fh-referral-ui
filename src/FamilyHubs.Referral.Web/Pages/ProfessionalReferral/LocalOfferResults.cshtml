@@ -16,14 +16,16 @@
 
 @if (Model.SearchResults.TotalCount == 0 && Model.InitialLoad)
 {
-    <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-l">No results found</h1>
-        <p class="govuk-caption-m">
-            Sorry, there are no activities, groups or services listed in your area yet.
-        </p>
-        <p class="govuk-caption-m">
-            You can <a href="https://www.gov.uk/find-local-council" data-testid="">check your council’s website</a> for your local family support services.
-        </p>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-l">No results found</h1>
+            <p class="govuk-caption-m">
+                Sorry, there are no activities, groups or services listed in your area yet.
+            </p>
+            <p class="govuk-caption-m">
+                You can <a href="https://www.gov.uk/find-local-council" data-testid="">check your council’s website</a> for your local family support services.
+            </p>
+        </div>
     </div>
 }
 else
