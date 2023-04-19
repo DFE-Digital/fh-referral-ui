@@ -65,7 +65,7 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
     public void ThenOnPostWithValidationError() 
     {
         //Arrange and Act
-        var result = _contactDetailsModel.OnPost() as RedirectToPageResult;
+        _contactDetailsModel.OnPost();
 
         //Assert
         _contactDetailsModel.ValidationValid.Should().BeFalse();

@@ -43,7 +43,7 @@ public class EmailModel : PageModel
 
     public IActionResult OnPost()
     {
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid || string.IsNullOrEmpty(TextBoxValue))
         {
             PartialTextBoxViewModel.TextBoxValue = TextBoxValue;
             if (string.IsNullOrWhiteSpace(TextBoxValue?.Trim()))
