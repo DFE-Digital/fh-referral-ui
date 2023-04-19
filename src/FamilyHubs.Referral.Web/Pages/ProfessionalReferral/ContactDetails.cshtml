@@ -4,6 +4,10 @@
     ViewData["Title"] = $"How can the service contact {@Model.FullName}?";
 }
 
+@section Back {
+    <a asp-page="/ProfessionalReferral/WhySupport" class="govuk-back-link">Back</a>
+}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         @if (Model.ValidationValid == false)
