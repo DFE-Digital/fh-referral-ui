@@ -10,13 +10,31 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+        @if (Model.ValidationValid == false)
+        {
+            <div class="govuk-error-summary" data-module="govuk-error-summary">
+                <div role="alert">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">
+                        There is a problem
+                    </h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            <li>
+                                <a href="#TextAreaValue" data-testid="enter-service-name-error">Enter details about the family</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+
     <h1 class="govuk-heading-l">Reason for the connection request</h1>
     <form method="post">
-        <div class="govuk-form-group">
-            <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
+        
 
+            <div class="govuk-form-group">
                 <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
-                <p>Use this to give the service details about the family, for example:</p>
+                    <p>Use this to give the service details about the family, for example:</p>
                     <ul class="govuk-list govuk-list--bullet">
                         <li>why the family needs help</li>
                         <li>other organisations currently working with the family</li>
@@ -24,7 +42,7 @@
                         <li>important things to note such as domestic abuse</li>
                     </ul>
 
-                    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
+                    <div class="govuk-character-count @(Model.ValidationValid == false ? "govuk-form-group--error" : "")" data-module="govuk-character-count" data-maxlength="500">
                         <div class="govuk-form-group">
                             <h1 class="govuk-label-wrapper">
                                 <label class="govuk-label govuk-label--m" for="with-hint">
@@ -36,12 +54,12 @@
                                 if (Model.ValidationValid == false)
                                 {
                                     <p class="govuk-error-message">
-                                        <span class="govuk-visually-hidden">Error:</span> You must enter a Reason For Support
+                                        <span class="govuk-visually-hidden">Error:</span> Enter details about the family
                                     </p>
                                 }
                             }
 
-                        <textarea asp-for="TextAreaValue" class="govuk-textarea govuk-js-character-count" rows="10" id="with-hint"></textarea>
+                            <textarea asp-for="TextAreaValue" class="govuk-textarea govuk-js-character-count" rows="10" id="with-hint"></textarea>
                         </div>
 
                         <div id="with-hint-info" class="govuk-hint govuk-character-count__message">
@@ -51,7 +69,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+
         <button type="submit" class="govuk-button" data-module="govuk-button">
             Continue
         </button>

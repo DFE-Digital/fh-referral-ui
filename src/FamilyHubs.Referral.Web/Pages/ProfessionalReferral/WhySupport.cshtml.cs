@@ -32,7 +32,7 @@ public class WhySupportModel : PageModel
 
     public IActionResult OnPost()
     {
-        if (TextAreaValue == null || TextAreaValue.Trim().Length == 0 || TextAreaValue.Length > 500)
+        if (string.IsNullOrWhiteSpace(TextAreaValue?.Trim()) || TextAreaValue.Length > 500)
         {
             ValidationValid = false;
             return Page();
