@@ -46,8 +46,7 @@ public class EmailModel : PageModel
         if (!ModelState.IsValid || string.IsNullOrEmpty(TextBoxValue))
         {
             PartialTextBoxViewModel.TextBoxValue = TextBoxValue;
-            if (string.IsNullOrWhiteSpace(TextBoxValue?.Trim()))
-                PartialTextBoxViewModel.ValidationValid = false;
+            PartialTextBoxViewModel.ValidationValid = false;
 
             return Page();
         }
