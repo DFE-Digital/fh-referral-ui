@@ -14,6 +14,7 @@ public class ConnectWizzardViewModel
     public bool TextPhoneSelected { get; set; }
     public bool LetterSelected { get; set; }
     public string? EmailAddress { get; set; }
+    public string? TelephoneNumber { get; set; }
 
     public string Encode(byte xorConstant = 0x62)
     {
