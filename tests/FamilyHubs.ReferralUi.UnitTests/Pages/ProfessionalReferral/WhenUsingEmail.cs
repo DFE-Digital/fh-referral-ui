@@ -3,11 +3,6 @@ using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
@@ -62,9 +57,9 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
         _emailModel.PartialTextBoxViewModel.ValidationValid.Should().BeFalse();
     }
 
-    private ConnectWizzardViewModel GetConnectWizzardViewModel(int version)
+    public static ConnectWizzardViewModel GetConnectWizzardViewModel(int version)
     {
-        switch(version) 
+        switch (version)
         {
             default:
                 return new ConnectWizzardViewModel
@@ -77,7 +72,7 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
                     TelephoneSelected = true,
                     TextPhoneSelected = true,
                     LetterSelected = true,
-                    
+
                 };
 
             case 2:
@@ -91,7 +86,7 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
                     TelephoneSelected = false,
                     TextPhoneSelected = true,
                     LetterSelected = true,
-                    
+
                 };
 
             case 3:
@@ -107,7 +102,7 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
                     LetterSelected = true,
                 };
 
-                case 4:
+            case 4:
                 return new ConnectWizzardViewModel
                 {
                     ServiceId = "ServiceId",
