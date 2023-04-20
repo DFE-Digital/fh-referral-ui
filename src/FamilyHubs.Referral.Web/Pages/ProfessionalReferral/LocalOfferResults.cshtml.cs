@@ -160,7 +160,7 @@ public class LocalOfferResultsModel : PageModel
     public string? SearchText { get; set; }
 
     [BindProperty]
-    public string SearchPostCode { get; set; } = string.Empty;
+    public string postcode { get; set; } = string.Empty;
 
     [BindProperty]
     public int CurrentPage { get; set; } = 1;
@@ -182,13 +182,13 @@ public class LocalOfferResultsModel : PageModel
     }
 
     public async Task<IActionResult> OnGetAsync(
-        string postCode, string? searchText, string? searchAge,
+        string postcode, string? searchText, string? searchAge,
         string? selectedLanguage, string? subcategorySelection,
         string? costSelection, string? serviceDeliverySelection,
         int? currentPage, bool forChildrenAndYoungPeople
         )
     {
-        SearchPostCode = postCode;
+        this.postcode = postcode;
         SearchText = searchText;
         SearchAge = searchAge;
         SelectedLanguage = selectedLanguage == "All languages" ? null : selectedLanguage;
@@ -198,7 +198,7 @@ public class LocalOfferResultsModel : PageModel
         CostSelection = costSelection?.Split(",").ToList();
         ServiceDeliverySelection = serviceDeliverySelection?.Split(",").ToList();
 
-        await GetLocationDetails(SearchPostCode);
+        await GetLocationDetails(this.postcode);
 
         await GetCategoriesTreeAsync();
 

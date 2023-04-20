@@ -1,5 +1,7 @@
 # fh-referral-ui
+
 Ui for the management of a person/family referral to a Local Authority, Voluntary, Charitable or Faith organisation.
+
 # fh-service-referral-ui
 
 ## Requirements
@@ -49,3 +51,8 @@ The entry point for the site's JavaScript is `scripts\app.ts`.
 To debug the JavaScript in Visual Studio, set breakpoints in the JavaScript files under the `Script documents` folder in the Solution Explorer when debugging.
 
 (Note, we might switch to [environment-based bundling and minification at a later point](https://learn.microsoft.com/en-us/aspnet/core/client-side/bundling-and-minification?view=aspnetcore-6.0).)
+
+## TODO
+
+open / close filter button doesn't work - create a component from the find site.
+
