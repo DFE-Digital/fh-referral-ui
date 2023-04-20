@@ -20,7 +20,8 @@ public class BaseProfessionalReferralPage
             TelephoneSelected = true,
             TextPhoneSelected = true,
             LetterSelected = true,
-            EmailAddress = "joe.blogs@email.com"
+            EmailAddress = "joe.blogs@email.com",
+            TelephoneNumber = "0121 111 2222"
         };
 
         _mockICacheService = new Mock<IDistributedCacheService>(MockBehavior.Strict);

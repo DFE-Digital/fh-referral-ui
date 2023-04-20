@@ -31,10 +31,10 @@ public class TelephoneModel : PageModel
         ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
         PartialTextBoxViewModel.HeadingText = $"What telephone number should the service use to call {model.FullName}?";
 
-        if (!string.IsNullOrEmpty(model.EmailAddress))
+        if (!string.IsNullOrEmpty(model.TelephoneNumber))
         {
             PartialTextBoxViewModel.TextBoxValue = model.TelephoneNumber;
-            TextBoxValue = model.EmailAddress;
+            TextBoxValue = model.TelephoneNumber;
         }
     }
 
