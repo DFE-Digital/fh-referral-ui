@@ -51,6 +51,7 @@ public class ContactDetailsModel : PageModel
         model.TelephoneSelected = !string.IsNullOrEmpty(Telephone);
         model.TextPhoneSelected = !string.IsNullOrEmpty(Textphone);
         model.LetterSelected = !string.IsNullOrEmpty(Letter);
+        _distributedCacheService.StoreConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel,model);
 
         string destination = string.Empty;
         if (model.EmailSelected)
