@@ -1,6 +1,5 @@
 ﻿using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Core.Services;
-using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Helpers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -31,93 +30,6 @@ public class WhenUsingRedisCacheService
         mockHttpContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
 
         _redisCacheService = new RedisCacheService(_mockRedisCache.Object, configuration, mockHttpContextAccessor.Object);
-    }
-
-
-
-    [Fact]
-    public void ThenResetOrganisationWithService()
-    {
-        //Arrange
-        int setStringCallback = 0;
-        _mockRedisCache.Setup(x => x.SetStringValue(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>())).Callback(() => setStringCallback++);
-
-        //Act
-        _redisCacheService.ResetOrganisationWithService();
-
-        //Assert
-        setStringCallback.Should().Be(1);
-    }
-
-    [Fact]
-    public void ThenRetrieveLastPageName()
-    {
-        //Arrange
-        _mockRedisCache.Setup(x => x.GetStringValue(It.IsAny<string>())).Returns("/LastPage");
-
-        //Act
-        string result = _redisCacheService.RetrieveLastPageName();
-
-        //Assert
-        result.Should().Be("/LastPage");
-    }
-
-    [Fact]
-    public void ThenStoreCurrentPageName()
-    {
-        //Arrange
-        int setStringCallback = 0;
-        _mockRedisCache.Setup(x => x.SetStringValue(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>())).Callback(() => setStringCallback++);
-
-        //Act
-        _redisCacheService.StoreCurrentPageName("currentPage");
-
-        //Assert
-        setStringCallback.Should().Be(1);
-    }
-
-    [Fact]
-    public void ThenRetrieveService()
-    {
-        //Arrange
-        ServiceDto service = BaseClientService.GetTestCountyCouncilServicesDto(1);
-        _mockRedisCache.Setup(x => x.GetValue<ServiceDto>(It.IsAny<string>())).Returns(service);
-
-        //Act
-        ServiceDto? result = _redisCacheService.RetrieveService();
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(service);
-    }
-
-    [Fact]
-    public void ThenStoreService()
-    {
-        //Arrange
-        ServiceDto service = BaseClientService.GetTestCountyCouncilServicesDto(1);
-        int setStringCallback = 0;
-        _mockRedisCache.Setup(x => x.SetValue<ServiceDto>(It.IsAny<string>(), It.IsAny<ServiceDto>(), It.IsAny<int>())).Callback(() => setStringCallback++);
-
-        //Act
-        _redisCacheService.StoreService(service);
-
-        //Assert
-        setStringCallback.Should().Be(1);
-    }
-
-    [Fact]
-    public void ThenResetLastPageName()
-    {
-        //Arrange
-        int setStringCallback = 0;
-        _mockRedisCache.Setup(x => x.SetStringValue(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>())).Callback(() => setStringCallback++);
-
-        //Act
-        _redisCacheService.ResetLastPageName();
-
-        //Assert
-        setStringCallback.Should().Be(1);
     }
 
     [Fact]
@@ -177,32 +89,5 @@ public class WhenUsingRedisCacheService
 
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(expectedResult);
-    }
-
-    [Fact]
-    public void ThenRetrieveStringValue()
-    {
-        //Arrange
-        _mockRedisCache.Setup(x => x.GetStringValue(It.IsAny<string>())).Returns("TestValue");
-
-        //Act
-        string result = _redisCacheService.RetrieveStringValue("Key");
-
-        //Assert
-        result.Should().Be("TestValue");
-    }
-
-    [Fact]
-    public void ThenStoreStringValue()
-    {
-        //Arrange
-        int setStringCallback = 0;
-        _mockRedisCache.Setup(x => x.SetStringValue(It.IsAny<string>(), It.IsAny<string>())).Callback(() => setStringCallback++);
-
-        //Act
-        _redisCacheService.StoreStringValue("Key", "TestValue");
-
-        //Assert
-        setStringCallback.Should().Be(1);
     }
 }
