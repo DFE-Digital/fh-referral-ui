@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
+using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -58,6 +59,8 @@ public static class StartupExtensions
             options.Configuration = configuration["CacheConnection"];
             options.InstanceName = "ReferralWeb";
         });
+
+        services.AddTransient<IReferralCacheKeys, ReferralCacheKeys>();
     }
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)

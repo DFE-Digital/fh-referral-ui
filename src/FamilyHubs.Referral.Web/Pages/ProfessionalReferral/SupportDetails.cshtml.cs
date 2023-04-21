@@ -7,6 +7,28 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
+public class ReferralCacheKeys : IReferralCacheKeys
+{
+    private readonly string _sessionId;
+
+    public ReferralCacheKeys(IHttpContextAccessor httpContextAccessor)
+    {
+        _sessionId = httpContextAccessor.HttpContext!.Session.Id;
+    }
+
+    public string ProfessionalReferral => SessionNamespaced("PR");
+
+    private string SessionNamespaced(string key)
+    {
+        return $"{_sessionId}{key}";
+    }
+}
+
+public interface IReferralCacheKeys
+{
+    string ProfessionalReferral { get; }
+}
+
 public static class DistributedCacheExtensions
 {
     public static async Task<T?> GetAsync<T>(
@@ -33,6 +55,7 @@ public static class DistributedCacheExtensions
 public class SupportDetailsModel : PageModel
 {
     private readonly IDistributedCache _distributedCache;
+    private readonly IReferralCacheKeys _referralCacheKeys;
 
     public string ServiceId { get; private set; } = default!;
     public string ServiceName { get; private set; } = default!;
@@ -51,9 +74,10 @@ public class SupportDetailsModel : PageModel
     [BindProperty]
     public string TextBoxValue { get; set; } = string.Empty;
 
-    public SupportDetailsModel(IDistributedCache distributedCache)
+    public SupportDetailsModel(IDistributedCache distributedCache, IReferralCacheKeys referralCacheKeys)
     {
         _distributedCache = distributedCache;
+        _referralCacheKeys = referralCacheKeys;
     }
 
     public async Task OnGetAsync(string serviceId, string serviceName)
@@ -66,7 +90,7 @@ public class SupportDetailsModel : PageModel
         ServiceName = serviceName;
 
         //todo: naming
-        var model = await _distributedCache.GetAsync<ConnectWizzardViewModel>(TempStorageConfiguration.KeyConnectWizzardViewModel);
+        var model = await _distributedCache.GetAsync<ConnectWizzardViewModel>(_referralCacheKeys.ProfessionalReferral);
         //if (model == null)
         //{
         //    model = new ConnectWizzardViewModel();
@@ -88,7 +112,7 @@ public class SupportDetailsModel : PageModel
         if (!ModelState.IsValid)
         {
             PartialTextBoxViewModel.TextBoxValue = TextBoxValue;
-            if (string.IsNullOrWhiteSpace(TextBoxValue?.Trim()))
+            if (string.IsNullOrWhiteSpace(TextBoxValue))
                 PartialTextBoxViewModel.ValidationValid = false;
 
             return Page();
@@ -96,10 +120,10 @@ public class SupportDetailsModel : PageModel
 
         if (TextBoxValue.Length > 255)
         {
-            TextBoxValue = TextBoxValue.Truncate(252) ?? string.Empty;
+            TextBoxValue = TextBoxValue.Truncate(255) ?? string.Empty;
         }
 
-        var model = await _distributedCache.GetAsync<ConnectWizzardViewModel>(TempStorageConfiguration.KeyConnectWizzardViewModel)
+        var model = await _distributedCache.GetAsync<ConnectWizzardViewModel>(_referralCacheKeys.ProfessionalReferral)
                     ?? new ConnectWizzardViewModel
                     {
                         ServiceId = serviceId,
@@ -109,7 +133,7 @@ public class SupportDetailsModel : PageModel
         model.FullName = TextBoxValue;
         //todo: options. do we need to set any? use a static
         //todo: safe to use fire and forget?
-        await _distributedCache.SetAsync(TempStorageConfiguration.KeyConnectWizzardViewModel, model);
+        await _distributedCache.SetAsync(_referralCacheKeys.ProfessionalReferral, model);
 
         return RedirectToPage("/ProfessionalReferral/WhySupport");
     }
