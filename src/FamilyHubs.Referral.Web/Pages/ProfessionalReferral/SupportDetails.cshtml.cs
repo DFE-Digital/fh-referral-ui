@@ -1,58 +1,14 @@
-using System.Text.Json;
+using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Helper;
 using FamilyHubs.Referral.Core.Models;
-using FamilyHubs.Referral.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Distributed;
+using FamilyHubs.Referral.Infrastructure.DistributedCache;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class ReferralCacheKeys : IReferralCacheKeys
-{
-    private readonly string _sessionId;
-
-    public ReferralCacheKeys(IHttpContextAccessor httpContextAccessor)
-    {
-        _sessionId = httpContextAccessor.HttpContext!.Session.Id;
-    }
-
-    public string ProfessionalReferral => SessionNamespaced("PR");
-
-    private string SessionNamespaced(string key)
-    {
-        return $"{_sessionId}{key}";
-    }
-}
-
-public interface IReferralCacheKeys
-{
-    string ProfessionalReferral { get; }
-}
-
-public static class DistributedCacheExtensions
-{
-    public static async Task<T?> GetAsync<T>(
-        this IDistributedCache cache,
-        string key,
-        CancellationToken token = default)
-    {
-        var json = await cache.GetStringAsync(key, token);
-        return json == null ? default : JsonSerializer.Deserialize<T>(json);
-    }
-
-    public static async Task SetAsync<T>(
-        this IDistributedCache cache,
-        string key,
-        T value,
-        DistributedCacheEntryOptions? options = null,
-        CancellationToken token = default)
-    {
-        var json = JsonSerializer.Serialize(value);
-        await cache.SetStringAsync(key, json, options ?? new DistributedCacheEntryOptions(), token);
-    }
-}
-
+//todo: set sliding expiration on cache that is slightly longer than session timeout
 public class SupportDetailsModel : PageModel
 {
     private readonly IDistributedCache _distributedCache;

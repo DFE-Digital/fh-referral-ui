@@ -18,8 +18,4 @@
     <ProjectReference Include="..\FamilyHubs.Referral.Core\FamilyHubs.Referral.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

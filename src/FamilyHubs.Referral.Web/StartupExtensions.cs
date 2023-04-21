@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
-using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
+using FamilyHubs.Referral.Core.DistributedCache;
+using FamilyHubs.Referral.Infrastructure.DistributedCache;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
