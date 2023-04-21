@@ -1,10 +1,6 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
-using FamilyHubs.Referral.Core.DistributedCache;
-using FamilyHubs.Referral.Infrastructure.DistributedCache;
-using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Distributed;
 using Serilog;
 using Serilog.Events;
 
@@ -58,22 +54,11 @@ public static class StartupExtensions
             options.IdleTimeout = TimeSpan.FromMinutes(sessionTimeOutMinutes);
         });
 
-        //todo: move to helper extension in infrastructure
-        services.AddStackExchangeRedisCache(options =>
-        {
-            options.Configuration = configuration["CacheConnection"];
-            options.InstanceName = "ReferralWeb";
-        });
-
-        services.AddTransient<IReferralCacheKeys, ReferralCacheKeys>();
-        services.AddTransient<IReferralDistributedCache, ReferralDistributedCache>();
-        var options = new DistributedCacheEntryOptions
-        {
-            // add a few minutes as a safety factor, so that the cache entry is not removed before the session expires
-            SlidingExpiration = TimeSpan.FromMinutes(sessionTimeOutMinutes + 5)
-        };
-        // there's currently only one, so this should be fine
-        services.AddSingleton(options);
+        // add a few minutes to the expiration as a safety factor,
+        // so that the cache entry is not removed before the session expires
+        services.AddReferralDistributedCache(
+            configuration["CacheConnection"],
+            sessionTimeOutMinutes + 5);
     }
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
