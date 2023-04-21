@@ -40,7 +40,7 @@
 //        _mockRedisCache.Setup(x => x.SetStringValue(It.IsAny<string>(), It.IsAny<string>())).Callback(() => setStringCallback++);
 
 //        //Act
-//        _redisCacheService.StoreConnectWizzardViewModel("key", new ConnectWizzardViewModel());
+//        _redisCacheService.StoreConnectWizzardViewModel("key", new ProfessionalReferralModel());
 
 //        //Assert
 //        setStringCallback.Should().Be(1);
@@ -64,10 +64,10 @@
 //    public void ThenRetrieveConnectWizzardViewModelWithNullKey()
 //    {
 //        //Arrange
-//        ConnectWizzardViewModel expectedResult = new();
+//        ProfessionalReferralModel expectedResult = new();
 
 //        //Act
-//        ConnectWizzardViewModel result = _redisCacheService.RetrieveConnectWizzardViewModel(default!);
+//        ProfessionalReferralModel result = _redisCacheService.RetrieveConnectWizzardViewModel(default!);
 
 //        //Assert
 //        result.Should().NotBeNull();
@@ -77,7 +77,7 @@
 //    [Fact]
 //    public void ThenRetrieveConnectWizzardViewModelWhichHasBeenEncoded()
 //    {
-//        ConnectWizzardViewModel expectedResult = new()
+//        ProfessionalReferralModel expectedResult = new()
 //        {
 //            ServiceId = Guid.NewGuid().ToString(),
 //            ServiceName = "ServiceName",
@@ -85,7 +85,7 @@
 //        };
 //        _mockRedisCache.Setup(x => x.GetStringValue(It.IsAny<string>())).Returns(expectedResult.Encode());
 
-//        ConnectWizzardViewModel result = _redisCacheService.RetrieveConnectWizzardViewModel("key");
+//        ProfessionalReferralModel result = _redisCacheService.RetrieveConnectWizzardViewModel("key");
 
 //        result.Should().NotBeNull();
 //        result.Should().BeEquivalentTo(expectedResult);

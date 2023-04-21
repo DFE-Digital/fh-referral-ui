@@ -1,6 +1,7 @@
 using System.Text.Json;
 using FamilyHubs.Referral.Core.Helper;
 using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Distributed;
@@ -89,15 +90,7 @@ public class SupportDetailsModel : PageModel
         ServiceId = serviceId;
         ServiceName = serviceName;
 
-        //todo: naming
-        var model = await _distributedCache.GetAsync<ConnectWizzardViewModel>(_referralCacheKeys.ProfessionalReferral);
-        //if (model == null)
-        //{
-        //    model = new ConnectWizzardViewModel();
-        //}
-        //model.ServiceId = serviceId;
-        //model.ServiceName = serviceName;
-        //_distributedCache.StoreConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel, model);
+        var model = await _distributedCache.GetAsync<ProfessionalReferralModel>(_referralCacheKeys.ProfessionalReferral);
 
         if (!string.IsNullOrEmpty(model?.FullName))
         {
@@ -123,8 +116,8 @@ public class SupportDetailsModel : PageModel
             TextBoxValue = TextBoxValue.Truncate(255) ?? string.Empty;
         }
 
-        var model = await _distributedCache.GetAsync<ConnectWizzardViewModel>(_referralCacheKeys.ProfessionalReferral)
-                    ?? new ConnectWizzardViewModel
+        var model = await _distributedCache.GetAsync<ProfessionalReferralModel>(_referralCacheKeys.ProfessionalReferral)
+                    ?? new ProfessionalReferralModel
                     {
                         ServiceId = serviceId,
                         ServiceName = serviceName

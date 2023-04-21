@@ -1,7 +1,7 @@
 ﻿
-namespace FamilyHubs.Referral.Core.Models;
+namespace FamilyHubs.Referral.Web.Models;
 
-public class ConnectWizzardViewModel
+public class ProfessionalReferralModel
 {
     public string ServiceId { get; set; } = string.Empty;
     public string ServiceName { get; set; } = string.Empty;
