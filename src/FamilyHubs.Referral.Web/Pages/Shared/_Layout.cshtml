@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+<head>
+    <partial name="_GoogleAnalytics.cshtml" />
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Connect families to support</title>
+    <meta name="description" content="@ViewData["Description"]">
+
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="~/lib/govuk/assets/images/favicon.ico" type="image/x-icon" />
+    <link rel="mask-icon" href="~/lib/govuk/assets/images/govuk-mask-icon.svg" color="#0b0c0c" />
+    <link rel="apple-touch-icon" sizes="180x180" href="~/lib/govuk/assets/images/govuk-apple-touch-icon-180x180.png" />
+    <link rel="apple-touch-icon" sizes="167x167" href="~/lib/govuk/assets/images/govuk-apple-touch-icon-167x167.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="~/lib/govuk/assets/images/govuk-apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon" href="~/lib/govuk/assets/images/govuk-apple-touch-icon.png" />
+
+    <!--[if !IE 8]><!-->
+    <link rel="stylesheet" href="~/css/application.css" asp-append-version="true" />
+    <!--<![endif]-->
+    <!--[if IE 8]>
+        <link rel="stylesheet" href="~/lib/govuk/govuk-frontend-ie8-4.5.0.min.css" />
+    <![endif]-->
+</head>
+<body class="govuk-template__body dfe-template__body" data-testid="pagebody">
+    <script>
+        document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+    </script>
+
+    <partial name="_CookieBanner" />
+
+    <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+    <partial name="_Header.cshtml" />
+
+    <div class="govuk-width-container">
+
+        <partial name="_PhaseBanner" />
+
+        @await RenderSectionAsync("Back", required: false)
+
+        <main class="govuk-main-wrapper custom-main" id="main-content" role="main">
+
+            @RenderBody()
+
+        </main>
+
+    </div>
+
+    <partial name="_Footer.cshtml" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/govuk/govuk-frontend-4.5.0.min.js"></script>
+    <script src="~/js/app.js" asp-append-version="true"></script>
+
+    <script>
+        window.GOVUKFrontend.initAll()
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

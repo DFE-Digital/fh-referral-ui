@@ -17,7 +17,7 @@ Then("the Accepted confirmation should show and cookie is set", () => {
     cy.get('[data-testid="cookies-banner-confirmation"]').should('not.have.css', 'display', 'none');
     cy.get('[data-testid="cookies-banner-reject-message"]').should('have.css', 'display', 'none');
     cy.get('[data-testid="cookies-banner-accept-message"]').should('not.have.css', 'display', 'none');
-    cy.getCookie('service_directory_cookies_policy').should('have.property', 'value', 'accept');
+    cy.getCookie('referral_cookies_policy').should('have.property', 'value', 'accept');
 });
 
 When("user rejects cookies", () => {
@@ -29,7 +29,7 @@ Then("the Rejected confirmation should show and cookie is set", () => {
     cy.get('[data-testid="cookies-banner-confirmation"]').should('not.have.css', 'display', 'none');
     cy.get('[data-testid="cookies-banner-reject-message"]').should('not.have.css', 'display', 'none');
     cy.get('[data-testid="cookies-banner-accept-message"]').should('have.css', 'display', 'none');
-    cy.getCookie('service_directory_cookies_policy').should('have.property', 'value', 'reject');
+    cy.getCookie('referral_cookies_policy').should('have.property', 'value', 'reject');
 });
 
 When("user clicks on Hide this message", () => {

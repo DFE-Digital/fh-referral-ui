@@ -1,4 +1,4 @@
-﻿using FamilyHubs.ReferralUi.Ui.Services.Api;
+﻿using FamilyHubs.Referral.Core.ApiClients;
 using FluentAssertions;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Services;
@@ -55,7 +55,7 @@ public class WhenUsingPostcodeLocationClientService : BaseClientService
     }
 }";
         var mockClient = GetMockClient(json);
-        PostcodeLocationClientService postcodeLocationClientService = new(mockClient);
+        var postcodeLocationClientService = new PostcodeLocationClientService(mockClient);
 
         //Act
         var result = await postcodeLocationClientService.LookupPostcode("BS14 0AL");

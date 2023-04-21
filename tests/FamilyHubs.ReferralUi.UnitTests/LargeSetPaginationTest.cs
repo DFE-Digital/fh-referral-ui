@@ -1,4 +1,4 @@
-﻿using FamilyHubs.ReferralUi.Ui.Models;
+﻿using FamilyHubs.Referral.Core.Models;
 using FluentAssertions;
 
 namespace FamilyHubs.ReferralUi.UnitTests;

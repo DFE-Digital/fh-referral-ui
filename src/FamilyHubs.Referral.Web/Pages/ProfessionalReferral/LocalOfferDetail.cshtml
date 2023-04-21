@@ -1,0 +1,166 @@
+﻿@page "{id:Guid}"
+@model LocalOfferDetailModel
+@{
+    ViewData["Title"] = Model.LocalOffer.Name;
+    ViewData["Description"] = "Description TBC";
+}
+
+@section Back {
+    <a href="@Model.ReturnUrl" class="govuk-back-link" data-testid="back-button">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-6" data-testid="service-name">@Model.LocalOffer.Name</h1>
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+
+        <table class="govuk-table">
+            <thead class="govuk-table__head"></thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Category</th>
+                    <td class="govuk-table__cell">
+                        @foreach (var serviceTaxonomy in Model.LocalOffer.Taxonomies)
+                        {
+                            @serviceTaxonomy.Name
+                        }
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Cost</th>
+                    @if (Model.LocalOffer?.CostOptions?.FirstOrDefault()?.Amount != null && Model.LocalOffer?.CostOptions?.FirstOrDefault()?.Amount > 0)
+                    {
+                        <td class="govuk-table__cell" data-testid="cost-value">
+                            £@Model.LocalOffer?.CostOptions?.FirstOrDefault()?.Amount every @Model.LocalOffer?.CostOptions?.FirstOrDefault()?.AmountDescription?.ToLower()
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="govuk-table__cell" data-testid="cost-value">Free</td>
+                    }
+
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Delivery method</th>
+                    <td class="govuk-table__cell" data-testid="delivery-value">
+                        @if (Model.LocalOffer?.ServiceDeliveries != null && Model.LocalOffer?.ServiceDeliveries?.Count > 0)
+                        {
+                            @Model.GetDeliveryMethodsAsString(Model.LocalOffer?.ServiceDeliveries)
+                        }
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">For children and young people</th>
+                    @if (Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.EligibilityType != null)
+                    {
+                        @if (Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MaximumAge > 100)
+                        {
+                            <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MinimumAge to 25+ years old</td>
+                        }
+                        else
+                        {
+                            <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MinimumAge to @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MaximumAge years old</td>
+                        }
+                    }
+                    else
+                    {
+                        <td class="govuk-table__cell" data-testid="eligibilities-value"></td>
+                    }
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Families can choose location</th>
+                    <td class="govuk-table__cell">TBD</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Languages</th>
+                    <td class="govuk-table__cell" data-testid="language-value">
+                        @if (Model.LocalOffer?.Languages != null && Model.LocalOffer?.Languages?.Count > 0)
+                        {
+                            @Model.GetLanguagesAsString(Model.LocalOffer.Languages)
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="govuk-heading-m">More details</h2>
+        <p data-testid="description-value">@Model.LocalOffer?.Description</p>
+        <h2 class="govuk-heading-m">Connect a family to this service</h2>
+
+        <!-- Contact details -->
+        <!-- Phone-->
+        @if (!string.IsNullOrEmpty(Model.Phone))
+        {
+            <dl class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Phone
+                </dt>
+                <dd class="govuk-summary-list__value" data-testid="detailsphone">
+                    <a href="tel:@Model.Phone">@Model.Phone</a>
+                </dd>
+            </dl>
+        }
+
+        <!--Email-->
+        @if (!string.IsNullOrEmpty(Model.Email))
+        {
+            <dl class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Email
+                </dt>
+                <dd class="govuk-summary-list__value" data-testid="detailsemail">
+                    <a href="mailto:@Model.Email">
+                        @Model.Email
+                    </a>
+                </dd>
+            </dl>
+        }
+
+        <!--Address-->
+        @if (!string.IsNullOrEmpty(Model.PostalCode))
+        {
+            <dl class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Address
+                </dt>
+                <dd class="govuk-summary-list__value" data-testid="detailsaddress">
+                    @if (!string.IsNullOrEmpty(Model.Address1))
+                    {
+                        @Model.Address1
+                        <br />
+                    }
+                    @if (!string.IsNullOrEmpty(Model.City))
+                    {
+                        @Model.City
+                        <br />
+                    }
+                    @if (!string.IsNullOrEmpty(Model.StateProvince))
+                    {
+                        @Model.StateProvince
+                        <br />
+                    }
+                    @if (!string.IsNullOrEmpty(Model.PostalCode))
+                    {
+                        @Model.PostalCode
+                        <br />
+                    }
+                </dd>
+            </dl>
+        }
+
+        <!--Website-->
+        @if (!string.IsNullOrEmpty(Model.Website))
+        {
+            <dl class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Website
+                </dt>
+                <dd class="govuk-summary-list__value" data-testid="detailswebsite">
+                    <a href="@Model.Website">
+                        @Model.Website
+                    </a>
+                </dd>
+            </dl>
+        }
+    </div>
+</div>
