@@ -1,6 +1,4 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
-using FamilyHubs.Referral.Core.Services;
-using FamilyHubs.ServiceDirectory.Shared.Helpers;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -51,13 +49,15 @@ public static class StartupExtensions
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 
-        services.AddDistributedMemoryCache();
         services.AddSession(options => {
             options.IdleTimeout = TimeSpan.FromMinutes(configuration.GetValue<int>("SessionTimeOutMinutes"));
         });
 
-        services.AddTransient<IRedisCache, RedisCache>();
-        services.AddTransient<IDistributedCacheService, RedisCacheService>();
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = configuration["CacheConnection"];
+            options.InstanceName = "ReferralWeb";
+        });
     }
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)

@@ -8,12 +8,10 @@
     <a asp-page="/ProfessionalReferral/Consent" asp-route-serviceId="@Model.ServiceId" asp-route-serviceName="@Model.ServiceName" class="govuk-back-link">Back</a>
 }
 
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <form method="post">
-            <!-- This control is only ment to be used as a single partial on a page, not to be used in a for loop -->
-            <partial name="../Shared/_TextBoxDetail" for="PartialTextBoxViewModel">
+            <partial name="_TextBoxDetail" for="@Model.PartialTextBoxViewModel" />
         </form>
     </div>
 </div>
