@@ -87,7 +87,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{2A1D12D9-CCA3-495E-8724-25AE0DA1E730}"
 	ProjectSection(SolutionItems) = preProject
-		docs\FeatureRelease_RequestForConnection.md = docs\FeatureRelease_RequestForConnection.md
 		README.md = README.md
 	EndProjectSection
 EndProject
