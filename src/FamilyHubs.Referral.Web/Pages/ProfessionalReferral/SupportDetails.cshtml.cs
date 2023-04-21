@@ -8,12 +8,43 @@ using FamilyHubs.Referral.Infrastructure.DistributedCache;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-//todo: set sliding expiration on cache that is slightly longer than session timeout
-public class SupportDetailsModel : PageModel
+public interface IReferralDistributedCache
+{
+    Task<ProfessionalReferralModel?> GetProfessionalReferralAsync();
+    Task SetProfessionalReferralAsync(ProfessionalReferralModel model);
+}
+
+public class ReferralDistributedCache : IReferralDistributedCache
 {
     private readonly IDistributedCache _distributedCache;
     private readonly IReferralCacheKeys _referralCacheKeys;
+    private readonly DistributedCacheEntryOptions _distributedCacheEntryOptions;
 
+    public ReferralDistributedCache(
+        IDistributedCache distributedCache,
+        IReferralCacheKeys referralCacheKeys,
+        DistributedCacheEntryOptions distributedCacheEntryOptions)
+    {
+        _distributedCache = distributedCache;
+        _referralCacheKeys = referralCacheKeys;
+        _distributedCacheEntryOptions = distributedCacheEntryOptions;
+    }
+
+    public async Task<ProfessionalReferralModel?> GetProfessionalReferralAsync()
+    {
+        return await _distributedCache.GetAsync<ProfessionalReferralModel>(_referralCacheKeys.ProfessionalReferral);
+    }
+
+    public async Task SetProfessionalReferralAsync(ProfessionalReferralModel model)
+    {
+        await _distributedCache.SetAsync(_referralCacheKeys.ProfessionalReferral, model, _distributedCacheEntryOptions);
+    }
+}
+
+//todo: set sliding expiration on cache that is slightly longer than session timeout
+public class SupportDetailsModel : PageModel
+{
+    private readonly IReferralDistributedCache _referralDistributedCache;
     public string ServiceId { get; private set; } = default!;
     public string ServiceName { get; private set; } = default!;
 
@@ -31,10 +62,9 @@ public class SupportDetailsModel : PageModel
     [BindProperty]
     public string TextBoxValue { get; set; } = string.Empty;
 
-    public SupportDetailsModel(IDistributedCache distributedCache, IReferralCacheKeys referralCacheKeys)
+    public SupportDetailsModel(IReferralDistributedCache referralDistributedCache)
     {
-        _distributedCache = distributedCache;
-        _referralCacheKeys = referralCacheKeys;
+        _referralDistributedCache = referralDistributedCache;
     }
 
     public async Task OnGetAsync(string serviceId, string serviceName)
@@ -46,7 +76,7 @@ public class SupportDetailsModel : PageModel
         ServiceId = serviceId;
         ServiceName = serviceName;
 
-        var model = await _distributedCache.GetAsync<ProfessionalReferralModel>(_referralCacheKeys.ProfessionalReferral);
+        var model = await _referralDistributedCache.GetProfessionalReferralAsync();
 
         if (!string.IsNullOrEmpty(model?.FullName))
         {
@@ -72,7 +102,7 @@ public class SupportDetailsModel : PageModel
             TextBoxValue = TextBoxValue.Truncate(255) ?? string.Empty;
         }
 
-        var model = await _distributedCache.GetAsync<ProfessionalReferralModel>(_referralCacheKeys.ProfessionalReferral)
+        var model = await _referralDistributedCache.GetProfessionalReferralAsync()
                     ?? new ProfessionalReferralModel
                     {
                         ServiceId = serviceId,
@@ -80,9 +110,8 @@ public class SupportDetailsModel : PageModel
                     };
 
         model.FullName = TextBoxValue;
-        //todo: options. do we need to set any? use a static
         //todo: safe to use fire and forget?
-        await _distributedCache.SetAsync(_referralCacheKeys.ProfessionalReferral, model);
+        await _referralDistributedCache.SetProfessionalReferralAsync(model);
 
         return RedirectToPage("/ProfessionalReferral/WhySupport");
     }

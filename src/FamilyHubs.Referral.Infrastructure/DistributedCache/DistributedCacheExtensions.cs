@@ -18,10 +18,10 @@ public static class DistributedCacheExtensions
         this IDistributedCache cache,
         string key,
         T value,
-        DistributedCacheEntryOptions? options = null,
+        DistributedCacheEntryOptions options,
         CancellationToken token = default)
     {
         var json = JsonSerializer.Serialize(value);
-        await cache.SetStringAsync(key, json, options ?? new DistributedCacheEntryOptions(), token);
+        await cache.SetStringAsync(key, json, options, token);
     }
 }
