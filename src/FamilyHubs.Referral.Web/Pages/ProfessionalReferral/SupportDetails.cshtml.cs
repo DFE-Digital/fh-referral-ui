@@ -3,45 +3,9 @@ using FamilyHubs.Referral.Core.Helper;
 using FamilyHubs.Referral.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Caching.Distributed;
-using FamilyHubs.Referral.Infrastructure.DistributedCache;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public interface IReferralDistributedCache
-{
-    Task<ProfessionalReferralModel?> GetProfessionalReferralAsync();
-    Task SetProfessionalReferralAsync(ProfessionalReferralModel model);
-}
-
-public class ReferralDistributedCache : IReferralDistributedCache
-{
-    private readonly IDistributedCache _distributedCache;
-    private readonly IReferralCacheKeys _referralCacheKeys;
-    private readonly DistributedCacheEntryOptions _distributedCacheEntryOptions;
-
-    public ReferralDistributedCache(
-        IDistributedCache distributedCache,
-        IReferralCacheKeys referralCacheKeys,
-        DistributedCacheEntryOptions distributedCacheEntryOptions)
-    {
-        _distributedCache = distributedCache;
-        _referralCacheKeys = referralCacheKeys;
-        _distributedCacheEntryOptions = distributedCacheEntryOptions;
-    }
-
-    public async Task<ProfessionalReferralModel?> GetProfessionalReferralAsync()
-    {
-        return await _distributedCache.GetAsync<ProfessionalReferralModel>(_referralCacheKeys.ProfessionalReferral);
-    }
-
-    public async Task SetProfessionalReferralAsync(ProfessionalReferralModel model)
-    {
-        await _distributedCache.SetAsync(_referralCacheKeys.ProfessionalReferral, model, _distributedCacheEntryOptions);
-    }
-}
-
-//todo: set sliding expiration on cache that is slightly longer than session timeout
 public class SupportDetailsModel : PageModel
 {
     private readonly IReferralDistributedCache _referralDistributedCache;
