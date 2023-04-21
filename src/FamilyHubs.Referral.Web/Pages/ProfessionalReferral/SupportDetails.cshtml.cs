@@ -63,7 +63,7 @@ public class SupportDetailsModel : PageModel
 
         if (TextBoxValue.Length > 255)
         {
-            TextBoxValue = TextBoxValue.Truncate(255) ?? string.Empty;
+            TextBoxValue = TextBoxValue.Truncate(252);
         }
 
         var model = await _referralDistributedCache.GetProfessionalReferralAsync()
