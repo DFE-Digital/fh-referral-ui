@@ -9,7 +9,7 @@ namespace FamilyHubs.ReferralUi.UnitTests.Infrastructure.DistributedCache;
 
 public class DistributedCacheExtensionsTests
 {
-    Mock<IDistributedCache> DistributedCache = new();
+    public Mock<IDistributedCache> DistributedCache = new();
 
     [Fact]
     public async Task GetAsync_WhenObjectIsNotInCache_ReturnsNull()
