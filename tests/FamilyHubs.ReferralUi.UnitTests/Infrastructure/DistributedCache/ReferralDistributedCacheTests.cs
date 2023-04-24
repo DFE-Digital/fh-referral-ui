@@ -64,4 +64,12 @@ public class ReferralDistributedCacheTests
             x => x.SetAsync(Key, ProfessionalReferralModelSerializedBytes, It.IsAny<DistributedCacheEntryOptions>(), default),
             Times.Once);
     }
+
+    [Fact]
+    public async Task RemoveProfessionalReferralAsync_WhenCalled_RemovesProfessionalReferral()
+    {
+        // act
+        await ReferralDistributedCache.RemoveProfessionalReferralAsync();
+        MockDistributedCache.Verify(x => x.RemoveAsync(Key, default), Times.Once);
+    }
 }
