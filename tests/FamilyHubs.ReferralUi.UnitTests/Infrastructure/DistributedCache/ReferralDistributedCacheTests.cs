@@ -5,7 +5,6 @@ using FluentAssertions;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
 using Moq;
-using static FamilyHubs.ReferralUi.UnitTests.Infrastructure.DistributedCache.DistributedCacheExtensionsTests;
 using System.Text;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Infrastructure.DistributedCache;
@@ -43,22 +42,32 @@ public class ReferralDistributedCacheTests
         result.Should().BeEquivalentTo(expectedProfessionalReferralModel);
     }
 
-    //[Fact]
-    //public async Task SetProfessionalReferralAsync_WhenCalled_SetsProfessionalReferral()
-    //{
-    //    var mockDistributedCache = new Mock<IDistributedCache>();
-    //    var mockReferralCacheKeys = new Mock<IReferralCacheKeys>();
-    //    var mockDistributedCacheEntryOptions = new Mock<DistributedCacheEntryOptions>();
-    //    var referralDistributedCache = new ReferralDistributedCache(
-    //        mockDistributedCache.Object,
-    //        mockReferralCacheKeys.Object,
-    //        mockDistributedCacheEntryOptions.Object);
-    //    var professionalReferralModel = new ProfessionalReferralModel();
-    //    await referralDistributedCache.SetProfessionalReferralAsync(professionalReferralModel);
-    //    mockDistributedCache.Verify(d => d.SetAsync(
-    //        mockReferralCacheKeys.Object.ProfessionalReferral,
-    //        professionalReferralModel,
-    //        mockDistributedCacheEntryOptions.Object,
-    //        default));
-    //}
+    [Fact]
+    public async Task SetProfessionalReferralAsync_WhenCalled_SetsProfessionalReferral()
+    {
+        const string key = "key";
+
+        var mockDistributedCache = new Mock<IDistributedCache>();
+        var mockReferralCacheKeys = new Mock<IReferralCacheKeys>();
+        mockReferralCacheKeys.SetupGet(k => k.ProfessionalReferral).Returns(key);
+
+        var mockDistributedCacheEntryOptions = new Mock<DistributedCacheEntryOptions>();
+        var referralDistributedCache = new ReferralDistributedCache(
+            mockDistributedCache.Object,
+            mockReferralCacheKeys.Object,
+            mockDistributedCacheEntryOptions.Object);
+        var professionalReferralModel = new ProfessionalReferralModel
+        {
+            FullName = "FullName"
+        };
+
+        var serialized = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(professionalReferralModel));
+
+        // act
+        await referralDistributedCache.SetProfessionalReferralAsync(professionalReferralModel);
+
+        mockDistributedCache.Verify(
+            x => x.SetAsync(key, serialized, It.IsAny<DistributedCacheEntryOptions>(), default),
+            Times.Once);
+    }
 }
