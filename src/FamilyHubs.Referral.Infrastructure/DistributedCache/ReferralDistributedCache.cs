@@ -29,4 +29,9 @@ public class ReferralDistributedCache : IReferralDistributedCache
     {
         await _distributedCache.SetAsync(_referralCacheKeys.ProfessionalReferral, model, _distributedCacheEntryOptions);
     }
+
+    public async Task RemoveProfessionalReferralAsync()
+    {
+        await _distributedCache.RemoveAsync(_referralCacheKeys.ProfessionalReferral);
+    }
 }

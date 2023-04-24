@@ -6,4 +6,5 @@ public interface IReferralDistributedCache
 {
     Task<ProfessionalReferralModel?> GetProfessionalReferralAsync();
     Task SetProfessionalReferralAsync(ProfessionalReferralModel model);
+    Task RemoveProfessionalReferralAsync();
 }
