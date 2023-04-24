@@ -1,5 +1,4 @@
-using FamilyHubs.Referral.Core.Models;
-using FamilyHubs.Referral.Core.Services;
+using FamilyHubs.Referral.Core.DistributedCache;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -7,8 +6,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class WhySupportModel : PageModel
 {
-    private readonly IDistributedCacheService _distributedCacheService;
-
+    private readonly IReferralDistributedCache _referralDistributedCache;
     public string ServiceId { get; private set; } = default!;
     public string ServiceName { get; private set; } = default!;
 
@@ -17,34 +15,43 @@ public class WhySupportModel : PageModel
 
     public bool ValidationValid { get; set; } = true;
 
-    public WhySupportModel(IDistributedCacheService distributedCacheService)
+    public WhySupportModel(IReferralDistributedCache referralDistributedCache)
     {
-        _distributedCacheService = distributedCacheService;
+        _referralDistributedCache = referralDistributedCache;
     }
-    public void OnGet()
+    public async Task OnGetAsync()
     {
-        ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
+        var model = await _referralDistributedCache.GetProfessionalReferralAsync();
+        if (model == null)
+        {
+            //todo: redirect to start?
+            throw new NotImplementedException();
+        }
         ServiceId = model.ServiceId;
         ServiceName = model.ServiceName;    
         if (!string.IsNullOrEmpty(model.ReasonForSupport))
             TextAreaValue = model.ReasonForSupport;
     }
 
-    public IActionResult OnPost()
+    public async Task<IActionResult> OnPostAsync()
     {
-        if (string.IsNullOrWhiteSpace(TextAreaValue?.Trim()) || TextAreaValue.Length > 500)
+        if (string.IsNullOrWhiteSpace(TextAreaValue) || TextAreaValue.Length > 500)
         {
             ValidationValid = false;
             return Page();
         }
 
-        ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
+        var model = await _referralDistributedCache.GetProfessionalReferralAsync();
+        if (model == null)
+        {
+            //todo:
+            throw new NotImplementedException();
+        }
         model.ReasonForSupport = TextAreaValue;
-        _distributedCacheService.StoreConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel, model);
+        await _referralDistributedCache.SetProfessionalReferralAsync(model);
 
         return RedirectToPage("/ProfessionalReferral/ContactDetails", new
         {
         });
-
     }
 }
