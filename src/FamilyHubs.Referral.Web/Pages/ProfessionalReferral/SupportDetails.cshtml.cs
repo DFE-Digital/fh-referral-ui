@@ -1,6 +1,6 @@
+using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Helper;
 using FamilyHubs.Referral.Core.Models;
-using FamilyHubs.Referral.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,12 +8,12 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class SupportDetailsModel : PageModel
 {
-    private readonly IDistributedCacheService _distributedCacheService;
-
+    private readonly IReferralDistributedCache _referralDistributedCache;
     public string ServiceId { get; private set; } = default!;
     public string ServiceName { get; private set; } = default!;
 
-    public PartialTextBoxViewModel PartialTextBoxViewModel { get; set; } = new PartialTextBoxViewModel()
+    //todo: separate static with changing
+    public PartialTextBoxViewModel PartialTextBoxViewModel { get; } = new()
     {
         ErrorId = "error-summary-title",
         HeadingText = "Who should the service contact in the family?",
@@ -23,42 +23,39 @@ public class SupportDetailsModel : PageModel
         TextBoxErrorText = "Enter a full name",
     };
 
-
     [BindProperty]
     public string TextBoxValue { get; set; } = string.Empty;
 
-    public SupportDetailsModel(IDistributedCacheService distributedCacheService)
+    public SupportDetailsModel(IReferralDistributedCache referralDistributedCache)
     {
-        _distributedCacheService = distributedCacheService;
+        _referralDistributedCache = referralDistributedCache;
     }
 
-    public void OnGet(string serviceId, string serviceName)
+    public async Task OnGetAsync(string serviceId, string serviceName)
     {
+        //todo:
         //Fixes Session Changing between requests 
-        this.HttpContext.Session.Set("What", new byte[] { 1, 2, 3, 4, 5 });
+        HttpContext.Session.Set("What", new byte[] { 1, 2, 3, 4, 5 });
 
         ServiceId = serviceId;
         ServiceName = serviceName;
 
-        ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
-        model.ServiceId = serviceId;
-        model.ServiceName = serviceName;
-        _distributedCacheService.StoreConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel, model);
+        var model = await _referralDistributedCache.GetProfessionalReferralAsync();
 
-        if (!string.IsNullOrEmpty(model.FullName))
+        if (!string.IsNullOrEmpty(model?.FullName))
         {
+            //todo: two?
             PartialTextBoxViewModel.TextBoxValue = model.FullName;
             TextBoxValue = model.FullName;
         }
-            
     }
 
-    public IActionResult OnPost()
+    public async Task<IActionResult> OnPostAsync(string serviceId, string serviceName)
     {
         if (!ModelState.IsValid)
         {
             PartialTextBoxViewModel.TextBoxValue = TextBoxValue;
-            if (string.IsNullOrWhiteSpace(TextBoxValue?.Trim()))
+            if (string.IsNullOrWhiteSpace(TextBoxValue))
                 PartialTextBoxViewModel.ValidationValid = false;
 
             return Page();
@@ -66,16 +63,20 @@ public class SupportDetailsModel : PageModel
 
         if (TextBoxValue.Length > 255)
         {
-            TextBoxValue = TextBoxValue.Truncate(252) ?? string.Empty;
+            TextBoxValue = TextBoxValue.Truncate(252);
         }
 
-        ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
+        var model = await _referralDistributedCache.GetProfessionalReferralAsync()
+                    ?? new ProfessionalReferralModel
+                    {
+                        ServiceId = serviceId,
+                        ServiceName = serviceName
+                    };
+
         model.FullName = TextBoxValue;
-        _distributedCacheService.StoreConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel, model);
+        //todo: safe to use fire and forget?
+        await _referralDistributedCache.SetProfessionalReferralAsync(model);
 
-        return RedirectToPage("/ProfessionalReferral/WhySupport", new
-        {
-        });
-
+        return RedirectToPage("/ProfessionalReferral/WhySupport");
     }
 }

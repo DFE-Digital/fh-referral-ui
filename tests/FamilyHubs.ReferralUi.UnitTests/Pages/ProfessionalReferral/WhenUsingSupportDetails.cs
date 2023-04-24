@@ -11,20 +11,19 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
     private readonly SupportDetailsModel _supportDetailsModel;
     public WhenUsingSupportDetails()
     {
-        _supportDetailsModel = new SupportDetailsModel(_mockICacheService.Object);
+        _supportDetailsModel = new SupportDetailsModel(ReferralDistributedCache.Object);
     }
 
     [Fact]
-    public void ThenOnGetSupportDetails()
+    public async Task ThenOnGetSupportDetails()
     {
         //Arrange
         Mock<ISession> mockSession = new Mock<ISession>();
         var httpContext = new DefaultHttpContext() { Session = mockSession.Object };
         _supportDetailsModel.PageContext.HttpContext = httpContext;
 
-
         //Act
-        _supportDetailsModel.OnGet("Id", "Some Name With Spaces");
+        await _supportDetailsModel.OnGetAsync("Id", "Some Name With Spaces");
 
         //Assert
         _supportDetailsModel.ServiceId.Should().Be("Id");
@@ -33,14 +32,13 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
     }
 
     [Fact]
-    public void ThenOnPostSupportDetails()
+    public async Task ThenOnPostSupportDetails()
     {
         //Arrange
         _supportDetailsModel.TextBoxValue = "Joe Blogs";
 
         //Act
-        var result = _supportDetailsModel.OnPost() as RedirectToPageResult;
-
+        var result = await _supportDetailsModel.OnPostAsync("Id", "Some Name With Spaces") as RedirectToPageResult;
 
         //Assert
         ArgumentNullException.ThrowIfNull(result);
@@ -50,15 +48,14 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
     [Theory]
     [InlineData(default!)]
     [InlineData(" ")]
-    public void ThenOnPostSupportDetailsWithEmptyFullName(string value)
+    public async Task ThenOnPostSupportDetailsWithEmptyFullName(string value)
     {
         //Arrange
         _supportDetailsModel.TextBoxValue = value;
         _supportDetailsModel.ModelState.AddModelError("FullName", "Enter a full name");
 
         //Act
-        _supportDetailsModel.OnPost();
-
+        await _supportDetailsModel.OnPostAsync("Id", "Some Name With Spaces");
 
         //Assert
         _supportDetailsModel.PartialTextBoxViewModel.ValidationValid.Should().BeFalse();

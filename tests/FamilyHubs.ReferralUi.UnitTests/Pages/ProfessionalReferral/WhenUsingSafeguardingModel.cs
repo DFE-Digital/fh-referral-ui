@@ -1,12 +1,11 @@
 ﻿using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
 public class WhenUsingSafeguardingModel
 {
+    [Fact]
     public void ThenOnGetSetsIdAndName()
     {
         //Arrange
