@@ -8,7 +8,6 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Configuration;
 using Moq;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
@@ -16,10 +15,12 @@ namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 public class WhenUsingLocalOfferDetail
 {
     public Mock<IReferralDistributedCache> MockReferralDistributedCache;
+    public Mock<IOrganisationClientService> MockIOrganisationClientService;
 
     public WhenUsingLocalOfferDetail()
     {
         MockReferralDistributedCache = new Mock<IReferralDistributedCache>();
+        MockIOrganisationClientService = new Mock<IOrganisationClientService>();
     }
 
     [Theory]
@@ -30,7 +31,6 @@ public class WhenUsingLocalOfferDetail
     public async Task ThenOnGetAsync_LocalOfferDetailWithReferralNotEnabled(string url)
     {
         //Arrange
-        Mock<IOrganisationClientService> mockIOrganisationClientService = new Mock<IOrganisationClientService>();
         ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(1);
         if (serviceDto != null && serviceDto.Contacts != null)
         {
@@ -41,9 +41,9 @@ public class WhenUsingLocalOfferDetail
         }
 
         if (serviceDto != null)
-            mockIOrganisationClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
+            MockIOrganisationClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
 
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
         DefaultHttpContext httpContext = new DefaultHttpContext
         {
             Request =
@@ -76,15 +76,14 @@ public class WhenUsingLocalOfferDetail
     public async Task ThenOnGetAsync_WithNullServiceAtLocation()
     {
         //Arrange
-        Mock<IOrganisationClientService> mockIOrganisationClientService = new Mock<IOrganisationClientService>();
         ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(1);
         List<ServiceDeliveryDto> deliveryDtoList = new List<ServiceDeliveryDto>(serviceDto.ServiceDeliveries ?? new List<ServiceDeliveryDto>());
         deliveryDtoList.Add(new ServiceDeliveryDto { Id = 1, Name = ServiceDeliveryType.Online, ServiceId = 1 });
         serviceDto.ServiceDeliveries = deliveryDtoList;
         serviceDto.Contacts = default!;
-        mockIOrganisationClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
+        MockIOrganisationClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
 
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
         DefaultHttpContext httpContext = new DefaultHttpContext();
         httpContext.Request.Scheme = "http";
         httpContext.Request.Host = new HostString("localhost");
@@ -107,11 +106,10 @@ public class WhenUsingLocalOfferDetail
     public async Task ThenOnGetAsync_WithServiceAtLocationContainingInPerson()
     {
         //Arrange
-        Mock<IOrganisationClientService> mockIOrganisationClientService = new Mock<IOrganisationClientService>();
         ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(1);
-        mockIOrganisationClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
+        MockIOrganisationClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
 
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
         DefaultHttpContext httpContext = new DefaultHttpContext();
         httpContext.Request.Scheme = "http";
         httpContext.Request.Host = new HostString("localhost");
@@ -134,11 +132,10 @@ public class WhenUsingLocalOfferDetail
     public async Task ThenOnGetAsync_LocalOfferDetailWithReferralEnabled()
     {
         //Arrange
-        Mock<IOrganisationClientService> mockIOrganisationClientService = new Mock<IOrganisationClientService>();
         ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(1);
-        mockIOrganisationClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
+        MockIOrganisationClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
 
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
         DefaultHttpContext httpContext = new DefaultHttpContext();
         httpContext.Request.Scheme = "http";
         httpContext.Request.Host = new HostString("localhost");
@@ -160,10 +157,9 @@ public class WhenUsingLocalOfferDetail
     public void ThenOnPostAsync_ReturnsRedirectToPageResult()
     {
         //Arrange
-        Mock<IOrganisationClientService> mockIOrganisationClientService = new Mock<IOrganisationClientService>();
         ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(1);
 
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
 
         //Act 
         var result = localOfferDetailModel.OnPost("NewId", serviceDto.Id.ToString(), serviceDto.Name) as RedirectToPageResult;
@@ -178,9 +174,7 @@ public class WhenUsingLocalOfferDetail
     public void ThenGetDeliveryMethodsAsString_WithNullCollection()
     {
         //Arrange
-        Mock<IOrganisationClientService> mockIOrganisationClientService = new Mock<IOrganisationClientService>();
-
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
 
         //Act
         string result = localOfferDetailModel.GetDeliveryMethodsAsString(default!);
@@ -193,8 +187,7 @@ public class WhenUsingLocalOfferDetail
     public void ThenGetLanguagesAsString_WithNullCollection()
     {
         //Arrange
-        Mock<IOrganisationClientService> mockIOrganisationClientService = new Mock<IOrganisationClientService>();
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
 
         //Act
         string result = localOfferDetailModel.GetLanguagesAsString(default!);
@@ -207,8 +200,7 @@ public class WhenUsingLocalOfferDetail
     public void ThenGetLanguagesAsString_ShouldReturnLanguages()
     {
         //Arrange
-        Mock<IOrganisationClientService> mockIOrganisationClientService = new Mock<IOrganisationClientService>();
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
         List<LanguageDto> languageDtos = new List<LanguageDto>
         {
             new() { Id = 1, Name = "English", ServiceId = 1 },
@@ -227,8 +219,7 @@ public class WhenUsingLocalOfferDetail
     public void ThenExtractAddressParts_ShouldJustReturn()
     {
         //Arrange
-        Mock<IOrganisationClientService> mockIOrganisationClientService = new Mock<IOrganisationClientService>();
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(mockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
         LocationDto locationDto = new LocationDto { Address1 = default!, Address2 = default!, City = default!, Country = default!, Latitude = default!, Longitude = default!, LocationType = LocationType.NotSet, Name = default!, PostCode = default!, StateProvince = default! };
 
         //Act
