@@ -15,7 +15,7 @@ public class ReferralCacheKeysTests
         var mockSession = new Mock<ISession>();
         mockSession.Setup(s => s.Id).Returns(sessionId);
         mockHttpContextAccessor
-            .Setup(h => h.HttpContext.Session)
+            .Setup(h => h.HttpContext!.Session)
             .Returns(mockSession.Object);
 
         var referralCacheKeys = new ReferralCacheKeys(mockHttpContextAccessor.Object);
