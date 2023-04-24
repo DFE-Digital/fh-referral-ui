@@ -36,4 +36,18 @@ public class DistributedCacheExtensionsTests
             
         result.Should().Be(expected);
     }
+
+    [Fact]
+    public async Task SetAsync_SetsObjectInCache()
+    {
+        var expected = new TestRecord("Name", 100);
+        var serialized = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(expected));
+        DistributedCache.Setup(x => x.SetAsync("key", serialized, It.IsAny<DistributedCacheEntryOptions>(), default))
+            .Returns(Task.CompletedTask);
+        await DistributedCache.Object.SetAsync("key", expected, new DistributedCacheEntryOptions());
+
+        DistributedCache.Verify(
+            x => x.SetAsync("key", serialized, It.IsAny<DistributedCacheEntryOptions>(), default),
+            Times.Once);
+    }
 }
