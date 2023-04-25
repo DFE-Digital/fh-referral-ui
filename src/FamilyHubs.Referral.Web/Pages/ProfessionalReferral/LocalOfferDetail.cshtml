@@ -7,10 +7,12 @@
 @section Back {
     @if (!string.IsNullOrEmpty(Model.ReturnUrl) && Model.ReturnUrl.Contains("Safeguarding"))
     {
-        //todo: this uses the postcode of the service, not the postcode that was searched for
-        // (which changes the set of results when the user navigates back)
-        <a asp-page="/ProfessionalReferral/LocalOfferResults" class="govuk-back-link" data-testid="back-button"
-           asp-route-postcode="@Model.PostalCode" asp-route-currentPage="1">Back</a>
+        @* we _could_ store the postcode (and current page) through the journey and take them back to the correct results page *@
+@*        <a asp-page="/ProfessionalReferral/LocalOfferResults" class="govuk-back-link" data-testid="back-button"
+           asp-route-postcode="" asp-route-currentPage="">Back</a>*@
+
+        @* as we don't, send them back to the search page instead *@
+        <a asp-page="/ProfessionalReferral/Search" class="govuk-back-link" data-testid="back-button">Back</a>
     }
     else
     {
@@ -173,13 +175,8 @@
                 </div>
             }
         </dl>
-        
-        <form method="post">
-            <input asp-for="@Model.Name" type="hidden">
-            <input asp-for="@Model.ServiceId" type="hidden">
-            <button type="submit" class="govuk-button" data-module="govuk-button">
-                Request a connection
-            </button>
-        </form>
+
+        <a asp-page="/ProfessionalReferral/Safeguarding" role="button" draggable="false" class="govuk-button" data-module="govuk-button"
+           asp-route-serviceId="@Model.ServiceId" asp-route-serviceName="@Model.Name">Request a connection</a>
     </div>
 </div>

@@ -6,7 +6,6 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Moq;
 
@@ -145,23 +144,6 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.Phone.Should().Be("01827 65777");
         localOfferDetailModel.Website.Should().Be("https://www.google.com");
         localOfferDetailModel.Email.Should().Be("Contact@email.com");
-    }
-
-    [Fact]
-    public void ThenOnPostAsync_ReturnsRedirectToPageResult()
-    {
-        //Arrange
-        ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(1);
-
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
-
-        //Act 
-        var result = localOfferDetailModel.OnPost("NewId", serviceDto.Id.ToString(), serviceDto.Name) as RedirectToPageResult;
-
-        //Assert
-        result.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(result);
-        result.PageName.Should().Be("/ProfessionalReferral/Safeguarding");
     }
 
     [Fact]

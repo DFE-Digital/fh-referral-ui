@@ -53,17 +53,6 @@ public class LocalOfferDetailModel : PageModel
         return Page();
     }
 
-    //todo: no need for this postback
-    public IActionResult OnPost(string id, string serviceId, string name)
-    {
-        return RedirectToPage("/ProfessionalReferral/Safeguarding", new
-        {
-            serviceId,
-            serviceName = name
-        });
-
-    }
-
     public string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto>? serviceDeliveries)
     {
         var result = string.Empty;
