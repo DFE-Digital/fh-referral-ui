@@ -41,6 +41,8 @@
         </ul>
 
         <form method="post">
+            <input asp-for="@Model.ServiceName" type="hidden">
+            <input asp-for="@Model.ServiceId" type="hidden">
 
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
                 <div class="govuk-form-group @(Model.TextAreaValidation != TextAreaValidation.Valid ? "govuk-form-group--error" : "")">

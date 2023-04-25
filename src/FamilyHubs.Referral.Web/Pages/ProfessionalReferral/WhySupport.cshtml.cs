@@ -14,11 +14,14 @@ public enum TextAreaValidation
 public class WhySupportModel : PageModel
 {
     private readonly IReferralDistributedCache _referralDistributedCache;
-    public string ServiceId { get; private set; } = default!;
-    public string ServiceName { get; private set; } = default!;
 
     [BindProperty]
-    public string TextAreaValue { get; set; } = default!;
+    public string? ServiceId { get; set; }
+    [BindProperty]
+    public string? ServiceName { get; set; }
+
+    [BindProperty]
+    public string? TextAreaValue { get; set; }
 
     public TextAreaValidation TextAreaValidation { get; set; } = TextAreaValidation.Valid;
 
