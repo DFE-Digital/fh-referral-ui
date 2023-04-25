@@ -198,7 +198,7 @@ public class WhenUsingLocalOfferResultsPage
 
         // Assert
         searchResults.Should().NotBeNull();
-        searchResults!.PageName.Should().Be("/ConnectionRequest/LocalOfferResults");
+        searchResults!.PageName.Should().Be("/ProfessionalReferral/LocalOfferResults");
     }
 
     [Theory]
