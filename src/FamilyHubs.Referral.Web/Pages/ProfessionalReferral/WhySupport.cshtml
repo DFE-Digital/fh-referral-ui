@@ -10,7 +10,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        @if (Model.ValidationValid == false)
+        @if (!Model.ValidationValid)
         {
             <div class="govuk-error-summary" data-module="govuk-error-summary">
                 <div role="alert">
@@ -20,7 +20,7 @@
                     <div class="govuk-error-summary__body">
                         <ul class="govuk-list govuk-error-summary__list">
                             <li>
-                                <a href="#TextAreaValue" data-testid="summary-error">Enter details about the family</a>
+                                <a href="#reason" data-testid="summary-error">Enter details about the family</a>
                             </li>
                         </ul>
                     </div>
@@ -28,52 +28,58 @@
             </div>
         }
 
-    <h1 class="govuk-heading-l">Reason for the connection request</h1>
-    <form method="post">
-        
+        <h1 class="govuk-heading-l">Reason for the connection request</h1>
 
-            <div class="govuk-form-group">
-                <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
-                    <p>Use this to give the service details about the family, for example:</p>
-                    <ul class="govuk-list govuk-list--bullet">
-                        <li>why the family needs help</li>
-                        <li>other organisations currently working with the family</li>
-                        <li>if any family members have mental health conditions or special educational needs or disabilities</li>
-                        <li>important things to note such as domestic abuse</li>
-                    </ul>
+        <p>Use this to give the service details about the family, for example:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>why the family needs help</li>
+            <li>other organisations currently working with the family</li>
+            <li>if any family members have mental health conditions or special educational needs or disabilities</li>
+            <li>important things to note such as domestic abuse</li>
+        </ul>
 
-                    <div class="govuk-character-count @(Model.ValidationValid == false ? "govuk-form-group--error" : "")" data-module="govuk-character-count" data-maxlength="500">
-                        <div class="govuk-form-group">
-                            <h1 class="govuk-label-wrapper">
-                                <label class="govuk-label govuk-label--m" for="with-hint">
-                                    What do you want to tell the service?
-                                </label>
-                            </h1>
+        <form method="post">
 
-                            @{
-                                if (Model.ValidationValid == false)
-                                {
-                                    <p class="govuk-error-message">
-                                        <span class="govuk-visually-hidden">Error:</span> Enter details about the family
-                                    </p>
-                                }
-                            }
+            <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
+                <div class="govuk-form-group @(Model.ValidationValid ? "" : "govuk-form-group--error")">
 
-                            <textarea asp-for="TextAreaValue" class="govuk-textarea govuk-js-character-count" rows="10" id="with-hint"></textarea>
-                        </div>
+                    <h1 class="govuk-label-wrapper">
+                        <label class="govuk-label govuk-label--m" for="reason">
+                            What do you want to tell the service?
+                        </label>
+                    </h1>
+                    
+@*                    todo:
+                    If the input is empty
+                    Say ‘Enter [whatever it is]’.
 
-                        <div id="with-hint-info" class="govuk-hint govuk-character-count__message">
-                            You can enter up to 500 characters
-                        </div>
+                    For example, ‘Enter a summary’.
 
-                    </div>
+                    If the input is too long
+                    Say ‘[whatever it is] must be [number] characters or less’.
+
+                    For example, ‘Summary must be 400 characters or less’.*@
+
+                    @if (!Model.ValidationValid)
+                    {
+                        <p class="govuk-error-message" id="exceeding-characters-error">
+                            <span class="govuk-visually-hidden">Error:</span> Enter details about the family
+                        </p>
+                    }
+
+                    <textarea asp-for="TextAreaValue" class="govuk-textarea govuk-js-character-count @(Model.ValidationValid ? "" : "govuk-textarea--error")"
+                              rows="10" id="reason" aria-describedby="reason-info exceeding-characters-error"></textarea>
                 </div>
-            </div>
 
-        <button type="submit" class="govuk-button" data-module="govuk-button">
-            Continue
-        </button>
-    </form>
+                <div id="reason-info" class="govuk-hint govuk-character-count__message">
+                    You can enter up to 500 characters
+                </div>
+
+                <button type="submit" class="govuk-button" data-module="govuk-button">
+                    Continue
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
