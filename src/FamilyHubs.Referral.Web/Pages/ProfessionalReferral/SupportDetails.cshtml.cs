@@ -74,9 +74,12 @@ public class SupportDetailsModel : PageModel
                     };
 
         model.FullName = TextBoxValue;
-        //todo: safe to use fire and forget?
         await _referralDistributedCache.SetProfessionalReferralAsync(model);
 
-        return RedirectToPage("/ProfessionalReferral/WhySupport");
+        return RedirectToPage("/ProfessionalReferral/WhySupport",new
+        {
+            serviceId,
+            serviceName // WhySupport doesn't require serviceName, but we add it so that what we send to GA is consistent throughout the journey
+        });
     }
 }

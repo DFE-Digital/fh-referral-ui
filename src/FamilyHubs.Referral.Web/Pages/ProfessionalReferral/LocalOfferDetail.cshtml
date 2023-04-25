@@ -1,19 +1,21 @@
-﻿@page "{id:Guid}"
+﻿@page
 @model LocalOfferDetailModel
 @{
     ViewData["Title"] = Model.LocalOffer.Name;
 }
 
 @section Back {
-    @if (!string.IsNullOrEmpty(@Model.ReturnUrl) && @Model.ReturnUrl.Contains("Safeguarding"))
+    @if (!string.IsNullOrEmpty(Model.ReturnUrl) && Model.ReturnUrl.Contains("Safeguarding"))
     {
-        <a href="/ProfessionalReferral/LocalOfferResults/@Model.PostalCode?currentPage=1" class="govuk-back-link" data-testid="back-button">Back</a>
+        //todo: this uses the postcode of the service, not the postcode that was searched for
+        // (which changes the set of results when the user navigates back)
+        <a asp-page="/ProfessionalReferral/LocalOfferResults" class="govuk-back-link" data-testid="back-button"
+           asp-route-postcode="@Model.PostalCode" asp-route-currentPage="1">Back</a>
     }
     else
     {
         <a href="@Model.ReturnUrl" class="govuk-back-link" data-testid="back-button">Back</a>
     }
-
 }
 
 <div class="govuk-grid-row">

@@ -19,18 +19,23 @@ public class WhySupportModel : PageModel
     {
         _referralDistributedCache = referralDistributedCache;
     }
-    public async Task OnGetAsync()
+
+    public async Task<IActionResult> OnGetAsync(string serviceId)
     {
         var model = await _referralDistributedCache.GetProfessionalReferralAsync();
         if (model == null)
         {
-            //todo: redirect to start?
-            throw new NotImplementedException();
+            // session has expired and we don't have a model to work with
+            // likely the user has come back to this page after a long time
+            // send them back to the start of the journey
+            return RedirectToPage("/ProfessionalReferral/LocalOfferDetail", new { serviceId });
         }
         ServiceId = model.ServiceId;
         ServiceName = model.ServiceName;    
         if (!string.IsNullOrEmpty(model.ReasonForSupport))
             TextAreaValue = model.ReasonForSupport;
+
+        return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -44,14 +49,18 @@ public class WhySupportModel : PageModel
         var model = await _referralDistributedCache.GetProfessionalReferralAsync();
         if (model == null)
         {
-            //todo:
-            throw new NotImplementedException();
+            // session has expired and we don't have a model to work with
+            // likely the user has come back to this page after a long time
+            // send them back to the start of the journey
+            return RedirectToPage("/ProfessionalReferral/LocalOfferDetail", new { ServiceId });
         }
         model.ReasonForSupport = TextAreaValue;
         await _referralDistributedCache.SetProfessionalReferralAsync(model);
 
         return RedirectToPage("/ProfessionalReferral/ContactDetails", new
         {
+            ServiceId,
+            ServiceName
         });
     }
 }

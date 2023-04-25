@@ -28,7 +28,7 @@ public class WhenUsingLocalOfferDetail
     [InlineData("url")]
     [InlineData("https://wwww.google.com")]
     [InlineData("http://google.com")]
-    public async Task ThenOnGetAsync_LocalOfferDetailWithReferralNotEnabled(string url)
+    public async Task ThenOnGetAsync_LocalOfferDetailWithReferralNotEnabled(string? url)
     {
         //Arrange
         ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(1);
@@ -64,12 +64,7 @@ public class WhenUsingLocalOfferDetail
         //Assert
         result.Should().NotBeNull();
         result.Should().BeOfType<PageResult>();
-        if (url == null || url == "url")
-        {
-            localOfferDetailModel.Website.Should().BeEquivalentTo("");
-        }
-        else
-            localOfferDetailModel.Website.Should().BeEquivalentTo(url);
+        localOfferDetailModel.Website.Should().BeEquivalentTo(url is null or "url" ? "" : url);
     }
 
     [Fact]
@@ -99,7 +94,6 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.Email.Should().BeNullOrEmpty();
         localOfferDetailModel.Phone.Should().BeNullOrEmpty();
         localOfferDetailModel.Website.Should().BeNullOrEmpty();
-
     }
 
     [Fact]
