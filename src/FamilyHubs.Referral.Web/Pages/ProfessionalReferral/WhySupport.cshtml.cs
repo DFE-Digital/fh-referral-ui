@@ -4,6 +4,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
+public enum TextAreaValidation
+{
+    Valid,
+    Empty,
+    TooLong
+}
+
 public class WhySupportModel : PageModel
 {
     private readonly IReferralDistributedCache _referralDistributedCache;
@@ -13,7 +20,7 @@ public class WhySupportModel : PageModel
     [BindProperty]
     public string TextAreaValue { get; set; } = default!;
 
-    public bool ValidationValid { get; set; } = true;
+    public TextAreaValidation TextAreaValidation { get; set; } = TextAreaValidation.Valid;
 
     public WhySupportModel(IReferralDistributedCache referralDistributedCache)
     {
@@ -40,9 +47,15 @@ public class WhySupportModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if (string.IsNullOrWhiteSpace(TextAreaValue) || TextAreaValue.Length > 500)
+        if (string.IsNullOrEmpty(TextAreaValue))
         {
-            ValidationValid = false;
+            TextAreaValidation = TextAreaValidation.Empty;
+            return Page();
+        }
+
+        if (TextAreaValue.Length > 500)
+        {
+            TextAreaValidation = TextAreaValidation.TooLong;
             return Page();
         }
 

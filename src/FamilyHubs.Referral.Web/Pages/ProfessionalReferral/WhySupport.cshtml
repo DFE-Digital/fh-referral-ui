@@ -10,7 +10,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        @if (!Model.ValidationValid)
+        @if (Model.TextAreaValidation != TextAreaValidation.Valid)
         {
             <div class="govuk-error-summary" data-module="govuk-error-summary">
                 <div role="alert">
@@ -20,7 +20,9 @@
                     <div class="govuk-error-summary__body">
                         <ul class="govuk-list govuk-error-summary__list">
                             <li>
-                                <a href="#reason" data-testid="summary-error">Enter details about the family</a>
+                                <a href="#reason" data-testid="summary-error">
+                                    @GetValidationMessage(Model.TextAreaValidation)
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -41,33 +43,22 @@
         <form method="post">
 
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
-                <div class="govuk-form-group @(Model.ValidationValid ? "" : "govuk-form-group--error")">
+                <div class="govuk-form-group @(Model.TextAreaValidation != TextAreaValidation.Valid ? "govuk-form-group--error" : "")">
 
                     <h1 class="govuk-label-wrapper">
                         <label class="govuk-label govuk-label--m" for="reason">
                             What do you want to tell the service?
                         </label>
                     </h1>
-                    
-@*                    todo:
-                    If the input is empty
-                    Say ‘Enter [whatever it is]’.
 
-                    For example, ‘Enter a summary’.
-
-                    If the input is too long
-                    Say ‘[whatever it is] must be [number] characters or less’.
-
-                    For example, ‘Summary must be 400 characters or less’.*@
-
-                    @if (!Model.ValidationValid)
+                    @if (Model.TextAreaValidation != TextAreaValidation.Valid)
                     {
                         <p class="govuk-error-message" id="exceeding-characters-error">
-                            <span class="govuk-visually-hidden">Error:</span> Enter details about the family
+                            <span class="govuk-visually-hidden">Error:</span> @GetValidationMessage(Model.TextAreaValidation)
                         </p>
                     }
 
-                    <textarea asp-for="TextAreaValue" class="govuk-textarea govuk-js-character-count @(Model.ValidationValid ? "" : "govuk-textarea--error")"
+                    <textarea asp-for="TextAreaValue" class="govuk-textarea govuk-js-character-count @(Model.TextAreaValidation != TextAreaValidation.Valid ? "govuk-textarea--error" : "")"
                               rows="10" id="reason" aria-describedby="reason-info exceeding-characters-error"></textarea>
                 </div>
 
@@ -83,3 +74,18 @@
     </div>
 </div>
 
+@functions {
+
+    public static string GetValidationMessage(TextAreaValidation validation)
+    {
+        switch (validation)
+        {
+            case TextAreaValidation.TooLong:
+                return "Reason for the connection request must be 500 characters or less";
+            case TextAreaValidation.Empty:
+                return "Enter reason for the connection request";
+            default:
+                return "";
+        }
+    }
+}
