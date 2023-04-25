@@ -13,7 +13,7 @@ public enum TextAreaValidation
 
 public class WhySupportModel : PageModel
 {
-    private readonly IReferralDistributedCache _referralDistributedCache;
+    private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
 
     [BindProperty]
     public string? ServiceId { get; set; }
@@ -25,14 +25,14 @@ public class WhySupportModel : PageModel
 
     public TextAreaValidation TextAreaValidation { get; set; } = TextAreaValidation.Valid;
 
-    public WhySupportModel(IReferralDistributedCache referralDistributedCache)
+    public WhySupportModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
     {
-        _referralDistributedCache = referralDistributedCache;
+        _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }
 
     public async Task<IActionResult> OnGetAsync(string serviceId)
     {
-        var model = await _referralDistributedCache.GetProfessionalReferralAsync();
+        var model = await _connectionRequestDistributedCache.GetAsync();
         if (model == null)
         {
             // session has expired and we don't have a model to work with
@@ -42,8 +42,8 @@ public class WhySupportModel : PageModel
         }
         ServiceId = model.ServiceId;
         ServiceName = model.ServiceName;    
-        if (!string.IsNullOrEmpty(model.ReasonForSupport))
-            TextAreaValue = model.ReasonForSupport;
+        if (!string.IsNullOrEmpty(model.Reason))
+            TextAreaValue = model.Reason;
 
         return Page();
     }
@@ -62,7 +62,7 @@ public class WhySupportModel : PageModel
             return Page();
         }
 
-        var model = await _referralDistributedCache.GetProfessionalReferralAsync();
+        var model = await _connectionRequestDistributedCache.GetAsync();
         if (model == null)
         {
             // session has expired and we don't have a model to work with
@@ -70,8 +70,8 @@ public class WhySupportModel : PageModel
             // send them back to the start of the journey
             return RedirectToPage("/ProfessionalReferral/LocalOfferDetail", new { ServiceId });
         }
-        model.ReasonForSupport = TextAreaValue;
-        await _referralDistributedCache.SetProfessionalReferralAsync(model);
+        model.Reason = TextAreaValue;
+        await _connectionRequestDistributedCache.SetAsync(model);
 
         return RedirectToPage("/ProfessionalReferral/ContactDetails", new
         {

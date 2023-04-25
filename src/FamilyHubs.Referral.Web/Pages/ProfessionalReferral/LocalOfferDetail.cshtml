@@ -8,7 +8,7 @@
     @if (!string.IsNullOrEmpty(Model.ReturnUrl) && Model.ReturnUrl.Contains("Safeguarding"))
     {
         @* we _could_ store the postcode (and current page) through the journey and take them back to the correct results page *@
-@*        <a asp-page="/ProfessionalReferral/LocalOfferResults" class="govuk-back-link" data-testid="back-button"
+        @* <a asp-page="/ProfessionalReferral/LocalOfferResults" class="govuk-back-link" data-testid="back-button"
            asp-route-postcode="" asp-route-currentPage="">Back</a>*@
 
         @* as we don't, send them back to the search page instead *@

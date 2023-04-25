@@ -18,9 +18,9 @@ public class ReferralCacheKeysTests
             .Setup(h => h.HttpContext!.Session)
             .Returns(mockSession.Object);
 
-        var referralCacheKeys = new ReferralCacheKeys(mockHttpContextAccessor.Object);
+        var referralCacheKeys = new CacheKeys(mockHttpContextAccessor.Object);
 
-        string result = referralCacheKeys.ProfessionalReferral;
+        string result = referralCacheKeys.ConnectionRequest;
 
         result.Should().Be($"{sessionId}PR");
     }

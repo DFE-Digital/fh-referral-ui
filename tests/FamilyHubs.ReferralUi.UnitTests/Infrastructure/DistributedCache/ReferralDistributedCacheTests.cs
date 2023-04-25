@@ -13,32 +13,32 @@ public class ReferralDistributedCacheTests
 {
     public const string Key = "key";
     public Mock<IDistributedCache> MockDistributedCache;
-    public Mock<IReferralCacheKeys> MockReferralCacheKeys;
+    public Mock<ICacheKeys> MockReferralCacheKeys;
     public Mock<DistributedCacheEntryOptions> MockDistributedCacheEntryOptions;
-    public ReferralDistributedCache ReferralDistributedCache;
-    public ProfessionalReferralModel ProfessionalReferralModel;
+    public ConnectionRequestDistributedCache ConnectionRequestDistributedCache;
+    public ConnectionRequestModel ConnectionRequestModel;
     public byte[] ProfessionalReferralModelSerializedBytes;
 
     public ReferralDistributedCacheTests()
     {
         MockDistributedCache = new Mock<IDistributedCache>();
 
-        MockReferralCacheKeys = new Mock<IReferralCacheKeys>();
-        MockReferralCacheKeys.SetupGet(k => k.ProfessionalReferral).Returns(Key);
+        MockReferralCacheKeys = new Mock<ICacheKeys>();
+        MockReferralCacheKeys.SetupGet(k => k.ConnectionRequest).Returns(Key);
 
         MockDistributedCacheEntryOptions = new Mock<DistributedCacheEntryOptions>();
-        ReferralDistributedCache = new ReferralDistributedCache(
+        ConnectionRequestDistributedCache = new ConnectionRequestDistributedCache(
             MockDistributedCache.Object,
             MockReferralCacheKeys.Object,
             MockDistributedCacheEntryOptions.Object);
-        ProfessionalReferralModel = new ProfessionalReferralModel
+        ConnectionRequestModel = new ConnectionRequestModel
         {
-            FullName = "FullName",
+            FamilyContactFullName = "FamilyContactFullName",
             ServiceId = "1",
             ServiceName = "ServiceName"
         };
 
-        ProfessionalReferralModelSerializedBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(ProfessionalReferralModel));
+        ProfessionalReferralModelSerializedBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(ConnectionRequestModel));
     }
 
     [Fact]
@@ -49,16 +49,16 @@ public class ReferralDistributedCacheTests
             .ReturnsAsync(ProfessionalReferralModelSerializedBytes);
 
         // act
-        ProfessionalReferralModel? result = await ReferralDistributedCache.GetProfessionalReferralAsync();
+        ConnectionRequestModel? result = await ConnectionRequestDistributedCache.GetAsync();
 
-        result.Should().BeEquivalentTo(ProfessionalReferralModel);
+        result.Should().BeEquivalentTo(ConnectionRequestModel);
     }
 
     [Fact]
     public async Task SetProfessionalReferralAsync_WhenCalled_SetsProfessionalReferral()
     {
         // act
-        await ReferralDistributedCache.SetProfessionalReferralAsync(ProfessionalReferralModel);
+        await ConnectionRequestDistributedCache.SetAsync(ConnectionRequestModel);
 
         MockDistributedCache.Verify(
             x => x.SetAsync(Key, ProfessionalReferralModelSerializedBytes, It.IsAny<DistributedCacheEntryOptions>(), default),
@@ -69,7 +69,7 @@ public class ReferralDistributedCacheTests
     public async Task RemoveProfessionalReferralAsync_WhenCalled_RemovesProfessionalReferral()
     {
         // act
-        await ReferralDistributedCache.RemoveProfessionalReferralAsync();
+        await ConnectionRequestDistributedCache.RemoveAsync();
         MockDistributedCache.Verify(x => x.RemoveAsync(Key, default), Times.Once);
     }
 }

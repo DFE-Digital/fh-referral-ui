@@ -13,12 +13,12 @@ namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
 public class WhenUsingLocalOfferDetail
 {
-    public Mock<IReferralDistributedCache> MockReferralDistributedCache;
+    public Mock<IConnectionRequestDistributedCache> MockReferralDistributedCache;
     public Mock<IOrganisationClientService> MockIOrganisationClientService;
 
     public WhenUsingLocalOfferDetail()
     {
-        MockReferralDistributedCache = new Mock<IReferralDistributedCache>();
+        MockReferralDistributedCache = new Mock<IConnectionRequestDistributedCache>();
         MockIOrganisationClientService = new Mock<IOrganisationClientService>();
     }
 

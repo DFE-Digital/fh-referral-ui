@@ -8,7 +8,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class SupportDetailsModel : PageModel
 {
-    private readonly IReferralDistributedCache _referralDistributedCache;
+    private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
     public string ServiceId { get; private set; } = default!;
     public string ServiceName { get; private set; } = default!;
 
@@ -26,9 +26,9 @@ public class SupportDetailsModel : PageModel
     [BindProperty]
     public string TextBoxValue { get; set; } = string.Empty;
 
-    public SupportDetailsModel(IReferralDistributedCache referralDistributedCache)
+    public SupportDetailsModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
     {
-        _referralDistributedCache = referralDistributedCache;
+        _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }
 
     public async Task OnGetAsync(string serviceId, string serviceName)
@@ -40,13 +40,13 @@ public class SupportDetailsModel : PageModel
         ServiceId = serviceId;
         ServiceName = serviceName;
 
-        var model = await _referralDistributedCache.GetProfessionalReferralAsync();
+        var model = await _connectionRequestDistributedCache.GetAsync();
 
-        if (!string.IsNullOrEmpty(model?.FullName))
+        if (!string.IsNullOrEmpty(model?.FamilyContactFullName))
         {
             //todo: two?
-            PartialTextBoxViewModel.TextBoxValue = model.FullName;
-            TextBoxValue = model.FullName;
+            PartialTextBoxViewModel.TextBoxValue = model.FamilyContactFullName;
+            TextBoxValue = model.FamilyContactFullName;
         }
     }
 
@@ -66,15 +66,15 @@ public class SupportDetailsModel : PageModel
             TextBoxValue = TextBoxValue.Truncate(252);
         }
 
-        var model = await _referralDistributedCache.GetProfessionalReferralAsync()
-                    ?? new ProfessionalReferralModel
+        var model = await _connectionRequestDistributedCache.GetAsync()
+                    ?? new ConnectionRequestModel
                     {
                         ServiceId = serviceId,
                         ServiceName = serviceName
                     };
 
-        model.FullName = TextBoxValue;
-        await _referralDistributedCache.SetProfessionalReferralAsync(model);
+        model.FamilyContactFullName = TextBoxValue;
+        await _connectionRequestDistributedCache.SetAsync(model);
 
         return RedirectToPage("/ProfessionalReferral/WhySupport",new
         {

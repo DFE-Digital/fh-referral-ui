@@ -20,8 +20,8 @@ public static class ServiceCollectionExtension
             options.InstanceName = "ReferralWeb";
         });
 
-        services.AddTransient<IReferralCacheKeys, ReferralCacheKeys>();
-        services.AddTransient<IReferralDistributedCache, ReferralDistributedCache>();
+        services.AddTransient<ICacheKeys, CacheKeys>();
+        services.AddTransient<IConnectionRequestDistributedCache, ConnectionRequestDistributedCache>();
 
         // there's currently only one, so this should be fine
         services.AddSingleton(new DistributedCacheEntryOptions

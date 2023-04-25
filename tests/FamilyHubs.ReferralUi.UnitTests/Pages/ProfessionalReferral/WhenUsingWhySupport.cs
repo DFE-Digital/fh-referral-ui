@@ -1,9 +1,9 @@
-﻿//using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
+﻿//using FamilyHubs.Referral.Web.Pages.ConnectionRequest;
 //using FluentAssertions;
 //using Microsoft.AspNetCore.Mvc;
 //using Moq;
 
-//namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
+//namespace FamilyHubs.ReferralUi.UnitTests.Pages.ConnectionRequest;
 
 //public class WhenUsingWhySupport
 //{
@@ -16,8 +16,8 @@
 //        {
 //            ServiceId = "Service Id",
 //            ServiceName = "Service Name",
-//            FullName = "Full Name",
-//            ReasonForSupport = "Reason for Support"
+//            FamilyContactFullName = "Full Name",
+//            Reason = "Reason for Support"
 //        };
 //        _mockCacheService = new Mock<IDistributedCacheService>();
 //        _whySupportModel = new WhySupportModel(_mockCacheService.Object);
@@ -35,7 +35,7 @@
 //        //Assert
 //        _whySupportModel.ServiceId.Should().Be(_connectWizzardViewModel.ServiceId);
 //        _whySupportModel.ServiceName.Should().Be(_connectWizzardViewModel.ServiceName);
-//        _whySupportModel.TextAreaValue.Should().Be(_connectWizzardViewModel.ReasonForSupport);
+//        _whySupportModel.TextAreaValue.Should().Be(_connectWizzardViewModel.Reason);
 
 //    }
 

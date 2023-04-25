@@ -3,16 +3,16 @@ using Microsoft.AspNetCore.Http;
 
 namespace FamilyHubs.Referral.Infrastructure.DistributedCache;
 
-public class ReferralCacheKeys : IReferralCacheKeys
+public class CacheKeys : ICacheKeys
 {
     private readonly string _sessionId;
 
-    public ReferralCacheKeys(IHttpContextAccessor httpContextAccessor)
+    public CacheKeys(IHttpContextAccessor httpContextAccessor)
     {
         _sessionId = httpContextAccessor.HttpContext!.Session.Id;
     }
 
-    public string ProfessionalReferral => SessionNamespaced("PR");
+    public string ConnectionRequest => SessionNamespaced("PR");
 
     private string SessionNamespaced(string key)
     {
