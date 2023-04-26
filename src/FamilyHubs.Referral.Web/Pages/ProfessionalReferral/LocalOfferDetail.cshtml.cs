@@ -5,6 +5,7 @@ using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Primitives;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -33,17 +34,27 @@ public class LocalOfferDetailModel : PageModel
         _organisationClientService = organisationClientService;
     }
 
-    //Needs to pass dummy id so service id can be any string
-    public async Task<IActionResult> OnGetAsync(string id, string serviceid)
+    public async Task<IActionResult> OnGetAsync(string serviceid)
     {
         ServiceId = serviceid;
-        ReturnUrl = Request.Headers["Referer"].ToString();
+        var referer = Request.Headers["Referer"];
+        ReturnUrl = StringValues.IsNullOrEmpty(referer) ? Url.Page("Search") : referer.ToString();
         LocalOffer = await _organisationClientService.GetLocalOfferById(serviceid);
         Name = LocalOffer.Name;
-        if (LocalOffer.Locations.Count != 0) ExtractAddressParts(LocalOffer.Locations.First());
+        if (LocalOffer.Locations != null && LocalOffer.Locations.Any()) ExtractAddressParts(LocalOffer.Locations.First());
         GetContactDetails();
 
         return Page();
+    }
+
+    public IActionResult OnPost(string id, string serviceId, string name)
+    {
+        return RedirectToPage("/ProfessionalReferral/Safeguarding", new
+        {
+            id = serviceId,
+            name
+        });
+
     }
 
     public string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto>? serviceDeliveries)
@@ -53,19 +64,7 @@ public class LocalOfferDetailModel : PageModel
         if (serviceDeliveries == null || serviceDeliveries.Count == 0)
             return result;
 
-        foreach (var name in serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name))
-        {
-            result += result +
-                    (!string.IsNullOrWhiteSpace(name.AsString(EnumFormat.Description)) ?
-                    name.AsString(EnumFormat.Description) + "," :
-                    string.Empty);
-        }
-
-        //Remove last comma if present
-        if (result.EndsWith(","))
-        {
-            result = result.Remove(result.Length - 1);
-        }
+        result = string.Join(',', serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name).ToArray());
 
         return result;
     }
@@ -121,6 +120,8 @@ public class LocalOfferDetailModel : PageModel
         }
         else
         {
+            if (LocalOffer.Contacts == null)
+                return;
             //if there are more then one contact then bellow code will pick the last record
             foreach (var contactDto in LocalOffer.Contacts)
             {
