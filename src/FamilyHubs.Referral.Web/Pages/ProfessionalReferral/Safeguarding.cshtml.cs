@@ -6,12 +6,12 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class SafeguardingModel : PageModel
 {
     [BindProperty]
-    public string Id { get; set; } = default!;
+    public string ServiceId { get; set; } = default!;
     [BindProperty]
-    public string Name { get; set; } = default!;
-    public void OnGet(string id, string name)
+    public string ServiceName { get; set; } = default!;
+    public void OnGet(string serviceId, string serviceName)
     {
-        Id = id;
-        Name = name;
+        ServiceId = serviceId;
+        ServiceName = serviceName;
     }
 }

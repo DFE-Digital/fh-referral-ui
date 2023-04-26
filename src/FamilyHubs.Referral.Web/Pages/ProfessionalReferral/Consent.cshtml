@@ -1,0 +1,84 @@
+﻿@page
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.ConsentModel
+@{
+    ViewData["Title"] = "Permission to share details";
+}
+
+@section Back {
+    <a href="/ProfessionalReferral/Safeguarding?serviceId=@Model.ServiceId&serviceName=@Model.ServiceName" class="govuk-back-link">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        @if (!Model.ValidationValid)
+        {
+            <div class="govuk-error-summary" data-module="govuk-error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">
+                    There is a problem
+                </h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list">
+                        <li>
+                            <a href="#consent" data-testid="enter-service-name-error">Select whether you have permission from the family to share details.</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        }
+
+        <h1 class="govuk-heading-l">
+            Permission to share details
+        </h1>
+        <form method="post">
+            <input asp-for="@Model.ServiceName" type="hidden">
+            <input asp-for="@Model.ServiceId" type="hidden">
+            <p>You must have permission from the family to give their details to the service.</p>
+            <p>Those details include:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>who to contact in the family</li>
+                <li>ways to contact the family</li>
+                <li>why the family needs help</li>
+            </ul>
+            <p>You can come back and request a connection to the service once you have permission.</p>
+
+            <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            Do you have permission from the family?
+                        </h1>
+                    </legend>
+                    <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                        @{
+                            if (Model.ValidationValid == false)
+                            {
+                                <p class="govuk-error-message">
+                                    <span class="govuk-visually-hidden">Error:</span> Select whether you have permission from the family to share details.
+                                </p>
+                            }
+                        }
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="consent" name="Consent" type="radio" value="yes" @(Model.Consent != null && Model.Consent == "yes" ? "checked" : "")>
+                            <label class="govuk-label govuk-radios__label" for="consent">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="consent-2" name="Consent" type="radio" value="no" @(Model.Consent != null && Model.Consent == "no" ? "checked" : "")>
+                            <label class="govuk-label govuk-radios__label" for="consent-2">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Continue
+            </button>
+        </form>
+    </div>
+
+
+</div>
+

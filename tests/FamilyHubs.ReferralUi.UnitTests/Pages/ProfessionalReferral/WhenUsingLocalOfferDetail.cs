@@ -138,9 +138,9 @@ public class WhenUsingLocalOfferDetail
         //Assert
         result.Should().NotBeNull();
         result.Should().BeOfType<PageResult>();
-        localOfferDetailModel.Phone.Should().Be("01827 65770");
-        localOfferDetailModel.Website.Should().Be("https://www.testservice1.com");
-        localOfferDetailModel.Email.Should().Be("support@testservice1.com");
+        localOfferDetailModel.Phone.Should().Be("01827 65777");
+        localOfferDetailModel.Website.Should().Be("https://www.google.com");
+        localOfferDetailModel.Email.Should().Be("Contact@email.com");
 
     }
     
@@ -174,9 +174,9 @@ public class WhenUsingLocalOfferDetail
         //Assert
         result.Should().NotBeNull();
         result.Should().BeOfType<PageResult>();
-        localOfferDetailModel.Phone.Should().Be("01827 65770");
-        localOfferDetailModel.Website.Should().Be("https://www.testservice1.com");
-        localOfferDetailModel.Email.Should().Be("support@testservice1.com");
+        localOfferDetailModel.Phone.Should().Be("01827 65777");
+        localOfferDetailModel.Website.Should().Be("https://www.google.com");
+        localOfferDetailModel.Email.Should().Be("Contact@email.com");
     }
 
     [Fact]

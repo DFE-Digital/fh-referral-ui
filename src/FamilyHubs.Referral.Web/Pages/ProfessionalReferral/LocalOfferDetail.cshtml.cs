@@ -1,11 +1,10 @@
-using System.Text;
-using System.Text.RegularExpressions;
-using EnumsNET;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Primitives;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -34,12 +33,12 @@ public class LocalOfferDetailModel : PageModel
         _organisationClientService = organisationClientService;
     }
 
-    public async Task<IActionResult> OnGetAsync(string serviceid)
+    public async Task<IActionResult> OnGetAsync(string serviceId)
     {
-        ServiceId = serviceid;
+        ServiceId = serviceId;
         var referer = Request.Headers["Referer"];
         ReturnUrl = StringValues.IsNullOrEmpty(referer) ? Url.Page("Search") : referer.ToString();
-        LocalOffer = await _organisationClientService.GetLocalOfferById(serviceid);
+        LocalOffer = await _organisationClientService.GetLocalOfferById(serviceId);
         Name = LocalOffer.Name;
         if (LocalOffer.Locations != null && LocalOffer.Locations.Any()) ExtractAddressParts(LocalOffer.Locations.First());
         GetContactDetails();
@@ -51,8 +50,8 @@ public class LocalOfferDetailModel : PageModel
     {
         return RedirectToPage("/ProfessionalReferral/Safeguarding", new
         {
-            id = serviceId,
-            name
+            serviceId,
+            serviceName = name
         });
 
     }
@@ -96,9 +95,9 @@ public class LocalOfferDetailModel : PageModel
         if (string.IsNullOrEmpty(addressDto.Address1))
             return;
 
-        Address1 = addressDto.Address1 + ",";
-        City = !string.IsNullOrWhiteSpace(addressDto.City) ? addressDto.City + "," : string.Empty;
-        StateProvince = !string.IsNullOrWhiteSpace(addressDto.StateProvince) ? addressDto.StateProvince + "," : string.Empty;
+        Address1 = addressDto.Address1.Replace(",", "") + ",";
+        City = !string.IsNullOrWhiteSpace(addressDto.City) ? addressDto.City.Replace(",", "") + "," : string.Empty;
+        StateProvince = !string.IsNullOrWhiteSpace(addressDto.StateProvince) ? addressDto.StateProvince.Replace(",", "") + "," : string.Empty;
         PostalCode = addressDto.PostCode;
     }
 

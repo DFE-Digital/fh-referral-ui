@@ -1,8 +1,12 @@
 ﻿@page
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.SafeguardingModel
+@{
+    ViewData["Title"] = "Safeguarding";
+    string serviceName = System.Web.HttpUtility.UrlEncode(Model.ServiceName);
+}
 
 @section Back {
-    <a asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-serviceId="@Model.Id" asp-route-name="@Model.Name" class="govuk-back-link">Back</a>
+    <a href="/ProfessionalReferral/LocalOfferDetail/c2e8cebb-4597-4032-89c7-2559cdce33e8/?serviceId=@Model.ServiceId" class="govuk-back-link">Back</a>
 }
 
 <div class="govuk-grid-row">
@@ -13,13 +17,10 @@
             </h1>
             <p>Use the <a href="https://nhssafeguarding.app/?nocache=0.23461449202295054" id="nhs-safeguarding" class="govuk-link--inverse">NHS safeguarding app</a> for guidance on reporting safeguarding concerns.</p>
         </div>
-
-        <form method="post" novalidate>
-            <div class="govuk-form-group">
-                <button type="submit" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
-                    Continue
-                </button>
-            </div>
-        </form>
+        <div class="govuk-form-group">
+            <a asp-page="/ProfessionalReferral/Consent" asp-route-serviceId="@Model.ServiceId" asp-route-serviceName="@Model.ServiceName" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+                Continue
+            </a>
+        </div>
     </div>
 </div>

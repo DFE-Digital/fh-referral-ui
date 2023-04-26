@@ -48,6 +48,7 @@ public static class StartupExtensions
 
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
+
     }
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
