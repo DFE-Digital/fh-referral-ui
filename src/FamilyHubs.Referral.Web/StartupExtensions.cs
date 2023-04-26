@@ -49,6 +49,18 @@ public static class StartupExtensions
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 
+        var sessionTimeOutMinutes = configuration.GetValue<int>("SessionTimeOutMinutes");
+        services.AddSession(options => {
+            options.IdleTimeout = TimeSpan.FromMinutes(sessionTimeOutMinutes);
+        });
+
+        // the expiration should be longer than the session timeout,
+        // so that the cache entry is not removed before the session expires.
+        // (we make the session quite a bit longer, in case the user is keeping the session alive,
+        // without updating the redis cache, e.g. by refreshing the safeguarding page.)
+        services.AddReferralDistributedCache(
+            configuration["RedisCache:Connection"],
+            int.Parse(configuration["RedisCache:SlidingExpirationInMinutes"] ?? "240"));
     }
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
@@ -84,6 +96,8 @@ public static class StartupExtensions
         app.UseStaticFiles();
 
         app.UseRouting();
+
+        app.UseSession();
 
         //app.UseAuthentication();
         //app.UseAuthorization();

@@ -37,7 +37,7 @@ public class WhenUsingConsent
     }
 
     [Theory]
-    [InlineData("yes", "/ProfessionalReferral/FamilyContact")]
+    [InlineData("yes", "/ProfessionalReferral/SupportDetails")]
     [InlineData("no", "/ProfessionalReferral/ConsentShutter")]
     public void ThenOnGetConsent_With_IsImmediateHarm_Selected(string isConsentGiven, string pageName)
     {
