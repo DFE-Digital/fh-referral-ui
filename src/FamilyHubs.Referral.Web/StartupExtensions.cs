@@ -1,7 +1,4 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
-using FamilyHubs.Referral.Core.Services;
-using FamilyHubs.ServiceDirectory.Shared.Helpers;
-using FamilyHubs.SharedKernel.Security;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -41,6 +38,8 @@ public static class StartupExtensions
 
         // Add services to the container.
         services.AddRazorPages();
+
+        services.AddFamilyHubs(configuration);
     }
 
     public static void AddWebUiServices(this IServiceCollection services, IConfiguration configuration)
@@ -50,14 +49,18 @@ public static class StartupExtensions
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 
-        services.AddDistributedMemoryCache();
+        var sessionTimeOutMinutes = configuration.GetValue<int>("SessionTimeOutMinutes");
         services.AddSession(options => {
-            options.IdleTimeout = TimeSpan.FromMinutes(configuration.GetValue<int>("SessionTimeOutMinutes"));
+            options.IdleTimeout = TimeSpan.FromMinutes(sessionTimeOutMinutes);
         });
 
-        services.AddTransient<IRedisCache, RedisCache>();
-        services.AddTransient<IDistributedCacheService, RedisCacheService>();
-
+        // the expiration should be longer than the session timeout,
+        // so that the cache entry is not removed before the session expires.
+        // (we make the session quite a bit longer, in case the user is keeping the session alive,
+        // without updating the redis cache, e.g. by refreshing the safeguarding page.)
+        services.AddReferralDistributedCache(
+            configuration["RedisCache:Connection"],
+            int.Parse(configuration["RedisCache:SlidingExpirationInMinutes"] ?? "240"));
     }
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
@@ -77,16 +80,14 @@ public static class StartupExtensions
     {
         app.UseSerilogRequestLogging();
 
-        app.UseAppSecurityHeaders();
+        app.UseFamilyHubs();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
-            app.UseExceptionHandler("/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
-        app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 #if use_https
         app.UseHttpsRedirection();

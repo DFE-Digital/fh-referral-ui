@@ -1,85 +1,74 @@
-﻿using FamilyHubs.Referral.Core.Models;
-using FamilyHubs.Referral.Core.Services;
+﻿using FamilyHubs.Referral.Core.DistributedCache;
+using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
 public class WhenUsingWhySupport
 {
     private readonly WhySupportModel _whySupportModel;
-    private readonly Mock<IDistributedCacheService> _mockCacheService;
-    private readonly ConnectWizzardViewModel _connectWizzardViewModel;
+    private readonly Mock<IConnectionRequestDistributedCache> _mockConnectionRequestDistributedCache;
+    private readonly ConnectionRequestModel _connectionRequestModel;
     public WhenUsingWhySupport()
     {
-        _connectWizzardViewModel = new ConnectWizzardViewModel
+        _connectionRequestModel = new ConnectionRequestModel
         {
             ServiceId = "Service Id",
             ServiceName = "Service Name",
-            FullName = "Full Name",
-            ReasonForSupport = "Reason for Support"
+            FamilyContactFullName = "Full Name",
+            Reason = "Reason for Support"
         };
-        _mockCacheService = new Mock<IDistributedCacheService>();
-        _whySupportModel = new WhySupportModel(_mockCacheService.Object);
+        _mockConnectionRequestDistributedCache = new Mock<IConnectionRequestDistributedCache>();
+        _whySupportModel = new WhySupportModel(_mockConnectionRequestDistributedCache.Object);
     }
 
     [Fact]
-    public void ThenOnGetWhySupport()
+    public async Task ThenOnGetWhySupport()
     {
-        //Arrange
-        _mockCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
+        _mockConnectionRequestDistributedCache.Setup(x => x.GetAsync()).ReturnsAsync(_connectionRequestModel);
 
         //Act
-        _whySupportModel.OnGet();
+        await _whySupportModel.OnGetAsync("1");
 
-        //Assert
-        _whySupportModel.ServiceId.Should().Be(_connectWizzardViewModel.ServiceId);
-        _whySupportModel.ServiceName.Should().Be(_connectWizzardViewModel.ServiceName);
-        _whySupportModel.TextAreaValue.Should().Be(_connectWizzardViewModel.ReasonForSupport);
-
+        _whySupportModel.ServiceId.Should().Be(_connectionRequestModel.ServiceId);
+        _whySupportModel.ServiceName.Should().Be(_connectionRequestModel.ServiceName);
+        _whySupportModel.TextAreaValue.Should().Be(_connectionRequestModel.Reason);
     }
 
     [Fact]
-    public void ThenOnPostWhySupport()
+    public async Task ThenOnPostWhySupport()
     {
-        //Arrange
-        _mockCacheService.Setup(x => x.RetrieveConnectWizzardViewModel(It.IsAny<string>())).Returns(_connectWizzardViewModel);
-        int callBack = 0;
-        _mockCacheService.Setup(x => x.StoreConnectWizzardViewModel(It.IsAny<string>(),It.IsAny<ConnectWizzardViewModel>())).Callback(() => callBack++);
-        _whySupportModel.TextAreaValue = "Reason For Support";
+        _mockConnectionRequestDistributedCache.Setup(x => x.GetAsync()).ReturnsAsync(_connectionRequestModel);
+        _whySupportModel.TextAreaValue = "New Reason For Support";
 
         //Act
-        var result = _whySupportModel.OnPost() as RedirectToPageResult;
+        var result = await _whySupportModel.OnPostAsync() as RedirectToPageResult;
 
-
-        //Assert
-        callBack.Should().Be(1);
+        //todo: check new content
+        _mockConnectionRequestDistributedCache
+            .Verify(x => x.SetAsync(It.IsAny<ConnectionRequestModel>()), Times.Once);
+            
         ArgumentNullException.ThrowIfNull(result);
         result.PageName.Should().Be("/ProfessionalReferral/ContactDetails");
     }
 
     [Theory]
-    [InlineData(default!)]
-    [InlineData(" ")]
-    public void ThenOnPostSupportDetailsWithEmptyFullName(string value)
+    [InlineData(default, TextAreaValidation.Empty)]
+    [InlineData("", TextAreaValidation.Empty)]
+    [InlineData(" ", TextAreaValidation.Valid)]
+    [InlineData("ABC", TextAreaValidation.Valid)]
+    [InlineData("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890", TextAreaValidation.Valid)]
+    [InlineData("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901", TextAreaValidation.TooLong)]
+    public async Task ThenOnPostAsync_ReasonIsValidated(string? value, TextAreaValidation textAreaValidation)
     {
-        //Arrange
         _whySupportModel.TextAreaValue = value;
-        _whySupportModel.ModelState.AddModelError("Text Area", "Enter a Reason For Support");
 
         //Act
-        _whySupportModel.OnPost();
+        await _whySupportModel.OnPostAsync();
 
-
-        //Assert
-        _whySupportModel.ValidationValid.Should().BeFalse();
+        _whySupportModel.TextAreaValidation.Should().Be(textAreaValidation);
     }
 }

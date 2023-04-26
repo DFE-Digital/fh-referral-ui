@@ -8,15 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-    <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="2.0.3" />
+    <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="2.0.4" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="8.55.0.65544">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

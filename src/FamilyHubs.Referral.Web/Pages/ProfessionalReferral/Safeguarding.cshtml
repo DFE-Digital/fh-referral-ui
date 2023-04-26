@@ -2,11 +2,10 @@
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.SafeguardingModel
 @{
     ViewData["Title"] = "Safeguarding";
-    string serviceName = System.Web.HttpUtility.UrlEncode(Model.ServiceName);
 }
 
 @section Back {
-    <a href="/ProfessionalReferral/LocalOfferDetail/c2e8cebb-4597-4032-89c7-2559cdce33e8/?serviceId=@Model.ServiceId" class="govuk-back-link">Back</a>
+    <a href="/ProfessionalReferral/LocalOfferDetail/?serviceId=@Model.ServiceId" class="govuk-back-link">Back</a>
 }
 
 <div class="govuk-grid-row">
