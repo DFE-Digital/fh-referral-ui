@@ -11,6 +11,11 @@ public class ContactDetailsModel : PageModel
     public string? FullName { get; set; }
 
     [BindProperty]
+    public string? ServiceId { get; set; }
+    [BindProperty]
+    public string? ServiceName { get; set; }
+
+    [BindProperty]
     public string? Email { get; set; }
 
     [BindProperty]
@@ -27,18 +32,31 @@ public class ContactDetailsModel : PageModel
         _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }
 
-    public async Task OnGetAsync()
+    public async Task<IActionResult> OnGetAsync(string serviceId)
     {
         var model = await _connectionRequestDistributedCache.GetAsync();
+        if (model == null)
+        {
+            // session has expired and we don't have a model to work with
+            // likely the user has come back to this page after a long time
+            // send them back to the start of the journey
+            return RedirectToPage("/ProfessionalReferral/LocalOfferDetail", new { serviceId });
+        }
         //todo: handle missing model. have base class for all pages that handles this?
 
         //todo: why default to "Family"?
         //FullName = !string.IsNullOrEmpty(model.FullName) ? model.FullName : "Family";
-        FullName = model!.FamilyContactFullName;
+
+        ServiceId = model.ServiceId;
+        ServiceName = model.ServiceName;
+
+        FullName = model.FamilyContactFullName;
         Email = (model.EmailSelected) ? "Email" : null;
         Telephone = (model.TelephoneSelected) ? "Telephone" : null;
         Textphone = (model.TextPhoneSelected) ? "Textphone" : null;
         Letter = (model.LetterSelected) ? "Letter" : null;
+
+        return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
