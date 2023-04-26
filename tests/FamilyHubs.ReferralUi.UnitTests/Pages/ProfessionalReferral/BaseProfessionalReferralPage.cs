@@ -6,20 +6,20 @@ namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
 public class BaseProfessionalReferralPage
 {
-    public Mock<IReferralDistributedCache> ReferralDistributedCache;
-    public readonly ProfessionalReferralModel ProfessionalReferralModel;
+    public Mock<IConnectionRequestDistributedCache> ReferralDistributedCache;
+    public readonly ConnectionRequestModel ConnectionRequestModel;
 
     public BaseProfessionalReferralPage()
     {
-        ProfessionalReferralModel = new ProfessionalReferralModel
+        ConnectionRequestModel = new ConnectionRequestModel
         {
             ServiceId = "ServiceId",
             ServiceName = "ServiceName",
-            FullName = "FullName",
+            FamilyContactFullName = "FamilyContactFullName",
         };
 
-        ReferralDistributedCache = new Mock<IReferralDistributedCache>(MockBehavior.Strict);
-        ReferralDistributedCache.Setup(x => x.SetProfessionalReferralAsync(It.IsAny<ProfessionalReferralModel>())).Returns(Task.CompletedTask);
-        ReferralDistributedCache.Setup(x => x.GetProfessionalReferralAsync()).ReturnsAsync(ProfessionalReferralModel);
+        ReferralDistributedCache = new Mock<IConnectionRequestDistributedCache>(MockBehavior.Strict);
+        ReferralDistributedCache.Setup(x => x.SetAsync(It.IsAny<ConnectionRequestModel>())).Returns(Task.CompletedTask);
+        ReferralDistributedCache.Setup(x => x.GetAsync()).ReturnsAsync(ConnectionRequestModel);
     }
 }

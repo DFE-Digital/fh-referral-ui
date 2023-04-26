@@ -33,7 +33,7 @@ else
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Services, groups and activities in this area</h1>
-            <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/ProfessionalReferral/Search">@Model.postcode</a></span>
+                <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/ProfessionalReferral/Search">@Model.postcode</a></span>
         </div>
     </div>
 
@@ -370,7 +370,7 @@ else
                     {
                         <li role="listitem" tab-index="0">
                             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-                                <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@Guid.NewGuid().ToString()" asp-route-serviceid="@item.Id" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
+                                <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-serviceid="@item.Id" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
                             </h2>
                             <p class="govuk-caption-m">
                                 @if (item.Locations.FirstOrDefault() != null)

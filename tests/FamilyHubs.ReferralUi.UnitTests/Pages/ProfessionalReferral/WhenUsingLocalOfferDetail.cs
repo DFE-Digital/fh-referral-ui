@@ -6,7 +6,6 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Moq;
 
@@ -14,12 +13,12 @@ namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
 
 public class WhenUsingLocalOfferDetail
 {
-    public Mock<IReferralDistributedCache> MockReferralDistributedCache;
+    public Mock<IConnectionRequestDistributedCache> MockReferralDistributedCache;
     public Mock<IOrganisationClientService> MockIOrganisationClientService;
 
     public WhenUsingLocalOfferDetail()
     {
-        MockReferralDistributedCache = new Mock<IReferralDistributedCache>();
+        MockReferralDistributedCache = new Mock<IConnectionRequestDistributedCache>();
         MockIOrganisationClientService = new Mock<IOrganisationClientService>();
     }
 
@@ -28,7 +27,7 @@ public class WhenUsingLocalOfferDetail
     [InlineData("url")]
     [InlineData("https://wwww.google.com")]
     [InlineData("http://google.com")]
-    public async Task ThenOnGetAsync_LocalOfferDetailWithReferralNotEnabled(string url)
+    public async Task ThenOnGetAsync_LocalOfferDetailWithReferralNotEnabled(string? url)
     {
         //Arrange
         ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(1);
@@ -64,12 +63,7 @@ public class WhenUsingLocalOfferDetail
         //Assert
         result.Should().NotBeNull();
         result.Should().BeOfType<PageResult>();
-        if (url == null || url == "url")
-        {
-            localOfferDetailModel.Website.Should().BeEquivalentTo("");
-        }
-        else
-            localOfferDetailModel.Website.Should().BeEquivalentTo(url);
+        localOfferDetailModel.Website.Should().BeEquivalentTo(url is null or "url" ? "" : url);
     }
 
     [Fact]
@@ -99,7 +93,6 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.Email.Should().BeNullOrEmpty();
         localOfferDetailModel.Phone.Should().BeNullOrEmpty();
         localOfferDetailModel.Website.Should().BeNullOrEmpty();
-
     }
 
     [Fact]
@@ -151,23 +144,6 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.Phone.Should().Be("01827 65777");
         localOfferDetailModel.Website.Should().Be("https://www.google.com");
         localOfferDetailModel.Email.Should().Be("Contact@email.com");
-    }
-
-    [Fact]
-    public void ThenOnPostAsync_ReturnsRedirectToPageResult()
-    {
-        //Arrange
-        ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(1);
-
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockReferralDistributedCache.Object);
-
-        //Act 
-        var result = localOfferDetailModel.OnPost("NewId", serviceDto.Id.ToString(), serviceDto.Name) as RedirectToPageResult;
-
-        //Assert
-        result.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(result);
-        result.PageName.Should().Be("/ProfessionalReferral/Safeguarding");
     }
 
     [Fact]

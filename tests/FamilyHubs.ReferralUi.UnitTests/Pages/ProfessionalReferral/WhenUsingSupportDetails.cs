@@ -52,7 +52,7 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
     {
         //Arrange
         _supportDetailsModel.TextBoxValue = value;
-        _supportDetailsModel.ModelState.AddModelError("FullName", "Enter a full name");
+        _supportDetailsModel.ModelState.AddModelError("FamilyContactFullName", "Enter a full name");
 
         //Act
         await _supportDetailsModel.OnPostAsync("Id", "Some Name With Spaces");

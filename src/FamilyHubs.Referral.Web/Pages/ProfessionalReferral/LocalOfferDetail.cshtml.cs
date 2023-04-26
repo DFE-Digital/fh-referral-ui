@@ -12,7 +12,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class LocalOfferDetailModel : PageModel
 {
     private readonly IOrganisationClientService _organisationClientService;
-    private readonly IReferralDistributedCache _referralDistributedCache;
+    private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
     public ServiceDto LocalOffer { get; set; } = default!;
 
     public string? ReturnUrl { get; set; }
@@ -32,10 +32,10 @@ public class LocalOfferDetailModel : PageModel
 
     public LocalOfferDetailModel(
         IOrganisationClientService organisationClientService,
-        IReferralDistributedCache referralDistributedCache)
+        IConnectionRequestDistributedCache connectionRequestDistributedCache)
     {
         _organisationClientService = organisationClientService;
-        _referralDistributedCache = referralDistributedCache;
+        _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }
 
     public async Task<IActionResult> OnGetAsync(string serviceId)
@@ -48,20 +48,9 @@ public class LocalOfferDetailModel : PageModel
         if (LocalOffer.Locations != null && LocalOffer.Locations.Any()) ExtractAddressParts(LocalOffer.Locations.First());
         GetContactDetails();
 
-        await _referralDistributedCache.RemoveProfessionalReferralAsync();
+        await _connectionRequestDistributedCache.RemoveAsync();
 
         return Page();
-    }
-
-    //todo: no need for this postback
-    public IActionResult OnPost(string id, string serviceId, string name)
-    {
-        return RedirectToPage("/ProfessionalReferral/Safeguarding", new
-        {
-            serviceId,
-            serviceName = name
-        });
-
     }
 
     public string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto>? serviceDeliveries)

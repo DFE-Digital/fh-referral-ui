@@ -34,19 +34,15 @@ public class ConsentModel : PageModel
 
         if (string.Compare(Consent, "yes", StringComparison.OrdinalIgnoreCase) == 0)
         {
-            
-
             return RedirectToPage("/ProfessionalReferral/SupportDetails", new
             {
                 serviceId,
                 serviceName
             });
-
         }
 
         return RedirectToPage("/ProfessionalReferral/ConsentShutter", new
         {
         });
-
     }
 }
