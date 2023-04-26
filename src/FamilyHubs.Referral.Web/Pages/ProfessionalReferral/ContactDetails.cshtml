@@ -1,10 +1,11 @@
 ﻿@page
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.ContactDetailsModel
 @{
-    ViewData["Title"] = $"How can the service contact {@Model.FullName}?";
+    ViewData["Title"] = $"How can the service contact {Model.FullName}?";
 }
 
 @section Back {
+    @*todo:service id & name required*@
     <a asp-page="/ProfessionalReferral/WhySupport" class="govuk-back-link">Back</a>
 }
 
@@ -32,6 +33,7 @@
                 <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <span class="govuk-fieldset__heading">
+                            @*todo: do we have to worry about injection?*@
                             How can the service contact @Model.FullName?
                         </span>
                     </legend>
