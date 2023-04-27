@@ -35,24 +35,20 @@ public class ContactDetailsModel : ProfessionalReferralModel
         Letter = model.LetterSelected;
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    protected override string? OnPostWithModel(ConnectionRequestModel model)
     {
-        if (!ModelState.IsValid || (!Email && !Telephone && !Textphone && !Letter))
+        if (!(ModelState.IsValid && (Email || Telephone || Textphone || Letter)))
         {
             ValidationValid = false;
-            
-            return Page();
+            return null;
         }
         
-        var model = await ConnectionRequestCache.GetAsync();
-        //todo: handle missing model
-        model!.EmailSelected = Email;
+        model.EmailSelected = Email;
         model.TelephoneSelected = Telephone;
         model.TextPhoneSelected = Textphone;
         model.LetterSelected = Letter;
-        await ConnectionRequestCache.SetAsync(model);
 
-        string destination = string.Empty;
+        string destination;
         if (model.EmailSelected)
         {
             destination = "Email";
@@ -69,9 +65,11 @@ public class ContactDetailsModel : ProfessionalReferralModel
         {
             destination = "Letter";
         }
-
-        return RedirectToPage($"/ProfessionalReferral/{destination}", new
+        else
         {
-        });
+            throw new InvalidOperationException("No contact method selected");
+        }
+
+        return $"/ProfessionalReferral/{destination}";
     }
 }

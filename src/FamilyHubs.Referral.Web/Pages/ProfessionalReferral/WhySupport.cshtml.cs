@@ -30,35 +30,23 @@ public class WhySupportModel : ProfessionalReferralModel
             TextAreaValue = model.Reason;
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    protected override string? OnPostWithModel(ConnectionRequestModel model)
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {
             TextAreaValidation = TextAreaValidation.Empty;
-            return Page();
+            return null;
         }
 
         if (TextAreaValue.Length > 500)
         {
             TextAreaValidation = TextAreaValidation.TooLong;
-            return Page();
+            return null;
         }
 
-        var model = await ConnectionRequestCache.GetAsync();
-        if (model == null)
-        {
-            // session has expired and we don't have a model to work with
-            // likely the user has come back to this page after a long time
-            // send them back to the start of the journey
-            return RedirectToPage("/ProfessionalReferral/LocalOfferDetail", new { ServiceId });
-        }
         model.Reason = TextAreaValue;
-        await ConnectionRequestCache.SetAsync(model);
 
-        return RedirectToPage("/ProfessionalReferral/ContactDetails", new
-        {
-            ServiceId,
-            ServiceName
-        });
+        //todo: make these refactor friendly
+        return "/ProfessionalReferral/ContactDetails";
     }
 }
