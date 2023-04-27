@@ -11,9 +11,6 @@ public class ContactDetailsModel : ProfessionalReferralModel
     public string? FullName { get; set; }
 
     [BindProperty]
-    public string? ServiceName { get; set; }
-
-    [BindProperty]
     public bool Email { get; set; }
 
     [BindProperty]
@@ -31,8 +28,6 @@ public class ContactDetailsModel : ProfessionalReferralModel
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        ServiceName = model.ServiceName;
-
         FullName = model.FamilyContactFullName;
         Email = model.EmailSelected;
         Telephone = model.TelephoneSelected;

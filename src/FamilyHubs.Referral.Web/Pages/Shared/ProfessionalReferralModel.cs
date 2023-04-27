@@ -10,6 +10,9 @@ public abstract class ProfessionalReferralModel : PageModel
     [BindProperty]
     public string? ServiceId { get; set; }
 
+    [BindProperty]
+    public string? ServiceName { get; set; }
+
     protected readonly IConnectionRequestDistributedCache ConnectionRequestCache;
 
     protected ProfessionalReferralModel(IConnectionRequestDistributedCache connectionRequestCache)
@@ -31,6 +34,7 @@ public abstract class ProfessionalReferralModel : PageModel
         }
 
         ServiceId = model.ServiceId;
+        ServiceName = model.ServiceName;
 
         OnGetWithModel(model);
 

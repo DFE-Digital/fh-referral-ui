@@ -15,9 +15,6 @@ public enum TextAreaValidation
 public class WhySupportModel : ProfessionalReferralModel
 {
     [BindProperty]
-    public string? ServiceName { get; set; }
-
-    [BindProperty]
     public string? TextAreaValue { get; set; }
 
     public TextAreaValidation TextAreaValidation { get; set; } = TextAreaValidation.Valid;
@@ -29,7 +26,6 @@ public class WhySupportModel : ProfessionalReferralModel
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        ServiceName = model.ServiceName;
         if (!string.IsNullOrEmpty(model.Reason))
             TextAreaValue = model.Reason;
     }
