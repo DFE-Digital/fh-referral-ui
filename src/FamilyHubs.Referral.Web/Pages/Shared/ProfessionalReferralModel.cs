@@ -27,7 +27,7 @@ public abstract class ProfessionalReferralModel : PageModel
             // session has expired and we don't have a model to work with
             // likely the user has come back to this page after a long time
             // send them back to the start of the journey
-            return RedirectToPage("/ProfessionalReferral/LocalOfferDetail", new {serviceId});
+            return RedirectToPage("/ProfessionalReferral/LocalOfferDetail", new { serviceId });
         }
 
         ServiceId = model.ServiceId;

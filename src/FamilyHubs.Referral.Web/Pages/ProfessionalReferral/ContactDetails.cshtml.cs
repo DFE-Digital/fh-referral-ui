@@ -31,7 +31,6 @@ public class ContactDetailsModel : ProfessionalReferralModel
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        //todo: don't pass name through, once in cache
         ServiceName = model.ServiceName;
 
         FullName = model.FamilyContactFullName;

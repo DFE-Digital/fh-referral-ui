@@ -54,5 +54,7 @@ To debug the JavaScript in Visual Studio, set breakpoints in the JavaScript file
 
 ## TODO
 
-open / close filter button doesn't work - create a component from the find site.
+* open / close filter button doesn't work - create a component from the find site.
 
+* would be better to get the ServiceName for the dashboard from our API, 
+  rather than passing it through the journey, as someone could change it in the URL

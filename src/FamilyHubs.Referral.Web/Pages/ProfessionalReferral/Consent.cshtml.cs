@@ -6,13 +6,12 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class ConsentModel : PageModel
 { 
     [BindProperty]
-    public string ServiceId { get; set; } = default!;
+    public string? ServiceId { get; set; }
     [BindProperty]
-    public string ServiceName { get; set; } = default!;
+    public string? ServiceName { get; set; }
 
     [BindProperty]
-    public string Consent { get; set; } = default!;
-
+    public string? Consent { get; set; }
 
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
@@ -40,8 +39,6 @@ public class ConsentModel : PageModel
             });
         }
 
-        return RedirectToPage("/ProfessionalReferral/ConsentShutter", new
-        {
-        });
+        return RedirectToPage("/ProfessionalReferral/ConsentShutter");
     }
 }
