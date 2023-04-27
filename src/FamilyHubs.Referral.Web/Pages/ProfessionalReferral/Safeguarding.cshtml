@@ -15,9 +15,8 @@
                 Do not use this service to report safeguarding concerns
             </h1>
             <p>Use the <a href="https://nhssafeguarding.app/?nocache=0.23461449202295054" id="nhs-safeguarding" class="govuk-link--inverse">NHS safeguarding app</a> for guidance on reporting safeguarding concerns.</p>
-        </div>
-        <div class="govuk-form-group">
-            <a asp-page="/ProfessionalReferral/Consent" asp-route-serviceId="@Model.ServiceId" asp-route-serviceName="@Model.ServiceName" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+            <a asp-page="/ProfessionalReferral/Consent" class="govuk-button app-button--inverted" data-module="govuk-button"
+               asp-route-serviceId="@Model.ServiceId" asp-route-serviceName="@Model.ServiceName">
                 Continue
             </a>
         </div>
