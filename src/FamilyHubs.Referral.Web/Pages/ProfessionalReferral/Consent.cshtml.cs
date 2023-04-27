@@ -31,7 +31,6 @@ public class ConsentModel : PageModel
             return Page();
         }
 
-
         if (string.Compare(Consent, "yes", StringComparison.OrdinalIgnoreCase) == 0)
         {
             return RedirectToPage("/ProfessionalReferral/SupportDetails", new

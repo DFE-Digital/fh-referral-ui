@@ -1,6 +1,7 @@
 using FamilyHubs.Referral.Core.DistributedCache;
+using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -11,12 +12,8 @@ public enum TextAreaValidation
     TooLong
 }
 
-public class WhySupportModel : PageModel
+public class WhySupportModel : ProfessionalReferralModel
 {
-    private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
-
-    [BindProperty]
-    public string? ServiceId { get; set; }
     [BindProperty]
     public string? ServiceName { get; set; }
 
@@ -25,27 +22,16 @@ public class WhySupportModel : PageModel
 
     public TextAreaValidation TextAreaValidation { get; set; } = TextAreaValidation.Valid;
 
-    public WhySupportModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
+    public WhySupportModel(IConnectionRequestDistributedCache connectionRequestCache)
+        : base(connectionRequestCache)
     {
-        _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }
 
-    public async Task<IActionResult> OnGetAsync(string serviceId)
+    protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        var model = await _connectionRequestDistributedCache.GetAsync();
-        if (model == null)
-        {
-            // session has expired and we don't have a model to work with
-            // likely the user has come back to this page after a long time
-            // send them back to the start of the journey
-            return RedirectToPage("/ProfessionalReferral/LocalOfferDetail", new { serviceId });
-        }
-        ServiceId = model.ServiceId;
-        ServiceName = model.ServiceName;    
+        ServiceName = model.ServiceName;
         if (!string.IsNullOrEmpty(model.Reason))
             TextAreaValue = model.Reason;
-
-        return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -62,7 +48,7 @@ public class WhySupportModel : PageModel
             return Page();
         }
 
-        var model = await _connectionRequestDistributedCache.GetAsync();
+        var model = await ConnectionRequestCache.GetAsync();
         if (model == null)
         {
             // session has expired and we don't have a model to work with
@@ -71,7 +57,7 @@ public class WhySupportModel : PageModel
             return RedirectToPage("/ProfessionalReferral/LocalOfferDetail", new { ServiceId });
         }
         model.Reason = TextAreaValue;
-        await _connectionRequestDistributedCache.SetAsync(model);
+        await ConnectionRequestCache.SetAsync(model);
 
         return RedirectToPage("/ProfessionalReferral/ContactDetails", new
         {

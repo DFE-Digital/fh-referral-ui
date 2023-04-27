@@ -1,17 +1,15 @@
 using FamilyHubs.Referral.Core.DistributedCache;
+using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class ContactDetailsModel : PageModel
+public class ContactDetailsModel : ProfessionalReferralModel
 {
-    private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
     public bool ValidationValid { get; private set; } = true;
     public string? FullName { get; set; }
 
-    [BindProperty]
-    public string? ServiceId { get; set; }
     [BindProperty]
     public string? ServiceName { get; set; }
 
@@ -27,27 +25,13 @@ public class ContactDetailsModel : PageModel
     [BindProperty]
     public string? Letter { get; set; }
 
-    public ContactDetailsModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
+    public ContactDetailsModel(IConnectionRequestDistributedCache connectionRequestCache) : base(connectionRequestCache)
     {
-        _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }
 
-    public async Task<IActionResult> OnGetAsync(string serviceId)
+    protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        var model = await _connectionRequestDistributedCache.GetAsync();
-        if (model == null)
-        {
-            // session has expired and we don't have a model to work with
-            // likely the user has come back to this page after a long time
-            // send them back to the start of the journey
-            return RedirectToPage("/ProfessionalReferral/LocalOfferDetail", new { serviceId });
-        }
-        //todo: handle missing model. have base class for all pages that handles this?
-
-        //todo: why default to "Family"?
-        //FullName = !string.IsNullOrEmpty(model.FullName) ? model.FullName : "Family";
-
-        ServiceId = model.ServiceId;
+        //todo: don't pass name through, once in cache
         ServiceName = model.ServiceName;
 
         FullName = model.FamilyContactFullName;
@@ -55,8 +39,6 @@ public class ContactDetailsModel : PageModel
         Telephone = (model.TelephoneSelected) ? "Telephone" : null;
         Textphone = (model.TextPhoneSelected) ? "Textphone" : null;
         Letter = (model.LetterSelected) ? "Letter" : null;
-
-        return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -68,13 +50,13 @@ public class ContactDetailsModel : PageModel
             return Page();
         }
         
-        var model = await _connectionRequestDistributedCache.GetAsync();
+        var model = await ConnectionRequestCache.GetAsync();
         //todo: handle missing model
         model!.EmailSelected = !string.IsNullOrEmpty(Email);
         model.TelephoneSelected = !string.IsNullOrEmpty(Telephone);
         model.TextPhoneSelected = !string.IsNullOrEmpty(Textphone);
         model.LetterSelected = !string.IsNullOrEmpty(Letter);
-        await _connectionRequestDistributedCache.SetAsync(model);
+        await ConnectionRequestCache.SetAsync(model);
 
         string destination = string.Empty;
         if (model.EmailSelected)
