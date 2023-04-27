@@ -14,16 +14,16 @@ public class ContactDetailsModel : ProfessionalReferralModel
     public string? ServiceName { get; set; }
 
     [BindProperty]
-    public string? Email { get; set; }
+    public bool Email { get; set; }
 
     [BindProperty]
-    public string? Telephone { get; set; }
+    public bool Telephone { get; set; }
 
     [BindProperty]
-    public string? Textphone { get; set; }
+    public bool Textphone { get; set; }
 
     [BindProperty]
-    public string? Letter { get; set; }
+    public bool Letter { get; set; }
 
     public ContactDetailsModel(IConnectionRequestDistributedCache connectionRequestCache) : base(connectionRequestCache)
     {
@@ -34,15 +34,15 @@ public class ContactDetailsModel : ProfessionalReferralModel
         ServiceName = model.ServiceName;
 
         FullName = model.FamilyContactFullName;
-        Email = (model.EmailSelected) ? "Email" : null;
-        Telephone = (model.TelephoneSelected) ? "Telephone" : null;
-        Textphone = (model.TextPhoneSelected) ? "Textphone" : null;
-        Letter = (model.LetterSelected) ? "Letter" : null;
+        Email = model.EmailSelected;
+        Telephone = model.TelephoneSelected;
+        Textphone = model.TextPhoneSelected;
+        Letter = model.LetterSelected;
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!ModelState.IsValid || (string.IsNullOrEmpty(Email) && string.IsNullOrEmpty(Telephone) && string.IsNullOrEmpty(Textphone) && string.IsNullOrEmpty(Letter)))
+        if (!ModelState.IsValid || (!Email && !Telephone && !Textphone && !Letter))
         {
             ValidationValid = false;
             
@@ -51,10 +51,10 @@ public class ContactDetailsModel : ProfessionalReferralModel
         
         var model = await ConnectionRequestCache.GetAsync();
         //todo: handle missing model
-        model!.EmailSelected = !string.IsNullOrEmpty(Email);
-        model.TelephoneSelected = !string.IsNullOrEmpty(Telephone);
-        model.TextPhoneSelected = !string.IsNullOrEmpty(Textphone);
-        model.LetterSelected = !string.IsNullOrEmpty(Letter);
+        model!.EmailSelected = Email;
+        model.TelephoneSelected = Telephone;
+        model.TextPhoneSelected = Textphone;
+        model.LetterSelected = Letter;
         await ConnectionRequestCache.SetAsync(model);
 
         string destination = string.Empty;
