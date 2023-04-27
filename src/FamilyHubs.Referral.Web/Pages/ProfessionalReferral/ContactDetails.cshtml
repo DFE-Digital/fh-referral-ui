@@ -10,7 +10,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        @if (Model.ValidationValid == false)
+        @if (!Model.ValidationValid)
         {
             <div class="govuk-error-summary" data-module="govuk-error-summary">
                 <div role="alert">
@@ -28,53 +28,48 @@
             </div>
         }
         <form method="post">
-            <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+            <div class="govuk-form-group  @(Model.ValidationValid ? "" : "govuk-form-group--error")">
+                <fieldset class="govuk-fieldset" aria-describedby="hint @(Model.ValidationValid ? "" : "error")">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                        <span class="govuk-fieldset__heading">
-                            @*todo: do we have to worry about injection?*@
+                        <h1 class="govuk-fieldset__heading">
                             How can the service contact @Model.FullName?
-                        </span>
+                        </h1>
                     </legend>
-                    <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
-                        <div id="waste-hint" class="govuk-hint">
-                            Select all that apply.
+                    <div id="hint" class="govuk-hint">
+                        Select all that apply.
+                    </div>
+                    @if (!Model.ValidationValid)
+                    {
+                        <p id="error" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> Select a contact method
+                        </p>
+                    }
+                    <div id="contact-methods" class="govuk-checkboxes" data-module="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="Email" name="Email" type="checkbox" value="Email">
+                            <label class="govuk-label govuk-checkboxes__label" for="Email">
+                                Email
+                            </label>
                         </div>
-                        @if (Model.ValidationValid == false)
-                        {
-                            <p class="govuk-error-message">
-                                <span class="govuk-visually-hidden">Error:</span> Select a contact method
-                            </p>
-                        }
-                        <div id="contact-methods" class="govuk-checkboxes" data-module="govuk-checkboxes">
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="Email"  name="Email" type="checkbox" value="Email">
-                                <label class="govuk-label govuk-checkboxes__label" for="Email">
-                                    Email
-                                </label>
-                            </div>
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="Telephone"  name="Telephone" type="checkbox" value="Telephone">
-                                <label class="govuk-label govuk-checkboxes__label" for="Telephone">
-                                    Telephone
-                                </label>
-                            </div>
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="Textphone" name="Textphone" type="checkbox" value="Textphone">
-                                <label class="govuk-label govuk-checkboxes__label" for="Textphone">
-                                    Text message
-                                </label>
-                            </div>
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="Letter" name="Letter" type="checkbox" value="Letter">
-                                <label class="govuk-label govuk-checkboxes__label" for="Letter">
-                                    Letter
-                                </label>
-                            </div>
-
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="Telephone"  name="Telephone" type="checkbox" value="Telephone">
+                            <label class="govuk-label govuk-checkboxes__label" for="Telephone">
+                                Telephone
+                            </label>
+                        </div>
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="Textphone" name="Textphone" type="checkbox" value="Textphone">
+                            <label class="govuk-label govuk-checkboxes__label" for="Textphone">
+                                Text message
+                            </label>
+                        </div>
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="Letter" name="Letter" type="checkbox" value="Letter">
+                            <label class="govuk-label govuk-checkboxes__label" for="Letter">
+                                Letter
+                            </label>
                         </div>
                     </div>
-                    
                 </fieldset> 
             </div>
             <button type="submit" class="govuk-button" data-module="govuk-button">
