@@ -7,7 +7,7 @@ using Moq;
 
 // ReSharper disable StringLiteralTypo
 
-namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
+namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
 public class WhenUsingSearch
 {

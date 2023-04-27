@@ -5,7 +5,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
+namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
 public class WhenUsingWhySupport
 {
@@ -22,14 +22,14 @@ public class WhenUsingWhySupport
             Reason = "Reason for Support"
         };
         _mockConnectionRequestDistributedCache = new Mock<IConnectionRequestDistributedCache>();
+        _mockConnectionRequestDistributedCache.Setup(x => x.GetAsync()).ReturnsAsync(_connectionRequestModel);
+
         _whySupportModel = new WhySupportModel(_mockConnectionRequestDistributedCache.Object);
     }
 
     [Fact]
     public async Task ThenOnGetWhySupport()
     {
-        _mockConnectionRequestDistributedCache.Setup(x => x.GetAsync()).ReturnsAsync(_connectionRequestModel);
-
         //Act
         await _whySupportModel.OnGetAsync("1");
 
@@ -41,7 +41,6 @@ public class WhenUsingWhySupport
     [Fact]
     public async Task ThenOnPostWhySupport()
     {
-        _mockConnectionRequestDistributedCache.Setup(x => x.GetAsync()).ReturnsAsync(_connectionRequestModel);
         _whySupportModel.TextAreaValue = "New Reason For Support";
 
         //Act
@@ -50,7 +49,7 @@ public class WhenUsingWhySupport
         //todo: check new content
         _mockConnectionRequestDistributedCache
             .Verify(x => x.SetAsync(It.IsAny<ConnectionRequestModel>()), Times.Once);
-            
+
         ArgumentNullException.ThrowIfNull(result);
         result.PageName.Should().Be("/ProfessionalReferral/ContactDetails");
     }

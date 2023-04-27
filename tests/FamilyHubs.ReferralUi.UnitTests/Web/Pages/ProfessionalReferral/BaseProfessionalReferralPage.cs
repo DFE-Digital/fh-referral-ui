@@ -2,7 +2,7 @@
 using FamilyHubs.Referral.Core.Models;
 using Moq;
 
-namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
+namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
 public class BaseProfessionalReferralPage
 {

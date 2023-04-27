@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
+namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
 public class WhenUsingConsent
 {

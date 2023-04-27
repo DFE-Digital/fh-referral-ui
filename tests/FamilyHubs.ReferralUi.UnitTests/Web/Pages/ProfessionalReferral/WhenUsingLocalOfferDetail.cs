@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Moq;
 
-namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
+namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
 public class WhenUsingLocalOfferDetail
 {
@@ -58,7 +58,7 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.PageContext.HttpContext = httpContext;
 
         //Act 
-        var result = await localOfferDetailModel.OnGetAsync((serviceDto != null) ? serviceDto.Id.ToString() : string.Empty) as PageResult;
+        var result = await localOfferDetailModel.OnGetAsync(serviceDto != null ? serviceDto.Id.ToString() : string.Empty) as PageResult;
 
         //Assert
         result.Should().NotBeNull();

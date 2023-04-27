@@ -14,7 +14,7 @@ using Moq;
 
 // ReSharper disable StringLiteralTypo
 
-namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
+namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
 public class WhenUsingLocalOfferResultsPage
 {
@@ -29,10 +29,10 @@ public class WhenUsingLocalOfferResultsPage
 
         _mockIOrganisationClientService.Setup(x => x.GetCategories())
             .ReturnsAsync(new List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>());
-        
+
         _mockIOrganisationClientService.Setup(x => x.GetLocalOffers(It.IsAny<LocalOfferFilter>()))
             .ReturnsAsync(new PaginatedList<ServiceDto>());
-        
+
         _pageModel = new LocalOfferResultsModel(_mockIPostcodeLocationClientService.Object, _mockIOrganisationClientService.Object);
     }
 
