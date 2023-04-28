@@ -4,21 +4,30 @@ using FamilyHubs.Referral.Core.Helper;
 using System.ComponentModel.DataAnnotations;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.Referral.Core.DistributedCache;
+using FamilyHubs.Referral.Web.Models;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class EmailModel : ProfessionalReferralModel
+public class EmailModel : ProfessionalReferralModel, ISingleTextboxPageModel
 {
     //todo: interface for this? compose to static? get asp-for input to pick up is email
-    public PartialTextBoxViewModel PartialTextBoxViewModel { get; set; } = new()
-    {
-        HeadingText = string.Empty,
-        ErrorId = "error-summary-title",
-        HintText = string.Empty,
-        TextBoxLabel = "Email address",
-        MainErrorText = "Enter an email address in the correct format, like name@example.com",
-        TextBoxErrorText = "Enter an email address in the correct format, like name@example.com",
-    };
+    //public PartialTextBoxViewModel PartialTextBoxViewModel { get; set; } = new()
+    //{
+    //    HeadingText = string.Empty,
+    //    ErrorId = "error-summary-title",
+    //    HintText = string.Empty,
+    //    TextBoxLabel = "Email address",
+    //    MainErrorText = "Enter an email address in the correct format, like name@example.com",
+    //    TextBoxErrorText = "Enter an email address in the correct format, like name@example.com",
+    //};
+
+    public string ErrorId { get; set; } = "error-summary-title";
+    public string HeadingText { get; set; } = "";
+    public string? HintText { get; set; }
+    public string TextBoxLabel { get; set; } = "Email address";
+    public string MainErrorText { get; set; } = "Enter an email address in the correct format, like name@example.com";
+    public string? TextBoxErrorText { get; set; } = "Enter an email address in the correct format, like name@example.com";
+    public bool ValidationValid { get; set; } = true;
 
     //todo: check input matches gds email. partial doesn't find this as it uses PartialTextBoxViewModel instead
     [EmailAddress]
@@ -32,11 +41,10 @@ public class EmailModel : ProfessionalReferralModel
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        PartialTextBoxViewModel.HeadingText = $"What is the email address for {model.FamilyContactFullName}?";
+        HeadingText = $"What is the email address for {model.FamilyContactFullName}?";
 
         if (!string.IsNullOrEmpty(model.EmailAddress))
         {
-            PartialTextBoxViewModel.TextBoxValue = model.EmailAddress;
             TextBoxValue = model.EmailAddress;
         }
     }
@@ -45,9 +53,8 @@ public class EmailModel : ProfessionalReferralModel
     {
         if (!ModelState.IsValid || string.IsNullOrEmpty(TextBoxValue))
         {
-            PartialTextBoxViewModel.TextBoxValue = TextBoxValue;
-            PartialTextBoxViewModel.ValidationValid = false;
-
+            //PartialTextBoxViewModel.TextBoxValue = TextBoxValue;
+            ValidationValid = false;
             return null;
         }
 
