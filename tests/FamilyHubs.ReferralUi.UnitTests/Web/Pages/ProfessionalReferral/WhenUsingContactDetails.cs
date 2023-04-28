@@ -73,13 +73,13 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
         result!.PageName.Should().Be(expectedNextPage);
     }
 
-    //[Fact]
-    //public void ThenOnPostWithValidationError()
-    //{
-    //    //Arrange and Act
-    //    var result = _contactDetailsModel.OnPost() as RedirectToPageResult;
+    [Fact]
+    public async Task ThenOnPostWithValidationError()
+    {
+        //Act
+        var result = await _contactDetailsModel.OnPostAsync() as RedirectToPageResult;
 
-    //    //Assert
-    //    _contactDetailsModel.ValidationValid.Should().BeFalse();
-    //}
+        //Assert
+        _contactDetailsModel.ValidationValid.Should().BeFalse();
+    }
 }
