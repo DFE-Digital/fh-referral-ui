@@ -79,7 +79,7 @@ public class SupportDetailsModel : PageModel
         return RedirectToPage("/ProfessionalReferral/WhySupport",new
         {
             serviceId,
-            serviceName // WhySupport doesn't require serviceName, but we add it so that what we send to GA is consistent throughout the journey
+            serviceName
         });
     }
 }

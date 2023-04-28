@@ -2,7 +2,7 @@
 using FamilyHubs.Referral.Core.Models;
 using Moq;
 
-namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
+namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
 public class BaseProfessionalReferralPage
 {
@@ -16,6 +16,11 @@ public class BaseProfessionalReferralPage
             ServiceId = "ServiceId",
             ServiceName = "ServiceName",
             FamilyContactFullName = "FamilyContactFullName",
+            Reason = "Reason For Support",
+            EmailSelected = true,
+            TelephoneSelected = true,
+            TextphoneSelected = true,
+            LetterSelected = true
         };
 
         ReferralDistributedCache = new Mock<IConnectionRequestDistributedCache>(MockBehavior.Strict);

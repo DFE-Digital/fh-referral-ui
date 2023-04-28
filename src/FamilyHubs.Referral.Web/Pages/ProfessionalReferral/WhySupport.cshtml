@@ -55,13 +55,13 @@
 
                     @if (Model.TextAreaValidation != TextAreaValidation.Valid)
                     {
-                        <p class="govuk-error-message" id="exceeding-characters-error">
+                        <p class="govuk-error-message" id="reason-error">
                             <span class="govuk-visually-hidden">Error:</span> @GetValidationMessage(Model.TextAreaValidation)
                         </p>
                     }
 
                     <textarea asp-for="TextAreaValue" class="govuk-textarea govuk-js-character-count @(Model.TextAreaValidation != TextAreaValidation.Valid ? "govuk-textarea--error" : "")"
-                              rows="10" id="reason" aria-describedby="reason-info exceeding-characters-error"></textarea>
+                              rows="10" id="reason" aria-describedby="reason-info @(Model.TextAreaValidation != TextAreaValidation.Valid ? "reason-error" : "")"></textarea>
                 </div>
 
                 <div id="reason-info" class="govuk-hint govuk-character-count__message">

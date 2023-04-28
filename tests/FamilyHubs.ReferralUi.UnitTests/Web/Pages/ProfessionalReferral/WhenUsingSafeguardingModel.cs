@@ -1,7 +1,7 @@
 ﻿using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
 
-namespace FamilyHubs.ReferralUi.UnitTests.Pages.ProfessionalReferral;
+namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
 public class WhenUsingSafeguardingModel
 {

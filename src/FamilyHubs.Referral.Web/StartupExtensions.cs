@@ -37,7 +37,11 @@ public static class StartupExtensions
         services.AddWebUiServices(configuration);
 
         // Add services to the container.
-        services.AddRazorPages();
+        services.AddRazorPages()
+            .AddViewOptions(options =>
+            {
+                options.HtmlHelperOptions.ClientValidationEnabled = false;
+            });
 
         services.AddFamilyHubs(configuration);
     }
