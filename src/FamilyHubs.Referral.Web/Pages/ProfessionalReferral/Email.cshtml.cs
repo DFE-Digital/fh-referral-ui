@@ -9,6 +9,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class EmailModel : ProfessionalReferralModel
 {
+    //todo: interface for this? compose to static? get asp-for input to pick up is email
     public PartialTextBoxViewModel PartialTextBoxViewModel { get; set; } = new()
     {
         HeadingText = string.Empty,
