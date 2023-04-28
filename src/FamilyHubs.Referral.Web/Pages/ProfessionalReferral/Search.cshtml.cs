@@ -39,7 +39,7 @@ public partial class SearchModel : PageModel
 
             return RedirectToPage("LocalOfferResults", new
             {
-                Postcode,
+                postcode = Postcode,
                 currentPage = 1
             });
         }

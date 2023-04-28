@@ -1,6 +1,6 @@
+using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Helper;
 using FamilyHubs.Referral.Core.Models;
-using FamilyHubs.Referral.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,12 +8,12 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class SupportDetailsModel : PageModel
 {
-    private readonly IDistributedCacheService _distributedCacheService;
-
+    private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
     public string ServiceId { get; private set; } = default!;
     public string ServiceName { get; private set; } = default!;
 
-    public PartialTextBoxViewModel PartialTextBoxViewModel { get; set; } = new PartialTextBoxViewModel()
+    //todo: separate static with changing
+    public PartialTextBoxViewModel PartialTextBoxViewModel { get; } = new()
     {
         ErrorId = "error-summary-title",
         HeadingText = "Who should the service contact in the family?",
@@ -23,42 +23,39 @@ public class SupportDetailsModel : PageModel
         TextBoxErrorText = "Enter a full name",
     };
 
-
     [BindProperty]
     public string TextBoxValue { get; set; } = string.Empty;
 
-    public SupportDetailsModel(IDistributedCacheService distributedCacheService)
+    public SupportDetailsModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
     {
-        _distributedCacheService = distributedCacheService;
+        _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }
 
-    public void OnGet(string serviceId, string serviceName)
+    public async Task OnGetAsync(string serviceId, string serviceName)
     {
+        //todo:
         //Fixes Session Changing between requests 
-        this.HttpContext.Session.Set("What", new byte[] { 1, 2, 3, 4, 5 });
+        HttpContext.Session.Set("What", new byte[] { 1, 2, 3, 4, 5 });
 
         ServiceId = serviceId;
         ServiceName = serviceName;
 
-        ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
-        model.ServiceId = serviceId;
-        model.ServiceName = serviceName;
-        _distributedCacheService.StoreConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel, model);
+        var model = await _connectionRequestDistributedCache.GetAsync();
 
-        if (!string.IsNullOrEmpty(model.FullName))
+        if (!string.IsNullOrEmpty(model?.FamilyContactFullName))
         {
-            PartialTextBoxViewModel.TextBoxValue = model.FullName;
-            TextBoxValue = model.FullName;
+            //todo: two?
+            PartialTextBoxViewModel.TextBoxValue = model.FamilyContactFullName;
+            TextBoxValue = model.FamilyContactFullName;
         }
-            
     }
 
-    public IActionResult OnPost()
+    public async Task<IActionResult> OnPostAsync(string serviceId, string serviceName)
     {
         if (!ModelState.IsValid)
         {
             PartialTextBoxViewModel.TextBoxValue = TextBoxValue;
-            if (string.IsNullOrWhiteSpace(TextBoxValue?.Trim()))
+            if (string.IsNullOrWhiteSpace(TextBoxValue))
                 PartialTextBoxViewModel.ValidationValid = false;
 
             return Page();
@@ -66,16 +63,23 @@ public class SupportDetailsModel : PageModel
 
         if (TextBoxValue.Length > 255)
         {
-            TextBoxValue = TextBoxValue.Truncate(252) ?? string.Empty;
+            TextBoxValue = TextBoxValue.Truncate(252);
         }
 
-        ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
-        model.FullName = TextBoxValue;
-        _distributedCacheService.StoreConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel, model);
+        var model = await _connectionRequestDistributedCache.GetAsync()
+                    ?? new ConnectionRequestModel
+                    {
+                        ServiceId = serviceId,
+                        ServiceName = serviceName
+                    };
 
-        return RedirectToPage("/ProfessionalReferral/WhySupport", new
+        model.FamilyContactFullName = TextBoxValue;
+        await _connectionRequestDistributedCache.SetAsync(model);
+
+        return RedirectToPage("/ProfessionalReferral/WhySupport",new
         {
+            serviceId,
+            serviceName
         });
-
     }
 }

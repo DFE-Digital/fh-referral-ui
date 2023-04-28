@@ -1,4 +1,5 @@
 using FamilyHubs.Referral.Core.ApiClients;
+using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,6 +12,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class LocalOfferDetailModel : PageModel
 {
     private readonly IOrganisationClientService _organisationClientService;
+    private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
     public ServiceDto LocalOffer { get; set; } = default!;
 
     public string? ReturnUrl { get; set; }
@@ -28,9 +30,12 @@ public class LocalOfferDetailModel : PageModel
     public string Website { get; set; } = default!;
     public string Email { get; set; } = default!;
 
-    public LocalOfferDetailModel(IOrganisationClientService organisationClientService, IConfiguration configuration)
+    public LocalOfferDetailModel(
+        IOrganisationClientService organisationClientService,
+        IConnectionRequestDistributedCache connectionRequestDistributedCache)
     {
         _organisationClientService = organisationClientService;
+        _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }
 
     public async Task<IActionResult> OnGetAsync(string serviceId)
@@ -43,17 +48,9 @@ public class LocalOfferDetailModel : PageModel
         if (LocalOffer.Locations != null && LocalOffer.Locations.Any()) ExtractAddressParts(LocalOffer.Locations.First());
         GetContactDetails();
 
+        await _connectionRequestDistributedCache.RemoveAsync();
+
         return Page();
-    }
-
-    public IActionResult OnPost(string id, string serviceId, string name)
-    {
-        return RedirectToPage("/ProfessionalReferral/Safeguarding", new
-        {
-            serviceId,
-            serviceName = name
-        });
-
     }
 
     public string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto>? serviceDeliveries)

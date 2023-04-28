@@ -1,59 +1,54 @@
+using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
-using FamilyHubs.Referral.Core.Services;
+using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class ContactDetailsModel : PageModel
+public class ContactDetailsModel : ProfessionalReferralModel
 {
-    private readonly IDistributedCacheService _distributedCacheService;
     public bool ValidationValid { get; private set; } = true;
     public string? FullName { get; set; }
 
     [BindProperty]
-    public string? Email { get; set; }
+    public bool Email { get; set; }
 
     [BindProperty]
-    public string? Telephone { get; set; }
+    public bool Telephone { get; set; }
 
     [BindProperty]
-    public string? Textphone { get; set; }
+    public bool Textphone { get; set; }
 
     [BindProperty]
-    public string? Letter { get; set; }
+    public bool Letter { get; set; }
 
-    public ContactDetailsModel(IDistributedCacheService distributedCacheService)
+    public ContactDetailsModel(IConnectionRequestDistributedCache connectionRequestCache) : base(connectionRequestCache)
     {
-        _distributedCacheService = distributedCacheService;
-    }
-    public void OnGet()
-    {
-        ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
-        FullName = !string.IsNullOrEmpty(model.FullName) ? model.FullName : "Family";
-        Email = (model.EmailSelected) ? "Email" : null;
-        Telephone = (model.TelephoneSelected) ? "Telephone" : null;
-        Textphone = (model.TextPhoneSelected) ? "Textphone" : null;
-        Letter = (model.LetterSelected) ? "Letter" : null;
     }
 
-    public IActionResult OnPost()
+    protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        if (!ModelState.IsValid || (string.IsNullOrEmpty(Email) && string.IsNullOrEmpty(Telephone) && string.IsNullOrEmpty(Textphone) && string.IsNullOrEmpty(Letter)))
+        FullName = model.FamilyContactFullName;
+        Email = model.EmailSelected;
+        Telephone = model.TelephoneSelected;
+        Textphone = model.TextphoneSelected;
+        Letter = model.LetterSelected;
+    }
+
+    protected override string? OnPostWithModel(ConnectionRequestModel model)
+    {
+        if (!(ModelState.IsValid && (Email || Telephone || Textphone || Letter)))
         {
             ValidationValid = false;
-            
-            return Page();
+            return null;
         }
         
-        ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
-        model.EmailSelected = !string.IsNullOrEmpty(Email);
-        model.TelephoneSelected = !string.IsNullOrEmpty(Telephone);
-        model.TextPhoneSelected = !string.IsNullOrEmpty(Textphone);
-        model.LetterSelected = !string.IsNullOrEmpty(Letter);
-        _distributedCacheService.StoreConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel,model);
+        model.EmailSelected = Email;
+        model.TelephoneSelected = Telephone;
+        model.TextphoneSelected = Textphone;
+        model.LetterSelected = Letter;
 
-        string destination = string.Empty;
+        string destination;
         if (model.EmailSelected)
         {
             destination = "Email";
@@ -62,7 +57,7 @@ public class ContactDetailsModel : PageModel
         {
             destination = "Telephone";
         }
-        else if (model.TextPhoneSelected)
+        else if (model.TextphoneSelected)
         {
             destination = "Textphone";
         }
@@ -70,9 +65,11 @@ public class ContactDetailsModel : PageModel
         {
             destination = "Letter";
         }
-
-        return RedirectToPage($"/ProfessionalReferral/{destination}", new
+        else
         {
-        });
+            throw new InvalidOperationException("No contact method selected");
+        }
+
+        return $"/ProfessionalReferral/{destination}";
     }
 }

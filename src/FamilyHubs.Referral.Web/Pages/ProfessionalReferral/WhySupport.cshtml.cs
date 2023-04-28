@@ -1,50 +1,52 @@
+using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
-using FamilyHubs.Referral.Core.Services;
+using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class WhySupportModel : PageModel
+public enum TextAreaValidation
 {
-    private readonly IDistributedCacheService _distributedCacheService;
+    Valid,
+    Empty,
+    TooLong
+}
 
-    public string ServiceId { get; private set; } = default!;
-    public string ServiceName { get; private set; } = default!;
-
+public class WhySupportModel : ProfessionalReferralModel
+{
     [BindProperty]
-    public string TextAreaValue { get; set; } = default!;
+    public string? TextAreaValue { get; set; }
 
-    public bool ValidationValid { get; set; } = true;
+    public TextAreaValidation TextAreaValidation { get; set; } = TextAreaValidation.Valid;
 
-    public WhySupportModel(IDistributedCacheService distributedCacheService)
+    public WhySupportModel(IConnectionRequestDistributedCache connectionRequestCache)
+        : base(connectionRequestCache)
     {
-        _distributedCacheService = distributedCacheService;
-    }
-    public void OnGet()
-    {
-        ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
-        ServiceId = model.ServiceId;
-        ServiceName = model.ServiceName;    
-        if (!string.IsNullOrEmpty(model.ReasonForSupport))
-            TextAreaValue = model.ReasonForSupport;
     }
 
-    public IActionResult OnPost()
+    protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        if (string.IsNullOrWhiteSpace(TextAreaValue?.Trim()) || TextAreaValue.Length > 500)
+        if (!string.IsNullOrEmpty(model.Reason))
+            TextAreaValue = model.Reason;
+    }
+
+    protected override string? OnPostWithModel(ConnectionRequestModel model)
+    {
+        if (string.IsNullOrEmpty(TextAreaValue))
         {
-            ValidationValid = false;
-            return Page();
+            TextAreaValidation = TextAreaValidation.Empty;
+            return null;
         }
 
-        ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
-        model.ReasonForSupport = TextAreaValue;
-        _distributedCacheService.StoreConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel, model);
-
-        return RedirectToPage("/ProfessionalReferral/ContactDetails", new
+        if (TextAreaValue.Length > 500)
         {
-        });
+            TextAreaValidation = TextAreaValidation.TooLong;
+            return null;
+        }
 
+        model.Reason = TextAreaValue;
+
+        //todo: make these refactor friendly
+        return "/ProfessionalReferral/ContactDetails";
     }
 }
