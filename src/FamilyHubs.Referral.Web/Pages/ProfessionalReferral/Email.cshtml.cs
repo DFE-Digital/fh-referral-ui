@@ -1,15 +1,15 @@
 using FamilyHubs.Referral.Core.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using FamilyHubs.Referral.Core.Helper;
 using System.ComponentModel.DataAnnotations;
+using FamilyHubs.Referral.Web.Pages.Shared;
+using FamilyHubs.Referral.Core.DistributedCache;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class EmailModel : PageModel
+public class EmailModel : ProfessionalReferralModel
 {
-    private readonly IDistributedCacheService _distributedCacheService;
-    public PartialTextBoxViewModel PartialTextBoxViewModel { get; set; } = new PartialTextBoxViewModel()
+    public PartialTextBoxViewModel PartialTextBoxViewModel { get; set; } = new()
     {
         HeadingText = string.Empty,
         ErrorId = "error-summary-title",
@@ -19,19 +19,19 @@ public class EmailModel : PageModel
         TextBoxErrorText = "Enter an email address in the correct format, like name@example.com",
     };
 
+    //todo: we're not using client side validation. does this cause the model to be invalid? how is that handled?
     [EmailAddress]
     [BindProperty]
     public string TextBoxValue { get; set; } = string.Empty;
 
-    public EmailModel(IDistributedCacheService distributedCacheService)
+    public EmailModel(IConnectionRequestDistributedCache connectionRequestCache)
+        : base(connectionRequestCache)
     {
-        _distributedCacheService = distributedCacheService;
     }
 
-    public void OnGet()
+    protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
-        PartialTextBoxViewModel.HeadingText = $"What is the email address for {model.FullName}?";
+        PartialTextBoxViewModel.HeadingText = $"What is the email address for {model.FamilyContactFullName}?";
 
         if (!string.IsNullOrEmpty(model.EmailAddress))
         {
@@ -40,31 +40,30 @@ public class EmailModel : PageModel
         }
     }
 
-    public IActionResult OnPost()
+    protected override string? OnPostWithModel(ConnectionRequestModel model)
     {
         if (!ModelState.IsValid || string.IsNullOrEmpty(TextBoxValue))
         {
             PartialTextBoxViewModel.TextBoxValue = TextBoxValue;
             PartialTextBoxViewModel.ValidationValid = false;
 
-            return Page();
+            return null;
         }
 
         if (TextBoxValue.Length > 255)
         {
-            TextBoxValue = TextBoxValue.Truncate(252) ?? string.Empty;
+            TextBoxValue = TextBoxValue.Truncate(252);
         }
 
-        ConnectWizzardViewModel model = _distributedCacheService.RetrieveConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel);
         model.EmailAddress = TextBoxValue;
-        _distributedCacheService.StoreConnectWizzardViewModel(TempStorageConfiguration.KeyConnectWizzardViewModel, model);
 
-        string destination = string.Empty;
+        string destination;
         if (model.TelephoneSelected)
         {
+            //todo: const or route helper
             destination = "Telephone";
         }
-        else if (model.TextPhoneSelected)
+        else if (model.TextphoneSelected)
         {
             destination = "Textphone";
         }
@@ -77,8 +76,6 @@ public class EmailModel : PageModel
             destination = "ContactMethod";
         }
 
-        return RedirectToPage($"/ProfessionalReferral/{destination}", new
-        {
-        });
+        return $"/ProfessionalReferral/{destination}";
     }
 }

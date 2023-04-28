@@ -5,9 +5,8 @@
 }
 
 @section Back {
-    <a asp-page="/ProfessionalReferral/ContactDetails" class="govuk-back-link">Back</a>
+    <a asp-page="/ProfessionalReferral/ContactDetails" asp-route-serviceId="@Model.ServiceId" asp-route-serviceName="@Model.ServiceName" class="govuk-back-link">Back</a>
 }
-
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
