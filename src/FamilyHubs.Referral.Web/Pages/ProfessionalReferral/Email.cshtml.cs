@@ -19,10 +19,10 @@ public class EmailModel : ProfessionalReferralModel
         TextBoxErrorText = "Enter an email address in the correct format, like name@example.com",
     };
 
-    //todo: we're not using client side validation. does this cause the model to be invalid? how is that handled?
+    //todo: check input matches gds email. partial doesn't find this as it uses PartialTextBoxViewModel instead
     [EmailAddress]
     [BindProperty]
-    public string TextBoxValue { get; set; } = string.Empty;
+    public string? TextBoxValue { get; set; }
 
     public EmailModel(IConnectionRequestDistributedCache connectionRequestCache)
         : base(connectionRequestCache)

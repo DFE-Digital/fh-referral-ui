@@ -10,7 +10,7 @@
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                     <li>
-                        <a href="#TextBoxValue" data-testid="summary-error">@Model.MainErrorText</a>
+                        <a href="#textbox" data-testid="summary-error">@Model.MainErrorText</a>
                     </li>
                 </ul>
             </div>
@@ -19,30 +19,30 @@
 }
 
 
-<div class="govuk-form-group">
+<div class="govuk-form-group @(Model.ValidationValid ? "": "govuk-form-group--error")">
     <h1 class="govuk-label-wrapper">
-        <label class="govuk-label govuk-label--l" for="event-name">
+        <label class="govuk-label govuk-label--l" for="textbox">
             @Model.HeadingText
         </label>
     </h1>
     @if (!string.IsNullOrEmpty(Model.HintText))
     {
-        <div id="event-name-hint" class="govuk-hint">
+        <div id="hint" class="govuk-hint">
             @Model.HintText
         </div>
     }
-    <div class="@(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
-        @if (Model.ValidationValid == false)
-        {
-            <p class="govuk-error-message">
-                <span class="govuk-visually-hidden">Error:</span> @Model.TextBoxErrorText
-            </p>
-        }
-        <label class="govuk-label" for="TextBoxValue">
-            @Model.TextBoxLabel
-        </label>
-        <input class="govuk-input @(Model.ValidationValid == false ? "govuk-input--error" : "")" type="text" spellcheck="false" autocomplete="TextBoxValue" id="TextBoxValue" name="TextBoxValue" value="@Model.TextBoxValue" asp-for="TextBoxValue">
-    </div>
+    @if (!Model.ValidationValid)
+    {
+        <p id="error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> @Model.TextBoxErrorText
+        </p>
+    }
+    <label class="govuk-label" for="textbox">
+        @Model.TextBoxLabel
+    </label>
+    <input asp-for="TextBoxValue" class="govuk-input @(Model.ValidationValid ? "" : "govuk-input--error")"
+           spellcheck="false" autocomplete="TextBoxValue" id="textbox" name="TextBoxValue" value="@Model.TextBoxValue"
+           aria-describedby="hint error">
 </div>
 <button type="submit" class="govuk-button" data-module="govuk-button">
     Continue

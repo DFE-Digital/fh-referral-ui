@@ -9,8 +9,8 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class SupportDetailsModel : PageModel
 {
     private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
-    public string ServiceId { get; private set; } = default!;
-    public string ServiceName { get; private set; } = default!;
+    public string? ServiceId { get; private set; }
+    public string? ServiceName { get; private set; }
 
     //todo: separate static with changing
     public PartialTextBoxViewModel PartialTextBoxViewModel { get; } = new()
