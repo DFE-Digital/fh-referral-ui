@@ -1,6 +1,6 @@
-﻿@model FamilyHubs.Referral.Core.Models.PartialTextBoxViewModel
+﻿@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.ISingleTextboxPageModel
 <!-- This control can only be used when there are no other inputs on the page -->
-@if (Model.ValidationValid == false)
+@if (!Model.ValidationValid)
 {
     <div class="govuk-error-summary" data-module="govuk-error-summary">
         <div role="alert">
@@ -24,6 +24,7 @@
             @Model.HeadingText
         </label>
     </h1>
+    @*todo: check which should be hint*@
     @if (!string.IsNullOrEmpty(Model.HintText))
     {
         <div id="hint" class="govuk-hint">
