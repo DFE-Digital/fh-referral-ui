@@ -21,6 +21,7 @@ public class EmailModel : ProfessionalReferralModel, ISingleTextboxPageModel
     public bool ValidationValid { get; set; } = true;
 
     //todo: check input matches gds email. partial doesn't find this as it uses PartialTextBoxViewModel instead
+    [Required]
     [EmailAddress]
     [BindProperty]
     public string? TextBoxValue { get; set; }
@@ -42,14 +43,13 @@ public class EmailModel : ProfessionalReferralModel, ISingleTextboxPageModel
 
     protected override string? OnPostWithModel(ConnectionRequestModel model)
     {
-        if (!ModelState.IsValid || string.IsNullOrEmpty(TextBoxValue))
+        if (!ModelState.IsValid)
         {
-            //PartialTextBoxViewModel.TextBoxValue = TextBoxValue;
             ValidationValid = false;
             return null;
         }
 
-        if (TextBoxValue.Length > 255)
+        if (TextBoxValue!.Length > 255)
         {
             TextBoxValue = TextBoxValue.Truncate(252);
         }

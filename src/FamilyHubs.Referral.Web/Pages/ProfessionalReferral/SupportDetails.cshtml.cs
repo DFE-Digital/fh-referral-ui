@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Helper;
 using FamilyHubs.Referral.Core.Models;
@@ -21,8 +22,9 @@ public class SupportDetailsModel : PageModel, ISingleTextboxPageModel
     public string? TextBoxErrorText { get; set; } = "Enter a full name";
     public bool ValidationValid { get; set; } = true;
 
+    [Required]
     [BindProperty]
-    public string? TextBoxValue { get; set; } = string.Empty;
+    public string? TextBoxValue { get; set; }
 
     public SupportDetailsModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
     {
@@ -48,13 +50,12 @@ public class SupportDetailsModel : PageModel, ISingleTextboxPageModel
 
     public async Task<IActionResult> OnPostAsync(string serviceId, string serviceName)
     {
-        if (!ModelState.IsValid || string.IsNullOrWhiteSpace(TextBoxValue))
+        if (!ModelState.IsValid)
         {
             ValidationValid = false;
             return Page();
         }
 
-        //todo: could it be null?
         if (TextBoxValue!.Length > 255)
         {
             TextBoxValue = TextBoxValue.Truncate(252);
