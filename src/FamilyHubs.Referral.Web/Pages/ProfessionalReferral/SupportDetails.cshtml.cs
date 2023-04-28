@@ -11,10 +11,9 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class SupportDetailsModel : PageModel, ISingleTextboxPageModel
 {
     private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
-    public string? ServiceId { get; private set; }
-    public string? ServiceName { get; private set; }
+    public string? ServiceId { get; set; }
+    public string? ServiceName { get; set; }
 
-    public string ErrorId { get; set; } = "error-summary-title";
     public string HeadingText { get; set; } = "Who should the service contact in the family?";
     public string? HintText { get; set; } = "This must be a person aged 16 or over.";
     public string TextBoxLabel { get; set; } = "Full name";

@@ -5,8 +5,6 @@ public interface ISingleTextboxPageModel
 {
     //todo: get rid of text and label
     public string HeadingText { get; set; }
-    //todo: no need for this?
-    public string ErrorId { get; set; }
     public string? HintText { get; set; }
     public string TextBoxLabel { get; set; }
     public string MainErrorText { get; set; }

@@ -12,7 +12,6 @@ public class EmailModel : ProfessionalReferralModel, ISingleTextboxPageModel
 {
     //todo: get asp-for input to pick up is email
 
-    public string ErrorId { get; set; } = "error-summary-title";
     public string HeadingText { get; set; } = "";
     public string? HintText { get; set; }
     public string TextBoxLabel { get; set; } = "Email address";
