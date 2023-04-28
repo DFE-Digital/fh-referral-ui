@@ -10,16 +10,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class EmailModel : ProfessionalReferralModel, ISingleTextboxPageModel
 {
-    //todo: interface for this? compose to static? get asp-for input to pick up is email
-    //public PartialTextBoxViewModel PartialTextBoxViewModel { get; set; } = new()
-    //{
-    //    HeadingText = string.Empty,
-    //    ErrorId = "error-summary-title",
-    //    HintText = string.Empty,
-    //    TextBoxLabel = "Email address",
-    //    MainErrorText = "Enter an email address in the correct format, like name@example.com",
-    //    TextBoxErrorText = "Enter an email address in the correct format, like name@example.com",
-    //};
+    //todo: get asp-for input to pick up is email
 
     public string ErrorId { get; set; } = "error-summary-title";
     public string HeadingText { get; set; } = "";

@@ -8,12 +8,4 @@
     <a asp-page="/ProfessionalReferral/ContactDetails" asp-route-serviceId="@Model.ServiceId" asp-route-serviceName="@Model.ServiceName" class="govuk-back-link">Back</a>
 }
 
-@*todo: move rest into partial? except maybe not form?? and back?? and title??*@
-@*or can we specify the whole cshtml to use directly, and not use a partial?*@
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <form method="post">
-            <partial name="_SingleTextboxPage" for="@Model" />
-        </form>
-    </div>
-</div>
+<partial name="_SingleTextboxPage" for="@Model" />
