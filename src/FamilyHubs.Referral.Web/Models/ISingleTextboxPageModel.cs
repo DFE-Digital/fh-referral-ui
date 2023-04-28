@@ -3,7 +3,6 @@
 //todo: best place for this to live?
 public interface ISingleTextboxPageModel
 {
-    //todo: get rid of text and label
     public string HeadingText { get; set; }
     public string? HintText { get; set; }
     public string TextBoxLabel { get; set; }

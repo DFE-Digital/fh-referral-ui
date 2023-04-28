@@ -47,8 +47,7 @@
                     @Model.TextBoxLabel
                 </label>
                 <input asp-for="TextBoxValue" class="govuk-input @(Model.ValidationValid ? "" : "govuk-input--error")"
-                       spellcheck="false" autocomplete="TextBoxValue" id="textbox" name="TextBoxValue" value="@Model.TextBoxValue"
-                       aria-describedby="hint error">
+                       spellcheck="false" autocomplete="TextBoxValue" id="textbox" aria-describedby="hint error">
             </div>
             <button type="submit" class="govuk-button" data-module="govuk-button">
                 Continue
