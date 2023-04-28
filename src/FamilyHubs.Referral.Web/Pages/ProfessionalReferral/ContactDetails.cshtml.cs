@@ -31,7 +31,7 @@ public class ContactDetailsModel : ProfessionalReferralModel
         FullName = model.FamilyContactFullName;
         Email = model.EmailSelected;
         Telephone = model.TelephoneSelected;
-        Textphone = model.TextPhoneSelected;
+        Textphone = model.TextphoneSelected;
         Letter = model.LetterSelected;
     }
 
@@ -45,7 +45,7 @@ public class ContactDetailsModel : ProfessionalReferralModel
         
         model.EmailSelected = Email;
         model.TelephoneSelected = Telephone;
-        model.TextPhoneSelected = Textphone;
+        model.TextphoneSelected = Textphone;
         model.LetterSelected = Letter;
 
         string destination;
@@ -57,7 +57,7 @@ public class ContactDetailsModel : ProfessionalReferralModel
         {
             destination = "Telephone";
         }
-        else if (model.TextPhoneSelected)
+        else if (model.TextphoneSelected)
         {
             destination = "Textphone";
         }

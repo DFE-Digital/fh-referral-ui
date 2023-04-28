@@ -39,7 +39,7 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
     {
         _connectionRequestModel.EmailSelected = email;
         _connectionRequestModel.TelephoneSelected = telephone;
-        _connectionRequestModel.TextPhoneSelected = textphone;
+        _connectionRequestModel.TextphoneSelected = textphone;
         _connectionRequestModel.LetterSelected = letter;
 
         //Act
@@ -51,39 +51,27 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
         _contactDetailsModel.Letter.Should().Be(letter);
     }
 
-    //[Theory]
-    //[InlineData("Email", "/ProfessionalReferral/Email")]
-    //[InlineData("Telephone", "/ProfessionalReferral/Telephone")]
-    //[InlineData("Textphone", "/ProfessionalReferral/Textphone")]
-    //[InlineData("Letter", "/ProfessionalReferral/Letter")]
-    //public void ThenOnPostSupportDetails(string value, string urlDesination)
-    //{
-    //    //Arrange
-    //    switch (value)
-    //    {
-    //        case "Telephone":
-    //            _contactDetailsModel.Telephone = "Telephone";
-    //            break;
-    //        case "Textphone":
-    //            _contactDetailsModel.Textphone = "Textphone";
-    //            break;
-    //        case "Letter":
-    //            _contactDetailsModel.Letter = "Letter";
-    //            break;
-    //        default:
-    //            _contactDetailsModel.Email = "Email";
-    //            break;
-    //    }
+    [Theory]
+    [InlineData("/ProfessionalReferral/Email", true, false, false, false)]
+    [InlineData("/ProfessionalReferral/Telephone", false, true, false, false)]
+    [InlineData("/ProfessionalReferral/Textphone", false, false, true, false)]
+    [InlineData("/ProfessionalReferral/Letter", false, false, false, true)]
+    [InlineData("/ProfessionalReferral/Email", true, true, true, true)]
+    [InlineData("/ProfessionalReferral/Telephone", false, true, true, true)]
+    [InlineData("/ProfessionalReferral/Textphone", false, false, true, true)]
+    public async Task ThenOnPostSupportDetails(string expectedNextPage, bool email, bool telephone, bool textphone, bool letter)
+    {
+        _contactDetailsModel.Email = email;
+        _contactDetailsModel.Telephone = telephone;
+        _contactDetailsModel.Textphone = textphone;
+        _contactDetailsModel.Letter = letter;
 
+        //Act
+        var result = await _contactDetailsModel.OnPostAsync() as RedirectToPageResult;
 
-    //    //Act
-    //    var result = _contactDetailsModel.OnPost() as RedirectToPageResult;
-
-
-    //    //Assert
-    //    ArgumentNullException.ThrowIfNull(result);
-    //    result.PageName.Should().Be(urlDesination);
-    //}
+        result.Should().NotBeNull();
+        result!.PageName.Should().Be(expectedNextPage);
+    }
 
     //[Fact]
     //public void ThenOnPostWithValidationError()

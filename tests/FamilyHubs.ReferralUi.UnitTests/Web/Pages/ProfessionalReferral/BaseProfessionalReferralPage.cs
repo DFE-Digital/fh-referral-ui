@@ -19,7 +19,7 @@ public class BaseProfessionalReferralPage
             Reason = "Reason For Support",
             EmailSelected = true,
             TelephoneSelected = true,
-            TextPhoneSelected = true,
+            TextphoneSelected = true,
             LetterSelected = true
         };
 
