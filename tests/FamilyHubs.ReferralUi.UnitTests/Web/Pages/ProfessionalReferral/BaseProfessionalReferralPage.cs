@@ -9,6 +9,8 @@ public class BaseProfessionalReferralPage
     public Mock<IConnectionRequestDistributedCache> ReferralDistributedCache;
     public readonly ConnectionRequestModel ConnectionRequestModel;
 
+    public const string EmailAddress = "example.com";
+
     public BaseProfessionalReferralPage()
     {
         ConnectionRequestModel = new ConnectionRequestModel
@@ -20,7 +22,8 @@ public class BaseProfessionalReferralPage
             EmailSelected = true,
             TelephoneSelected = true,
             TextphoneSelected = true,
-            LetterSelected = true
+            LetterSelected = true,
+            EmailAddress = EmailAddress
         };
 
         ReferralDistributedCache = new Mock<IConnectionRequestDistributedCache>(MockBehavior.Strict);

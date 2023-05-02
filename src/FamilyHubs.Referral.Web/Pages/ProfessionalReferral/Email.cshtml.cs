@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Web.Models;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -44,6 +45,8 @@ public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageMode
             return null;
         }
 
+        //todo: don't truncate email, it will invalidate it
+        // check inbuilt validation limits it to max email length
         if (TextBoxValue!.Length > 255)
         {
             TextBoxValue = TextBoxValue.Truncate(252);
