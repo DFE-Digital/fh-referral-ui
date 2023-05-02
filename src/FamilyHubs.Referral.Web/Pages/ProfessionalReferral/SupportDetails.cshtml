@@ -1,17 +1,11 @@
 ﻿@page
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.SupportDetailsModel
 @{
-    ViewData["Title"] = "Who should the service contact in the family?";
+    ViewData["Title"] = Model.HeadingText;
 }
 
 @section Back {
     <a asp-page="/ProfessionalReferral/Consent" asp-route-serviceId="@Model.ServiceId" asp-route-serviceName="@Model.ServiceName" class="govuk-back-link">Back</a>
 }
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <form method="post">
-            <partial name="_TextBoxDetail" for="@Model.PartialTextBoxViewModel" />
-        </form>
-    </div>
-</div>
+<partial name="_SingleTextboxPage" for="@Model" />

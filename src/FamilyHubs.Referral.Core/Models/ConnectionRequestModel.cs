@@ -11,4 +11,5 @@ public class ConnectionRequestModel
     public bool TelephoneSelected { get; set; }
     public bool TextphoneSelected { get; set; }
     public bool LetterSelected { get; set; }
+    public string? EmailAddress { get; set; }
 }

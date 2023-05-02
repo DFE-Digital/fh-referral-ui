@@ -58,6 +58,6 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
         await _supportDetailsModel.OnPostAsync("Id", "Some Name With Spaces");
 
         //Assert
-        _supportDetailsModel.PartialTextBoxViewModel.ValidationValid.Should().BeFalse();
+        _supportDetailsModel.ValidationValid.Should().BeFalse();
     }
 }

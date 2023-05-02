@@ -1,0 +1,77 @@
+﻿@model ISingleTextboxPageModel
+
+<!-- This control can only be used when there are no other inputs on the page -->
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        @if (!Model.ValidationValid)
+        {
+            <div class="govuk-error-summary" data-module="govuk-error-summary">
+                <div role="alert">
+                    <h2 class="govuk-error-summary__title">
+                        There is a problem
+                    </h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            <li>
+                                <a href="#textbox" data-testid="summary-error">@Model.ErrorText</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <form method="post" novalidate>
+            <div class="govuk-form-group @(Model.ValidationValid ? "": "govuk-form-group--error")">
+                <h1 class="govuk-label-wrapper">
+                    <label class="govuk-label govuk-label--l" for="textbox">
+                        @Model.HeadingText
+                    </label>
+                </h1>
+                @*todo: check which should be hint*@
+                @if (!string.IsNullOrEmpty(Model.HintText))
+                {
+                    <div id="hint" class="govuk-hint">
+                        @Model.HintText
+                    </div>
+                }
+                @if (!Model.ValidationValid)
+                {
+                    <p id="error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> @Model.ErrorText
+                    </p>
+                }
+                <label class="govuk-label" for="textbox">
+                    @Model.TextBoxLabel
+                </label>
+                @{
+                    string? type, inputMode;
+
+                    if (Model is ISingleEmailTextboxPageModel)
+                    {
+                        inputMode = type = "email";
+                    }
+                    else
+                    {
+                        inputMode = type = "text";
+                    }
+                }
+                @* we're currently using this to gather details (name, email) that are not the person filling in the form. *@
+                @* so it doesn't make sense to autocomplete with the user's details, so we set it to off (despite GDS guidelines). *@
+                
+                @* we're' currently using this to gather emails, which GDS recommends to switch spellcheck off for, *@
+                @* and to gather names, for which it doesn't make sense to have spellcheck enabled. *@
+
+                <input class="govuk-input @(Model.ValidationValid ? "" : "govuk-input--error")"
+                       name="TextBoxValue" type="@type" value="@Model.TextBoxValue" inputmode="@inputMode"
+                       spellcheck="false" autocomplete="off" id="textbox" aria-describedby="hint error">
+            </div>
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Continue
+            </button>
+        </form>
+    </div>
+</div>
+

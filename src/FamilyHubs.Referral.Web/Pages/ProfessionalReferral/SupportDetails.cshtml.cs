@@ -1,30 +1,28 @@
+using System.ComponentModel.DataAnnotations;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Helper;
 using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class SupportDetailsModel : PageModel
+public class SupportDetailsModel : PageModel, ISingleTextboxPageModel
 {
     private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
-    public string ServiceId { get; private set; } = default!;
-    public string ServiceName { get; private set; } = default!;
+    public string? ServiceId { get; set; }
+    public string? ServiceName { get; set; }
 
-    //todo: separate static with changing
-    public PartialTextBoxViewModel PartialTextBoxViewModel { get; } = new()
-    {
-        ErrorId = "error-summary-title",
-        HeadingText = "Who should the service contact in the family?",
-        HintText = "This must be a person aged 16 or over.",
-        TextBoxLabel = "Full name",
-        MainErrorText = "Enter a full name",
-        TextBoxErrorText = "Enter a full name",
-    };
+    public string HeadingText { get; set; } = "Who should the service contact in the family?";
+    public string? HintText { get; set; } = "This must be a person aged 16 or over.";
+    public string TextBoxLabel { get; set; } = "Full name";
+    public string ErrorText { get; set; } = "Enter a full name";
+    public bool ValidationValid { get; set; } = true;
 
+    [Required]
     [BindProperty]
-    public string TextBoxValue { get; set; } = string.Empty;
+    public string? TextBoxValue { get; set; }
 
     public SupportDetailsModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
     {
@@ -44,8 +42,6 @@ public class SupportDetailsModel : PageModel
 
         if (!string.IsNullOrEmpty(model?.FamilyContactFullName))
         {
-            //todo: two?
-            PartialTextBoxViewModel.TextBoxValue = model.FamilyContactFullName;
             TextBoxValue = model.FamilyContactFullName;
         }
     }
@@ -54,14 +50,11 @@ public class SupportDetailsModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            PartialTextBoxViewModel.TextBoxValue = TextBoxValue;
-            if (string.IsNullOrWhiteSpace(TextBoxValue))
-                PartialTextBoxViewModel.ValidationValid = false;
-
+            ValidationValid = false;
             return Page();
         }
 
-        if (TextBoxValue.Length > 255)
+        if (TextBoxValue!.Length > 255)
         {
             TextBoxValue = TextBoxValue.Truncate(252);
         }
