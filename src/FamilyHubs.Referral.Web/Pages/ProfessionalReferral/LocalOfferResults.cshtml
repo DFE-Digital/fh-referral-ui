@@ -191,34 +191,52 @@ else
 
                                                 @foreach (var categoryKv in Model.NestedCategories)
                                                 {
-                                                    <!-- Start category -->
-                                                    <div class="govuk-form-group">
-                                                        <fieldset class="govuk-fieldset">
-                                                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                                                @categoryKv.Key.Name
-                                                            </legend>
-                                                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                                        @if (categoryKv.Value != null && categoryKv.Value.Any())
+                                                        {
+                                                            <!-- Start category -->
+                                                            <div class="govuk-form-group">
+                                                                <fieldset class="govuk-fieldset">
+                                                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                                                        @categoryKv.Key.Name
+                                                                    </legend>
+                                                                    <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
 
-                                                                @foreach (var subcategory in categoryKv.Value)
-                                                                {
-                                                                    <!-- Start sub-category -->
-                                                                    <div class="govuk-checkboxes__item">
-                                                                        <input class="govuk-checkboxes__input" id="@subcategory.Name.ToLower().Replace(" ", "")"
-                                                                               name="SubcategorySelection" data-testid="@subcategory.Name.ToLower().Replace(" ", "")"
-                                                                               type="checkbox"
-                                                                               value="@subcategory.Id"
-                                                                               @(Model.SubcategorySelection != null && Model.SubcategorySelection.Any(x => x == subcategory.Id.ToString()) ? "checked" : "")>
-                                                                        <label class="govuk-label govuk-checkboxes__label" for="@subcategory.Name.ToLower().Replace(" ", "")">
-                                                                            @subcategory.Name
-                                                                        </label>
+                                                                        @foreach (var subcategory in categoryKv.Value)
+                                                                        {
+                                                                            <!-- Start sub-category -->
+                                                                            <div class="govuk-checkboxes__item">
+                                                                                <input class="govuk-checkboxes__input" id="@subcategory.Name.ToLower().Replace(" ", "")"
+                                                                                       name="SubcategorySelection" data-testid="@subcategory.Name.ToLower().Replace(" ", "")"
+                                                                                       type="checkbox"
+                                                                                       value="@subcategory.Id"
+                                                                                @(Model.SubcategorySelection != null && Model.SubcategorySelection.Any(x => x == subcategory.Id.ToString()) ? "checked" : "")>
+                                                                                <label class="govuk-label govuk-checkboxes__label" for="@subcategory.Name.ToLower().Replace(" ", "")">
+                                                                                    @subcategory.Name
+                                                                                </label>
+                                                                            </div>
+                                                                            <!-- End sub-category -->
+                                                                        }
                                                                     </div>
-                                                                    <!-- End sub-category -->
-                                                                }
+                                                                </fieldset>
                                                             </div>
-                                                        </fieldset>
-                                                    </div>
-                                                    <!-- End category -->
-                                                }
+                                                            <!-- End category -->
+                                                        }
+                                                        else
+                                                        {
+                                                            <!-- Start main-category -->
+                                                            <div class="govuk-checkboxes__item">
+                                                                <input class="govuk-checkboxes__input" id="@categoryKv.Key.Name.ToLower().Replace(" ", "")"
+                                                                       name="SubcategorySelection" data-testid="@categoryKv.Key.Name.ToLower().Replace(" ", "")"
+                                                                       type="checkbox"
+                                                                       value="@categoryKv.Key.Id"
+                                                                @(Model.SubcategorySelection != null && Model.SubcategorySelection.Any(x => x == categoryKv.Key.Id.ToString()) ? "checked" : "")>
+                                                                <label class="govuk-label govuk-checkboxes__label" for="@categoryKv.Key.Name.ToLower().Replace(" ", "")">
+                                                                    @categoryKv.Key.Name
+                                                                </label>
+                                                            </div>
+                                                            <!-- End main-category -->
+                                                        }
+                                                    }
                                             </div>
                                         </div>
                                     </div>
