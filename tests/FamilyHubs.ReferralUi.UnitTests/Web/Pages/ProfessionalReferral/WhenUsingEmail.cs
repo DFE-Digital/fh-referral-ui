@@ -55,4 +55,20 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
 
         _emailModel.ValidationValid.Should().BeFalse();
     }
+
+    //todo: we should really have a test to check the email validation is working
+    // but I've been unable to get the model validation to trigger in the test
+
+    //[Fact]
+    //public async Task ThenOnPostWithValidationErrorX()
+    //{
+    //    _emailModel.TextBoxValue = "123456789012345678901234567890123456789012345678901234567890@12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890.com";
+
+    //    //trigger model validation
+
+    //    //Act
+    //    await _emailModel.OnPostAsync();
+
+    //    _emailModel.ValidationValid.Should().BeFalse();
+    //}
 }
