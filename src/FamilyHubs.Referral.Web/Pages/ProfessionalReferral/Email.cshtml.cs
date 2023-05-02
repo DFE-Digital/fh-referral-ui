@@ -17,6 +17,7 @@ public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageMode
 
     [Required]
     [EmailAddress]
+    [StringLength(254, MinimumLength = 3)] // the EmailAddress attribute allows emails that are too long, so we have this too
     [BindProperty]
     public string? TextBoxValue { get; set; }
 

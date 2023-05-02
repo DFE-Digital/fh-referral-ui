@@ -23,7 +23,7 @@
             </div>
         }
 
-        <form method="post">
+        <form method="post" novalidate>
             <div class="govuk-form-group @(Model.ValidationValid ? "": "govuk-form-group--error")">
                 <h1 class="govuk-label-wrapper">
                     <label class="govuk-label govuk-label--l" for="textbox">
@@ -47,7 +47,16 @@
                     @Model.TextBoxLabel
                 </label>
                 @{
-                    string type = Model is ISingleEmailTextboxPageModel ? "email" : "text";
+                    string? type, inputMode;
+
+                    if (Model is ISingleEmailTextboxPageModel)
+                    {
+                        inputMode = type = "email";
+                    }
+                    else
+                    {
+                        inputMode = type = "text";
+                    }
                 }
                 @* we're currently using this to gather details (name, email) that are not the person filling in the form. *@
                 @* so it doesn't make sense to autocomplete with the user's details, so we set it to off (despite GDS guidelines). *@
@@ -55,11 +64,8 @@
                 @* we're' currently using this to gather emails, which GDS recommends to switch spellcheck off for, *@
                 @* and to gather names, for which it doesn't make sense to have spellcheck enabled. *@
 
-                @* we set type to email as per GDS guidelines, but that means that browsers do their own validation. *@
-                @* if it's decided that we don't want the built-in validation, we could set it to type text instead, *@
-                @* and set inputmode="email", so that mobile users still get the email appropriate keyboard. *@
                 <input class="govuk-input @(Model.ValidationValid ? "" : "govuk-input--error")"
-                       name="TextBoxValue" type="@type" value="@Model.TextBoxValue"
+                       name="TextBoxValue" type="@type" value="@Model.TextBoxValue" inputmode="@inputMode"
                        spellcheck="false" autocomplete="off" id="textbox" aria-describedby="hint error">
             </div>
             <button type="submit" class="govuk-button" data-module="govuk-button">
