@@ -8,7 +8,7 @@ using FamilyHubs.Referral.Web.Models;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class EmailModel : ProfessionalReferralModel, ISingleTextboxPageModel
+public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageModel
 {
     //todo: get asp-for input to pick up is email
 
