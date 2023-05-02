@@ -10,16 +10,12 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageModel
 {
-    //todo: get asp-for input to pick up is email
-
     public string HeadingText { get; set; } = "";
     public string? HintText { get; set; }
     public string TextBoxLabel { get; set; } = "Email address";
-    public string MainErrorText { get; set; } = "Enter an email address in the correct format, like name@example.com";
-    public string? TextBoxErrorText { get; set; } = "Enter an email address in the correct format, like name@example.com";
+    public string ErrorText { get; set; } = "Enter an email address in the correct format, like name@example.com";
     public bool ValidationValid { get; set; } = true;
 
-    //todo: check input matches gds email. partial doesn't find this as it uses PartialTextBoxViewModel instead
     [Required]
     [EmailAddress]
     [BindProperty]

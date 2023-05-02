@@ -17,8 +17,7 @@ public class SupportDetailsModel : PageModel, ISingleTextboxPageModel
     public string HeadingText { get; set; } = "Who should the service contact in the family?";
     public string? HintText { get; set; } = "This must be a person aged 16 or over.";
     public string TextBoxLabel { get; set; } = "Full name";
-    public string MainErrorText { get; set; } = "Enter a full name";
-    public string? TextBoxErrorText { get; set; } = "Enter a full name";
+    public string ErrorText { get; set; } = "Enter a full name";
     public bool ValidationValid { get; set; } = true;
 
     [Required]

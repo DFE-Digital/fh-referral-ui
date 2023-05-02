@@ -15,7 +15,7 @@
                     <div class="govuk-error-summary__body">
                         <ul class="govuk-list govuk-error-summary__list">
                             <li>
-                                <a href="#textbox" data-testid="summary-error">@Model.MainErrorText</a>
+                                <a href="#textbox" data-testid="summary-error">@Model.ErrorText</a>
                             </li>
                         </ul>
                     </div>
@@ -40,7 +40,7 @@
                 @if (!Model.ValidationValid)
                 {
                     <p id="error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> @Model.TextBoxErrorText
+                        <span class="govuk-visually-hidden">Error:</span> @Model.ErrorText
                     </p>
                 }
                 <label class="govuk-label" for="textbox">
