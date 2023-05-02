@@ -1,31 +1,16 @@
-﻿using FamilyHubs.Referral.Core.DistributedCache;
-using FamilyHubs.Referral.Core.Models;
-using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
+﻿using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
 public class WhenUsingContactDetails : BaseProfessionalReferralPage
 {
     private readonly ContactDetailsModel _contactDetailsModel;
-    private readonly Mock<IConnectionRequestDistributedCache> _mockConnectionRequestDistributedCache;
-    private readonly ConnectionRequestModel _connectionRequestModel;
 
     public WhenUsingContactDetails()
     {
-        _connectionRequestModel = new ConnectionRequestModel
-        {
-            ServiceId = "Service Id",
-            ServiceName = "Service Name",
-            FamilyContactFullName = "Full Name",
-            Reason = "Reason for Support",
-        };
-        _mockConnectionRequestDistributedCache = new Mock<IConnectionRequestDistributedCache>();
-        _mockConnectionRequestDistributedCache.Setup(x => x.GetAsync()).ReturnsAsync(_connectionRequestModel);
-
-        _contactDetailsModel = new ContactDetailsModel(_mockConnectionRequestDistributedCache.Object);
+        _contactDetailsModel = new ContactDetailsModel(ReferralDistributedCache.Object);
     }
 
     [Theory]
@@ -37,10 +22,10 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
     [InlineData(true, true, true, true)]
     public async Task ThenCheckboxesShouldMatchRetrievedModel(bool email, bool telephone, bool textphone, bool letter)
     {
-        _connectionRequestModel.EmailSelected = email;
-        _connectionRequestModel.TelephoneSelected = telephone;
-        _connectionRequestModel.TextphoneSelected = textphone;
-        _connectionRequestModel.LetterSelected = letter;
+        ConnectionRequestModel.EmailSelected = email;
+        ConnectionRequestModel.TelephoneSelected = telephone;
+        ConnectionRequestModel.TextphoneSelected = textphone;
+        ConnectionRequestModel.LetterSelected = letter;
 
         //Act
         await _contactDetailsModel.OnGetAsync("1");
