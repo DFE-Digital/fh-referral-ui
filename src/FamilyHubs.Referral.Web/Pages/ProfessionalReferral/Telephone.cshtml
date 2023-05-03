@@ -1,0 +1,12 @@
+﻿@page
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.TelephoneModel
+@{
+    ViewData["Title"] = Model.HeadingText;
+}
+
+@section Back {
+    @*todo: could be email or contact details*@
+    <a asp-page="/ProfessionalReferral/Email" asp-route-serviceId="@Model.ServiceId" asp-route-serviceName="@Model.ServiceName" class="govuk-back-link">Back</a>
+}
+
+<partial name="_SingleTextboxPage" for="@Model" />
