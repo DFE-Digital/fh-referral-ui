@@ -16,6 +16,7 @@ public class TelephoneModel : ProfessionalReferralModel, ISingleTelephoneTextbox
     // Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192
     public string ErrorText { get; set; } = "Enter a UK telephone number";
     public bool ValidationValid { get; set; } = true;
+    public string? BackUrl { get; set; }
 
     [Required]
     [Phone]
@@ -35,6 +36,8 @@ public class TelephoneModel : ProfessionalReferralModel, ISingleTelephoneTextbox
         {
             TextBoxValue = model.TelephoneNumber;
         }
+
+        BackUrl = GetBackUrl(model.EmailSelected);
     }
 
     protected override string? OnPostWithModel(ConnectionRequestModel model)
@@ -42,6 +45,7 @@ public class TelephoneModel : ProfessionalReferralModel, ISingleTelephoneTextbox
         if (!ModelState.IsValid)
         {
             ValidationValid = false;
+            BackUrl = GetBackUrl(model.EmailSelected);
             return null;
         }
 
@@ -62,5 +66,10 @@ public class TelephoneModel : ProfessionalReferralModel, ISingleTelephoneTextbox
         }
 
         return $"/ProfessionalReferral/{destination}";
+    }
+
+    private string GetBackUrl(bool emailSelected)
+    {
+        return $"/ProfessionalReferral/{(emailSelected?"Email": "ContactDetails")}";
     }
 }

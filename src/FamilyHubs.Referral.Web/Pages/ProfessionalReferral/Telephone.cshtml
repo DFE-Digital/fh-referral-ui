@@ -5,8 +5,7 @@
 }
 
 @section Back {
-    @*todo: could be email or contact details*@
-    <a asp-page="/ProfessionalReferral/Email" asp-route-serviceId="@Model.ServiceId" asp-route-serviceName="@Model.ServiceName" class="govuk-back-link">Back</a>
+    <a asp-page="@Model.BackUrl" asp-route-serviceId="@Model.ServiceId" asp-route-serviceName="@Model.ServiceName" class="govuk-back-link">Back</a>
 }
 
 <partial name="_SingleTextboxPage" for="@Model" />
