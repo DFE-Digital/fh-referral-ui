@@ -12,14 +12,12 @@ public class TelephoneModel : ProfessionalReferralModel, ISingleTelephoneTextbox
     public string HeadingText { get; set; } = "";
     public string? HintText { get; set; }
     public string TextBoxLabel { get; set; } = "UK telephone number";
-    //todo: will need different error texts
-    // Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192
-    public string ErrorText { get; set; } = "Enter a UK telephone number";
+    public string ErrorText { get; set; } = "";
     public bool ValidationValid { get; set; } = true;
     public string? BackUrl { get; set; }
 
-    [Required]
-    [Phone]
+    [Required(ErrorMessage = "Enter a UK telephone number", AllowEmptyStrings = false)]
+    [Phone(ErrorMessage = "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192")]
     [BindProperty]
     public string? TextBoxValue { get; set; }
 
@@ -39,13 +37,15 @@ public class TelephoneModel : ProfessionalReferralModel, ISingleTelephoneTextbox
 
         BackUrl = GetBackUrl(model.EmailSelected);
     }
-
+    //The TextBoxValue field is not a valid phone number. /The TextBoxValue field is required.
     protected override string? OnPostWithModel(ConnectionRequestModel model)
     {
         if (!ModelState.IsValid)
         {
             ValidationValid = false;
             BackUrl = GetBackUrl(model.EmailSelected);
+            //todo: better checking needed?
+            ErrorText = ModelState["TextBoxValue"]!.Errors[0].ErrorMessage;
             return null;
         }
 
