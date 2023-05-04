@@ -47,25 +47,31 @@
                     @Model.TextBoxLabel
                 </label>
                 @{
-                    string? type, inputMode;
+                    string? type;
 
-                    if (Model is ISingleEmailTextboxPageModel)
+                    //todo: get from interface (itself, not concrete)
+                    switch (Model)
                     {
-                        inputMode = type = "email";
-                    }
-                    else
-                    {
-                        inputMode = type = "text";
+                        case ISingleTelephoneTextboxPageModel:
+                            type = "tel";
+                            break;
+                        case ISingleEmailTextboxPageModel:
+                            type = "email";
+                            break;
+                        default:
+                            type = "text";
+                            break;
                     }
                 }
                 @* we're currently using this to gather details (name, email) that are not the person filling in the form. *@
                 @* so it doesn't make sense to autocomplete with the user's details, so we set it to off (despite GDS guidelines). *@
+                @* we might end up setting autocomplete anyway, as it can help with accessibility tools. *@
                 
                 @* we're' currently using this to gather emails, which GDS recommends to switch spellcheck off for, *@
-                @* and to gather names, for which it doesn't make sense to have spellcheck enabled. *@
+                @* and to gather names and telephone numbers, for which it doesn't make sense to have spellcheck enabled. *@
 
                 <input class="govuk-input @(Model.ValidationValid ? "" : "govuk-input--error")"
-                       name="TextBoxValue" type="@type" value="@Model.TextBoxValue" inputmode="@inputMode"
+                       name="TextBoxValue" type="@type" value="@Model.TextBoxValue" inputmode="@type"
                        spellcheck="false" autocomplete="off" id="textbox" aria-describedby="hint error">
             </div>
             <button type="submit" class="govuk-button" data-module="govuk-button">
