@@ -29,10 +29,11 @@ public class ContactDetailsModel : ProfessionalReferralModel
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
         FullName = model.FamilyContactFullName;
-        Email = model.EmailSelected;
-        Telephone = model.TelephoneSelected;
-        Textphone = model.TextphoneSelected;
-        Letter = model.LetterSelected;
+        //todo: use array, if asp-for & binding works
+        Email = model.ContactMethodsSelected[(int)ContactMethod.Email];
+        Telephone = model.ContactMethodsSelected[(int)ContactMethod.Telephone];
+        Textphone = model.ContactMethodsSelected[(int)ContactMethod.Textphone];
+        Letter = model.ContactMethodsSelected[(int)ContactMethod.Letter];
     }
 
     protected override string? OnPostWithModel(ConnectionRequestModel model)
@@ -42,34 +43,34 @@ public class ContactDetailsModel : ProfessionalReferralModel
             ValidationValid = false;
             return null;
         }
-        
-        model.EmailSelected = Email;
-        model.TelephoneSelected = Telephone;
-        model.TextphoneSelected = Textphone;
-        model.LetterSelected = Letter;
 
-        string destination;
-        if (model.EmailSelected)
-        {
-            destination = "Email";
-        }
-        else if (model.TelephoneSelected) 
-        {
-            destination = "Telephone";
-        }
-        else if (model.TextphoneSelected)
-        {
-            destination = "Textphone";
-        }
-        else if (model.LetterSelected)
-        {
-            destination = "Letter";
-        }
-        else
-        {
-            throw new InvalidOperationException("No contact method selected");
-        }
+        model.ContactMethodsSelected[(int)ContactMethod.Email] = Email;
+        model.ContactMethodsSelected[(int)ContactMethod.Telephone] = Telephone;
+        model.ContactMethodsSelected[(int)ContactMethod.Textphone] = Textphone;
+        model.ContactMethodsSelected[(int)ContactMethod.Letter] = Letter;
 
-        return $"/ProfessionalReferral/{destination}";
+        //string destination;
+        //if (model.EmailSelected)
+        //{
+        //    destination = "Email";
+        //}
+        //else if (model.TelephoneSelected) 
+        //{
+        //    destination = "Telephone";
+        //}
+        //else if (model.TextphoneSelected)
+        //{
+        //    destination = "Textphone";
+        //}
+        //else if (model.LetterSelected)
+        //{
+        //    destination = "Letter";
+        //}
+        //else
+        //{
+        //    throw new InvalidOperationException("No contact method selected");
+        //}
+
+        return FirstContactMethodPage(model.ContactMethodsSelected);
     }
 }

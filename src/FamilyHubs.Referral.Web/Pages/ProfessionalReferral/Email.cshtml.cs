@@ -47,26 +47,26 @@ public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageMode
 
         model.EmailAddress = TextBoxValue;
 
-        string destination;
-        if (model.TelephoneSelected)
-        {
-            //todo: const or route helper
-            destination = "Telephone";
-        }
-        else if (model.TextphoneSelected)
-        {
-            destination = "Textphone";
-        }
-        else if (model.LetterSelected)
-        {
-            destination = "Letter";
-        }
-        else
-        {
-            destination = "ContactMethod";
-        }
+        //string destination;
+        //if (model.TelephoneSelected)
+        //{
+        //    //todo: const or route helper
+        //    destination = "Telephone";
+        //}
+        //else if (model.TextphoneSelected)
+        //{
+        //    destination = "Textphone";
+        //}
+        //else if (model.LetterSelected)
+        //{
+        //    destination = "Letter";
+        //}
+        //else
+        //{
+        //    destination = "ContactMethod";
+        //}
 
-        return $"/ProfessionalReferral/{destination}";
+        return NextPage(ContactMethod.Email, model.ContactMethodsSelected);
     }
 
     private void SetPageProperties(ConnectionRequestModel model)

@@ -49,33 +49,35 @@ public class TextModel : ProfessionalReferralModel, ISingleTelephoneTextboxPageM
 
         model.TextphoneNumber = TextBoxValue;
 
-        string destination = model.LetterSelected ? "Letter" : "ContactMethod";
+        //string destination = model.LetterSelected ? "Letter" : "ContactMethod";
 
-        return $"/ProfessionalReferral/{destination}";
+        //return $"/ProfessionalReferral/{destination}";
+
+        return NextPage(ContactMethod.Textphone, model.ContactMethodsSelected);
     }
 
-    // todo: generic back/forward method?
-    private string GetBackUrl(ConnectionRequestModel model)
-    {
-        string backPage;
-        if (model.TelephoneSelected)
-        {
-            backPage = "Telephone";
-        }
-        else if (model.EmailSelected)
-        {
-            backPage = "Email";
-        }
-        else
-        {
-            backPage = "WhySupport";
-        }
-        return $"/ProfessionalReferral/{backPage}";
-    }
+    //// todo: generic back/forward method?
+    //private string GetBackUrl(ConnectionRequestModel model)
+    //{
+    //    string backPage;
+    //    if (model.TelephoneSelected)
+    //    {
+    //        backPage = "Telephone";
+    //    }
+    //    else if (model.EmailSelected)
+    //    {
+    //        backPage = "Email";
+    //    }
+    //    else
+    //    {
+    //        backPage = "WhySupport";
+    //    }
+    //    return $"/ProfessionalReferral/{backPage}";
+    //}
 
     private void SetPageProperties(ConnectionRequestModel model)
     {
         HeadingText = $"What telephone number should the service use to text {model.FamilyContactFullName}?";
-        BackUrl = GetBackUrl(model);
+        BackUrl = PreviousPage(ContactMethod.Textphone, model.ContactMethodsSelected);
     }
 }

@@ -1,4 +1,5 @@
-﻿using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
+﻿using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,9 +33,9 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
     [InlineData("/ProfessionalReferral/ContactMethod", false, false, false)]
     public async Task ThenOnPostEmail(string expectedNextPage, bool telephone, bool textphone, bool letter)
     {
-        ConnectionRequestModel.TelephoneSelected = telephone;
-        ConnectionRequestModel.TextphoneSelected = textphone;
-        ConnectionRequestModel.LetterSelected = letter;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Telephone] = telephone;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Textphone] = textphone;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Letter] = letter;
 
         _emailModel.TextBoxValue = "someone@email.com";
 

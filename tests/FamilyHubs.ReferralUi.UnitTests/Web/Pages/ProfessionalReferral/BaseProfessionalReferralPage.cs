@@ -20,10 +20,11 @@ public class BaseProfessionalReferralPage
             ServiceName = "ServiceName",
             FamilyContactFullName = "FamilyContactFullName",
             Reason = "Reason For Support",
-            EmailSelected = true,
-            TelephoneSelected = true,
-            TextphoneSelected = true,
-            LetterSelected = true,
+            ContactMethodsSelected = new[] { true, true, true, true },
+            //EmailSelected = true,
+            //TelephoneSelected = true,
+            //TextphoneSelected = true,
+            //LetterSelected = true,
             EmailAddress = EmailAddress,
             TelephoneNumber = Telephone
         };

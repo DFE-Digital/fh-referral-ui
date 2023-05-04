@@ -67,4 +67,45 @@ public abstract class ProfessionalReferralModel : PageModel
             ServiceName
         });
     }
+
+    private static string[] _connectJourneyPages =
+    {
+        "ContactDetails",
+        "Email",
+        "Telephone",
+        "Text",
+        "Letter",
+        "ContactMethods"
+    };
+
+    protected string FirstContactMethodPage(bool[] contactMethodsSelected)
+    {
+        return NextPage((ContactMethod)(-1), contactMethodsSelected);
+    }
+
+    protected string NextPage(ContactMethod currentPage, bool[] contactMethodsSelected)
+    {
+        while (++currentPage <= ContactMethod.Last)
+        {
+            if (contactMethodsSelected[(int) currentPage])
+            {
+                break;
+            }
+        }
+
+        return $"/ProfessionalReferral/{_connectJourneyPages[(int)currentPage+1]}";
+    }
+
+    protected string PreviousPage(ContactMethod currentPage, bool[] contactMethodsSelected)
+    {
+        while (--currentPage >= 0)
+        {
+            if (contactMethodsSelected[(int)currentPage])
+            {
+                break;
+            }
+        }
+
+        return $"/ProfessionalReferral/{_connectJourneyPages[(int)currentPage + 1]}";
+    }
 }
