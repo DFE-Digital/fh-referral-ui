@@ -37,14 +37,13 @@ public class TelephoneModel : ProfessionalReferralModel, ISingleTelephoneTextbox
 
         BackUrl = GetBackUrl(model.EmailSelected);
     }
-    //The TextBoxValue field is not a valid phone number. /The TextBoxValue field is required.
+
     protected override string? OnPostWithModel(ConnectionRequestModel model)
     {
         if (!ModelState.IsValid)
         {
             ValidationValid = false;
             BackUrl = GetBackUrl(model.EmailSelected);
-            //todo: better checking needed?
             ErrorText = ModelState["TextBoxValue"]!.Errors[0].ErrorMessage;
             return null;
         }

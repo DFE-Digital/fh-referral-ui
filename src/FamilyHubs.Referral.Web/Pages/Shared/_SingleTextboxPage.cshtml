@@ -47,21 +47,14 @@
                     @Model.TextBoxLabel
                 </label>
                 @{
-                    string? type;
-
-                    //todo: get from interface (itself, not concrete)
-                    switch (Model)
+                    // we could get type, inputmode and autocomplete from the interface itself (if we swapped the text to base and introduced a text derived)
+                    // which in some ways would be neat, but it would mean that view info would be out of the view and in the interfaces
+                    string type = Model switch
                     {
-                        case ISingleTelephoneTextboxPageModel:
-                            type = "tel";
-                            break;
-                        case ISingleEmailTextboxPageModel:
-                            type = "email";
-                            break;
-                        default:
-                            type = "text";
-                            break;
-                    }
+                        ISingleTelephoneTextboxPageModel => "tel",
+                        ISingleEmailTextboxPageModel => "email",
+                        _ => "text"
+                    };
                 }
                 @* we're currently using this to gather details (name, email) that are not the person filling in the form. *@
                 @* so it doesn't make sense to autocomplete with the user's details, so we set it to off (despite GDS guidelines). *@
