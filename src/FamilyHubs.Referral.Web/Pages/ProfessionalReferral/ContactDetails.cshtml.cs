@@ -7,20 +7,12 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class ContactDetailsModel : ProfessionalReferralModel
 {
+    //todo: move into base?
     public bool ValidationValid { get; private set; } = true;
     public string? FullName { get; set; }
 
     [BindProperty]
-    public bool Email { get; set; }
-
-    [BindProperty]
-    public bool Telephone { get; set; }
-
-    [BindProperty]
-    public bool Textphone { get; set; }
-
-    [BindProperty]
-    public bool Letter { get; set; }
+    public bool[] ContactMethods { get; set; } = new bool[(int)ContactMethod.Last+1];
 
     public ContactDetailsModel(IConnectionRequestDistributedCache connectionRequestCache) : base(connectionRequestCache)
     {
@@ -29,25 +21,18 @@ public class ContactDetailsModel : ProfessionalReferralModel
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
         FullName = model.FamilyContactFullName;
-        //todo: use array, if asp-for & binding works
-        Email = model.ContactMethodsSelected[(int)ContactMethod.Email];
-        Telephone = model.ContactMethodsSelected[(int)ContactMethod.Telephone];
-        Textphone = model.ContactMethodsSelected[(int)ContactMethod.Textphone];
-        Letter = model.ContactMethodsSelected[(int)ContactMethod.Letter];
+        ContactMethods = model.ContactMethodsSelected;
     }
 
     protected override string? OnPostWithModel(ConnectionRequestModel model)
     {
-        if (!(ModelState.IsValid && (Email || Telephone || Textphone || Letter)))
+        if (!(ModelState.IsValid && ContactMethods.Any(m => m)))
         {
             ValidationValid = false;
             return null;
         }
 
-        model.ContactMethodsSelected[(int)ContactMethod.Email] = Email;
-        model.ContactMethodsSelected[(int)ContactMethod.Telephone] = Telephone;
-        model.ContactMethodsSelected[(int)ContactMethod.Textphone] = Textphone;
-        model.ContactMethodsSelected[(int)ContactMethod.Letter] = Letter;
+        model.ContactMethodsSelected = ContactMethods;
 
         return FirstContactMethodPage(model.ContactMethodsSelected);
     }
