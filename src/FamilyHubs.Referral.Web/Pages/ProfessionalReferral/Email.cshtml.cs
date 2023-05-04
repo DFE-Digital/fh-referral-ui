@@ -28,12 +28,12 @@ public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageMode
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        HeadingText = $"What is the email address for {model.FamilyContactFullName}?";
-
         if (!string.IsNullOrEmpty(model.EmailAddress))
         {
             TextBoxValue = model.EmailAddress;
         }
+
+        SetPageProperties(model);
     }
 
     protected override string? OnPostWithModel(ConnectionRequestModel model)
@@ -41,6 +41,7 @@ public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageMode
         if (!ModelState.IsValid)
         {
             ValidationValid = false;
+            SetPageProperties(model);
             return null;
         }
 
@@ -66,5 +67,10 @@ public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageMode
         }
 
         return $"/ProfessionalReferral/{destination}";
+    }
+
+    private void SetPageProperties(ConnectionRequestModel model)
+    {
+        HeadingText = $"What is the email address for {model.FamilyContactFullName}?";
     }
 }

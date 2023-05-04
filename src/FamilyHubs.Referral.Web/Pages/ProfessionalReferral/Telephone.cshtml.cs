@@ -28,14 +28,12 @@ public class TelephoneModel : ProfessionalReferralModel, ISingleTelephoneTextbox
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        HeadingText = $"What telephone number should the service use to call {model.FamilyContactFullName}?";
-
         if (!string.IsNullOrEmpty(model.TelephoneNumber))
         {
             TextBoxValue = model.TelephoneNumber;
         }
 
-        BackUrl = GetBackUrl(model.EmailSelected);
+        SetPageProperties(model);
     }
 
     protected override string? OnPostWithModel(ConnectionRequestModel model)
@@ -43,8 +41,9 @@ public class TelephoneModel : ProfessionalReferralModel, ISingleTelephoneTextbox
         if (!ModelState.IsValid)
         {
             ValidationValid = false;
-            BackUrl = GetBackUrl(model.EmailSelected);
             ErrorText = ModelState["TextBoxValue"]!.Errors[0].ErrorMessage;
+
+            SetPageProperties(model);
             return null;
         }
 
@@ -70,5 +69,11 @@ public class TelephoneModel : ProfessionalReferralModel, ISingleTelephoneTextbox
     private string GetBackUrl(bool emailSelected)
     {
         return $"/ProfessionalReferral/{(emailSelected?"Email": "ContactDetails")}";
+    }
+
+    private void SetPageProperties(ConnectionRequestModel model)
+    {
+        HeadingText = $"What telephone number should the service use to call {model.FamilyContactFullName}?";
+        BackUrl = GetBackUrl(model.EmailSelected);
     }
 }

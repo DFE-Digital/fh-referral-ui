@@ -22,14 +22,13 @@
                 </div>
             </div>
         }
+        
+@*      not even the GDS error summary page is consistent in whether the heading goes in the form-group or not!
+        so we follow the prototype's lead (which I think looks better anyway)*@
+        <h1 class="govuk-heading-l">@Model.HeadingText</h1>
 
         <form method="post" novalidate>
             <div class="govuk-form-group @(Model.ValidationValid ? "": "govuk-form-group--error")">
-                <h1 class="govuk-label-wrapper">
-                    <label class="govuk-label govuk-label--l" for="textbox">
-                        @Model.HeadingText
-                    </label>
-                </h1>
                 @*todo: check which should be hint*@
                 @if (!string.IsNullOrEmpty(Model.HintText))
                 {
