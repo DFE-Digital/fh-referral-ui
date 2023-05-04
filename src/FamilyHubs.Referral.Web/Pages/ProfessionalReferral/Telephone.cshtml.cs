@@ -7,30 +7,30 @@ using FamilyHubs.Referral.Web.Models;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageModel
+public class TelephoneModel : ProfessionalReferralModel, ISingleTelephoneTextboxPageModel
 {
     public string HeadingText { get; set; } = "";
     public string? HintText { get; set; }
-    public string TextBoxLabel { get; set; } = "Email address";
-    public string ErrorText { get; set; } = "Enter an email address in the correct format, like name@example.com";
+    public string TextBoxLabel { get; set; } = "UK telephone number";
+    public string ErrorText { get; set; } = "";
     public bool ValidationValid { get; set; } = true;
+    public string? BackUrl { get; set; }
 
-    [Required]
-    [EmailAddress]
-    [StringLength(254, MinimumLength = 3)] // the EmailAddress attribute allows emails that are too long, so we have this too
+    [Required(ErrorMessage = "Enter a UK telephone number", AllowEmptyStrings = false)]
+    [Phone(ErrorMessage = "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192")]
     [BindProperty]
     public string? TextBoxValue { get; set; }
 
-    public EmailModel(IConnectionRequestDistributedCache connectionRequestCache)
+    public TelephoneModel(IConnectionRequestDistributedCache connectionRequestCache)
         : base(connectionRequestCache)
     {
     }
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        if (!string.IsNullOrEmpty(model.EmailAddress))
+        if (!string.IsNullOrEmpty(model.TelephoneNumber))
         {
-            TextBoxValue = model.EmailAddress;
+            TextBoxValue = model.TelephoneNumber;
         }
 
         SetPageProperties(model);
@@ -41,19 +41,16 @@ public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageMode
         if (!ModelState.IsValid)
         {
             ValidationValid = false;
+            ErrorText = ModelState["TextBoxValue"]!.Errors[0].ErrorMessage;
+
             SetPageProperties(model);
             return null;
         }
 
-        model.EmailAddress = TextBoxValue;
+        model.TelephoneNumber = TextBoxValue;
 
         string destination;
-        if (model.TelephoneSelected)
-        {
-            //todo: const or route helper
-            destination = "Telephone";
-        }
-        else if (model.TextphoneSelected)
+        if (model.TextphoneSelected)
         {
             destination = "Textphone";
         }
@@ -69,8 +66,14 @@ public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageMode
         return $"/ProfessionalReferral/{destination}";
     }
 
+    private string GetBackUrl(bool emailSelected)
+    {
+        return $"/ProfessionalReferral/{(emailSelected?"Email": "ContactDetails")}";
+    }
+
     private void SetPageProperties(ConnectionRequestModel model)
     {
-        HeadingText = $"What is the email address for {model.FamilyContactFullName}?";
+        HeadingText = $"What telephone number should the service use to call {model.FamilyContactFullName}?";
+        BackUrl = GetBackUrl(model.EmailSelected);
     }
 }

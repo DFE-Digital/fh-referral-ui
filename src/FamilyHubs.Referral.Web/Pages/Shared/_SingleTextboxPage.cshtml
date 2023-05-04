@@ -22,14 +22,13 @@
                 </div>
             </div>
         }
+        
+@*      not even the GDS error summary page is consistent in whether the heading goes in the form-group or not!
+        so we follow the prototype's lead (which I think looks better anyway)*@
+        <h1 class="govuk-heading-l">@Model.HeadingText</h1>
 
         <form method="post" novalidate>
             <div class="govuk-form-group @(Model.ValidationValid ? "": "govuk-form-group--error")">
-                <h1 class="govuk-label-wrapper">
-                    <label class="govuk-label govuk-label--l" for="textbox">
-                        @Model.HeadingText
-                    </label>
-                </h1>
                 @*todo: check which should be hint*@
                 @if (!string.IsNullOrEmpty(Model.HintText))
                 {
@@ -47,25 +46,24 @@
                     @Model.TextBoxLabel
                 </label>
                 @{
-                    string? type, inputMode;
-
-                    if (Model is ISingleEmailTextboxPageModel)
+                    // we could get type, inputmode and autocomplete from the interface itself (if we swapped the text to base and introduced a text derived)
+                    // which in some ways would be neat, but it would mean that view info would be out of the view and in the interfaces
+                    string type = Model switch
                     {
-                        inputMode = type = "email";
-                    }
-                    else
-                    {
-                        inputMode = type = "text";
-                    }
+                        ISingleTelephoneTextboxPageModel => "tel",
+                        ISingleEmailTextboxPageModel => "email",
+                        _ => "text"
+                    };
                 }
                 @* we're currently using this to gather details (name, email) that are not the person filling in the form. *@
                 @* so it doesn't make sense to autocomplete with the user's details, so we set it to off (despite GDS guidelines). *@
+                @* we might end up setting autocomplete anyway, as it can help with accessibility tools. *@
                 
                 @* we're' currently using this to gather emails, which GDS recommends to switch spellcheck off for, *@
-                @* and to gather names, for which it doesn't make sense to have spellcheck enabled. *@
+                @* and to gather names and telephone numbers, for which it doesn't make sense to have spellcheck enabled. *@
 
                 <input class="govuk-input @(Model.ValidationValid ? "" : "govuk-input--error")"
-                       name="TextBoxValue" type="@type" value="@Model.TextBoxValue" inputmode="@inputMode"
+                       name="TextBoxValue" type="@type" value="@Model.TextBoxValue" inputmode="@type"
                        spellcheck="false" autocomplete="off" id="textbox" aria-describedby="hint error">
             </div>
             <button type="submit" class="govuk-button" data-module="govuk-button">
