@@ -10,6 +10,7 @@ public class BaseProfessionalReferralPage
     public readonly ConnectionRequestModel ConnectionRequestModel;
 
     public const string EmailAddress = "example.com";
+    public const string Telephone = "07700 900000";
 
     public BaseProfessionalReferralPage()
     {
@@ -23,7 +24,8 @@ public class BaseProfessionalReferralPage
             TelephoneSelected = true,
             TextphoneSelected = true,
             LetterSelected = true,
-            EmailAddress = EmailAddress
+            EmailAddress = EmailAddress,
+            TelephoneNumber = Telephone
         };
 
         ReferralDistributedCache = new Mock<IConnectionRequestDistributedCache>(MockBehavior.Strict);
