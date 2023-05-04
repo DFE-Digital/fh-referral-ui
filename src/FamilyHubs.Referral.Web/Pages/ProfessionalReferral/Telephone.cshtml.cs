@@ -49,29 +49,8 @@ public class TelephoneModel : ProfessionalReferralModel, ISingleTelephoneTextbox
 
         model.TelephoneNumber = TextBoxValue;
 
-        //string destination;
-        //if (model.TextphoneSelected)
-        //{
-        //    destination = "Textphone";
-        //}
-        //else if (model.LetterSelected)
-        //{
-        //    destination = "Letter";
-        //}
-        //else
-        //{
-        //    destination = "ContactMethod";
-        //}
-
-        //return $"/ProfessionalReferral/{destination}";
-
         return NextPage(ContactMethod.Telephone, model.ContactMethodsSelected);
     }
-
-    //private string GetBackUrl(bool emailSelected)
-    //{
-    //    return $"/ProfessionalReferral/{(emailSelected?"Email": "ContactDetails")}";
-    //}
 
     private void SetPageProperties(ConnectionRequestModel model)
     {

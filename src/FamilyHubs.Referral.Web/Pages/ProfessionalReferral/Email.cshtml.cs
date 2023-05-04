@@ -47,25 +47,6 @@ public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageMode
 
         model.EmailAddress = TextBoxValue;
 
-        //string destination;
-        //if (model.TelephoneSelected)
-        //{
-        //    //todo: const or route helper
-        //    destination = "Telephone";
-        //}
-        //else if (model.TextphoneSelected)
-        //{
-        //    destination = "Textphone";
-        //}
-        //else if (model.LetterSelected)
-        //{
-        //    destination = "Letter";
-        //}
-        //else
-        //{
-        //    destination = "ContactMethod";
-        //}
-
         return NextPage(ContactMethod.Email, model.ContactMethodsSelected);
     }
 

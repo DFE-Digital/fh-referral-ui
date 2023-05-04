@@ -49,28 +49,6 @@ public class ContactDetailsModel : ProfessionalReferralModel
         model.ContactMethodsSelected[(int)ContactMethod.Textphone] = Textphone;
         model.ContactMethodsSelected[(int)ContactMethod.Letter] = Letter;
 
-        //string destination;
-        //if (model.EmailSelected)
-        //{
-        //    destination = "Email";
-        //}
-        //else if (model.TelephoneSelected) 
-        //{
-        //    destination = "Telephone";
-        //}
-        //else if (model.TextphoneSelected)
-        //{
-        //    destination = "Textphone";
-        //}
-        //else if (model.LetterSelected)
-        //{
-        //    destination = "Letter";
-        //}
-        //else
-        //{
-        //    throw new InvalidOperationException("No contact method selected");
-        //}
-
         return FirstContactMethodPage(model.ContactMethodsSelected);
     }
 }
