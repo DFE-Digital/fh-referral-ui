@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class ContactDetailsModel : ProfessionalReferralModel
+public class ContactDetailsModel : ProfessionalReferralSessionModel
 {
     public string? FullName { get; set; }
 

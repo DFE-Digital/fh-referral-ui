@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
-public abstract class ProfessionalReferralModel : PageModel
+public abstract class ProfessionalReferralSessionModel : PageModel
 {
     [BindProperty]
     public string? ServiceId { get; set; }
@@ -17,7 +17,7 @@ public abstract class ProfessionalReferralModel : PageModel
 
     protected readonly IConnectionRequestDistributedCache ConnectionRequestCache;
 
-    protected ProfessionalReferralModel(IConnectionRequestDistributedCache connectionRequestCache)
+    protected ProfessionalReferralSessionModel(IConnectionRequestDistributedCache connectionRequestCache)
     {
         ConnectionRequestCache = connectionRequestCache;
     }

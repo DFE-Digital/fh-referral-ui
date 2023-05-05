@@ -12,7 +12,7 @@ public enum TextAreaValidation
     TooLong
 }
 
-public class WhySupportModel : ProfessionalReferralModel
+public class WhySupportModel : ProfessionalReferralSessionModel
 {
     [BindProperty]
     public string? TextAreaValue { get; set; }
