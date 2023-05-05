@@ -6,6 +6,8 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class LetterModel : ProfessionalReferralSessionModel
 {
+    public string HeadingText { get; set; } = "";
+
     public LetterModel(IConnectionRequestDistributedCache connectionRequestCache)
         : base(connectionRequestCache)
     {
@@ -13,11 +15,23 @@ public class LetterModel : ProfessionalReferralSessionModel
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        throw new NotImplementedException();
+        SetPageProperties(model);
     }
 
     protected override string? OnPostWithModel(ConnectionRequestModel model)
     {
-        throw new NotImplementedException();
+        if (!ModelState.IsValid)
+        {
+            ValidationValid = false;
+            SetPageProperties(model);
+            return null;
+        }
+
+        return NextPage(ContactMethod.Letter, model.ContactMethodsSelected);
+    }
+
+    private void SetPageProperties(ConnectionRequestModel model)
+    {
+        HeadingText = $"What is the address for {model.FamilyContactFullName}?";
     }
 }
