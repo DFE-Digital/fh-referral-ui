@@ -13,7 +13,6 @@ public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageMode
     public string? HintText { get; set; }
     public string TextBoxLabel { get; set; } = "Email address";
     public string ErrorText { get; set; } = "Enter an email address in the correct format, like name@example.com";
-    public bool ValidationValid { get; set; } = true;
 
     [Required]
     [EmailAddress]

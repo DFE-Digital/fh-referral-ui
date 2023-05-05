@@ -13,6 +13,8 @@ public abstract class ProfessionalReferralModel : PageModel
     [BindProperty]
     public string? ServiceName { get; set; }
 
+    public bool ValidationValid { get; set; } = true;
+
     protected readonly IConnectionRequestDistributedCache ConnectionRequestCache;
 
     protected ProfessionalReferralModel(IConnectionRequestDistributedCache connectionRequestCache)

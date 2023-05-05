@@ -13,7 +13,6 @@ public class TelephoneModel : ProfessionalReferralModel, ISingleTelephoneTextbox
     public string? HintText { get; set; }
     public string TextBoxLabel { get; set; } = "UK telephone number";
     public string ErrorText { get; set; } = "";
-    public bool ValidationValid { get; set; } = true;
     public string? BackUrl { get; set; }
 
     [Required(ErrorMessage = "Enter a UK telephone number", AllowEmptyStrings = false)]

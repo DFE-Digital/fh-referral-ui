@@ -7,8 +7,6 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class ContactDetailsModel : ProfessionalReferralModel
 {
-    //todo: move into base?
-    public bool ValidationValid { get; private set; } = true;
     public string? FullName { get; set; }
 
     [BindProperty]
