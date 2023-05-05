@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using FamilyHubs.SharedKernel.Identity;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -11,13 +12,13 @@ public static class DummyProfessional
     {
         var authClaims = new List<Claim>
         {
-                    new Claim("FirstName", "Joe"),
-                    new Claim("LastName", "Professional"),
-                    new Claim(ClaimTypes.Email, "Joe.Professional@email.com"),
-                    new Claim("PhoneNumber", "0122 865 278"),
-                    new Claim(ClaimTypes.Role, "Professional"),
+                    new Claim(FamilyHubsClaimTypes.FirstName, "Joe"),
+                    new Claim(FamilyHubsClaimTypes.LastName, "Professional"),
+                    new Claim(FamilyHubsClaimTypes.Email, "Joe.Professional@email.com"),
+                    new Claim(FamilyHubsClaimTypes.PhoneNumber, "0122 865 278"),
+                    new Claim(FamilyHubsClaimTypes.Role, "Professional"),
                     new Claim("Team", "Social work team"),
-                    new Claim("OrganisationId", "1"),
+                    new Claim(FamilyHubsClaimTypes.OrganisationId, "1"),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
         JwtSecurityToken tokenItem = CreateToken(authClaims);
