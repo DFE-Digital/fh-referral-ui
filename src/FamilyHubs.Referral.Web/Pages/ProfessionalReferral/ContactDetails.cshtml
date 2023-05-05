@@ -45,30 +45,30 @@
                         </p>
                     }
                     <div id="contact-methods" class="govuk-checkboxes" data-module="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item">
-                            <input asp-for="Email" class="govuk-checkboxes__input" type="checkbox">
-                            <label asp-for="Email" class="govuk-label govuk-checkboxes__label">
-                                Email
-                            </label>
-                        </div>
-                        <div class="govuk-checkboxes__item">
-                            <input asp-for="Telephone" class="govuk-checkboxes__input" type="checkbox">
-                            <label asp-for="Telephone" class="govuk-label govuk-checkboxes__label">
-                                Telephone
-                            </label>
-                        </div>
-                        <div class="govuk-checkboxes__item">
-                            <input asp-for="Textphone" class="govuk-checkboxes__input" type="checkbox">
-                            <label asp-for="Textphone" class="govuk-label govuk-checkboxes__label">
-                                Text message
-                            </label>
-                        </div>
-                        <div class="govuk-checkboxes__item">
-                            <input asp-for="Letter" class="govuk-checkboxes__input" type="checkbox">
-                            <label asp-for="Letter" class="govuk-label govuk-checkboxes__label">
-                                Letter
-                            </label>
-                        </div>
+                        @{
+                            // we can either have the names here, or add Display attributes on the enum values.
+                            // if the names are here, we have to keep them in sync with the enum values
+                            // but if we use the Display attribute, we have to effectively have display data outside of the view (and use reflection to get the names)
+                            string[] contactMethodDisplayNames =
+                            {
+                                "Email",
+                                "Telephone",
+                                "Text message",
+                                "Letter"
+                            };
+
+                            for (int contactMethod = 0; contactMethod <= (int) ContactMethod.Last; ++contactMethod)
+                            {
+                                // work around captured variable being modified in outside scope
+                                int capturedContactMethod = contactMethod;
+                                <div class="govuk-checkboxes__item">
+                                    <input asp-for="ContactMethods[capturedContactMethod]" class="govuk-checkboxes__input" type="checkbox">
+                                    <label asp-for="ContactMethods[capturedContactMethod]" class="govuk-label govuk-checkboxes__label">
+                                        @contactMethodDisplayNames[capturedContactMethod]
+                                    </label>
+                                </div>
+                            }
+                        }
                     </div>
                 </fieldset> 
             </div>

@@ -1,0 +1,101 @@
+﻿using FamilyHubs.Referral.Core.DistributedCache;
+using FamilyHubs.Referral.Core.Models;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FamilyHubs.Referral.Web.Pages.Shared;
+
+//todo: once we start storing the model in the session, switch to storing the service id and name in the session, rather than the url?
+public abstract class ProfessionalReferralSessionModel : ProfessionalReferralModel
+{
+    public bool ValidationValid { get; set; } = true;
+
+    protected readonly IConnectionRequestDistributedCache ConnectionRequestCache;
+
+    protected ProfessionalReferralSessionModel(IConnectionRequestDistributedCache connectionRequestCache)
+    {
+        ConnectionRequestCache = connectionRequestCache;
+    }
+
+    protected abstract void OnGetWithModel(ConnectionRequestModel model);
+    protected abstract string? OnPostWithModel(ConnectionRequestModel model);
+
+    protected override async Task<IActionResult> OnSafeGetAsync()
+    {
+        var model = await ConnectionRequestCache.GetAsync();
+        if (model == null)
+        {
+            // session has expired and we don't have a model to work with
+            // likely the user has come back to this page after a long time
+            // send them back to the start of the journey
+            // not strictly a journey page, but still works
+            return RedirectToProfessionalReferralPage("LocalOfferDetail");
+        }
+
+        OnGetWithModel(model);
+
+        return Page();
+    }
+
+    protected override async Task<IActionResult> OnSafePostAsync()
+    {
+        var model = await ConnectionRequestCache.GetAsync();
+        if (model == null)
+        {
+            // session has expired and we don't have a model to work with
+            // likely the user has come back to this page after a long time
+            // send them back to the start of the journey
+            return RedirectToProfessionalReferralPage("LocalOfferDetail");
+        }
+
+        string? nextPage = OnPostWithModel(model);
+        if (nextPage == null)
+        {
+            return Page();
+        }
+
+        await ConnectionRequestCache.SetAsync(model);
+
+        return RedirectToProfessionalReferralPage(nextPage);
+    }
+
+    private static string[] _connectJourneyPages =
+    {
+        "ContactDetails",
+        "Email",
+        "Telephone",
+        "Text",
+        "Letter",
+        "ContactMethods"
+    };
+
+    protected string FirstContactMethodPage(bool[] contactMethodsSelected)
+    {
+        return NextPage((ContactMethod)(-1), contactMethodsSelected);
+    }
+
+    protected string NextPage(ContactMethod currentPage, bool[] contactMethodsSelected)
+    {
+        while (++currentPage <= ContactMethod.Last)
+        {
+            if (contactMethodsSelected[(int) currentPage])
+            {
+                break;
+            }
+        }
+
+        return _connectJourneyPages[(int)currentPage+1];
+    }
+
+    protected string PreviousPage(ContactMethod currentPage, bool[] contactMethodsSelected)
+    {
+        while (--currentPage >= 0)
+        {
+            if (contactMethodsSelected[(int)currentPage])
+            {
+                break;
+            }
+        }
+
+        return _connectJourneyPages[(int)currentPage + 1];
+    }
+}

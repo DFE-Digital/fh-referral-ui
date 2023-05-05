@@ -5,22 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class ContactDetailsModel : ProfessionalReferralModel
+public class ContactDetailsModel : ProfessionalReferralSessionModel
 {
-    public bool ValidationValid { get; private set; } = true;
     public string? FullName { get; set; }
 
     [BindProperty]
-    public bool Email { get; set; }
-
-    [BindProperty]
-    public bool Telephone { get; set; }
-
-    [BindProperty]
-    public bool Textphone { get; set; }
-
-    [BindProperty]
-    public bool Letter { get; set; }
+    public bool[] ContactMethods { get; set; } = new bool[(int)ContactMethod.Last+1];
 
     public ContactDetailsModel(IConnectionRequestDistributedCache connectionRequestCache) : base(connectionRequestCache)
     {
@@ -29,47 +19,19 @@ public class ContactDetailsModel : ProfessionalReferralModel
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
         FullName = model.FamilyContactFullName;
-        Email = model.EmailSelected;
-        Telephone = model.TelephoneSelected;
-        Textphone = model.TextphoneSelected;
-        Letter = model.LetterSelected;
+        ContactMethods = model.ContactMethodsSelected;
     }
 
     protected override string? OnPostWithModel(ConnectionRequestModel model)
     {
-        if (!(ModelState.IsValid && (Email || Telephone || Textphone || Letter)))
+        if (!(ModelState.IsValid && ContactMethods.Any(m => m)))
         {
             ValidationValid = false;
             return null;
         }
-        
-        model.EmailSelected = Email;
-        model.TelephoneSelected = Telephone;
-        model.TextphoneSelected = Textphone;
-        model.LetterSelected = Letter;
 
-        string destination;
-        if (model.EmailSelected)
-        {
-            destination = "Email";
-        }
-        else if (model.TelephoneSelected) 
-        {
-            destination = "Telephone";
-        }
-        else if (model.TextphoneSelected)
-        {
-            destination = "Textphone";
-        }
-        else if (model.LetterSelected)
-        {
-            destination = "Letter";
-        }
-        else
-        {
-            throw new InvalidOperationException("No contact method selected");
-        }
+        model.ContactMethodsSelected = ContactMethods;
 
-        return $"/ProfessionalReferral/{destination}";
+        return FirstContactMethodPage(model.ContactMethodsSelected);
     }
 }

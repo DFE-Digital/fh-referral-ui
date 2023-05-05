@@ -31,10 +31,10 @@ public class WhenUsingWhySupport
     public async Task ThenOnGetWhySupport()
     {
         //Act
-        await _whySupportModel.OnGetAsync("1");
+        await _whySupportModel.OnGetAsync("1", "Service Name");
 
-        _whySupportModel.ServiceId.Should().Be(_connectionRequestModel.ServiceId);
-        _whySupportModel.ServiceName.Should().Be(_connectionRequestModel.ServiceName);
+        _whySupportModel.ServiceId.Should().Be("1");
+        _whySupportModel.ServiceName.Should().Be("Service Name");
         _whySupportModel.TextAreaValue.Should().Be(_connectionRequestModel.Reason);
     }
 
@@ -44,7 +44,7 @@ public class WhenUsingWhySupport
         _whySupportModel.TextAreaValue = "New Reason For Support";
 
         //Act
-        var result = await _whySupportModel.OnPostAsync() as RedirectToPageResult;
+        var result = await _whySupportModel.OnPostAsync("1", "Service Name") as RedirectToPageResult;
 
         //todo: check new content
         _mockConnectionRequestDistributedCache
@@ -66,7 +66,7 @@ public class WhenUsingWhySupport
         _whySupportModel.TextAreaValue = value;
 
         //Act
-        await _whySupportModel.OnPostAsync();
+        await _whySupportModel.OnPostAsync("1", "Service Name");
 
         _whySupportModel.TextAreaValidation.Should().Be(textAreaValidation);
     }

@@ -7,7 +7,7 @@ using FamilyHubs.Referral.Web.Models;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class TelephoneModel : ProfessionalReferralSessionModel, ISingleTelephoneTextboxPageModel
+public class TextModel : ProfessionalReferralSessionModel, ISingleTelephoneTextboxPageModel
 {
     public string HeadingText { get; set; } = "";
     public string? HintText { get; set; }
@@ -20,16 +20,16 @@ public class TelephoneModel : ProfessionalReferralSessionModel, ISingleTelephone
     [BindProperty]
     public string? TextBoxValue { get; set; }
 
-    public TelephoneModel(IConnectionRequestDistributedCache connectionRequestCache)
+    public TextModel(IConnectionRequestDistributedCache connectionRequestCache)
         : base(connectionRequestCache)
     {
     }
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        if (!string.IsNullOrEmpty(model.TelephoneNumber))
+        if (!string.IsNullOrEmpty(model.TextphoneNumber))
         {
-            TextBoxValue = model.TelephoneNumber;
+            TextBoxValue = model.TextphoneNumber;
         }
 
         SetPageProperties(model);
@@ -46,14 +46,14 @@ public class TelephoneModel : ProfessionalReferralSessionModel, ISingleTelephone
             return null;
         }
 
-        model.TelephoneNumber = TextBoxValue;
+        model.TextphoneNumber = TextBoxValue;
 
-        return NextPage(ContactMethod.Telephone, model.ContactMethodsSelected);
+        return NextPage(ContactMethod.Textphone, model.ContactMethodsSelected);
     }
 
     private void SetPageProperties(ConnectionRequestModel model)
     {
-        HeadingText = $"What telephone number should the service use to call {model.FamilyContactFullName}?";
-        BackUrl = PreviousPage(ContactMethod.Telephone, model.ContactMethodsSelected);
+        HeadingText = $"What telephone number should the service use to text {model.FamilyContactFullName}?";
+        BackUrl = PreviousPage(ContactMethod.Textphone, model.ContactMethodsSelected);
     }
 }

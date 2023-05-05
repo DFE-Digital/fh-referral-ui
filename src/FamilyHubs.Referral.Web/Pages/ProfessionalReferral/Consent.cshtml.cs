@@ -1,28 +1,22 @@
+using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class ConsentModel : PageModel
+public class ConsentModel : ProfessionalReferralModel
 { 
-    [BindProperty]
-    public string? ServiceId { get; set; }
-    [BindProperty]
-    public string? ServiceName { get; set; }
-
     [BindProperty]
     public string? Consent { get; set; }
 
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public void OnGet(string serviceId, string serviceName)
+    protected override Task<IActionResult> OnSafePostAsync()
     {
-        ServiceId = serviceId;
-        ServiceName = serviceName;
+        return Task.FromResult(OnSafePost());
     }
 
-    public IActionResult OnPost(string serviceId, string serviceName)
+    private IActionResult OnSafePost()
     {
         if (!ModelState.IsValid || Consent == null)
         {
@@ -32,11 +26,7 @@ public class ConsentModel : PageModel
 
         if (string.Compare(Consent, "yes", StringComparison.OrdinalIgnoreCase) == 0)
         {
-            return RedirectToPage("/ProfessionalReferral/SupportDetails", new
-            {
-                serviceId,
-                serviceName
-            });
+            return RedirectToProfessionalReferralPage("SupportDetails");
         }
 
         return RedirectToPage("/ProfessionalReferral/ConsentShutter");

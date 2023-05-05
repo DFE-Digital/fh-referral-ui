@@ -1,67 +1,50 @@
-﻿using FamilyHubs.Referral.Core.DistributedCache;
-using FamilyHubs.Referral.Core.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
-public abstract class ProfessionalReferralModel : PageModel
+public class ProfessionalReferralModel : PageModel
 {
-    [BindProperty]
     public string? ServiceId { get; set; }
-
-    [BindProperty]
     public string? ServiceName { get; set; }
 
-    protected readonly IConnectionRequestDistributedCache ConnectionRequestCache;
-
-    protected ProfessionalReferralModel(IConnectionRequestDistributedCache connectionRequestCache)
+    protected virtual Task<IActionResult> OnSafeGetAsync()
     {
-        ConnectionRequestCache = connectionRequestCache;
+        return Task.FromResult((IActionResult)Page());
     }
 
-    protected abstract void OnGetWithModel(ConnectionRequestModel model);
-    protected abstract string? OnPostWithModel(ConnectionRequestModel model);
-
-    public async Task<IActionResult> OnGetAsync(string serviceId)
+    protected virtual Task<IActionResult> OnSafePostAsync()
     {
-        var model = await ConnectionRequestCache.GetAsync();
-        if (model == null)
-        {
-            // session has expired and we don't have a model to work with
-            // likely the user has come back to this page after a long time
-            // send them back to the start of the journey
-            return RedirectToPage("/ProfessionalReferral/LocalOfferDetail", new { serviceId });
-        }
-
-        ServiceId = model.ServiceId;
-        ServiceName = model.ServiceName;
-
-        OnGetWithModel(model);
-
-        return Page();
+        return Task.FromResult((IActionResult)Page());
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnGetAsync(string serviceId, string serviceName)
     {
-        var model = await ConnectionRequestCache.GetAsync();
-        if (model == null)
+        if (serviceId == null || serviceName == null)
         {
-            // session has expired and we don't have a model to work with
-            // likely the user has come back to this page after a long time
-            // send them back to the start of the journey
-            return RedirectToPage("/ProfessionalReferral/LocalOfferDetail", new { ServiceId });
+            // someone's been monkeying with the query string and we don't have the service details we need
+            // we can't send them back to the start of the journey because we don't know what service they were looking at
+            // so we'll just send them to the home page
+            return RedirectToPage("/Index");
         }
 
-        string? nextPage = OnPostWithModel(model);
-        if (nextPage == null)
-        {
-            return Page();
-        }
+        ServiceId = serviceId;
+        ServiceName = serviceName;
 
-        await ConnectionRequestCache.SetAsync(model);
+        return await OnSafeGetAsync();
+    }
 
-        return RedirectToPage(nextPage, new
+    public async Task<IActionResult> OnPostAsync(string serviceId, string serviceName)
+    {
+        ServiceId = serviceId;
+        ServiceName = serviceName;
+
+        return await OnSafePostAsync();
+    }
+
+    protected IActionResult RedirectToProfessionalReferralPage(string page)
+    {
+        return RedirectToPage($"/ProfessionalReferral/{page}", new
         {
             ServiceId,
             ServiceName

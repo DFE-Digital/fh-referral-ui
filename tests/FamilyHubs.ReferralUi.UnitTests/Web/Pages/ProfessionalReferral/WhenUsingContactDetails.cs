@@ -1,4 +1,5 @@
-﻿using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
+﻿using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,37 +23,37 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
     [InlineData(true, true, true, true)]
     public async Task ThenCheckboxesShouldMatchRetrievedModel(bool email, bool telephone, bool textphone, bool letter)
     {
-        ConnectionRequestModel.EmailSelected = email;
-        ConnectionRequestModel.TelephoneSelected = telephone;
-        ConnectionRequestModel.TextphoneSelected = textphone;
-        ConnectionRequestModel.LetterSelected = letter;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Email] = email;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Telephone] = telephone;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Textphone] = textphone;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Letter] = letter;
 
         //Act
-        await _contactDetailsModel.OnGetAsync("1");
+        await _contactDetailsModel.OnGetAsync("1", "Service Name");
 
-        _contactDetailsModel.Email.Should().Be(email);
-        _contactDetailsModel.Telephone.Should().Be(telephone);
-        _contactDetailsModel.Textphone.Should().Be(textphone);
-        _contactDetailsModel.Letter.Should().Be(letter);
+        _contactDetailsModel.ContactMethods[(int)ContactMethod.Email].Should().Be(email);
+        _contactDetailsModel.ContactMethods[(int)ContactMethod.Telephone].Should().Be(telephone);
+        _contactDetailsModel.ContactMethods[(int)ContactMethod.Textphone].Should().Be(textphone);
+        _contactDetailsModel.ContactMethods[(int)ContactMethod.Letter].Should().Be(letter);
     }
 
     [Theory]
     [InlineData("/ProfessionalReferral/Email", true, false, false, false)]
     [InlineData("/ProfessionalReferral/Telephone", false, true, false, false)]
-    [InlineData("/ProfessionalReferral/Textphone", false, false, true, false)]
+    [InlineData("/ProfessionalReferral/Text", false, false, true, false)]
     [InlineData("/ProfessionalReferral/Letter", false, false, false, true)]
     [InlineData("/ProfessionalReferral/Email", true, true, true, true)]
     [InlineData("/ProfessionalReferral/Telephone", false, true, true, true)]
-    [InlineData("/ProfessionalReferral/Textphone", false, false, true, true)]
+    [InlineData("/ProfessionalReferral/Text", false, false, true, true)]
     public async Task ThenOnPostSupportDetails(string expectedNextPage, bool email, bool telephone, bool textphone, bool letter)
     {
-        _contactDetailsModel.Email = email;
-        _contactDetailsModel.Telephone = telephone;
-        _contactDetailsModel.Textphone = textphone;
-        _contactDetailsModel.Letter = letter;
+        _contactDetailsModel.ContactMethods[(int)ContactMethod.Email] = email;
+        _contactDetailsModel.ContactMethods[(int)ContactMethod.Telephone] = telephone;
+        _contactDetailsModel.ContactMethods[(int)ContactMethod.Textphone] = textphone;
+        _contactDetailsModel.ContactMethods[(int)ContactMethod.Letter] = letter;
 
         //Act
-        var result = await _contactDetailsModel.OnPostAsync() as RedirectToPageResult;
+        var result = await _contactDetailsModel.OnPostAsync("1", "Service Name") as RedirectToPageResult;
 
         result.Should().NotBeNull();
         result!.PageName.Should().Be(expectedNextPage);
@@ -62,7 +63,7 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
     public async Task ThenOnPostWithValidationError()
     {
         //Act
-        var result = await _contactDetailsModel.OnPostAsync() as RedirectToPageResult;
+        var result = await _contactDetailsModel.OnPostAsync("1", "Service Name") as RedirectToPageResult;
 
         //Assert
         _contactDetailsModel.ValidationValid.Should().BeFalse();

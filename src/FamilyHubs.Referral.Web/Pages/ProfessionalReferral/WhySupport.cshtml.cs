@@ -12,7 +12,7 @@ public enum TextAreaValidation
     TooLong
 }
 
-public class WhySupportModel : ProfessionalReferralModel
+public class WhySupportModel : ProfessionalReferralSessionModel
 {
     [BindProperty]
     public string? TextAreaValue { get; set; }
@@ -46,7 +46,6 @@ public class WhySupportModel : ProfessionalReferralModel
 
         model.Reason = TextAreaValue;
 
-        //todo: make these refactor friendly
-        return "/ProfessionalReferral/ContactDetails";
+        return "ContactDetails";
     }
 }

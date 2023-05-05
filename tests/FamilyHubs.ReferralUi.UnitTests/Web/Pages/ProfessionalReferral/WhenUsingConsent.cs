@@ -13,10 +13,10 @@ public class WhenUsingConsent
         _consentModel = new ConsentModel();
     }
     [Fact]
-    public void ThenOnGetConsent()
+    public async Task ThenOnGetConsent()
     {
         //Act
-        _consentModel.OnGet("Id", "Name");
+        await _consentModel.OnGetAsync("Id", "Name");
 
         //Assert
         _consentModel.ServiceId.Should().Be("Id");
@@ -24,13 +24,13 @@ public class WhenUsingConsent
     }
 
     [Fact]
-    public void ThenOnGetConsent_With_IsConsentGiven_NotSelected()
+    public async Task ThenOnGetConsent_With_IsConsentGiven_NotSelected()
     {
         //Arrange
         _consentModel.Consent = default!;
 
         //Act
-        _consentModel.OnPost("Id", "ServiceName");
+        await _consentModel.OnPostAsync("Id", "ServiceName");
 
         //Assert
         _consentModel.ValidationValid.Should().BeFalse();
@@ -39,17 +39,16 @@ public class WhenUsingConsent
     [Theory]
     [InlineData("yes", "/ProfessionalReferral/SupportDetails")]
     [InlineData("no", "/ProfessionalReferral/ConsentShutter")]
-    public void ThenOnGetConsent_With_IsImmediateHarm_Selected(string isConsentGiven, string pageName)
+    public async Task ThenOnGetConsent_With_IsImmediateHarm_Selected(string isConsentGiven, string pageName)
     {
         //Arrange
         _consentModel.Consent = isConsentGiven;
 
         //Act
-        var result = _consentModel.OnPost("Id", "ServiceName") as RedirectToPageResult;
+        var result = await _consentModel.OnPostAsync("Id", "ServiceName") as RedirectToPageResult;
 
         //Assert
         ArgumentNullException.ThrowIfNull(result);
         result.PageName.Should().Be(pageName);
     }
-
 }

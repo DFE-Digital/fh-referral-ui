@@ -7,13 +7,12 @@ using FamilyHubs.Referral.Web.Models;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageModel
+public class EmailModel : ProfessionalReferralSessionModel, ISingleEmailTextboxPageModel
 {
     public string HeadingText { get; set; } = "";
     public string? HintText { get; set; }
     public string TextBoxLabel { get; set; } = "Email address";
     public string ErrorText { get; set; } = "Enter an email address in the correct format, like name@example.com";
-    public bool ValidationValid { get; set; } = true;
 
     [Required]
     [EmailAddress]
@@ -47,26 +46,7 @@ public class EmailModel : ProfessionalReferralModel, ISingleEmailTextboxPageMode
 
         model.EmailAddress = TextBoxValue;
 
-        string destination;
-        if (model.TelephoneSelected)
-        {
-            //todo: const or route helper
-            destination = "Telephone";
-        }
-        else if (model.TextphoneSelected)
-        {
-            destination = "Textphone";
-        }
-        else if (model.LetterSelected)
-        {
-            destination = "Letter";
-        }
-        else
-        {
-            destination = "ContactMethod";
-        }
-
-        return $"/ProfessionalReferral/{destination}";
+        return NextPage(ContactMethod.Email, model.ContactMethodsSelected);
     }
 
     private void SetPageProperties(ConnectionRequestModel model)

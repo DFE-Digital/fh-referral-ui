@@ -1,4 +1,5 @@
-﻿using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
+﻿using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
     public async Task ThenOnGetEmail()
     {
         //Arrange and Act
-        await _emailModel.OnGetAsync("1");
+        await _emailModel.OnGetAsync("1", "Service Name");
 
         //Assert
         _emailModel.TextBoxValue.Should().Be(EmailAddress);
@@ -25,21 +26,21 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
 
     [Theory]
     [InlineData("/ProfessionalReferral/Telephone", true, false, false)]
-    [InlineData("/ProfessionalReferral/Textphone", false, true, false)]
+    [InlineData("/ProfessionalReferral/Text", false, true, false)]
     [InlineData("/ProfessionalReferral/Letter", false, false, true)]
     [InlineData("/ProfessionalReferral/Telephone", true, true, true)]
-    [InlineData("/ProfessionalReferral/Textphone", false, true, true)]
-    [InlineData("/ProfessionalReferral/ContactMethod", false, false, false)]
+    [InlineData("/ProfessionalReferral/Text", false, true, true)]
+    [InlineData("/ProfessionalReferral/ContactMethods", false, false, false)]
     public async Task ThenOnPostEmail(string expectedNextPage, bool telephone, bool textphone, bool letter)
     {
-        ConnectionRequestModel.TelephoneSelected = telephone;
-        ConnectionRequestModel.TextphoneSelected = textphone;
-        ConnectionRequestModel.LetterSelected = letter;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Telephone] = telephone;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Textphone] = textphone;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Letter] = letter;
 
         _emailModel.TextBoxValue = "someone@email.com";
 
         //Act
-        var result = await _emailModel.OnPostAsync() as RedirectToPageResult;
+        var result = await _emailModel.OnPostAsync("1", "Service Name") as RedirectToPageResult;
 
         result.Should().NotBeNull();
         result!.PageName.Should().Be(expectedNextPage);
@@ -51,7 +52,7 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
         _emailModel.ModelState.AddModelError("key", "message");
 
         //Act
-        await _emailModel.OnPostAsync();
+        await _emailModel.OnPostAsync("1", "Service Name");
 
         _emailModel.ValidationValid.Should().BeFalse();
     }
