@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
-//todo: rename the 2 base classes
 //todo: make other base class derive from this one?
-public class ProfessionalReferralNoSessionModel : PageModel
+public class ProfessionalReferralModel : PageModel
 {
     public string? ServiceId { get; set; }
     public string? ServiceName { get; set; }

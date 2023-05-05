@@ -10,7 +10,7 @@ public class WhenUsingSafeguardingModel
     public async Task ThenOnGetSetsIdAndName()
     {
         //Arrange
-        var safeguardingModel = new ProfessionalReferralNoSessionModel();
+        var safeguardingModel = new ProfessionalReferralModel();
 
         //Act
         await safeguardingModel.OnGetAsync("Id", "Name");

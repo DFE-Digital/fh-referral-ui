@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class SupportDetailsModel : ProfessionalReferralNoSessionModel, ISingleTextboxPageModel
+public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPageModel
 {
     private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
 

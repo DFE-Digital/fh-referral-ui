@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class ConsentModel : ProfessionalReferralNoSessionModel
+public class ConsentModel : ProfessionalReferralModel
 { 
     [BindProperty]
     public string? Consent { get; set; }
