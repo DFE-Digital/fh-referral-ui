@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
+using FamilyHubs.Referral.Web.Pages.Shared;
 using FluentAssertions;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
@@ -9,7 +10,7 @@ public class WhenUsingSafeguardingModel
     public async Task ThenOnGetSetsIdAndName()
     {
         //Arrange
-        SafeguardingModel safeguardingModel = new SafeguardingModel();
+        var safeguardingModel = new ProfessionalReferralNoSessionModel();
 
         //Act
         await safeguardingModel.OnGetAsync("Id", "Name");
