@@ -43,7 +43,7 @@ public class SupportDetailsModel : ProfessionalReferralNoSessionModel, ISingleTe
         return Page();
     }
 
-    protected override async Task<IActionResult> OnSafePostAsync(string serviceId, string serviceName)
+    public async Task<IActionResult> OnPostAsync(string serviceId, string serviceName)
     {
         if (!ModelState.IsValid)
         {

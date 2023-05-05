@@ -30,16 +30,4 @@ public class ProfessionalReferralNoSessionModel : PageModel
 
         return await OnSafeGetAsync(serviceId, serviceName);
     }
-
-    //todo: better name
-    //todo: don't actually need these
-    protected virtual Task<IActionResult> OnSafePostAsync(string serviceId, string serviceName)
-    {
-        return Task.FromResult((IActionResult)Page());
-    }
-
-    public async Task<IActionResult> OnPostAsync(string serviceId, string serviceName)
-    {
-        return await OnSafePostAsync(serviceId, serviceName);
-    }
 }

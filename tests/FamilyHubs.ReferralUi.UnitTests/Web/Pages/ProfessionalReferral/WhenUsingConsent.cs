@@ -24,13 +24,13 @@ public class WhenUsingConsent
     }
 
     [Fact]
-    public async Task ThenOnGetConsent_With_IsConsentGiven_NotSelected()
+    public void ThenOnGetConsent_With_IsConsentGiven_NotSelected()
     {
         //Arrange
         _consentModel.Consent = default!;
 
         //Act
-        await _consentModel.OnPostAsync("Id", "ServiceName");
+        _consentModel.OnPost("Id", "ServiceName");
 
         //Assert
         _consentModel.ValidationValid.Should().BeFalse();
@@ -39,13 +39,13 @@ public class WhenUsingConsent
     [Theory]
     [InlineData("yes", "/ProfessionalReferral/SupportDetails")]
     [InlineData("no", "/ProfessionalReferral/ConsentShutter")]
-    public async Task ThenOnGetConsent_With_IsImmediateHarm_Selected(string isConsentGiven, string pageName)
+    public void ThenOnGetConsent_With_IsImmediateHarm_Selected(string isConsentGiven, string pageName)
     {
         //Arrange
         _consentModel.Consent = isConsentGiven;
 
         //Act
-        var result = await _consentModel.OnPostAsync("Id", "ServiceName") as RedirectToPageResult;
+        var result = _consentModel.OnPost("Id", "ServiceName") as RedirectToPageResult;
 
         //Assert
         ArgumentNullException.ThrowIfNull(result);

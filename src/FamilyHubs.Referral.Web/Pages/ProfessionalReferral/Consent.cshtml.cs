@@ -11,12 +11,7 @@ public class ConsentModel : ProfessionalReferralNoSessionModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    protected override Task<IActionResult> OnSafePostAsync(string serviceId, string serviceName)
-    {
-        return Task.FromResult(OnSafePost(serviceId, serviceName));
-    }
-
-    protected IActionResult OnSafePost(string serviceId, string serviceName)
+    public IActionResult OnPost(string serviceId, string serviceName)
     {
         if (!ModelState.IsValid || Consent == null)
         {
