@@ -1,4 +1,77 @@
 ﻿@page
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.LetterModel
 @{
+    ViewData["Title"] = Model.HeadingText;
 }
+
+@section Back {
+    <a asp-page="@Model.BackUrl" asp-route-serviceId="@Model.ServiceId" asp-route-serviceName="@Model.ServiceName" class="govuk-back-link">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        @if (!Model.ValidationValid) //todo: will need individual valids
+        {
+            <div class="govuk-error-summary" data-module="govuk-error-summary">
+                <div role="alert">
+                    <h2 class="govuk-error-summary__title">
+                        There is a problem
+                    </h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            @*todo:foreach*@
+@*                            <li>
+                                <a href="#textbox" data-testid="summary-error">@Model.ErrorText</a>
+                            </li>*@
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <form method="post" novalidate>
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-fieldset__heading">
+                        @Model.HeadingText
+                    </h1>
+                </legend>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="address-line-1">
+                        Address line 1
+                    </label>
+                    <input asp-for="AddressLine1" class="govuk-input" id="address-line-1" type="text" autocomplete="off">
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="address-line-2">
+                        Address line 2 (optional)
+                    </label>
+                    <input asp-for="AddressLine2" class="govuk-input" id="address-line-2" type="text" autocomplete="off">
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="address-town">
+                        Town or city
+                    </label>
+                    <input asp-for="TownOrCity" class="govuk-input govuk-!-width-two-thirds" id="address-town" type="text" autocomplete="off">
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="address-county">
+                        County (optional)
+                    </label>
+                    <input asp-for="County" class="govuk-input govuk-!-width-two-thirds" id="address-county" type="text" autocomplete="off">
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="address-postcode">
+                        Postcode
+                    </label>
+                    <input asp-for="Postcode" class="govuk-input govuk-input--width-10" id="address-postcode" type="text" autocomplete="off">
+                </div>
+            </fieldset>
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Continue
+            </button>
+        </form>
+
+    </div>
+</div>
