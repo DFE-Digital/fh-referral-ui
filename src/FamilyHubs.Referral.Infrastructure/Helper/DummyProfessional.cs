@@ -11,8 +11,8 @@ public static class DummyProfessional
     {
         var authClaims = new List<Claim>
         {
-                    new Claim("FirstName", "123"),
-                    new Claim("LastName", "123"),
+                    new Claim("FirstName", "Joe"),
+                    new Claim("LastName", "Professional"),
                     new Claim(ClaimTypes.Email, "Joe.Professional@email.com"),
                     new Claim("PhoneNumber", "0122 865 278"),
                     new Claim(ClaimTypes.Role, "Professional"),
