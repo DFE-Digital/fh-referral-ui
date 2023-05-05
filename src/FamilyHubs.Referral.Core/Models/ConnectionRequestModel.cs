@@ -20,4 +20,9 @@ public class ConnectionRequestModel
     public string? EmailAddress { get; set; }
     public string? TelephoneNumber { get; set; }
     public string? TextphoneNumber { get; set; }
+    public string? AddressLine1 { get; set; }
+    public string? AddressLine2 { get; set; }
+    public string? TownOrCity { get; set; }
+    public string? County { get; set; }
+    public string? Postcode { get; set; }
 }
