@@ -26,11 +26,11 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
 
     [Theory]
     [InlineData("/ProfessionalReferral/Telephone", true, false, false)]
-    [InlineData("/ProfessionalReferral/Textphone", false, true, false)]
+    [InlineData("/ProfessionalReferral/Text", false, true, false)]
     [InlineData("/ProfessionalReferral/Letter", false, false, true)]
     [InlineData("/ProfessionalReferral/Telephone", true, true, true)]
-    [InlineData("/ProfessionalReferral/Textphone", false, true, true)]
-    [InlineData("/ProfessionalReferral/ContactMethod", false, false, false)]
+    [InlineData("/ProfessionalReferral/Text", false, true, true)]
+    [InlineData("/ProfessionalReferral/ContactMethods", false, false, false)]
     public async Task ThenOnPostEmail(string expectedNextPage, bool telephone, bool textphone, bool letter)
     {
         ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Telephone] = telephone;
