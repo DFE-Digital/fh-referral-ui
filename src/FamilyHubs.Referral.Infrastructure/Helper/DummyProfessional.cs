@@ -11,13 +11,13 @@ public static class DummyProfessional
     {
         var authClaims = new List<Claim>
         {
-                    new Claim("Joe Professional", "123"),
+                    new Claim("FirstName", "123"),
+                    new Claim("LastName", "123"),
                     new Claim(ClaimTypes.Email, "Joe.Professional@email.com"),
-                    new Claim(ClaimTypes.HomePhone, "0122 865 278"),
-                    new Claim(ClaimTypes.Name, "Joe Professional"),
+                    new Claim("PhoneNumber", "0122 865 278"),
                     new Claim(ClaimTypes.Role, "Professional"),
                     new Claim("Team", "Social work team"),
-                    new Claim("OpenReferralOrganisationId", "1"),
+                    new Claim("OrganisationId", "1"),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
         JwtSecurityToken tokenItem = CreateToken(authClaims);
@@ -38,5 +38,16 @@ public static class DummyProfessional
             );
 
         return token;
+    }
+
+    public static List<Claim> GetClaimsFromToken(string? token = null)
+    {
+        if (token == null) 
+        {
+            token = GetProfessionalUserToken();
+        }
+        var handler = new JwtSecurityTokenHandler();
+        var jwtSecurityToken = handler.ReadJwtToken(token);
+        return jwtSecurityToken.Claims.ToList();
     }
 }

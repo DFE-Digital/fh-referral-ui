@@ -24,7 +24,6 @@
   <ItemGroup>
     <PackageReference Include="Enums.NET" Version="4.0.1" />
     <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="2.0.4" />
-    <PackageReference Include="FamilyHubs.SharedKernel" Version="2.0.1" />
     <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="1.0.34-alpha" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
@@ -49,7 +48,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\FamilyHubs.Referral.Core\FamilyHubs.Referral.Core.csproj" />
 	  <ProjectReference Include="..\FamilyHubs.Referral.Infrastructure\FamilyHubs.Referral.Infrastructure.csproj" />
 	</ItemGroup>
 

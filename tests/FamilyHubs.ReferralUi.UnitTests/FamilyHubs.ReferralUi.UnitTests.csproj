@@ -24,8 +24,6 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\FamilyHubs.Referral.Core\FamilyHubs.Referral.Core.csproj" />
-    <ProjectReference Include="..\..\src\FamilyHubs.Referral.Infrastructure\FamilyHubs.Referral.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\FamilyHubs.Referral.Web\FamilyHubs.Referral.Web.csproj" />
   </ItemGroup>
 
