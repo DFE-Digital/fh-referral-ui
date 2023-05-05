@@ -6,13 +6,13 @@ namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 public class WhenUsingSafeguardingModel
 {
     [Fact]
-    public void ThenOnGetSetsIdAndName()
+    public async Task ThenOnGetSetsIdAndName()
     {
         //Arrange
         SafeguardingModel safeguardingModel = new SafeguardingModel();
 
         //Act
-        safeguardingModel.OnGet("Id", "Name");
+        await safeguardingModel.OnGetAsync("Id", "Name");
 
         //Assert
         safeguardingModel.ServiceId.Should().Be("Id");

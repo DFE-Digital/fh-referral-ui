@@ -1,16 +1,8 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using FamilyHubs.Referral.Web.Pages.Shared;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-//todo: we have to handle missing serviceId and serviceName better through the journey
-public class SafeguardingModel : PageModel
+//todo: just use base directly?
+public class SafeguardingModel : ProfessionalReferralNoSessionModel
 {
-    public string? ServiceId { get; set; }
-    public string? ServiceName { get; set; }
-
-    public void OnGet(string serviceId, string serviceName)
-    {
-        ServiceId = serviceId;
-        ServiceName = serviceName;
-    }
 }

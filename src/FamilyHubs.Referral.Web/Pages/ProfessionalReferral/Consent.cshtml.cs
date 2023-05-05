@@ -1,28 +1,22 @@
+using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class ConsentModel : PageModel
+public class ConsentModel : ProfessionalReferralNoSessionModel
 { 
-    [BindProperty]
-    public string? ServiceId { get; set; }
-    [BindProperty]
-    public string? ServiceName { get; set; }
-
     [BindProperty]
     public string? Consent { get; set; }
 
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public void OnGet(string serviceId, string serviceName)
+    protected override Task<IActionResult> OnSafePostAsync(string serviceId, string serviceName)
     {
-        ServiceId = serviceId;
-        ServiceName = serviceName;
+        return Task.FromResult(OnSafePost(serviceId, serviceName));
     }
 
-    public IActionResult OnPost(string serviceId, string serviceName)
+    protected IActionResult OnSafePost(string serviceId, string serviceName)
     {
         if (!ModelState.IsValid || Consent == null)
         {

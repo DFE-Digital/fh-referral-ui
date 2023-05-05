@@ -3,16 +3,14 @@ using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Helper;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Models;
+using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class SupportDetailsModel : PageModel, ISingleTextboxPageModel
+public class SupportDetailsModel : ProfessionalReferralNoSessionModel, ISingleTextboxPageModel
 {
     private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
-    public string? ServiceId { get; set; }
-    public string? ServiceName { get; set; }
 
     public string HeadingText { get; set; } = "Who should the service contact in the family?";
     public string? HintText { get; set; } = "This must be a person aged 16 or over.";
@@ -29,14 +27,11 @@ public class SupportDetailsModel : PageModel, ISingleTextboxPageModel
         _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }
 
-    public async Task OnGetAsync(string serviceId, string serviceName)
+    protected override async Task<IActionResult> OnSafeGetAsync(string serviceId, string serviceName)
     {
         //todo:
         //Fixes Session Changing between requests 
         HttpContext.Session.Set("What", new byte[] { 1, 2, 3, 4, 5 });
-
-        ServiceId = serviceId;
-        ServiceName = serviceName;
 
         var model = await _connectionRequestDistributedCache.GetAsync();
 
@@ -44,9 +39,11 @@ public class SupportDetailsModel : PageModel, ISingleTextboxPageModel
         {
             TextBoxValue = model.FamilyContactFullName;
         }
+
+        return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync(string serviceId, string serviceName)
+    protected override async Task<IActionResult> OnSafePostAsync(string serviceId, string serviceName)
     {
         if (!ModelState.IsValid)
         {
