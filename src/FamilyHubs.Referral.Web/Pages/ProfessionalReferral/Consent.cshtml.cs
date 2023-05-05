@@ -11,7 +11,12 @@ public class ConsentModel : ProfessionalReferralModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
-    public IActionResult OnPost(string serviceId, string serviceName)
+    protected override Task<IActionResult> OnSafePostAsync()
+    {
+        return Task.FromResult(OnSafePost());
+    }
+
+    private IActionResult OnSafePost()
     {
         if (!ModelState.IsValid || Consent == null)
         {
@@ -21,11 +26,7 @@ public class ConsentModel : ProfessionalReferralModel
 
         if (string.Compare(Consent, "yes", StringComparison.OrdinalIgnoreCase) == 0)
         {
-            return RedirectToPage("/ProfessionalReferral/SupportDetails", new
-            {
-                serviceId,
-                serviceName
-            });
+            return RedirectToProfessionalReferralPage("SupportDetails");
         }
 
         return RedirectToPage("/ProfessionalReferral/ConsentShutter");

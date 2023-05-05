@@ -46,7 +46,6 @@ public class WhySupportModel : ProfessionalReferralSessionModel
 
         model.Reason = TextAreaValue;
 
-        //todo: make these refactor friendly
-        return "/ProfessionalReferral/ContactDetails";
+        return "ContactDetails";
     }
 }

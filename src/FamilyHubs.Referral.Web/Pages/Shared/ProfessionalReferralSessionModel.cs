@@ -1,18 +1,12 @@
 ﻿using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
-public abstract class ProfessionalReferralSessionModel : PageModel
+//todo: once we start storing the model in the session, switch to storing the service id and name in the session, rather than the url?
+public abstract class ProfessionalReferralSessionModel : ProfessionalReferralModel
 {
-    [BindProperty]
-    public string? ServiceId { get; set; }
-
-    [BindProperty]
-    public string? ServiceName { get; set; }
-
     public bool ValidationValid { get; set; } = true;
 
     protected readonly IConnectionRequestDistributedCache ConnectionRequestCache;
@@ -25,7 +19,7 @@ public abstract class ProfessionalReferralSessionModel : PageModel
     protected abstract void OnGetWithModel(ConnectionRequestModel model);
     protected abstract string? OnPostWithModel(ConnectionRequestModel model);
 
-    public async Task<IActionResult> OnGetAsync(string serviceId)
+    protected override async Task<IActionResult> OnSafeGetAsync()
     {
         var model = await ConnectionRequestCache.GetAsync();
         if (model == null)
@@ -33,18 +27,16 @@ public abstract class ProfessionalReferralSessionModel : PageModel
             // session has expired and we don't have a model to work with
             // likely the user has come back to this page after a long time
             // send them back to the start of the journey
-            return RedirectToPage("/ProfessionalReferral/LocalOfferDetail", new { serviceId });
+            // not strictly a journey page, but still works
+            return RedirectToProfessionalReferralPage("LocalOfferDetail");
         }
-
-        ServiceId = model.ServiceId;
-        ServiceName = model.ServiceName;
 
         OnGetWithModel(model);
 
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    protected override async Task<IActionResult> OnSafePostAsync()
     {
         var model = await ConnectionRequestCache.GetAsync();
         if (model == null)
@@ -52,7 +44,7 @@ public abstract class ProfessionalReferralSessionModel : PageModel
             // session has expired and we don't have a model to work with
             // likely the user has come back to this page after a long time
             // send them back to the start of the journey
-            return RedirectToPage("/ProfessionalReferral/LocalOfferDetail", new { ServiceId });
+            return RedirectToProfessionalReferralPage("LocalOfferDetail");
         }
 
         string? nextPage = OnPostWithModel(model);
@@ -63,11 +55,7 @@ public abstract class ProfessionalReferralSessionModel : PageModel
 
         await ConnectionRequestCache.SetAsync(model);
 
-        return RedirectToPage(nextPage, new
-        {
-            ServiceId,
-            ServiceName
-        });
+        return RedirectToProfessionalReferralPage(nextPage);
     }
 
     private static string[] _connectJourneyPages =
@@ -95,7 +83,7 @@ public abstract class ProfessionalReferralSessionModel : PageModel
             }
         }
 
-        return $"/ProfessionalReferral/{_connectJourneyPages[(int)currentPage+1]}";
+        return _connectJourneyPages[(int)currentPage+1];
     }
 
     protected string PreviousPage(ContactMethod currentPage, bool[] contactMethodsSelected)
@@ -108,6 +96,6 @@ public abstract class ProfessionalReferralSessionModel : PageModel
             }
         }
 
-        return $"/ProfessionalReferral/{_connectJourneyPages[(int)currentPage + 1]}";
+        return _connectJourneyPages[(int)currentPage + 1];
     }
 }

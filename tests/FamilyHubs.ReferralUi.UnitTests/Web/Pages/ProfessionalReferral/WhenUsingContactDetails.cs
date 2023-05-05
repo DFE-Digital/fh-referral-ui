@@ -29,7 +29,7 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
         ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Letter] = letter;
 
         //Act
-        await _contactDetailsModel.OnGetAsync("1");
+        await _contactDetailsModel.OnGetAsync("1", "Service Name");
 
         _contactDetailsModel.ContactMethods[(int)ContactMethod.Email].Should().Be(email);
         _contactDetailsModel.ContactMethods[(int)ContactMethod.Telephone].Should().Be(telephone);
@@ -53,7 +53,7 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
         _contactDetailsModel.ContactMethods[(int)ContactMethod.Letter] = letter;
 
         //Act
-        var result = await _contactDetailsModel.OnPostAsync() as RedirectToPageResult;
+        var result = await _contactDetailsModel.OnPostAsync("1", "Service Name") as RedirectToPageResult;
 
         result.Should().NotBeNull();
         result!.PageName.Should().Be(expectedNextPage);
@@ -63,7 +63,7 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
     public async Task ThenOnPostWithValidationError()
     {
         //Act
-        var result = await _contactDetailsModel.OnPostAsync() as RedirectToPageResult;
+        var result = await _contactDetailsModel.OnPostAsync("1", "Service Name") as RedirectToPageResult;
 
         //Assert
         _contactDetailsModel.ValidationValid.Should().BeFalse();

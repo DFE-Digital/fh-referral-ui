@@ -3,13 +3,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
-//todo: make other base class derive from this one?
 public class ProfessionalReferralModel : PageModel
 {
     public string? ServiceId { get; set; }
     public string? ServiceName { get; set; }
 
-    protected virtual Task<IActionResult> OnSafeGetAsync(string serviceId, string serviceName)
+    protected virtual Task<IActionResult> OnSafeGetAsync()
+    {
+        return Task.FromResult((IActionResult)Page());
+    }
+
+    protected virtual Task<IActionResult> OnSafePostAsync()
     {
         return Task.FromResult((IActionResult)Page());
     }
@@ -27,6 +31,23 @@ public class ProfessionalReferralModel : PageModel
         ServiceId = serviceId;
         ServiceName = serviceName;
 
-        return await OnSafeGetAsync(serviceId, serviceName);
+        return await OnSafeGetAsync();
+    }
+
+    public async Task<IActionResult> OnPostAsync(string serviceId, string serviceName)
+    {
+        ServiceId = serviceId;
+        ServiceName = serviceName;
+
+        return await OnSafePostAsync();
+    }
+
+    protected IActionResult RedirectToProfessionalReferralPage(string page)
+    {
+        return RedirectToPage($"/ProfessionalReferral/{page}", new
+        {
+            ServiceId,
+            ServiceName
+        });
     }
 }

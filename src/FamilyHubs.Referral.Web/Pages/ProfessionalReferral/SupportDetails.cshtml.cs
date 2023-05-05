@@ -27,7 +27,7 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
         _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }
 
-    protected override async Task<IActionResult> OnSafeGetAsync(string serviceId, string serviceName)
+    protected override async Task<IActionResult> OnSafeGetAsync()
     {
         //todo:
         //Fixes Session Changing between requests 
@@ -43,7 +43,7 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync(string serviceId, string serviceName)
+    protected override async Task<IActionResult> OnSafePostAsync()
     {
         if (!ModelState.IsValid)
         {
@@ -59,17 +59,13 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
         var model = await _connectionRequestDistributedCache.GetAsync()
                     ?? new ConnectionRequestModel
                     {
-                        ServiceId = serviceId,
-                        ServiceName = serviceName
+                        ServiceId = ServiceId,
+                        ServiceName = ServiceName
                     };
 
         model.FamilyContactFullName = TextBoxValue;
         await _connectionRequestDistributedCache.SetAsync(model);
 
-        return RedirectToPage("/ProfessionalReferral/WhySupport",new
-        {
-            serviceId,
-            serviceName
-        });
+        return RedirectToProfessionalReferralPage("WhySupport");
     }
 }
