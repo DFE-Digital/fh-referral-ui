@@ -20,10 +20,15 @@
                     </h2>
                     <div class="govuk-error-summary__body">
                         <ul class="govuk-list govuk-error-summary__list">
-                            @*todo:foreach*@
-@*                            <li>
-                                <a href="#textbox" data-testid="summary-error">@Model.ErrorText</a>
-                            </li>*@
+                            @if (Model.Errors != null)
+                            {
+                                @foreach (var error in Model.Errors)
+                                {
+                                    <li>
+                                        <a href="#@error.Property" data-testid="summary-error">@error.ErrorMessage</a>
+                                    </li>
+                                }
+                            }
                         </ul>
                     </div>
                 </div>
@@ -38,34 +43,36 @@
                     </h1>
                 </legend>
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="address-line-1">
+                    @*                    <label class="govuk-label" for="@Html.NameFor(m => m.AddressLine1)">
+*@
+                    <label asp-for="AddressLine1" class="govuk-label">
                         Address line 1
                     </label>
-                    <input asp-for="AddressLine1" class="govuk-input" id="address-line-1" type="text" autocomplete="off">
+                    <input asp-for="AddressLine1" class="govuk-input" type="text" autocomplete="off">
                 </div>
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="address-line-2">
+                    <label asp-for="AddressLine2" class=" govuk-label">
                         Address line 2 (optional)
                     </label>
-                    <input asp-for="AddressLine2" class="govuk-input" id="address-line-2" type="text" autocomplete="off">
+                    <input asp-for="AddressLine2" class="govuk-input" type="text" autocomplete="off">
                 </div>
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="address-town">
+                    <label asp-for="TownOrCity" class="govuk-label">
                         Town or city
                     </label>
-                    <input asp-for="TownOrCity" class="govuk-input govuk-!-width-two-thirds" id="address-town" type="text" autocomplete="off">
+                    <input asp-for="TownOrCity" class="govuk-input govuk-!-width-two-thirds" type="text" autocomplete="off">
                 </div>
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="address-county">
+                    <label asp-for="County" class="govuk-label">
                         County (optional)
                     </label>
-                    <input asp-for="County" class="govuk-input govuk-!-width-two-thirds" id="address-county" type="text" autocomplete="off">
+                    <input asp-for="County" class="govuk-input govuk-!-width-two-thirds" type="text" autocomplete="off">
                 </div>
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="address-postcode">
+                    <label asp-for="Postcode" class="govuk-label">
                         Postcode
                     </label>
-                    <input asp-for="Postcode" class="govuk-input govuk-input--width-10" id="address-postcode" type="text" autocomplete="off">
+                    <input asp-for="Postcode" class="govuk-input govuk-input--width-10" type="text" autocomplete="off">
                 </div>
             </fieldset>
             <button type="submit" class="govuk-button" data-module="govuk-button">

@@ -3,6 +3,7 @@ using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -10,21 +11,30 @@ public class LetterModel : ProfessionalReferralSessionModel
 {
     //todo: consistency with nullable
     [BindProperty]
-    [Required]
+    [Required(ErrorMessage = "You must enter an address.")]
+    [Display(Order = 1)]
     public string? AddressLine1 { get; set; } = "";
+
     [BindProperty]
     public string? AddressLine2 { get; set; } = "";
+
     [BindProperty]
-    [Required]
+    [Required(ErrorMessage = "You must enter a town or city.")]
+    [Display(Order = 2)]
     public string? TownOrCity { get; set; } = "";
+
     [BindProperty]
     public string? County { get; set; } = "";
+
     [BindProperty]
-    [Required]
+    [Required(ErrorMessage = "Enter a real postcode.")]
+    [Display(Order = 3)]
     public string? Postcode { get; set; } = "";
 
     public string HeadingText { get; set; } = "";
     public string? BackUrl { get; set; }
+
+    public Error[]? Errors { get; set; }
 
     public LetterModel(IConnectionRequestDistributedCache connectionRequestCache)
         : base(connectionRequestCache)
@@ -42,10 +52,23 @@ public class LetterModel : ProfessionalReferralSessionModel
         SetPageProperties(model);
     }
 
+    // have partial for summary?
+    //todo: have valid bool?
+    public record Error(string Property, string ErrorMessage);
+
+    // the ordering of errors in the ModelState is not guaranteed
+    private IEnumerable<Error> GetErrors(params string[] propertyNames)
+    {
+        return propertyNames.Select(p => (propertyName: p, entry: ModelState[p]))
+            .Where(t => t.entry!.ValidationState == ModelValidationState.Invalid)
+            .Select(t => new Error(t.propertyName, t.entry!.Errors[0].ErrorMessage));
+    }
+
     protected override string? OnPostWithModel(ConnectionRequestModel model)
     {
         if (!ModelState.IsValid)
         {
+            Errors = GetErrors(nameof(AddressLine1), nameof(TownOrCity), nameof(Postcode)).ToArray();
             ValidationValid = false;
             SetPageProperties(model);
             return null;
