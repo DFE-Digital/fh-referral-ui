@@ -15,7 +15,7 @@ public class UKGdsPostcodeAttribute : ValidationAttribute
     // see, https://ideal-postcodes.co.uk/guides/postcode-validation
 
     // allows whitespace at the start, end and in the middle
-    private static Regex _simpleValidUkPostcodeRegex = new Regex(
+    private static readonly Regex _simpleValidUkPostcodeRegex = new(
         @"^\s*[a-z]{1,2}\d[a-z\d]?\s*\d[a-z]{2}\s*$",
         RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
@@ -23,8 +23,8 @@ public class UKGdsPostcodeAttribute : ValidationAttribute
     // 'punctuation like hyphens, brackets, dashes and full stops'
     // I personally think it's a bad idea, as e.g. someone might have accidentally pressed '.' instead of 'l' and we wouldn't catch that.
     // I've also never seen a postcode containing punctuation or a postcode validation that allows it, but hey ho.
-    private static Regex _gdsAllowableChars = new Regex(
-        @"[-\(\).]+", RegexOptions.Compiled);
+    private static readonly Regex GdsAllowableChars = new(
+        @"[-\(\)\.\[\]]+", RegexOptions.Compiled);
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
@@ -32,7 +32,7 @@ public class UKGdsPostcodeAttribute : ValidationAttribute
         {
             string postcode = (string)value;
 
-            postcode = _gdsAllowableChars.Replace(postcode, "");
+            postcode = GdsAllowableChars.Replace(postcode, "");
 
             if (!_simpleValidUkPostcodeRegex.IsMatch(postcode))
             {
@@ -45,6 +45,6 @@ public class UKGdsPostcodeAttribute : ValidationAttribute
 
     public static string SanitisedPostcode(string postcode)
     {
-        return _gdsAllowableChars.Replace(postcode.Trim().ToUpper(), "");
+        return GdsAllowableChars.Replace(postcode.Trim().ToUpper(), "");
     }
 }
