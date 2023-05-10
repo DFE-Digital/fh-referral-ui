@@ -1,19 +1,15 @@
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public enum TextAreaValidation
+public class WhySupportModel : ProfessionalReferralSessionModel, ITellTheServicePageModel
 {
-    Valid,
-    Empty,
-    TooLong
-}
+    public string DescriptionPartial => "/Pages/ProfessionalReferral/WhySupportContent.cshtml";
 
-public class WhySupportModel : ProfessionalReferralSessionModel
-{
     [BindProperty]
     public string? TextAreaValue { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
