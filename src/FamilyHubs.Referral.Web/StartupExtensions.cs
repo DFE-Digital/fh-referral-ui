@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
+using FamilyHubs.SharedKernel.GovLogin.AppStart;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -25,6 +26,10 @@ public static class StartupExtensions
             loggerConfiguration.WriteTo.Console(
                 parsed ? logLevel : LogEventLevel.Warning);
         });
+
+        // *****  REQUIRED SECTION START
+        builder.Services.AddAndConfigureGovUkAuthentication(builder.Configuration);
+        // *****  REQUIRED SECTION END
     }
 
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
@@ -105,6 +110,10 @@ public static class StartupExtensions
 
         //app.UseAuthentication();
         //app.UseAuthorization();
+
+        // *****  REQUIRED SECTION START
+        app.UseGovLoginAuthentication();
+        // *****  REQUIRED SECTION END
 
         app.MapRazorPages();
 
