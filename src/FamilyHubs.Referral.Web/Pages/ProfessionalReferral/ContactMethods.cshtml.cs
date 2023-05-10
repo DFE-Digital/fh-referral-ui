@@ -13,7 +13,9 @@ public class ContactMethodsModel : ProfessionalReferralSessionModel, ITellTheSer
     [BindProperty]
     public string? TextAreaValue { get; set; }
 
-    public TextAreaValidation TextAreaValidation { get; set; } = TextAreaValidation.Valid;
+    public string? TextAreaValidationErrorMessage { get; set; }
+
+    //public TextAreaValidation TextAreaValidation { get; set; } = TextAreaValidation.Valid;
 
     public string? BackUrl { get; set; }
 
@@ -36,14 +38,14 @@ public class ContactMethodsModel : ProfessionalReferralSessionModel, ITellTheSer
         if (string.IsNullOrEmpty(TextAreaValue))
         {
             SetPageProperties(model);
-            TextAreaValidation = TextAreaValidation.Empty;
+            TextAreaValidationErrorMessage = "Enter details about the family";
             return null;
         }
 
         if (TextAreaValue.Length > 500)
         {
             SetPageProperties(model);
-            TextAreaValidation = TextAreaValidation.TooLong;
+            TextAreaValidationErrorMessage = "How the service can engage with the family must be 500 characters or less";
             return null;
         }
 

@@ -1,8 +1,8 @@
-﻿namespace FamilyHubs.Referral.Web.Models;
+﻿//namespace FamilyHubs.Referral.Web.Models;
 
-public enum TextAreaValidation
-{
-    Valid,
-    Empty,
-    TooLong
-}
+//public enum TextAreaValidation
+//{
+//    Valid,
+//    Empty,
+//    TooLong
+//}

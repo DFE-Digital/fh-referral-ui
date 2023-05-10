@@ -9,11 +9,15 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class WhySupportModel : ProfessionalReferralSessionModel, ITellTheServicePageModel
 {
     public string DescriptionPartial => "/Pages/ProfessionalReferral/WhySupportContent.cshtml";
+    public string? TextAreaValidationErrorMessage { get; set; }
+
+    //public string TextAreaValidationTooLongErrorMessage => "Reason for the connection request must be 500 characters or less";
+    //public string TextAreaValidationEmptyErrorMessage => "Enter reason for the connection request";
 
     [BindProperty]
     public string? TextAreaValue { get; set; }
 
-    public TextAreaValidation TextAreaValidation { get; set; } = TextAreaValidation.Valid;
+    //public TextAreaValidation TextAreaValidation { get; set; } = TextAreaValidation.Valid;
 
     public WhySupportModel(IConnectionRequestDistributedCache connectionRequestCache)
         : base(connectionRequestCache)
@@ -30,13 +34,13 @@ public class WhySupportModel : ProfessionalReferralSessionModel, ITellTheService
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {
-            TextAreaValidation = TextAreaValidation.Empty;
+            TextAreaValidationErrorMessage = "Enter reason for the connection request";
             return null;
         }
 
         if (TextAreaValue.Length > 500)
         {
-            TextAreaValidation = TextAreaValidation.TooLong;
+            TextAreaValidationErrorMessage = "Reason for the connection request must be 500 characters or less";
             return null;
         }
 
