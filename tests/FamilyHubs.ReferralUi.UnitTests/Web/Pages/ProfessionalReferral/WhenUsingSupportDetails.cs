@@ -23,24 +23,20 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
         _supportDetailsModel.PageContext.HttpContext = httpContext;
 
         //Act
-        await _supportDetailsModel.OnGetAsync("Id", "Some Name With Spaces");
+        await _supportDetailsModel.OnGetAsync("Id");
 
         //Assert
         _supportDetailsModel.ServiceId.Should().Be("Id");
-        _supportDetailsModel.ServiceName.Should().Be("Some Name With Spaces");
-
     }
 
     [Fact]
     public async Task ThenOnPostSupportDetails()
     {
-        //Arrange
         _supportDetailsModel.TextBoxValue = "Joe Blogs";
 
         //Act
-        var result = await _supportDetailsModel.OnPostAsync("Id", "Some Name With Spaces") as RedirectToPageResult;
+        var result = await _supportDetailsModel.OnPostAsync("Id") as RedirectToPageResult;
 
-        //Assert
         ArgumentNullException.ThrowIfNull(result);
         result.PageName.Should().Be("/ProfessionalReferral/WhySupport");
     }
@@ -50,14 +46,12 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
     [InlineData(" ")]
     public async Task ThenOnPostSupportDetailsWithEmptyFullName(string value)
     {
-        //Arrange
         _supportDetailsModel.TextBoxValue = value;
         _supportDetailsModel.ModelState.AddModelError("FamilyContactFullName", "Enter a full name");
 
         //Act
-        await _supportDetailsModel.OnPostAsync("Id", "Some Name With Spaces");
+        await _supportDetailsModel.OnPostAsync("Id");
 
-        //Assert
         _supportDetailsModel.ValidationValid.Should().BeFalse();
     }
 }
