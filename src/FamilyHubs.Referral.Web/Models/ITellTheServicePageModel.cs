@@ -10,9 +10,4 @@ public interface ITellTheServicePageModel
     string? TextAreaValue { get; set; }
 
     string? TextAreaValidationErrorMessage { get; set; }
-
-    //TextAreaValidation TextAreaValidation { get; set; }
-
-    //string TextAreaValidationTooLongErrorMessage { get; }
-    //string TextAreaValidationEmptyErrorMessage { get; }
 }

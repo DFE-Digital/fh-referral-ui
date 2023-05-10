@@ -11,13 +11,8 @@ public class WhySupportModel : ProfessionalReferralSessionModel, ITellTheService
     public string DescriptionPartial => "/Pages/ProfessionalReferral/WhySupportContent.cshtml";
     public string? TextAreaValidationErrorMessage { get; set; }
 
-    //public string TextAreaValidationTooLongErrorMessage => "Reason for the connection request must be 500 characters or less";
-    //public string TextAreaValidationEmptyErrorMessage => "Enter reason for the connection request";
-
     [BindProperty]
     public string? TextAreaValue { get; set; }
-
-    //public TextAreaValidation TextAreaValidation { get; set; } = TextAreaValidation.Valid;
 
     public WhySupportModel(IConnectionRequestDistributedCache connectionRequestCache)
         : base(connectionRequestCache)

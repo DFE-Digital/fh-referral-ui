@@ -14,9 +14,6 @@ public class ContactMethodsModel : ProfessionalReferralSessionModel, ITellTheSer
     public string? TextAreaValue { get; set; }
 
     public string? TextAreaValidationErrorMessage { get; set; }
-
-    //public TextAreaValidation TextAreaValidation { get; set; } = TextAreaValidation.Valid;
-
     public string? BackUrl { get; set; }
 
     public ContactMethodsModel(IConnectionRequestDistributedCache connectionRequestCache)
