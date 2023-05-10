@@ -43,7 +43,7 @@ public class UKGdsPostcodeAttribute : ValidationAttribute
         return ValidationResult.Success;
     }
 
-    public static string SanitisedPostcode(string postcode)
+    public static string SanitisePostcode(string postcode)
     {
         return GdsAllowableChars.Replace(postcode.Trim().ToUpper(), "");
     }

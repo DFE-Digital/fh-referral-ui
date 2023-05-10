@@ -80,7 +80,7 @@ public class LetterModel : ProfessionalReferralSessionModel
         model.AddressLine2 = AddressLine2;
         model.TownOrCity = TownOrCity;
         model.County = County;
-        model.Postcode = UKGdsPostcodeAttribute.SanitisedPostcode(Postcode!);
+        model.Postcode = UKGdsPostcodeAttribute.SanitisePostcode(Postcode!);
 
         return NextPage(ContactMethod.Letter, model.ContactMethodsSelected);
     }
