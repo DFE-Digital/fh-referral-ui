@@ -11,7 +11,8 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         
-        @if (!Model.ValidationValid) //todo: will need individual valids
+        @* move summary into partial if reused *@
+        @if (!Model.ValidationValid)
         {
             <div class="govuk-error-summary" data-module="govuk-error-summary">
                 <div role="alert">
@@ -43,8 +44,6 @@
                     </h1>
                 </legend>
                 <div class="govuk-form-group">
-                    @*                    <label class="govuk-label" for="@Html.NameFor(m => m.AddressLine1)">
-*@
                     <label asp-for="AddressLine1" class="govuk-label">
                         Address line 1
                     </label>

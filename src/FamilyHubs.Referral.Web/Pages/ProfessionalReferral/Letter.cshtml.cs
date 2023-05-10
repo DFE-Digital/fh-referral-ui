@@ -13,7 +13,6 @@ public class LetterModel : ProfessionalReferralSessionModel
     //todo: consistency with nullable
     [BindProperty]
     [Required(ErrorMessage = "You must enter an address.")]
-    [Display(Order = 1)]
     public string? AddressLine1 { get; set; } = "";
 
     [BindProperty]
@@ -21,7 +20,6 @@ public class LetterModel : ProfessionalReferralSessionModel
 
     [BindProperty]
     [Required(ErrorMessage = "You must enter a town or city.")]
-    [Display(Order = 2)]
     public string? TownOrCity { get; set; } = "";
 
     [BindProperty]
@@ -30,7 +28,6 @@ public class LetterModel : ProfessionalReferralSessionModel
     [BindProperty]
     [Required(ErrorMessage = "You must enter a postcode.")]
     [UKGdsPostcode]
-    [Display(Order = 3)]
     public string? Postcode { get; set; } = "";
 
     public string HeadingText { get; set; } = "";
@@ -54,8 +51,6 @@ public class LetterModel : ProfessionalReferralSessionModel
         SetPageProperties(model);
     }
 
-    // have partial for summary?
-    //todo: have valid bool?
     public record Error(string Property, string ErrorMessage);
 
     // the ordering of errors in the ModelState is not guaranteed
