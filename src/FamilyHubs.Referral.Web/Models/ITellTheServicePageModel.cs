@@ -9,5 +9,8 @@ public interface ITellTheServicePageModel
     [BindProperty]
     string? TextAreaValue { get; set; }
 
+    // might be cleaner to put back a TellTheServiceValidationStatus enum (Valid|Empty|TooLong)
+    // and add the error messages to the interface (especially if we have consistent error messages constructed from the h1/title)
+    // also if we add a new base class for the TellTheService pages
     string? TextAreaValidationErrorMessage { get; set; }
 }
