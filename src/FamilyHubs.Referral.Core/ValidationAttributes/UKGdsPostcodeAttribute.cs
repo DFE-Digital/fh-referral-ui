@@ -15,7 +15,7 @@ public class UKGdsPostcodeAttribute : ValidationAttribute
     // see, https://ideal-postcodes.co.uk/guides/postcode-validation
 
     // allows whitespace at the start, end and in the middle
-    private static readonly Regex _simpleValidUkPostcodeRegex = new(
+    private static readonly Regex SimpleValidUkPostcodeRegex = new(
         @"^\s*[a-z]{1,2}\d[a-z\d]?\s*\d[a-z]{2}\s*$",
         RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
@@ -23,8 +23,10 @@ public class UKGdsPostcodeAttribute : ValidationAttribute
     // 'punctuation like hyphens, brackets, dashes and full stops'
     // I personally think it's a bad idea, as e.g. someone might have accidentally pressed '.' instead of 'l' and we wouldn't catch that.
     // I've also never seen a postcode containing punctuation or a postcode validation that allows it, but hey ho.
-    private static readonly Regex GdsAllowableChars = new(
+    private static readonly Regex GdsAllowableCharsRegex = new(
         @"[-\(\)\.\[\]]+", RegexOptions.Compiled);
+
+    private static readonly Regex MultipleSpacesRegex = new(@"\s+");
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
@@ -32,9 +34,9 @@ public class UKGdsPostcodeAttribute : ValidationAttribute
         {
             string postcode = (string)value;
 
-            postcode = GdsAllowableChars.Replace(postcode, "");
+            postcode = GdsAllowableCharsRegex.Replace(postcode, "");
 
-            if (!_simpleValidUkPostcodeRegex.IsMatch(postcode))
+            if (!SimpleValidUkPostcodeRegex.IsMatch(postcode))
             {
                 return new ValidationResult("Enter a real postcode.");
             }
@@ -45,6 +47,7 @@ public class UKGdsPostcodeAttribute : ValidationAttribute
 
     public static string SanitisePostcode(string postcode)
     {
-        return GdsAllowableChars.Replace(postcode.Trim().ToUpper(), "");
+        string partSanitisedPostcode = GdsAllowableCharsRegex.Replace(postcode.Trim().ToUpper(), "");
+        return MultipleSpacesRegex.Replace(partSanitisedPostcode, " ");
     }
 }

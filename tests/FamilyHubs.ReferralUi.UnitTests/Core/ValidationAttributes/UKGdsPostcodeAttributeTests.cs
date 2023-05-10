@@ -54,7 +54,6 @@ public class UKGdsPostcodeAttributeTests
     [InlineData("SW1A 1AA", " SW1A 1AA")]
     [InlineData("SW1A 1AA", "SW1A 1AA ")]
     [InlineData("SW1A 1AA", "SW1A  1AA")]
-    //todo: remove all but one space in middle
     [InlineData("SW1A 1AA", "  SW1A    1AA  ")]   // tabs
     [InlineData("SW1A 1AA", " SW1A    1AA   ")]   // tabs
     [InlineData("SW1A 1AA", "[SW1A 1AA]")]
