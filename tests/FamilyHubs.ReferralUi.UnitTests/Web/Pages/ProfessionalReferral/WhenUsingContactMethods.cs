@@ -16,20 +16,27 @@ public class WhenUsingContactMethods : BaseProfessionalReferralPage
         _contactMethodsModel = new ContactMethodsModel(ReferralDistributedCache.Object);
     }
 
-    //todo: split unit test into 2
     [Fact]
-    public async Task ThenOnGetContactMethods()
+    public async Task OnGetAsync_ServiceIdIsStored()
     {
         //Act
         await _contactMethodsModel.OnGetAsync("1");
 
         _contactMethodsModel.ServiceId.Should().Be("1");
+    }
+
+    [Fact]
+    public async Task OnGetAsync_UserInputIsStoredInEngageReason()
+    {
+        //Act
+        await _contactMethodsModel.OnGetAsync("1");
+
         _contactMethodsModel.TextAreaValue.Should().Be(EngageReason);
     }
 
     //todo: split unit test into 2
     [Fact]
-    public async Task ThenOnPostContactMethods()
+    public async Task OnPostAsync_ModelIsStoredInDistributedCache()
     {
         _contactMethodsModel.TextAreaValue = "New Engage Reason";
 
@@ -39,7 +46,16 @@ public class WhenUsingContactMethods : BaseProfessionalReferralPage
         //todo: check new content
         ReferralDistributedCache.Verify(x =>
             x.SetAsync(It.IsAny<ConnectionRequestModel>()), Times.Once);
+    }
 
+    [Fact]
+    public async Task OnPostAsync_UserIsRedirectedToNextPage()
+    {
+        _contactMethodsModel.TextAreaValue = "New Engage Reason";
+
+        //Act
+        var result = await _contactMethodsModel.OnPostAsync("1") as RedirectToPageResult;
+        
         ArgumentNullException.ThrowIfNull(result);
         result.PageName.Should().Be("/ProfessionalReferral/CheckDetails");
     }
