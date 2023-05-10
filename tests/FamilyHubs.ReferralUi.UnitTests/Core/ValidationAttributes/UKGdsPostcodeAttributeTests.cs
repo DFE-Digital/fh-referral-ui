@@ -13,7 +13,11 @@ public class UKGdsPostcodeAttributeTests
 
     [Theory]
     [InlineData(true, "SW1A 1AA")]
-    public void IsValid_WhenPostcodeIsValid_ReturnsTrue(bool expectedIsValid, string postcode)
+    [InlineData(true, "[SW1A 1AA]")]
+    [InlineData(true, "SW1A-1AA")]
+    [InlineData(true, "SW1A-1AA")]
+    [InlineData(true, "S.W.1.A.1.A.A")]
+    public void IsValid_WhenPostcodeIsTested_ReturnsWhetherIsValid(bool expectedIsValid, string postcode)
     {
         // Act
         var result = UKGdsPostcodeAttribute.IsValid(postcode);
