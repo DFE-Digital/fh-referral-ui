@@ -18,7 +18,7 @@ public class WhenUsingText : BaseProfessionalReferralPage
     public async Task ThenOnGetEmail()
     {
         //Act
-        await _textModel.OnGetAsync("1", "Service Name");
+        await _textModel.OnGetAsync("1");
 
         //Assert
         _textModel.TextBoxValue.Should().Be(Text);
@@ -34,7 +34,7 @@ public class WhenUsingText : BaseProfessionalReferralPage
         _textModel.TextBoxValue = Telephone;
 
         //Act
-        var result = await _textModel.OnPostAsync("1", "Service Name") as RedirectToPageResult;
+        var result = await _textModel.OnPostAsync("1") as RedirectToPageResult;
 
         result.Should().NotBeNull();
         result!.PageName.Should().Be(expectedNextPage);
@@ -46,7 +46,7 @@ public class WhenUsingText : BaseProfessionalReferralPage
         _textModel.ModelState.AddModelError("TextBoxValue", "message");
 
         //Act
-        await _textModel.OnPostAsync("1", "Service Name");
+        await _textModel.OnPostAsync("1");
 
         _textModel.ValidationValid.Should().BeFalse();
     }

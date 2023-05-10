@@ -34,8 +34,7 @@ public class ReferralDistributedCacheTests
         ConnectionRequestModel = new ConnectionRequestModel
         {
             FamilyContactFullName = "FamilyContactFullName",
-            ServiceId = "1",
-            ServiceName = "ServiceName"
+            ServiceId = "1"
         };
 
         ProfessionalReferralModelSerializedBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(ConnectionRequestModel));

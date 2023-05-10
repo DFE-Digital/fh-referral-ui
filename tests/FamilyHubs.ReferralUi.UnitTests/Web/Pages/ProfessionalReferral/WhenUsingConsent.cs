@@ -12,15 +12,14 @@ public class WhenUsingConsent
     {
         _consentModel = new ConsentModel();
     }
+
     [Fact]
     public async Task ThenOnGetConsent()
     {
         //Act
-        await _consentModel.OnGetAsync("Id", "Name");
+        await _consentModel.OnGetAsync("Id");
 
-        //Assert
         _consentModel.ServiceId.Should().Be("Id");
-        _consentModel.ServiceName.Should().Be("Name");
     }
 
     [Fact]
@@ -30,7 +29,7 @@ public class WhenUsingConsent
         _consentModel.Consent = default!;
 
         //Act
-        await _consentModel.OnPostAsync("Id", "ServiceName");
+        await _consentModel.OnPostAsync("Id");
 
         //Assert
         _consentModel.ValidationValid.Should().BeFalse();
@@ -45,7 +44,7 @@ public class WhenUsingConsent
         _consentModel.Consent = isConsentGiven;
 
         //Act
-        var result = await _consentModel.OnPostAsync("Id", "ServiceName") as RedirectToPageResult;
+        var result = await _consentModel.OnPostAsync("Id") as RedirectToPageResult;
 
         //Assert
         ArgumentNullException.ThrowIfNull(result);

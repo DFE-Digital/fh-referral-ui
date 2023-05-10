@@ -27,6 +27,7 @@ public class EmailModel : ProfessionalReferralSessionModel, ISingleEmailTextboxP
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
+        //todo: do we need the check?
         if (!string.IsNullOrEmpty(model.EmailAddress))
         {
             TextBoxValue = model.EmailAddress;

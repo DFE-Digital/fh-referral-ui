@@ -59,8 +59,7 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
         var model = await _connectionRequestDistributedCache.GetAsync()
                     ?? new ConnectionRequestModel
                     {
-                        ServiceId = ServiceId,
-                        ServiceName = ServiceName
+                        ServiceId = ServiceId
                     };
 
         model.FamilyContactFullName = TextBoxValue;

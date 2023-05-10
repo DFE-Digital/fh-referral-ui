@@ -1,0 +1,131 @@
+﻿@page
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.LetterModel
+@{
+    ViewData["Title"] = Model.HeadingText;
+}
+
+@section Back {
+    <a asp-page="@Model.BackUrl" asp-route-serviceId="@Model.ServiceId" class="govuk-back-link">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        @* move summary into partial if reused *@
+        @if (!Model.ValidationValid)
+        {
+            <div class="govuk-error-summary" data-module="govuk-error-summary">
+                <div role="alert">
+                    <h2 class="govuk-error-summary__title">
+                        There is a problem
+                    </h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            @if (Model.Errors != null)
+                            {
+                                @foreach (var error in Model.Errors)
+                                {
+                                    <li>
+                                        <a href="#@error.Property" data-testid="summary-error">@error.ErrorMessage</a>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <form method="post" novalidate>
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-fieldset__heading">
+                        @Model.HeadingText
+                    </h1>
+                </legend>
+                @* we could drive these from data *@
+                @{ string? errorMessage = GetErrorMessage("AddressLine1"); }
+                <div class="govuk-form-group @(errorMessage != null ? "govuk-form-group--error" : "")">
+                    <label asp-for="AddressLine1" class="govuk-label">
+                        Address line 1
+                    </label>
+                    @if (errorMessage != null)
+                    {
+                        <p id="AddressLine1-error" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @errorMessage
+                        </p>
+
+                        <input asp-for="AddressLine1" class="govuk-input" type="text" autocomplete="off"
+                            aria-describedby="AddressLine1-error">
+                    }
+                    else
+                    {
+                        <input asp-for="AddressLine1" class="govuk-input" type="text" autocomplete="off">
+                    }
+                </div>
+                <div class="govuk-form-group">
+                    <label asp-for="AddressLine2" class=" govuk-label">
+                        Address line 2 (optional)
+                    </label>
+                    <input asp-for="AddressLine2" class="govuk-input" type="text" autocomplete="off">
+                </div>
+                @{ errorMessage = GetErrorMessage("TownOrCity"); }
+                <div class="govuk-form-group @(errorMessage != null ? "govuk-form-group--error" : "")">
+                    <label asp-for="TownOrCity" class="govuk-label">
+                        Town or city
+                    </label>
+                    @if (errorMessage != null)
+                    {
+                        <p id="TownOrCity-error" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @errorMessage
+                        </p>
+
+                        <input asp-for="TownOrCity" class="govuk-input govuk-!-width-two-thirds" type="text" autocomplete="off"
+                            aria-describedby="TownOrCity-error">
+                    }
+                    else
+                    {
+                        <input asp-for="TownOrCity" class="govuk-input govuk-!-width-two-thirds" type="text" autocomplete="off">
+                    }
+                </div>
+                <div class="govuk-form-group">
+                    <label asp-for="County" class="govuk-label">
+                        County (optional)
+                    </label>
+                    <input asp-for="County" class="govuk-input govuk-!-width-two-thirds" type="text" autocomplete="off">
+                </div>
+                @{ errorMessage = GetErrorMessage("Postcode"); }
+                <div class="govuk-form-group @(errorMessage != null ? "govuk-form-group--error" : "")">
+                    <label asp-for="Postcode" class="govuk-label">
+                        Postcode
+                    </label>
+                    @if (errorMessage != null)
+                    {
+                        <p id="Postcode-error" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> @errorMessage
+                        </p>
+
+                        <input asp-for="Postcode" class="govuk-input govuk-input--width-10" type="text" autocomplete="off"
+                            aria-describedby="Postcode-error">
+                    }
+                    else
+                    {
+                        <input asp-for="Postcode" class="govuk-input govuk-input--width-10" type="text" autocomplete="off">
+                    }
+                </div>
+            </fieldset>
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Continue
+            </button>
+        </form>
+
+    </div>
+</div>
+
+@functions
+{
+    public string? GetErrorMessage(string propertyName)
+    {
+        return Model.Errors?.FirstOrDefault(e => e.Property == propertyName)?.ErrorMessage;
+    }
+}

@@ -17,10 +17,9 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
     [Fact]
     public async Task ThenOnGetEmail()
     {
-        //Arrange and Act
-        await _emailModel.OnGetAsync("1", "Service Name");
+        // Act
+        await _emailModel.OnGetAsync("1");
 
-        //Assert
         _emailModel.TextBoxValue.Should().Be(EmailAddress);
     }
 
@@ -40,7 +39,7 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
         _emailModel.TextBoxValue = "someone@email.com";
 
         //Act
-        var result = await _emailModel.OnPostAsync("1", "Service Name") as RedirectToPageResult;
+        var result = await _emailModel.OnPostAsync("1") as RedirectToPageResult;
 
         result.Should().NotBeNull();
         result!.PageName.Should().Be(expectedNextPage);
@@ -52,7 +51,7 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
         _emailModel.ModelState.AddModelError("key", "message");
 
         //Act
-        await _emailModel.OnPostAsync("1", "Service Name");
+        await _emailModel.OnPostAsync("1");
 
         _emailModel.ValidationValid.Should().BeFalse();
     }
