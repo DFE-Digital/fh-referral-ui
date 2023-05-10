@@ -1,5 +1,4 @@
-﻿using FamilyHubs.Referral.Core.Models;
-using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
+﻿using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -19,7 +18,7 @@ public class WhenUsingLetter : BaseProfessionalReferralPage
     public async Task ThenOnGetLetter()
     {
         // Act
-        await _letterModel.OnGetAsync("1", "Service Name");
+        await _letterModel.OnGetAsync("1");
 
         _letterModel.AddressLine1.Should().Be(AddressLine1);
         _letterModel.AddressLine2.Should().Be(AddressLine2);
@@ -32,7 +31,7 @@ public class WhenUsingLetter : BaseProfessionalReferralPage
     public async Task ThenOnPostLetter_RedirectToContactMethods()
     {
         //Act
-        var result = await _letterModel.OnPostAsync("1", "Service Name") as RedirectToPageResult;
+        var result = await _letterModel.OnPostAsync("1") as RedirectToPageResult;
 
         result.Should().NotBeNull();
         result!.PageName.Should().Be("/ProfessionalReferral/ContactMethods");
@@ -46,7 +45,7 @@ public class WhenUsingLetter : BaseProfessionalReferralPage
         _letterModel.ModelState.AddModelError("Postcode", "Enter a real postcode.");
 
         //Act
-        await _letterModel.OnPostAsync("1", "Service Name");
+        await _letterModel.OnPostAsync("1");
 
         _letterModel.ValidationValid.Should().BeFalse();
     }

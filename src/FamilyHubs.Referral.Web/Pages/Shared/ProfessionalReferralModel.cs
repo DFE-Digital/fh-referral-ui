@@ -6,7 +6,6 @@ namespace FamilyHubs.Referral.Web.Pages.Shared;
 public class ProfessionalReferralModel : PageModel
 {
     public string? ServiceId { get; set; }
-    public string? ServiceName { get; set; }
 
     protected virtual Task<IActionResult> OnSafeGetAsync()
     {
@@ -18,9 +17,9 @@ public class ProfessionalReferralModel : PageModel
         return Task.FromResult((IActionResult)Page());
     }
 
-    public async Task<IActionResult> OnGetAsync(string serviceId, string serviceName)
+    public async Task<IActionResult> OnGetAsync(string serviceId)
     {
-        if (serviceId == null || serviceName == null)
+        if (serviceId == null)
         {
             // someone's been monkeying with the query string and we don't have the service details we need
             // we can't send them back to the start of the journey because we don't know what service they were looking at
@@ -29,15 +28,13 @@ public class ProfessionalReferralModel : PageModel
         }
 
         ServiceId = serviceId;
-        ServiceName = serviceName;
 
         return await OnSafeGetAsync();
     }
 
-    public async Task<IActionResult> OnPostAsync(string serviceId, string serviceName)
+    public async Task<IActionResult> OnPostAsync(string serviceId)
     {
         ServiceId = serviceId;
-        ServiceName = serviceName;
 
         return await OnSafePostAsync();
     }
@@ -46,8 +43,7 @@ public class ProfessionalReferralModel : PageModel
     {
         return RedirectToPage($"/ProfessionalReferral/{page}", new
         {
-            ServiceId,
-            ServiceName
+            ServiceId
         });
     }
 }

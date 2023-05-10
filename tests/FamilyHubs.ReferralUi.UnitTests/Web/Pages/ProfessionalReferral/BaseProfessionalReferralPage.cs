@@ -9,6 +9,7 @@ public class BaseProfessionalReferralPage
     public Mock<IConnectionRequestDistributedCache> ReferralDistributedCache;
     public readonly ConnectionRequestModel ConnectionRequestModel;
 
+    public const string Reason = "Reason";
     public const string EmailAddress = "example.com";
     public const string Telephone = "07700 900000";
     public const string Text = "07700 900001";
@@ -23,9 +24,8 @@ public class BaseProfessionalReferralPage
         ConnectionRequestModel = new ConnectionRequestModel
         {
             ServiceId = "ServiceId",
-            ServiceName = "ServiceName",
             FamilyContactFullName = "FamilyContactFullName",
-            Reason = "Reason For Support",
+            Reason = Reason,
             ContactMethodsSelected = new[] { true, true, true, true },
             EmailAddress = EmailAddress,
             TelephoneNumber = Telephone,

@@ -1,5 +1,4 @@
-﻿using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
-using FamilyHubs.Referral.Web.Pages.Shared;
+﻿using FamilyHubs.Referral.Web.Pages.Shared;
 using FluentAssertions;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
@@ -13,11 +12,9 @@ public class WhenUsingSafeguardingModel
         var safeguardingModel = new ProfessionalReferralModel();
 
         //Act
-        await safeguardingModel.OnGetAsync("Id", "Name");
+        await safeguardingModel.OnGetAsync("Id");
 
         //Assert
         safeguardingModel.ServiceId.Should().Be("Id");
-        safeguardingModel.ServiceName.Should().Be("Name");
-
     }
 }

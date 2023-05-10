@@ -1,5 +1,4 @@
-﻿using FamilyHubs.Referral.Core.DistributedCache;
-using FamilyHubs.Referral.Core.Models;
+﻿using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -7,35 +6,23 @@ using Moq;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
-public class WhenUsingWhySupport
+public class WhenUsingWhySupport : BaseProfessionalReferralPage
 {
     private readonly WhySupportModel _whySupportModel;
-    private readonly Mock<IConnectionRequestDistributedCache> _mockConnectionRequestDistributedCache;
-    private readonly ConnectionRequestModel _connectionRequestModel;
+
     public WhenUsingWhySupport()
     {
-        _connectionRequestModel = new ConnectionRequestModel
-        {
-            ServiceId = "Service Id",
-            ServiceName = "Service Name",
-            FamilyContactFullName = "Full Name",
-            Reason = "Reason for Support"
-        };
-        _mockConnectionRequestDistributedCache = new Mock<IConnectionRequestDistributedCache>();
-        _mockConnectionRequestDistributedCache.Setup(x => x.GetAsync()).ReturnsAsync(_connectionRequestModel);
-
-        _whySupportModel = new WhySupportModel(_mockConnectionRequestDistributedCache.Object);
+        _whySupportModel = new WhySupportModel(ReferralDistributedCache.Object);
     }
 
     [Fact]
     public async Task ThenOnGetWhySupport()
     {
         //Act
-        await _whySupportModel.OnGetAsync("1", "Service Name");
+        await _whySupportModel.OnGetAsync("1");
 
         _whySupportModel.ServiceId.Should().Be("1");
-        _whySupportModel.ServiceName.Should().Be("Service Name");
-        _whySupportModel.TextAreaValue.Should().Be(_connectionRequestModel.Reason);
+        _whySupportModel.TextAreaValue.Should().Be(Reason);
     }
 
     [Fact]
@@ -44,11 +31,11 @@ public class WhenUsingWhySupport
         _whySupportModel.TextAreaValue = "New Reason For Support";
 
         //Act
-        var result = await _whySupportModel.OnPostAsync("1", "Service Name") as RedirectToPageResult;
+        var result = await _whySupportModel.OnPostAsync("1") as RedirectToPageResult;
 
         //todo: check new content
-        _mockConnectionRequestDistributedCache
-            .Verify(x => x.SetAsync(It.IsAny<ConnectionRequestModel>()), Times.Once);
+        ReferralDistributedCache.Verify(x =>
+            x.SetAsync(It.IsAny<ConnectionRequestModel>()), Times.Once);
 
         ArgumentNullException.ThrowIfNull(result);
         result.PageName.Should().Be("/ProfessionalReferral/ContactDetails");
@@ -66,7 +53,7 @@ public class WhenUsingWhySupport
         _whySupportModel.TextAreaValue = value;
 
         //Act
-        await _whySupportModel.OnPostAsync("1", "Service Name");
+        await _whySupportModel.OnPostAsync("1");
 
         _whySupportModel.TextAreaValidation.Should().Be(textAreaValidation);
     }
