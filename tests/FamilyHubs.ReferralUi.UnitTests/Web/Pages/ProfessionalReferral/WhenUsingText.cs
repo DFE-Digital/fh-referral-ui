@@ -29,7 +29,7 @@ public class WhenUsingText : BaseProfessionalReferralPage
     [InlineData("/ProfessionalReferral/ContactMethods", false)]
     public async Task ThenOnPostEmail(string expectedNextPage, bool letter)
     {
-        ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Letter] = letter;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectJourneyPage.Letter] = letter;
 
         _textModel.TextBoxValue = Telephone;
 

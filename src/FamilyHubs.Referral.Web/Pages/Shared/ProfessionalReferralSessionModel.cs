@@ -58,6 +58,7 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
         return RedirectToProfessionalReferralPage(nextPage);
     }
 
+    //todo: probably want to move these into the base?
     private static string[] _connectJourneyPages =
     {
         "ContactDetails",
@@ -70,12 +71,12 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
 
     protected string FirstContactMethodPage(bool[] contactMethodsSelected)
     {
-        return NextPage((ContactMethod)(-1), contactMethodsSelected);
+        return NextPage((ConnectJourneyPage)(-1), contactMethodsSelected);
     }
 
-    protected string NextPage(ContactMethod currentPage, bool[] contactMethodsSelected)
+    protected string NextPage(ConnectJourneyPage currentPage, bool[] contactMethodsSelected)
     {
-        while (++currentPage <= ContactMethod.Last)
+        while (++currentPage <= ConnectJourneyPage.LastContactMethod)
         {
             if (contactMethodsSelected[(int) currentPage])
             {
@@ -86,7 +87,12 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
         return _connectJourneyPages[(int)currentPage+1];
     }
 
-    protected string PreviousPage(ContactMethod currentPage, bool[] contactMethodsSelected)
+    //protected string PreviousPage(ConnectJourneyPage currentPage)
+    //{
+    //    return _connectJourneyPages[(int) currentPage + 1];
+    //}
+
+    protected string PreviousPage(ConnectJourneyPage currentPage, bool[] contactMethodsSelected)
     {
         while (--currentPage >= 0)
         {

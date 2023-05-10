@@ -24,16 +24,7 @@
         
         @* we _could_ pass the heading, lead in and ul items *@
         <partial name="@Model.DescriptionPartial" />
-        @*        <h1 class="govuk-heading-l">Reason for the connection request</h1>
 
-        <p>Use this to give the service details about the family, for example:</p>
-        <ul class="govuk-list govuk-list--bullet">
-            <li>why the family needs help</li>
-            <li>other organisations currently working with the family</li>
-            <li>if any family members have mental health conditions or special educational needs or disabilities</li>
-            <li>important things to note such as domestic abuse</li>
-        </ul>
-*@
         <form method="post">
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
                 <div class="govuk-form-group @(Model.TextAreaValidation != TextAreaValidation.Valid ? "govuk-form-group--error" : "")">
@@ -71,7 +62,7 @@
 
     public static string GetValidationMessage(TextAreaValidation validation)
     {
-        //todo: need to customise error messages
+        //todo: need to customise error messages, could be header/title/error message < error message doesn't fit in new page
         switch (validation)
         {
             case TextAreaValidation.TooLong:

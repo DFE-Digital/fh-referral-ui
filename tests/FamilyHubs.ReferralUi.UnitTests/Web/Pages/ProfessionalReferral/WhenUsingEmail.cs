@@ -32,9 +32,9 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
     [InlineData("/ProfessionalReferral/ContactMethods", false, false, false)]
     public async Task ThenOnPostEmail(string expectedNextPage, bool telephone, bool textphone, bool letter)
     {
-        ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Telephone] = telephone;
-        ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Textphone] = textphone;
-        ConnectionRequestModel.ContactMethodsSelected[(int)ContactMethod.Letter] = letter;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectJourneyPage.Telephone] = telephone;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectJourneyPage.Textphone] = textphone;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectJourneyPage.Letter] = letter;
 
         _emailModel.TextBoxValue = "someone@email.com";
 

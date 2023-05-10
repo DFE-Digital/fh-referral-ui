@@ -10,7 +10,7 @@ public class ContactDetailsModel : ProfessionalReferralSessionModel
     public string? FullName { get; set; }
 
     [BindProperty]
-    public bool[] ContactMethods { get; set; } = new bool[(int)ContactMethod.Last+1];
+    public bool[] ContactMethods { get; set; } = new bool[(int)ConnectJourneyPage.LastContactMethod+1];
 
     public ContactDetailsModel(IConnectionRequestDistributedCache connectionRequestCache) : base(connectionRequestCache)
     {

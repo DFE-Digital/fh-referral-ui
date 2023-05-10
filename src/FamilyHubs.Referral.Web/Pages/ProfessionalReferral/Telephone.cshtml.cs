@@ -48,12 +48,12 @@ public class TelephoneModel : ProfessionalReferralSessionModel, ISingleTelephone
 
         model.TelephoneNumber = TextBoxValue;
 
-        return NextPage(ContactMethod.Telephone, model.ContactMethodsSelected);
+        return NextPage(ConnectJourneyPage.Telephone, model.ContactMethodsSelected);
     }
 
     private void SetPageProperties(ConnectionRequestModel model)
     {
         HeadingText = $"What telephone number should the service use to call {model.FamilyContactFullName}?";
-        BackUrl = PreviousPage(ContactMethod.Telephone, model.ContactMethodsSelected);
+        BackUrl = PreviousPage(ConnectJourneyPage.Telephone, model.ContactMethodsSelected);
     }
 }
