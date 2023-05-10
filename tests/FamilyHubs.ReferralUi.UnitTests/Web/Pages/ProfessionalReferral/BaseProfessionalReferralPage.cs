@@ -18,6 +18,7 @@ public class BaseProfessionalReferralPage
     public const string TownOrCity = "TownOrCity";
     public const string County = "County";
     public const string Postcode = "Postcode";
+    public const string EngageReason = "EngageReason";
 
     public BaseProfessionalReferralPage()
     {
@@ -34,7 +35,8 @@ public class BaseProfessionalReferralPage
             AddressLine2 = AddressLine2,
             TownOrCity = TownOrCity,
             County = County,
-            Postcode = Postcode
+            Postcode = Postcode,
+            EngageReason = EngageReason
         };
 
         ReferralDistributedCache = new Mock<IConnectionRequestDistributedCache>(MockBehavior.Strict);
