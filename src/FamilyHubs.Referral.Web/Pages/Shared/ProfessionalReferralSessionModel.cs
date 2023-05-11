@@ -75,12 +75,23 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
 
     protected string NextPage(ConnectJourneyPage currentPage, bool[] contactMethodsSelected)
     {
+        // we could do this, but should be handled later anyway
+        //if (Flow == JourneyFlow.ChangingPage)
+        //{
+        //    return "CheckDetails";
+        //}
+
         while (++currentPage <= ConnectJourneyPage.LastContactMethod)
         {
             if (contactMethodsSelected[(int) currentPage])
             {
                 break;
             }
+        }
+
+        if (Flow == JourneyFlow.ChangingContactMethods && (int)currentPage == _connectJourneyPages.Length)
+        {
+            return "CheckDetails";
         }
 
         return _connectJourneyPages[(int)currentPage+1];

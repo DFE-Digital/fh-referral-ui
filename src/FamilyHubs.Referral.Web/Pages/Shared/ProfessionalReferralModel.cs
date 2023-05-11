@@ -65,6 +65,15 @@ public class ProfessionalReferralModel : PageModel
     //todo: consts, if not an enum
     protected IActionResult NextPage(string page)
     {
+        if (Flow == JourneyFlow.ChangingContactMethods)
+        {
+            return RedirectToPage($"/ProfessionalReferral/{page}", new
+            {
+                ServiceId,
+                changing = "contact-methods"
+            });
+        }
+
         return RedirectToProfessionalReferralPage(
             Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page);
     }
