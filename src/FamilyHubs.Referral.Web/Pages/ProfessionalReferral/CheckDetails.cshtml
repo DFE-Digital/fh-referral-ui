@@ -137,12 +137,12 @@
                     Address
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    @string.Join("<br>", RemoveEmpty(
+                    @Html.Raw(string.Join("<br>", RemoveEmpty(
                         Model.ConnectionRequestModel.AddressLine1,
                         Model.ConnectionRequestModel.AddressLine2,
                         Model.ConnectionRequestModel.TownOrCity,
                         Model.ConnectionRequestModel.County,
-                        Model.ConnectionRequestModel.Postcode))
+                        Model.ConnectionRequestModel.Postcode)))
                 </dd>
                 <dd class="govuk-summary-list__actions">
                     <a asp-page="/ProfessionalReferral/Letter" asp-route-serviceId="@Model.ServiceId">
