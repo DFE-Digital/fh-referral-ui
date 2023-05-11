@@ -87,11 +87,6 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
         return _connectJourneyPages[(int)currentPage+1];
     }
 
-    //protected string PreviousPage(ConnectJourneyPage currentPage)
-    //{
-    //    return _connectJourneyPages[(int) currentPage + 1];
-    //}
-
     protected string PreviousPage(ConnectJourneyPage currentPage, bool[] contactMethodsSelected)
     {
         while (--currentPage >= 0)
