@@ -64,7 +64,7 @@
 
                 <input class="govuk-input @(Model.ValidationValid ? "" : "govuk-input--error")"
                        name="TextBoxValue" type="@type" value="@Model.TextBoxValue" inputmode="@type"
-                       spellcheck="false" autocomplete="off" id="textbox" aria-describedby="hint error">
+                       spellcheck="false" autocomplete="off" id="textbox" aria-describedby="hint @(Model.ValidationValid ? "" : "error")">
             </div>
             <button type="submit" class="govuk-button" data-module="govuk-button">
                 Continue
