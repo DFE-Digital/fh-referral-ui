@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -6,43 +7,61 @@ using Moq;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
-public class WhenUsingWhySupport : BaseProfessionalReferralPage
+public class WhenUsingContactMethods : BaseProfessionalReferralPage
 {
-    private readonly WhySupportModel _whySupportModel;
+    private readonly ContactMethodsModel _contactMethodsModel;
 
-    public WhenUsingWhySupport()
+    public WhenUsingContactMethods()
     {
-        _whySupportModel = new WhySupportModel(ReferralDistributedCache.Object);
+        _contactMethodsModel = new ContactMethodsModel(ReferralDistributedCache.Object);
     }
 
     [Fact]
-    public async Task ThenOnGetWhySupport()
+    public async Task OnGetAsync_ServiceIdIsStored()
     {
         //Act
-        await _whySupportModel.OnGetAsync("1");
+        await _contactMethodsModel.OnGetAsync("1");
 
-        _whySupportModel.ServiceId.Should().Be("1");
-        _whySupportModel.TextAreaValue.Should().Be(Reason);
+        _contactMethodsModel.ServiceId.Should().Be("1");
     }
 
     [Fact]
-    public async Task ThenOnPostWhySupport()
+    public async Task OnGetAsync_UserInputIsStoredInEngageReason()
     {
-        _whySupportModel.TextAreaValue = "New Reason For Support";
+        //Act
+        await _contactMethodsModel.OnGetAsync("1");
+
+        _contactMethodsModel.TextAreaValue.Should().Be(EngageReason);
+    }
+
+    //todo: split unit test into 2
+    [Fact]
+    public async Task OnPostAsync_ModelIsStoredInDistributedCache()
+    {
+        _contactMethodsModel.TextAreaValue = "New Engage Reason";
 
         //Act
-        var result = await _whySupportModel.OnPostAsync("1") as RedirectToPageResult;
+        var result = await _contactMethodsModel.OnPostAsync("1") as RedirectToPageResult;
 
         //todo: check new content
         ReferralDistributedCache.Verify(x =>
             x.SetAsync(It.IsAny<ConnectionRequestModel>()), Times.Once);
-
-        ArgumentNullException.ThrowIfNull(result);
-        result.PageName.Should().Be("/ProfessionalReferral/ContactDetails");
     }
 
-    private const string EmptyErrorMessage = "Enter reason for the connection request";
-    private const string TooLongErrorMessage = "Reason for the connection request must be 500 characters or less";
+    [Fact]
+    public async Task OnPostAsync_UserIsRedirectedToNextPage()
+    {
+        _contactMethodsModel.TextAreaValue = "New Engage Reason";
+
+        //Act
+        var result = await _contactMethodsModel.OnPostAsync("1") as RedirectToPageResult;
+        
+        ArgumentNullException.ThrowIfNull(result);
+        result.PageName.Should().Be("/ProfessionalReferral/CheckDetails");
+    }
+
+    private const string EmptyErrorMessage = "Enter details about the family";
+    private const string TooLongErrorMessage = "How the service can engage with the family must be 500 characters or less";
 
     [Theory]
     [InlineData(default, EmptyErrorMessage)]
@@ -53,11 +72,11 @@ public class WhenUsingWhySupport : BaseProfessionalReferralPage
     [InlineData("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901", TooLongErrorMessage)]
     public async Task ThenOnPostAsync_ReasonIsValidated(string? value, string? textAreaValidationErrorMessage)
     {
-        _whySupportModel.TextAreaValue = value;
+        _contactMethodsModel.TextAreaValue = value;
 
         //Act
-        await _whySupportModel.OnPostAsync("1");
+        await _contactMethodsModel.OnPostAsync("1");
 
-        _whySupportModel.TextAreaValidationErrorMessage.Should().Be(textAreaValidationErrorMessage);
+        _contactMethodsModel.TextAreaValidationErrorMessage.Should().Be(textAreaValidationErrorMessage);
     }
 }

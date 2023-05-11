@@ -1,23 +1,18 @@
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public enum TextAreaValidation
+public class WhySupportModel : ProfessionalReferralSessionModel, ITellTheServicePageModel
 {
-    Valid,
-    Empty,
-    TooLong
-}
+    public string DescriptionPartial => "/Pages/ProfessionalReferral/WhySupportContent.cshtml";
+    public string? TextAreaValidationErrorMessage { get; set; }
 
-public class WhySupportModel : ProfessionalReferralSessionModel
-{
     [BindProperty]
     public string? TextAreaValue { get; set; }
-
-    public TextAreaValidation TextAreaValidation { get; set; } = TextAreaValidation.Valid;
 
     public WhySupportModel(IConnectionRequestDistributedCache connectionRequestCache)
         : base(connectionRequestCache)
@@ -34,13 +29,13 @@ public class WhySupportModel : ProfessionalReferralSessionModel
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {
-            TextAreaValidation = TextAreaValidation.Empty;
+            TextAreaValidationErrorMessage = "Enter reason for the connection request";
             return null;
         }
 
         if (TextAreaValue.Length > 500)
         {
-            TextAreaValidation = TextAreaValidation.TooLong;
+            TextAreaValidationErrorMessage = "Reason for the connection request must be 500 characters or less";
             return null;
         }
 

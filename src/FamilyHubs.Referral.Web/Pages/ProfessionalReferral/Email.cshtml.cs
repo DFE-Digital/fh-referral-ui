@@ -47,7 +47,7 @@ public class EmailModel : ProfessionalReferralSessionModel, ISingleEmailTextboxP
 
         model.EmailAddress = TextBoxValue;
 
-        return NextPage(ContactMethod.Email, model.ContactMethodsSelected);
+        return NextPage(ConnectJourneyPage.Email, model.ContactMethodsSelected);
     }
 
     private void SetPageProperties(ConnectionRequestModel model)

@@ -77,12 +77,12 @@ public class LetterModel : ProfessionalReferralSessionModel
         model.County = County;
         model.Postcode = UKGdsPostcodeAttribute.SanitisePostcode(Postcode!);
 
-        return NextPage(ContactMethod.Letter, model.ContactMethodsSelected);
+        return NextPage(ConnectJourneyPage.Letter, model.ContactMethodsSelected);
     }
 
     private void SetPageProperties(ConnectionRequestModel model)
     {
         HeadingText = $"What is the address for {model.FamilyContactFullName}?";
-        BackUrl = PreviousPage(ContactMethod.Letter, model.ContactMethodsSelected);
+        BackUrl = PreviousPage(ConnectJourneyPage.Letter, model.ContactMethodsSelected);
     }
 }
