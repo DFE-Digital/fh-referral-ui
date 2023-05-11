@@ -112,10 +112,12 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
                 if (original != null)
                 {
                     isNewReferral = false;
+                    dto.Id = original.Id;
                     dto.ReasonForSupport = model.Reason!;
                     dto.EngageWithFamily = model.EngageReason!;
-                    dto.Created = DateTime.UtcNow;
+                    dto.Created = original.Created;
                     dto.LastModified = DateTime.UtcNow;
+                    dto.RecipientDto.Id = original.RecipientDto.Id;
                     dto.RecipientDto.Name = model.FamilyContactFullName!;
                     dto.RecipientDto.Email = model.EmailAddress;
                     dto.RecipientDto.Telephone = model.TelephoneNumber!;
@@ -128,6 +130,7 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
 
                     dto.ReferrerDto = referrerDto;
                     dto.ReferrerDto.Id = original.ReferrerDto.Id;
+                    dto.ReferralServiceDto.Id = original.ReferralServiceDto.Id;
                     dto.ReferralServiceDto.Name = serviceDto.Name;
                     dto.ReferralServiceDto.Description = serviceDto.Description;
                     dto.ReferralServiceDto.ReferralOrganisationDto = new ReferralOrganisationDto
@@ -136,8 +139,6 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
                         Name = organisation?.Name!,
                         Description = organisation?.Description!,
                     };
-
-
                 }
                 
             }
