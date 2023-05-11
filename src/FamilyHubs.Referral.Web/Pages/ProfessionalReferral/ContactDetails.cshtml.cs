@@ -32,6 +32,32 @@ public class ContactDetailsModel : ProfessionalReferralSessionModel
 
         model.ContactMethodsSelected = ContactMethods;
 
+        // if the user has come from the check details page,
+        //if (Flow == JourneyFlow.ChangingContactMethods)
+        //{
+        // we need to remove any previous contact details that are no longer selected
+        //todo: can we do this generically?
+        if (!ContactMethods[(int) ConnectJourneyPage.Email])
+        {
+            model.EmailAddress = null;
+        }
+        if (!ContactMethods[(int)ConnectJourneyPage.Telephone])
+        {
+            model.TelephoneNumber = null;
+        }
+        if (!ContactMethods[(int)ConnectJourneyPage.Textphone])
+        {
+            model.TextphoneNumber = null;
+        }
+        if (!ContactMethods[(int)ConnectJourneyPage.Letter])
+        {
+            model.AddressLine1 = null;
+            model.AddressLine2 = null;
+            model.TownOrCity = null;
+            model.County = null;
+            model.Postcode = null;
+        }
+        //}
         return FirstContactMethodPage(model.ContactMethodsSelected);
     }
 }

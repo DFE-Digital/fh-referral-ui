@@ -89,7 +89,8 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
             }
         }
 
-        if (Flow == JourneyFlow.ChangingContactMethods && (int)currentPage == _connectJourneyPages.Length)
+        if (Flow == JourneyFlow.ChangingContactMethods
+            && currentPage == ConnectJourneyPage.ContactMethods)
         {
             return "CheckDetails";
         }
