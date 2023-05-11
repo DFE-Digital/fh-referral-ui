@@ -25,7 +25,7 @@ public class ProfessionalReferralModel : PageModel
         return Task.FromResult((IActionResult)Page());
     }
 
-    public async Task<IActionResult> OnGetAsync(string serviceId, string? changing = null)
+    public async Task<IActionResult> OnGetAsync(string serviceId)
     {
         if (serviceId == null)
         {
@@ -37,20 +37,19 @@ public class ProfessionalReferralModel : PageModel
 
         ServiceId = serviceId;
 
-        //todo: move page next/previous into here and handle all journey pages here, or here and derived
+        return await OnSafeGetAsync();
+    }
+
+    public async Task<IActionResult> OnPostAsync(string serviceId, string? changing = null)
+    {
+        ServiceId = serviceId;
+
         Flow = changing switch
         {
             "page" => JourneyFlow.ChangingPage,
             "contact-methods" => JourneyFlow.ChangingContactMethods,
             _ => JourneyFlow.Normal
         };
-
-        return await OnSafeGetAsync();
-    }
-
-    public async Task<IActionResult> OnPostAsync(string serviceId)
-    {
-        ServiceId = serviceId;
 
         return await OnSafePostAsync();
     }
@@ -61,5 +60,12 @@ public class ProfessionalReferralModel : PageModel
         {
             ServiceId
         });
+    }
+
+    //todo: consts, if not an enum
+    protected IActionResult NextPage(string page)
+    {
+        return RedirectToProfessionalReferralPage(
+            Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page);
     }
 }

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
-//todo: once we start storing the model in the session, switch to storing the service id and name in the session, rather than the url?
 public abstract class ProfessionalReferralSessionModel : ProfessionalReferralModel
 {
     public bool ValidationValid { get; set; } = true;

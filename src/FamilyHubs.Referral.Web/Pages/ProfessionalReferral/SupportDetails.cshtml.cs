@@ -65,6 +65,6 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
         model.FamilyContactFullName = TextBoxValue;
         await _connectionRequestDistributedCache.SetAsync(model);
 
-        return RedirectToProfessionalReferralPage("WhySupport");
+        return NextPage("WhySupport");
     }
 }
