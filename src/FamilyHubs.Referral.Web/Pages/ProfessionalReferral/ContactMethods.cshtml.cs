@@ -51,6 +51,7 @@ public class ContactMethodsModel : ProfessionalReferralSessionModel, ITellTheSer
         //todo: use next page
         return "CheckDetails";
     }
+
     private void SetPageProperties(ConnectionRequestModel model)
     {
         BackUrl = PreviousPage(ConnectJourneyPage.ContactMethods, model.ContactMethodsSelected);

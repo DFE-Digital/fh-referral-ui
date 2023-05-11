@@ -1,0 +1,173 @@
+﻿@page
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.CheckDetailsModel
+
+@{
+    ViewData["Title"] = "Check the details you entered before requesting a connection";
+}
+
+@section Back {
+    <a asp-page="/ProfessionalReferral/ContactMethods" asp-route-serviceId="@Model.ServiceId" class="govuk-back-link">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    Check the details you entered before requesting a connection
+                </h1>
+            </legend>
+
+            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Permission to share details
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        Yes
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="#">
+                            Change<span class="govuk-visually-hidden">Change permission to share details.</span>
+                        </a>
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Name of contact
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ConnectionRequestModel!.FamilyContactFullName
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="#">
+                            Change<span class="govuk-visually-hidden">Change name of contact.</span>
+                        </a>
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Reason for request for support
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ConnectionRequestModel!.Reason
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="#">
+                            Change<span class="govuk-visually-hidden">Change reason for request for support.</span>
+                        </a>
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Contact methods
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        todo
+                        @*                @string.Join(", ", 
+                Model.ConnectionRequestModel.ContactMethodsSelected
+*@
+                        @*Email, Phone, Text, Letter*@
+                        @*todo: when user changes these, will have to blank any details we're no longer collecting*@
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="#">
+                            Change<span class="govuk-visually-hidden">Change contact methods.</span>
+                        </a>
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Email
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ConnectionRequestModel.EmailAddress
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="#">
+                            Change<span class="govuk-visually-hidden">Change email address.</span>
+                        </a>
+                    </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Telephone
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ConnectionRequestModel.TelephoneNumber
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="#">
+                            Change<span class="govuk-visually-hidden">Change telephone number.</span>
+                        </a>
+                    </dd>
+                </div>
+  
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Text
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ConnectionRequestModel.TextphoneNumber
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="#">
+                            Change<span class="govuk-visually-hidden">Change text telephone number.</span>
+                        </a>
+                    </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Address
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @string.Join("<br>", RemoveEmpty(
+                            Model.ConnectionRequestModel.AddressLine1,
+                            Model.ConnectionRequestModel.AddressLine2,
+                            Model.ConnectionRequestModel.TownOrCity,
+                            Model.ConnectionRequestModel.County,
+                            Model.ConnectionRequestModel.Postcode))
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="#">
+                            Change<span class="govuk-visually-hidden">Change address.</span>
+                        </a>
+                    </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        How to engage with the family
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ConnectionRequestModel.EngageReason
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link" href="#">
+                            Change<span class="govuk-visually-hidden">Change how to engage with the family.</span>
+                        </a>
+                    </dd>
+                </div>
+            </dl>
+        </fieldset>
+
+        <h2 class="govuk-heading-m">Now request a connection</h2>
+
+        <form method="post">
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Confirm details and send request
+            </button>
+        </form>
+    </div>
+</div>
+
+@functions
+{
+    private static IEnumerable<string> RemoveEmpty(params string?[] list)
+    {
+        return list.Where(x => !string.IsNullOrWhiteSpace(x))!;
+    }
+}
