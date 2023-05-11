@@ -48,6 +48,7 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
         try
         {
             var user = HttpContext.GetFamilyHubsUser();
+            var team = HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "Team");
 
             ReferrerDto referrerDto = new ReferrerDto
             { 
@@ -55,7 +56,7 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
                 EmailAddress = user.Email,
                 Role = user.Role,
                 PhoneNumber = user.PhoneNumber,
-                Team = ""
+                Team = team?.Value
                 
             };
 
