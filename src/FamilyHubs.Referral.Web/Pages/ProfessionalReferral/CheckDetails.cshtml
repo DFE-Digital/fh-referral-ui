@@ -61,12 +61,28 @@
                     Contact methods
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    todo
-                    @*                @string.Join(", ", 
-            Model.ConnectionRequestModel.ContactMethodsSelected
-*@
-                    @*Email, Phone, Text, Letter*@
                     @*todo: when user changes these, will have to blank any details we're no longer collecting*@
+
+                    @{
+                        // it's starting to feel like using the enum name (with display attr fallback) would be preferable
+                        string[] contactMethodDisplayNames =
+                        {
+                            "Email",
+                            "Telephone",
+                            "Text message",
+                            "Letter"
+                        };
+
+                        List<string> contactMethodsSelected = new List<string>();
+                        for (int contactMethod = 0; contactMethod <= (int) ConnectJourneyPage.LastContactMethod; ++contactMethod)
+                        {
+                            if (Model.ConnectionRequestModel.ContactMethodsSelected[contactMethod])
+                            {
+                                contactMethodsSelected.Add(contactMethodDisplayNames[contactMethod]);
+                            }
+                        }
+                        @string.Join(", ", contactMethodsSelected)
+                    }
                 </dd>
                 <dd class="govuk-summary-list__actions">
                     <a asp-page="/ProfessionalReferral/ContactMethods" asp-route-serviceId="@Model.ServiceId">
