@@ -13,6 +13,7 @@ public enum ConnectJourneyPage
 
 public class ConnectionRequestModel
 {
+    public long? ReferralId { get; set; }
     public string? ServiceId { get; set; }
     public string? FamilyContactFullName { get; set; }
     public string? Reason { get; set; }

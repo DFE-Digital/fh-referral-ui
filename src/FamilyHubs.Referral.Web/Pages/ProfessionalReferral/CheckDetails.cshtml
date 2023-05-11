@@ -1,0 +1,109 @@
+﻿@page
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.CheckDetailsModel
+@{
+    ViewData["Title"] = "Check the details you entered before requesting a connection";
+}
+
+<fieldset class="govuk-fieldset">
+    <h1 class="govuk-fieldset__heading-l">
+        Check the details you entered
+    </h1>
+
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9" id="replace-commas">
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Permission to share details
+            </dt>
+            <dd class="govuk-summary-list__value">
+                Yes
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" asp-page="/ProfessionalReferral/Consent">
+                    Change<span class="govuk-visually-hidden">type</span>
+                </a>
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Name of contact
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.ConnectionRequestModel.FamilyContactFullName
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" asp-page="/ProfessionalReferral/SupportDetails">
+                    Change<span class="govuk-visually-hidden">type</span>
+                </a>
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Reason for request for support
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.ConnectionRequestModel.Reason
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" asp-page="/ProfessionalReferral/WhySupport">
+                    Change<span class="govuk-visually-hidden"> name</span>
+                </a>
+            </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Contact details
+            </dt>
+            <dd class="govuk-summary-list__value" id="contactmethods">
+                @if (!string.IsNullOrEmpty(@Model.ConnectionRequestModel.EmailAddress))
+                {
+                    @Model.ConnectionRequestModel.EmailAddress
+                    <br>
+                }
+
+                @if (!string.IsNullOrEmpty(@Model.ConnectionRequestModel.TelephoneNumber))
+                {
+                    @Model.ConnectionRequestModel.TelephoneNumber
+                    <br>
+                }
+                @if (!string.IsNullOrEmpty(@Model.ConnectionRequestModel.TextphoneNumber))
+                {
+                    @Model.ConnectionRequestModel.TextphoneNumber
+                    <br>
+                }
+                @if (!string.IsNullOrEmpty(@Model.ConnectionRequestModel.Postcode))
+                {
+                    @Model.ConnectionRequestModel.AddressLine1
+                    @Model.ConnectionRequestModel.Postcode
+                    <br>
+                }
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" asp-page="/ProfessionalReferral/ContactDetails">
+                    Change<span class="govuk-visually-hidden"> name</span>
+                </a>
+            </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                How to engage with the family
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.ConnectionRequestModel.EngageReason
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" asp-page="/ProfessionalReferral/SupportDetails">
+                    Change<span class="govuk-visually-hidden"> type</span>
+                </a>
+            </dd>
+        </div>
+    </dl>
+
+    <form method="post">
+        <button class="govuk-button">
+            Submit request for support
+        </button>
+    </form>
+</fieldset>
