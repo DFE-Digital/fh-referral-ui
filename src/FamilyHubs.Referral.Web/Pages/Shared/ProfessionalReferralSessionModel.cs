@@ -54,7 +54,7 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
 
         await ConnectionRequestCache.SetAsync(model);
 
-        return RedirectToProfessionalReferralPage(nextPage);
+        return NextPage(nextPage);
     }
 
     //todo: probably want to move these into the base?
