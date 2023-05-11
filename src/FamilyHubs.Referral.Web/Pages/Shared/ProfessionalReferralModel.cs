@@ -3,9 +3,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
+public enum JourneyFlow
+{
+    Normal,
+    ChangingPage,
+    ChangingContactMethods
+}
+
 public class ProfessionalReferralModel : PageModel
 {
     public string? ServiceId { get; set; }
+    public JourneyFlow Flow { get; set; }
 
     protected virtual Task<IActionResult> OnSafeGetAsync()
     {
@@ -17,7 +25,7 @@ public class ProfessionalReferralModel : PageModel
         return Task.FromResult((IActionResult)Page());
     }
 
-    public async Task<IActionResult> OnGetAsync(string serviceId)
+    public async Task<IActionResult> OnGetAsync(string serviceId, string? changing = null)
     {
         if (serviceId == null)
         {
@@ -28,6 +36,14 @@ public class ProfessionalReferralModel : PageModel
         }
 
         ServiceId = serviceId;
+
+        //todo: move page next/previous into here and handle all journey pages here, or here and derived
+        Flow = changing switch
+        {
+            "page" => JourneyFlow.ChangingPage,
+            "contact-methods" => JourneyFlow.ChangingContactMethods,
+            _ => JourneyFlow.Normal
+        };
 
         return await OnSafeGetAsync();
     }
