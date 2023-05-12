@@ -52,7 +52,7 @@ public class ProfessionalReferralModel : PageModel
         return Task.FromResult((IActionResult)Page());
     }
 
-    public async Task<IActionResult> OnGetAsync(string serviceId)
+    public async Task<IActionResult> OnGetAsync(string serviceId, string? changing = null)
     {
         if (serviceId == null)
         {
@@ -64,25 +64,32 @@ public class ProfessionalReferralModel : PageModel
 
         ServiceId = serviceId;
 
+        Flow = GetFlow(changing);
+
         // default, but can be overridden
         BackUrl = GenerateBackUrl((_page-1).ToString());
 
         return await OnSafeGetAsync();
     }
 
-    public async Task<IActionResult> OnPostAsync(string serviceId, string? changing = null)
+    private JourneyFlow GetFlow(string? changing)
     {
-        ServiceId = serviceId;
-
-        // default, but can be overridden
-        BackUrl = GenerateBackUrl((_page-1).ToString());
-
-        Flow = changing switch
+        return changing switch
         {
             "page" => JourneyFlow.ChangingPage,
             "contact-methods" => JourneyFlow.ChangingContactMethods,
             _ => JourneyFlow.Normal
         };
+    }
+
+    public async Task<IActionResult> OnPostAsync(string serviceId, string? changing = null)
+    {
+        ServiceId = serviceId;
+
+        Flow = GetFlow(changing);
+
+        // default, but can be overridden
+        BackUrl = GenerateBackUrl((_page-1).ToString());
 
         return await OnSafePostAsync();
     }
