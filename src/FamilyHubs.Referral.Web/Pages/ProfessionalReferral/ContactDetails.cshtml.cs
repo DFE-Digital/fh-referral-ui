@@ -33,29 +33,6 @@ public class ContactDetailsModel : ProfessionalReferralSessionModel
 
         model.ContactMethodsSelected = ContactMethods;
 
-        // we need to remove any previous contact details that are no longer selected
-        //todo: can we do this generically?
-        if (!ContactMethods[(int)ConnectContactDetailsJourneyPage.Email])
-        {
-            model.EmailAddress = null;
-        }
-        if (!ContactMethods[(int)ConnectContactDetailsJourneyPage.Telephone])
-        {
-            model.TelephoneNumber = null;
-        }
-        if (!ContactMethods[(int)ConnectContactDetailsJourneyPage.Textphone])
-        {
-            model.TextphoneNumber = null;
-        }
-        if (!ContactMethods[(int)ConnectContactDetailsJourneyPage.Letter])
-        {
-            model.AddressLine1 = null;
-            model.AddressLine2 = null;
-            model.TownOrCity = null;
-            model.County = null;
-            model.Postcode = null;
-        }
-
         return FirstContactMethodPage(model.ContactMethodsSelected);
     }
 }
