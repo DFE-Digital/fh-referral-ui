@@ -38,7 +38,7 @@ public class UKGdsPostcodeAttribute : ValidationAttribute
 
             if (!SimpleValidUkPostcodeRegex.IsMatch(postcode))
             {
-                return new ValidationResult("Enter a real postcode.");
+                return new ValidationResult("Enter a real postcode");
             }
         }
 

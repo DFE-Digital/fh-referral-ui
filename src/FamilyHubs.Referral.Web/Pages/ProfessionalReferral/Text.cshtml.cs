@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Web.Models;
+using FamilyHubs.Referral.Core.ValidationAttributes;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 //todo: fix check details -> change contact methods change selection e.g. from text to phone, continue, then back and back again to check details & previous captured text has now been deleted
@@ -17,7 +18,7 @@ public class TextModel : ProfessionalReferralSessionModel, ISingleTelephoneTextb
     public string ErrorText { get; set; } = "";
 
     [Required(ErrorMessage = "Enter a UK telephone number", AllowEmptyStrings = false)]
-    [Phone(ErrorMessage = "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192")]
+    [UKGdsTelephoneNumber]
     [BindProperty]
     public string? TextBoxValue { get; set; }
 
