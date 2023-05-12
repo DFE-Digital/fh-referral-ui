@@ -117,11 +117,11 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
             }
         }
 
-        if (Flow == JourneyFlow.ChangingContactMethods
-            && currentPage == ConnectContactDetailsJourneyPage.ContactMethods)
-        {
-            return "CheckDetails";
-        }
+        //if (Flow == JourneyFlow.ChangingContactMethods
+        //    && currentPage == ConnectContactDetailsJourneyPage.ContactMethods)
+        //{
+        //    return "CheckDetails";
+        //}
 
         return _connectJourneyPages[(int)currentPage + 1];
     }

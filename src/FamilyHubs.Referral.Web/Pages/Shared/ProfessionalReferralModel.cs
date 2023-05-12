@@ -123,16 +123,29 @@ public class ProfessionalReferralModel : PageModel
     //    return Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page;
     //}
 
+    //todo: work with enums until the last possible moment
     //todo: better split between this and session model
     protected string GenerateBackUrl(string page)
     {
-        string backUrlPage = Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page;
+        string? backUrlPage;
+            
+        if (Flow == JourneyFlow.ChangingContactMethods
+            && page == ConnectJourneyPage.WhySupport.ToString()) // ContactMethods-1
+        {
+            backUrlPage = "CheckDetails";
+        }
+        else
+        {
+            backUrlPage = Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page;
+        }
+
 
         dynamic dynamicObject = new System.Dynamic.ExpandoObject();
         //todo: check for null
         dynamicObject.ServiceId = ServiceId;
 
-        if (Flow == JourneyFlow.ChangingContactMethods)
+        if (Flow == JourneyFlow.ChangingContactMethods
+            && backUrlPage != "CheckDetails" && backUrlPage != "WhySupport")
         {
             dynamicObject.changing = "contact-methods";
         }
