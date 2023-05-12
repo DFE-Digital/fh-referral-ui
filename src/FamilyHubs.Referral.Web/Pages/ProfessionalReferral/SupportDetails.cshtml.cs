@@ -23,6 +23,7 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
     public string? TextBoxValue { get; set; }
 
     public SupportDetailsModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
+        : base(ConnectJourneyPage.SupportDetails)
     {
         _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }

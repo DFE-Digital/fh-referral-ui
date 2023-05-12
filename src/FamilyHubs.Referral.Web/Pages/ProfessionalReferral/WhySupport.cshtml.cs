@@ -15,7 +15,7 @@ public class WhySupportModel : ProfessionalReferralSessionModel, ITellTheService
     public string? TextAreaValue { get; set; }
 
     public WhySupportModel(IConnectionRequestDistributedCache connectionRequestCache)
-        : base(connectionRequestCache)
+        : base(ConnectJourneyPage.WhySupport, connectionRequestCache)
     {
     }
 

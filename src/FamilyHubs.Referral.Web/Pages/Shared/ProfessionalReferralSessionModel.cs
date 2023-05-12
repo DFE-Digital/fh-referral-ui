@@ -10,7 +10,10 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
 
     protected readonly IConnectionRequestDistributedCache ConnectionRequestCache;
 
-    protected ProfessionalReferralSessionModel(IConnectionRequestDistributedCache connectionRequestCache)
+    protected ProfessionalReferralSessionModel(
+        ConnectJourneyPage page,
+        IConnectionRequestDistributedCache connectionRequestCache)
+        : base(page)
     {
         ConnectionRequestCache = connectionRequestCache;
     }
@@ -58,6 +61,7 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
     }
 
     //todo: probably want to move these into the base?
+    //todo: once enums merged, just use tostring instead
     private static string[] _connectJourneyPages =
     {
         "ContactDetails",
@@ -70,10 +74,10 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
 
     protected string FirstContactMethodPage(bool[] contactMethodsSelected)
     {
-        return NextPage((ConnectJourneyPage)(-1), contactMethodsSelected);
+        return NextPage((ConnectContactDetailsJourneyPage)(-1), contactMethodsSelected);
     }
 
-    protected string NextPage(ConnectJourneyPage currentPage, bool[] contactMethodsSelected)
+    protected string NextPage(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
     {
         // we could do this, but should be handled later anyway
         //if (Flow == JourneyFlow.ChangingPage)
@@ -81,7 +85,7 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
         //    return "CheckDetails";
         //}
 
-        while (++currentPage <= ConnectJourneyPage.LastContactMethod)
+        while (++currentPage <= ConnectContactDetailsJourneyPage.LastContactMethod)
         {
             if (contactMethodsSelected[(int) currentPage])
             {
@@ -90,7 +94,7 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
         }
 
         if (Flow == JourneyFlow.ChangingContactMethods
-            && currentPage == ConnectJourneyPage.ContactMethods)
+            && currentPage == ConnectContactDetailsJourneyPage.ContactMethods)
         {
             return "CheckDetails";
         }
@@ -98,7 +102,12 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
         return _connectJourneyPages[(int)currentPage+1];
     }
 
-    protected string PreviousPage(ConnectJourneyPage currentPage, bool[] contactMethodsSelected)
+    protected string GenerateBackUrl(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
+    {
+        return GenerateBackUrl(PreviousPage(currentPage, contactMethodsSelected));
+    }
+
+    private string PreviousPage(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
     {
         while (--currentPage >= 0)
         {
@@ -106,6 +115,12 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
             {
                 break;
             }
+        }
+
+        if (Flow == JourneyFlow.ChangingContactMethods
+            && currentPage == ConnectContactDetailsJourneyPage.ContactMethods)
+        {
+            return "CheckDetails";
         }
 
         return _connectJourneyPages[(int)currentPage + 1];

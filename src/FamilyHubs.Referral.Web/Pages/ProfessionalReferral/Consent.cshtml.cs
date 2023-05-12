@@ -11,6 +11,10 @@ public class ConsentModel : ProfessionalReferralModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
+    public ConsentModel() : base(ConnectJourneyPage.Consent)
+    {
+    }
+
     protected override Task<IActionResult> OnSafePostAsync()
     {
         return Task.FromResult(OnSafePost());

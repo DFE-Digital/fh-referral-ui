@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
+//todo: back to errored page asked to resubmit form??
+
 public enum JourneyFlow
 {
     Normal,
@@ -10,10 +12,35 @@ public enum JourneyFlow
     ChangingContactMethods
 }
 
+//todo: have only one of these
+//todo: work into next page?
+public enum ConnectJourneyPage
+{
+    LocalOfferDetail,
+    Safeguarding,
+    Consent,
+    SupportDetails,
+    WhySupport,
+    ContactDetails,
+    Email,
+    Telephone,
+    Text,
+    Letter,
+    ContactMethods,
+    CheckDetails
+}
+
 public class ProfessionalReferralModel : PageModel
 {
+    private readonly ConnectJourneyPage _page;
     public string? ServiceId { get; set; }
     public JourneyFlow Flow { get; set; }
+    public string? BackUrl { get; set; }
+
+    public ProfessionalReferralModel(ConnectJourneyPage page = ConnectJourneyPage.Safeguarding)
+    {
+        _page = page;
+    }
 
     protected virtual Task<IActionResult> OnSafeGetAsync()
     {
@@ -37,12 +64,18 @@ public class ProfessionalReferralModel : PageModel
 
         ServiceId = serviceId;
 
+        // default, but can be overridden
+        BackUrl = GenerateBackUrl((_page-1).ToString());
+
         return await OnSafeGetAsync();
     }
 
     public async Task<IActionResult> OnPostAsync(string serviceId, string? changing = null)
     {
         ServiceId = serviceId;
+
+        // default, but can be overridden
+        BackUrl = GenerateBackUrl((_page-1).ToString());
 
         Flow = changing switch
         {
@@ -76,5 +109,28 @@ public class ProfessionalReferralModel : PageModel
 
         return RedirectToProfessionalReferralPage(
             Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page);
+    }
+
+    //protected string PreviousPage(string page)
+    //{
+    //    return Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page;
+    //}
+
+    //todo: better split between this and session model
+    protected string GenerateBackUrl(string page)
+    {
+        string backUrlPage = Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page;
+
+        dynamic dynamicObject = new System.Dynamic.ExpandoObject();
+        //todo: check for null
+        dynamicObject.ServiceId = ServiceId;
+
+        if (Flow == JourneyFlow.ChangingContactMethods)
+        {
+            dynamicObject.changing = "contact-methods";
+        }
+
+        //todo: unit testing BackUrl when it uses this is going to be a pain. just do it manually instead?
+        return UrlHelperExtensions.Page(Url, $"/ProfessionalReferral/{backUrlPage}", dynamicObject);
     }
 }

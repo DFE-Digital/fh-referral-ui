@@ -6,7 +6,7 @@
 }
 
 @section Back {
-    <a asp-page="/ProfessionalReferral/ContactMethods" asp-route-serviceId="@Model.ServiceId" class="govuk-back-link">Back</a>
+    <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
 }
 
 <div class="govuk-grid-row">
@@ -61,8 +61,6 @@
                     Contact methods
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    @*todo: when user changes these, will have to blank any details we're no longer collecting*@
-
                     @{
                         // it's starting to feel like using the enum name (with display attr fallback) would be preferable
                         string[] contactMethodDisplayNames =
@@ -74,7 +72,7 @@
                         };
 
                         List<string> contactMethodsSelected = new List<string>();
-                        for (int contactMethod = 0; contactMethod <= (int) ConnectJourneyPage.LastContactMethod; ++contactMethod)
+                        for (int contactMethod = 0; contactMethod <= (int)ConnectContactDetailsJourneyPage.LastContactMethod; ++contactMethod)
                         {
                             if (Model.ConnectionRequestModel.ContactMethodsSelected[contactMethod])
                             {

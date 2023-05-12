@@ -9,7 +9,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral
         public ConnectionRequestModel? ConnectionRequestModel { get; set; }
 
         public CheckDetailsModel(IConnectionRequestDistributedCache connectionRequestCache)
-            : base(connectionRequestCache)
+            : base(ConnectJourneyPage.CheckDetails, connectionRequestCache)
         {
         }
 

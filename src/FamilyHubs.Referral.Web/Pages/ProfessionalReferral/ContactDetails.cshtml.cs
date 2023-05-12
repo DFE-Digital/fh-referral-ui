@@ -10,9 +10,10 @@ public class ContactDetailsModel : ProfessionalReferralSessionModel
     public string? FullName { get; set; }
 
     [BindProperty]
-    public bool[] ContactMethods { get; set; } = new bool[(int)ConnectJourneyPage.LastContactMethod+1];
+    public bool[] ContactMethods { get; set; } = new bool[(int)ConnectContactDetailsJourneyPage.LastContactMethod+1];
 
-    public ContactDetailsModel(IConnectionRequestDistributedCache connectionRequestCache) : base(connectionRequestCache)
+    public ContactDetailsModel(IConnectionRequestDistributedCache connectionRequestCache)
+        : base(ConnectJourneyPage.ContactDetails, connectionRequestCache)
     {
     }
 
@@ -32,24 +33,21 @@ public class ContactDetailsModel : ProfessionalReferralSessionModel
 
         model.ContactMethodsSelected = ContactMethods;
 
-        // if the user has come from the check details page,
-        //if (Flow == JourneyFlow.ChangingContactMethods)
-        //{
         // we need to remove any previous contact details that are no longer selected
         //todo: can we do this generically?
-        if (!ContactMethods[(int) ConnectJourneyPage.Email])
+        if (!ContactMethods[(int)ConnectContactDetailsJourneyPage.Email])
         {
             model.EmailAddress = null;
         }
-        if (!ContactMethods[(int)ConnectJourneyPage.Telephone])
+        if (!ContactMethods[(int)ConnectContactDetailsJourneyPage.Telephone])
         {
             model.TelephoneNumber = null;
         }
-        if (!ContactMethods[(int)ConnectJourneyPage.Textphone])
+        if (!ContactMethods[(int)ConnectContactDetailsJourneyPage.Textphone])
         {
             model.TextphoneNumber = null;
         }
-        if (!ContactMethods[(int)ConnectJourneyPage.Letter])
+        if (!ContactMethods[(int)ConnectContactDetailsJourneyPage.Letter])
         {
             model.AddressLine1 = null;
             model.AddressLine2 = null;
@@ -57,7 +55,7 @@ public class ContactDetailsModel : ProfessionalReferralSessionModel
             model.County = null;
             model.Postcode = null;
         }
-        //}
+
         return FirstContactMethodPage(model.ContactMethodsSelected);
     }
 }

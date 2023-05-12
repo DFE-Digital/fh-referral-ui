@@ -31,12 +31,11 @@ public class LetterModel : ProfessionalReferralSessionModel
     public string? Postcode { get; set; } = "";
 
     public string HeadingText { get; set; } = "";
-    public string? BackUrl { get; set; }
 
     public Error[]? Errors { get; set; }
 
     public LetterModel(IConnectionRequestDistributedCache connectionRequestCache)
-        : base(connectionRequestCache)
+        : base(ConnectJourneyPage.Letter, connectionRequestCache)
     {
     }
 
@@ -77,12 +76,12 @@ public class LetterModel : ProfessionalReferralSessionModel
         model.County = County;
         model.Postcode = UKGdsPostcodeAttribute.SanitisePostcode(Postcode!);
 
-        return NextPage(ConnectJourneyPage.Letter, model.ContactMethodsSelected);
+        return NextPage(ConnectContactDetailsJourneyPage.Letter, model.ContactMethodsSelected);
     }
 
     private void SetPageProperties(ConnectionRequestModel model)
     {
         HeadingText = $"What is the address for {model.FamilyContactFullName}?";
-        BackUrl = PreviousPage(ConnectJourneyPage.Letter, model.ContactMethodsSelected);
+        BackUrl = GenerateBackUrl(ConnectContactDetailsJourneyPage.Letter, model.ContactMethodsSelected);
     }
 }

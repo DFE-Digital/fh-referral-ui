@@ -21,7 +21,7 @@ public class EmailModel : ProfessionalReferralSessionModel, ISingleEmailTextboxP
     public string? TextBoxValue { get; set; }
 
     public EmailModel(IConnectionRequestDistributedCache connectionRequestCache)
-        : base(connectionRequestCache)
+        : base(ConnectJourneyPage.Email, connectionRequestCache)
     {
     }
 
@@ -47,11 +47,12 @@ public class EmailModel : ProfessionalReferralSessionModel, ISingleEmailTextboxP
 
         model.EmailAddress = TextBoxValue;
 
-        return NextPage(ConnectJourneyPage.Email, model.ContactMethodsSelected);
+        return NextPage(ConnectContactDetailsJourneyPage.Email, model.ContactMethodsSelected);
     }
 
     private void SetPageProperties(ConnectionRequestModel model)
     {
         HeadingText = $"What is the email address for {model.FamilyContactFullName}?";
+        BackUrl = GenerateBackUrl(ConnectContactDetailsJourneyPage.Email, model.ContactMethodsSelected);
     }
 }

@@ -14,10 +14,9 @@ public class ContactMethodsModel : ProfessionalReferralSessionModel, ITellTheSer
     public string? TextAreaValue { get; set; }
 
     public string? TextAreaValidationErrorMessage { get; set; }
-    public string? BackUrl { get; set; }
 
     public ContactMethodsModel(IConnectionRequestDistributedCache connectionRequestCache)
-        : base(connectionRequestCache)
+        : base(ConnectJourneyPage.ContactMethods, connectionRequestCache)
     {
     }
 
@@ -54,6 +53,6 @@ public class ContactMethodsModel : ProfessionalReferralSessionModel, ITellTheSer
 
     private void SetPageProperties(ConnectionRequestModel model)
     {
-        BackUrl = PreviousPage(ConnectJourneyPage.ContactMethods, model.ContactMethodsSelected);
+        BackUrl = GenerateBackUrl(ConnectContactDetailsJourneyPage.ContactMethods, model.ContactMethodsSelected);
     }
 }
