@@ -90,49 +90,62 @@
                     </a>
                 </dd>
             </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Email
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @Model.ConnectionRequestModel.EmailAddress
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                    <a asp-page="/ProfessionalReferral/Email" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
-                        Change<span class="govuk-visually-hidden"> email address</span>
-                    </a>
-                </dd>
-            </div>
 
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Telephone
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @Model.ConnectionRequestModel.TelephoneNumber
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                    <a asp-page="/ProfessionalReferral/Telephone" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
-                        Change<span class="govuk-visually-hidden"> telephone number</span>
-                    </a>
-                </dd>
-            </div>
+            @if (Model.ConnectionRequestModel.EmailAddress != null)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Email
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ConnectionRequestModel.EmailAddress
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a asp-page="/ProfessionalReferral/Email" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
+                            Change<span class="govuk-visually-hidden"> email address</span>
+                        </a>
+                    </dd>
+                </div>
+            }
 
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Text
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @Model.ConnectionRequestModel.TextphoneNumber
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                    <a asp-page="/ProfessionalReferral/Text" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
-                        Change<span class="govuk-visually-hidden"> text telephone number</span>
-                    </a>
-                </dd>
-            </div>
-
-            <div class="govuk-summary-list__row">
+            @if (Model.ConnectionRequestModel.TelephoneNumber != null)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Telephone
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ConnectionRequestModel.TelephoneNumber
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a asp-page="/ProfessionalReferral/Telephone" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
+                            Change<span class="govuk-visually-hidden"> telephone number</span>
+                        </a>
+                    </dd>
+                </div>
+            }
+            
+            @if (Model.ConnectionRequestModel.TextphoneNumber != null)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Text
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ConnectionRequestModel.TextphoneNumber
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a asp-page="/ProfessionalReferral/Text" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
+                            Change<span class="govuk-visually-hidden"> text telephone number</span>
+                        </a>
+                    </dd>
+                </div>
+            }
+            
+            @* AddressLine1 is a mandatory field, so we use it as a proxy for the whole address *@
+            @if (Model.ConnectionRequestModel.AddressLine1 != null)
+            {
+                <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     Address
                 </dt>
@@ -150,6 +163,7 @@
                     </a>
                 </dd>
             </div>
+            }
 
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
