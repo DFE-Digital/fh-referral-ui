@@ -1,4 +1,6 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
+using FamilyHubs.Referral.Core.DistributedCache;
+using FamilyHubs.Referral.Web.DistributedCache;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -65,6 +67,7 @@ public static class StartupExtensions
         services.AddReferralDistributedCache(
             configuration["RedisCache:Connection"],
             int.Parse(configuration["RedisCache:SlidingExpirationInMinutes"] ?? "240"));
+        services.AddTransient<ICacheKeys, CacheKeys>();
     }
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)

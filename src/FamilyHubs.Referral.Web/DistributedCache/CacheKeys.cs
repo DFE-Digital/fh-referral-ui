@@ -1,8 +1,8 @@
 ﻿using FamilyHubs.Referral.Core.DistributedCache;
-using Microsoft.AspNetCore.Http;
 
-namespace FamilyHubs.Referral.Infrastructure.DistributedCache;
+namespace FamilyHubs.Referral.Web.DistributedCache;
 
+//todo: move this back into infrastructure?
 public class CacheKeys : ICacheKeys
 {
     private readonly string _sessionId;
