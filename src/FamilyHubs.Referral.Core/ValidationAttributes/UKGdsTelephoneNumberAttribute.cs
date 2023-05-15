@@ -28,10 +28,20 @@ public class UKGdsTelephoneNumberAttribute : ValidationAttribute
         if (value != null)
         {
             string phoneNumberString = (string)value;
+            bool isValid = false;
 
             PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.GetInstance();
-            var phoneNumber = phoneNumberUtil.Parse(phoneNumberString, "GB");
-            bool isValid = phoneNumberUtil.IsValidNumber(phoneNumber);
+            try
+            {
+                // throws if not a possible number somewhere in the world
+                var phoneNumber = phoneNumberUtil.Parse(phoneNumberString, "GB");
+                // does more in depth validation, including if it's a valid UK number
+                isValid = phoneNumberUtil.IsValidNumber(phoneNumber);
+            }
+            catch (NumberParseException ex)
+            {
+                // PhoneNumberUtil.Parse calls IsViablePhoneNumber(), which throws a NumberParseException if the number isn't a viable telephone number somewhere in the world
+            }
 
             if (!isValid)
             {
