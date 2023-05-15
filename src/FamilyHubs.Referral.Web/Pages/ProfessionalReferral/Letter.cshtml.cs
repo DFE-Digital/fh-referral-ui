@@ -27,7 +27,7 @@ public class LetterModel : ProfessionalReferralSessionModel
 
     [BindProperty]
     [Required(ErrorMessage = "You must enter a postcodeB")]
-    [UKGdsPostcode]
+    [UkGdsPostcode]
     public string? Postcode { get; set; } = "";
 
     public string HeadingText { get; set; } = "";
@@ -74,7 +74,7 @@ public class LetterModel : ProfessionalReferralSessionModel
         model.AddressLine2 = AddressLine2;
         model.TownOrCity = TownOrCity;
         model.County = County;
-        model.Postcode = UKGdsPostcodeAttribute.SanitisePostcode(Postcode!);
+        model.Postcode = UkGdsPostcodeAttribute.SanitisePostcode(Postcode!);
 
         return NextPage(ConnectContactDetailsJourneyPage.Letter, model.ContactMethodsSelected);
     }

@@ -17,7 +17,7 @@ public class TelephoneModel : ProfessionalReferralSessionModel, ISingleTelephone
     public string ErrorText { get; set; } = "";
 
     [Required(ErrorMessage = "Enter a UK telephone number", AllowEmptyStrings = false)]
-    [UKGdsTelephoneNumber]
+    [UkGdsTelephoneNumber]
     [BindProperty]
     public string? TextBoxValue { get; set; }
 

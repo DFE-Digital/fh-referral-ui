@@ -5,11 +5,11 @@ namespace FamilyHubs.ReferralUi.UnitTests.Core.ValidationAttributes;
 
 public class UKGdsTelephoneNumberAttributeTests
 {
-    public UKGdsTelephoneNumberAttribute UKGdsTelephoneNumberAttribute { get; set; }
+    public UkGdsTelephoneNumberAttribute UKGdsTelephoneNumberAttribute { get; set; }
 
     public UKGdsTelephoneNumberAttributeTests()
     {
-        UKGdsTelephoneNumberAttribute = new UKGdsTelephoneNumberAttribute();
+        UKGdsTelephoneNumberAttribute = new UkGdsTelephoneNumberAttribute();
     }
 
     [Theory]
