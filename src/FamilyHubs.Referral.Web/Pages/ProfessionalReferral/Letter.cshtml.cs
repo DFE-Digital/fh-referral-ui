@@ -12,21 +12,21 @@ public class LetterModel : ProfessionalReferralSessionModel
 {
     //todo: consistency with nullable
     [BindProperty]
-    [Required(ErrorMessage = "You must enter an address.")]
+    [Required(ErrorMessage = "You must enter an address")]
     public string? AddressLine1 { get; set; } = "";
 
     [BindProperty]
     public string? AddressLine2 { get; set; } = "";
 
     [BindProperty]
-    [Required(ErrorMessage = "You must enter a town or city.")]
+    [Required(ErrorMessage = "You must enter a town or city")]
     public string? TownOrCity { get; set; } = "";
 
     [BindProperty]
     public string? County { get; set; } = "";
 
     [BindProperty]
-    [Required(ErrorMessage = "You must enter a postcode.")]
+    [Required(ErrorMessage = "You must enter a postcodeB")]
     [UKGdsPostcode]
     public string? Postcode { get; set; } = "";
 

@@ -60,7 +60,7 @@ public class WhenUsingContactMethods : BaseProfessionalReferralPage
         result.PageName.Should().Be("/ProfessionalReferral/CheckDetails");
     }
 
-    private const string EmptyErrorMessage = "Enter details about the family";
+    private const string EmptyErrorMessage = "Enter how best to engage with this family";
     private const string TooLongErrorMessage = "How the service can engage with the family must be 500 characters or less";
 
     [Theory]

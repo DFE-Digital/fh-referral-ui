@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
-//todo: back to errored page asked to resubmit form??
+//todo: use post redirect get pattern so that errored pages don't ask for a reload (especially when using back)
 
 public enum JourneyFlow
 {
@@ -140,17 +140,15 @@ public class ProfessionalReferralModel : PageModel
         }
 
 
-        dynamic dynamicObject = new System.Dynamic.ExpandoObject();
-        //todo: check for null
-        dynamicObject.ServiceId = ServiceId;
+        //todo: check ServiceId for null
+        string url = $"/ProfessionalReferral/{backUrlPage}?ServiceId={ServiceId}";
 
         if (Flow == JourneyFlow.ChangingContactMethods
             && backUrlPage != "CheckDetails" && backUrlPage != "WhySupport")
         {
-            dynamicObject.changing = "contact-methods";
+            url = $"{url}&changing=contact-methods";
         }
 
-        //todo: unit testing BackUrl when it uses this is going to be a pain. just do it manually instead?
-        return UrlHelperExtensions.Page(Url, $"/ProfessionalReferral/{backUrlPage}", dynamicObject);
+        return url;
     }
 }
