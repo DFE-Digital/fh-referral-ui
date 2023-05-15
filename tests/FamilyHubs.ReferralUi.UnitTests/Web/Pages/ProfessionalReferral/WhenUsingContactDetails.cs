@@ -23,18 +23,18 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
     [InlineData(true, true, true, true)]
     public async Task ThenCheckboxesShouldMatchRetrievedModel(bool email, bool telephone, bool textphone, bool letter)
     {
-        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectJourneyPage.Email] = email;
-        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectJourneyPage.Telephone] = telephone;
-        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectJourneyPage.Textphone] = textphone;
-        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectJourneyPage.Letter] = letter;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectContactDetailsJourneyPage.Email] = email;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectContactDetailsJourneyPage.Telephone] = telephone;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectContactDetailsJourneyPage.Textphone] = textphone;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectContactDetailsJourneyPage.Letter] = letter;
 
         //Act
         await _contactDetailsModel.OnGetAsync("1");
 
-        _contactDetailsModel.ContactMethods[(int)ConnectJourneyPage.Email].Should().Be(email);
-        _contactDetailsModel.ContactMethods[(int)ConnectJourneyPage.Telephone].Should().Be(telephone);
-        _contactDetailsModel.ContactMethods[(int)ConnectJourneyPage.Textphone].Should().Be(textphone);
-        _contactDetailsModel.ContactMethods[(int)ConnectJourneyPage.Letter].Should().Be(letter);
+        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Email].Should().Be(email);
+        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Telephone].Should().Be(telephone);
+        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Textphone].Should().Be(textphone);
+        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Letter].Should().Be(letter);
     }
 
     [Theory]
@@ -47,10 +47,10 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
     [InlineData("/ProfessionalReferral/Text", false, false, true, true)]
     public async Task ThenOnPostSupportDetails(string expectedNextPage, bool email, bool telephone, bool textphone, bool letter)
     {
-        _contactDetailsModel.ContactMethods[(int)ConnectJourneyPage.Email] = email;
-        _contactDetailsModel.ContactMethods[(int)ConnectJourneyPage.Telephone] = telephone;
-        _contactDetailsModel.ContactMethods[(int)ConnectJourneyPage.Textphone] = textphone;
-        _contactDetailsModel.ContactMethods[(int)ConnectJourneyPage.Letter] = letter;
+        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Email] = email;
+        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Telephone] = telephone;
+        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Textphone] = textphone;
+        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Letter] = letter;
 
         //Act
         var result = await _contactDetailsModel.OnPostAsync("1") as RedirectToPageResult;

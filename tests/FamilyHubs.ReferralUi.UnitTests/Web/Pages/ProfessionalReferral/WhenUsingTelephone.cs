@@ -31,8 +31,8 @@ public class WhenUsingTelephone : BaseProfessionalReferralPage
     [InlineData("/ProfessionalReferral/ContactMethods", false, false)]
     public async Task ThenOnPostEmail(string expectedNextPage, bool textphone, bool letter)
     {
-        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectJourneyPage.Textphone] = textphone;
-        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectJourneyPage.Letter] = letter;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectContactDetailsJourneyPage.Textphone] = textphone;
+        ConnectionRequestModel.ContactMethodsSelected[(int)ConnectContactDetailsJourneyPage.Letter] = letter;
 
         _telephoneModel.TextBoxValue = Telephone;
 

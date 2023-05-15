@@ -1,0 +1,197 @@
+﻿@page
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.CheckDetailsModel
+
+@{
+    ViewData["Title"] = "Check the details you entered before requesting a connection";
+}
+
+@section Back {
+    <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-l">
+            Check the details you entered before requesting a connection
+        </h1>
+
+        <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Permission to share details
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    Yes
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a asp-page="/ProfessionalReferral/Consent" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
+                        Change<span class="govuk-visually-hidden"> permission to share details</span>
+                    </a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Name of contact
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.ConnectionRequestModel!.FamilyContactFullName
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a asp-page="/ProfessionalReferral/SupportDetails" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
+                        Change<span class="govuk-visually-hidden"> name of contact</span>
+                    </a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Reason for request for support
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.ConnectionRequestModel!.Reason
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a asp-page="/ProfessionalReferral/WhySupport" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
+                        Change<span class="govuk-visually-hidden"> reason for request for support</span>
+                    </a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Contact methods
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @{
+                        // it's starting to feel like using the enum name (with display attr fallback) would be preferable
+                        string[] contactMethodDisplayNames =
+                        {
+                            "Email",
+                            "Telephone",
+                            "Text message",
+                            "Letter"
+                        };
+
+                        List<string> contactMethodsSelected = new List<string>();
+                        for (int contactMethod = 0; contactMethod <= (int)ConnectContactDetailsJourneyPage.LastContactMethod; ++contactMethod)
+                        {
+                            if (Model.ConnectionRequestModel.ContactMethodsSelected[contactMethod])
+                            {
+                                contactMethodsSelected.Add(contactMethodDisplayNames[contactMethod]);
+                            }
+                        }
+                        @string.Join(", ", contactMethodsSelected)
+                    }
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a asp-page="/ProfessionalReferral/ContactDetails" asp-route-serviceId="@Model.ServiceId" asp-route-changing="contact-methods">
+                        Change<span class="govuk-visually-hidden"> contact methods</span>
+                    </a>
+                </dd>
+            </div>
+
+            @if (Model.ConnectionRequestModel.EmailAddress != null)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Email
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ConnectionRequestModel.EmailAddress
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a asp-page="/ProfessionalReferral/Email" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
+                            Change<span class="govuk-visually-hidden"> email address</span>
+                        </a>
+                    </dd>
+                </div>
+            }
+
+            @if (Model.ConnectionRequestModel.TelephoneNumber != null)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Telephone
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ConnectionRequestModel.TelephoneNumber
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a asp-page="/ProfessionalReferral/Telephone" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
+                            Change<span class="govuk-visually-hidden"> telephone number</span>
+                        </a>
+                    </dd>
+                </div>
+            }
+            
+            @if (Model.ConnectionRequestModel.TextphoneNumber != null)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Text
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ConnectionRequestModel.TextphoneNumber
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a asp-page="/ProfessionalReferral/Text" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
+                            Change<span class="govuk-visually-hidden"> text telephone number</span>
+                        </a>
+                    </dd>
+                </div>
+            }
+            
+            @* AddressLine1 is a mandatory field, so we use it as a proxy for the whole address *@
+            @if (Model.ConnectionRequestModel.AddressLine1 != null)
+            {
+                <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Address
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.Raw(string.Join("<br>", RemoveEmpty(
+                        Model.ConnectionRequestModel.AddressLine1,
+                        Model.ConnectionRequestModel.AddressLine2,
+                        Model.ConnectionRequestModel.TownOrCity,
+                        Model.ConnectionRequestModel.County,
+                        Model.ConnectionRequestModel.Postcode)))
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a asp-page="/ProfessionalReferral/Letter" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
+                        Change<span class="govuk-visually-hidden"> address</span>
+                    </a>
+                </dd>
+            </div>
+            }
+
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    How to engage with the family
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.ConnectionRequestModel.EngageReason
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a asp-page="/ProfessionalReferral/ContactMethods" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
+                        Change<span class="govuk-visually-hidden"> how to engage with the family</span>
+                    </a>
+                </dd>
+            </div>
+        </dl>
+
+        <h2 class="govuk-heading-m">Now request a connection</h2>
+
+        <form method="post">
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Confirm details and send request
+            </button>
+        </form>
+    </div>
+</div>
+
+@functions
+{
+    private static IEnumerable<string> RemoveEmpty(params string?[] list)
+    {
+        return list.Where(x => !string.IsNullOrWhiteSpace(x))!;
+    }
+}

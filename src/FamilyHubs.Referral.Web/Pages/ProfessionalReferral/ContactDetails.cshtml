@@ -5,7 +5,7 @@
 }
 
 @section Back {
-    <a asp-page="/ProfessionalReferral/WhySupport" asp-route-serviceId="@Model.ServiceId" class="govuk-back-link">Back</a>
+    <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
 }
 
 <div class="govuk-grid-row">
@@ -57,7 +57,7 @@
                                 "Letter"
                             };
 
-                            for (int contactMethod = 0; contactMethod <= (int) ConnectJourneyPage.LastContactMethod; ++contactMethod)
+                            for (int contactMethod = 0; contactMethod <= (int)ConnectContactDetailsJourneyPage.LastContactMethod; ++contactMethod)
                             {
                                 // work around captured variable being modified in outside scope
                                 int capturedContactMethod = contactMethod;

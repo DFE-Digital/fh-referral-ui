@@ -4,14 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
-//todo: once we start storing the model in the session, switch to storing the service id and name in the session, rather than the url?
 public abstract class ProfessionalReferralSessionModel : ProfessionalReferralModel
 {
     public bool ValidationValid { get; set; } = true;
 
     protected readonly IConnectionRequestDistributedCache ConnectionRequestCache;
 
-    protected ProfessionalReferralSessionModel(IConnectionRequestDistributedCache connectionRequestCache)
+    protected ProfessionalReferralSessionModel(
+        ConnectJourneyPage page,
+        IConnectionRequestDistributedCache connectionRequestCache)
+        : base(page)
     {
         ConnectionRequestCache = connectionRequestCache;
     }
@@ -55,10 +57,11 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
 
         await ConnectionRequestCache.SetAsync(model);
 
-        return RedirectToProfessionalReferralPage(nextPage);
+        return NextPage(nextPage);
     }
 
     //todo: probably want to move these into the base?
+    //todo: once enums merged, just use tostring instead
     private static string[] _connectJourneyPages =
     {
         "ContactDetails",
@@ -71,12 +74,18 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
 
     protected string FirstContactMethodPage(bool[] contactMethodsSelected)
     {
-        return NextPage((ConnectJourneyPage)(-1), contactMethodsSelected);
+        return NextPage((ConnectContactDetailsJourneyPage)(-1), contactMethodsSelected);
     }
 
-    protected string NextPage(ConnectJourneyPage currentPage, bool[] contactMethodsSelected)
+    protected string NextPage(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
     {
-        while (++currentPage <= ConnectJourneyPage.LastContactMethod)
+        // we could do this, but should be handled later anyway
+        //if (Flow == JourneyFlow.ChangingPage)
+        //{
+        //    return "CheckDetails";
+        //}
+
+        while (++currentPage <= ConnectContactDetailsJourneyPage.LastContactMethod)
         {
             if (contactMethodsSelected[(int) currentPage])
             {
@@ -84,10 +93,21 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
             }
         }
 
+        if (Flow == JourneyFlow.ChangingContactMethods
+            && currentPage == ConnectContactDetailsJourneyPage.ContactMethods)
+        {
+            return "CheckDetails";
+        }
+
         return _connectJourneyPages[(int)currentPage+1];
     }
 
-    protected string PreviousPage(ConnectJourneyPage currentPage, bool[] contactMethodsSelected)
+    protected string GenerateBackUrl(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
+    {
+        return GenerateBackUrl(PreviousPage(currentPage, contactMethodsSelected));
+    }
+
+    private string PreviousPage(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
     {
         while (--currentPage >= 0)
         {
@@ -96,6 +116,12 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
                 break;
             }
         }
+
+        //if (Flow == JourneyFlow.ChangingContactMethods
+        //    && currentPage == ConnectContactDetailsJourneyPage.ContactMethods)
+        //{
+        //    return "CheckDetails";
+        //}
 
         return _connectJourneyPages[(int)currentPage + 1];
     }

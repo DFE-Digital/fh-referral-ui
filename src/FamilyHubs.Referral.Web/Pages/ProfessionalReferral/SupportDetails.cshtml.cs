@@ -23,6 +23,7 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
     public string? TextBoxValue { get; set; }
 
     public SupportDetailsModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
+        : base(ConnectJourneyPage.SupportDetails)
     {
         _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }
@@ -65,6 +66,6 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
         model.FamilyContactFullName = TextBoxValue;
         await _connectionRequestDistributedCache.SetAsync(model);
 
-        return RedirectToProfessionalReferralPage("WhySupport");
+        return NextPage("WhySupport");
     }
 }

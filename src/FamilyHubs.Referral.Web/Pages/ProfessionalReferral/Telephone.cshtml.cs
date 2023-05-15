@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Web.Models;
+using FamilyHubs.Referral.Core.ValidationAttributes;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -13,15 +14,14 @@ public class TelephoneModel : ProfessionalReferralSessionModel, ISingleTelephone
     public string? HintText { get; set; }
     public string TextBoxLabel { get; set; } = "UK telephone number";
     public string ErrorText { get; set; } = "";
-    public string? BackUrl { get; set; }
 
     [Required(ErrorMessage = "Enter a UK telephone number", AllowEmptyStrings = false)]
-    [Phone(ErrorMessage = "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192")]
+    [UkGdsTelephoneNumber]
     [BindProperty]
     public string? TextBoxValue { get; set; }
 
     public TelephoneModel(IConnectionRequestDistributedCache connectionRequestCache)
-        : base(connectionRequestCache)
+        : base(ConnectJourneyPage.Telephone, connectionRequestCache)
     {
     }
 
@@ -48,12 +48,12 @@ public class TelephoneModel : ProfessionalReferralSessionModel, ISingleTelephone
 
         model.TelephoneNumber = TextBoxValue;
 
-        return NextPage(ConnectJourneyPage.Telephone, model.ContactMethodsSelected);
+        return NextPage(ConnectContactDetailsJourneyPage.Telephone, model.ContactMethodsSelected);
     }
 
     private void SetPageProperties(ConnectionRequestModel model)
     {
         HeadingText = $"What telephone number should the service use to call {model.FamilyContactFullName}?";
-        BackUrl = PreviousPage(ConnectJourneyPage.Telephone, model.ContactMethodsSelected);
+        BackUrl = GenerateBackUrl(ConnectContactDetailsJourneyPage.Telephone, model.ContactMethodsSelected);
     }
 }
