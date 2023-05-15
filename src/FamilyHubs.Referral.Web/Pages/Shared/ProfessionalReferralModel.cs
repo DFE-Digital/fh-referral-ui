@@ -118,11 +118,6 @@ public class ProfessionalReferralModel : PageModel
             Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page);
     }
 
-    //protected string PreviousPage(string page)
-    //{
-    //    return Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page;
-    //}
-
     //todo: work with enums until the last possible moment
     //todo: better split between this and session model
     protected string GenerateBackUrl(string page)
