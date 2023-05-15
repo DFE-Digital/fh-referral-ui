@@ -36,7 +36,10 @@ public class UKGdsTelephoneNumberAttribute : ValidationAttribute
                 // throws if not a possible number somewhere in the world
                 var phoneNumber = phoneNumberUtil.Parse(phoneNumberString, "GB");
                 // does more in depth validation, including if it's a valid UK number
-                isValid = phoneNumberUtil.IsValidNumber(phoneNumber);
+                isValid = phoneNumberUtil.IsValidNumber(phoneNumber)
+                    && phoneNumberUtil.GetRegionCodeForNumber(phoneNumber) == "GB"
+                    // libphonenumber allows some characters that we don't want to allow
+                    && !phoneNumberString.Intersect("!\"£$%^&*={}'@~\\|?/").Any();
             }
             catch (NumberParseException ex)
             {
