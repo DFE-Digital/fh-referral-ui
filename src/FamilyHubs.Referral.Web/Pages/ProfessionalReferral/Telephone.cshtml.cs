@@ -8,7 +8,6 @@ using FamilyHubs.Referral.Core.ValidationAttributes;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-//todo: check details -> change contact details -> back -> goes to contact details, not check details
 public class TelephoneModel : ProfessionalReferralSessionModel, ISingleTelephoneTextboxPageModel
 {
     public string HeadingText { get; set; } = "";
