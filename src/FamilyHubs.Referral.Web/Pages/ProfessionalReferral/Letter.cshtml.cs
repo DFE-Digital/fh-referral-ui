@@ -26,7 +26,7 @@ public class LetterModel : ProfessionalReferralSessionModel
     public string? County { get; set; } = "";
 
     [BindProperty]
-    [Required(ErrorMessage = "You must enter a postcodeB")]
+    [Required(ErrorMessage = "You must enter a postcode")]
     [UkGdsPostcode]
     public string? Postcode { get; set; } = "";
 
