@@ -34,7 +34,7 @@ public class ContactMethodsModel : ProfessionalReferralSessionModel, ITellTheSer
         if (string.IsNullOrEmpty(TextAreaValue))
         {
             SetPageProperties(model);
-            TextAreaValidationErrorMessage = "Enter details about the family";
+            TextAreaValidationErrorMessage = "Enter how best to engage with this family";
             return null;
         }
 
