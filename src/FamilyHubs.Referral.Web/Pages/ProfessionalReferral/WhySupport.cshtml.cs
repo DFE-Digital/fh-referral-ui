@@ -15,7 +15,7 @@ public class WhySupportModel : ProfessionalReferralSessionModel, ITellTheService
     public string? TextAreaValue { get; set; }
 
     public WhySupportModel(IConnectionRequestDistributedCache connectionRequestCache)
-        : base(connectionRequestCache)
+        : base(ConnectJourneyPage.WhySupport, connectionRequestCache)
     {
     }
 
@@ -29,7 +29,7 @@ public class WhySupportModel : ProfessionalReferralSessionModel, ITellTheService
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {
-            TextAreaValidationErrorMessage = "Enter reason for the connection request";
+            TextAreaValidationErrorMessage = "Enter details about the family";
             return null;
         }
 

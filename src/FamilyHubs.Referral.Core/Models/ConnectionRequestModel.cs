@@ -1,7 +1,8 @@
 ﻿
 namespace FamilyHubs.Referral.Core.Models;
 
-public enum ConnectJourneyPage
+//todo: merge into one
+public enum ConnectContactDetailsJourneyPage
 {
     Email,
     Telephone,
@@ -16,7 +17,7 @@ public class ConnectionRequestModel
     public string? ServiceId { get; set; }
     public string? FamilyContactFullName { get; set; }
     public string? Reason { get; set; }
-    public bool[] ContactMethodsSelected { get; set; } = new bool[(int)ConnectJourneyPage.LastContactMethod+1];
+    public bool[] ContactMethodsSelected { get; set; } = new bool[(int)ConnectContactDetailsJourneyPage.LastContactMethod+1];
     public string? EmailAddress { get; set; }
     public string? TelephoneNumber { get; set; }
     public string? TextphoneNumber { get; set; }

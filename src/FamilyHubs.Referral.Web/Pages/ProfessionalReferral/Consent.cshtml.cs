@@ -13,6 +13,10 @@ public class ConsentModel : ProfessionalReferralModel
     [BindProperty]
     public bool ValidationValid { get; set; } = true;
 
+    public ConsentModel() : base(ConnectJourneyPage.Consent)
+    {
+    }
+
     protected override Task<IActionResult> OnSafePostAsync()
     {
         return Task.FromResult(OnSafePost());
@@ -28,9 +32,9 @@ public class ConsentModel : ProfessionalReferralModel
 
         if (string.Compare(Consent, "yes", StringComparison.OrdinalIgnoreCase) == 0)
         {
-            return RedirectToProfessionalReferralPage("SupportDetails");
+            return NextPage("SupportDetails");
         }
 
-        return RedirectToPage("/ProfessionalReferral/ConsentShutter");
+        return RedirectToProfessionalReferralPage("ConsentShutter");
     }
 }

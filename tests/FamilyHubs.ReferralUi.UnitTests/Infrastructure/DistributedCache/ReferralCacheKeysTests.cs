@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.Referral.Infrastructure.DistributedCache;
+using FamilyHubs.Referral.Web.DistributedCache;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;

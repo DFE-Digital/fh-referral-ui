@@ -12,31 +12,30 @@ public class LetterModel : ProfessionalReferralSessionModel
 {
     //todo: consistency with nullable
     [BindProperty]
-    [Required(ErrorMessage = "You must enter an address.")]
+    [Required(ErrorMessage = "You must enter an address")]
     public string? AddressLine1 { get; set; } = "";
 
     [BindProperty]
     public string? AddressLine2 { get; set; } = "";
 
     [BindProperty]
-    [Required(ErrorMessage = "You must enter a town or city.")]
+    [Required(ErrorMessage = "You must enter a town or city")]
     public string? TownOrCity { get; set; } = "";
 
     [BindProperty]
     public string? County { get; set; } = "";
 
     [BindProperty]
-    [Required(ErrorMessage = "You must enter a postcode.")]
-    [UKGdsPostcode]
+    [Required(ErrorMessage = "You must enter a postcode")]
+    [UkGdsPostcode]
     public string? Postcode { get; set; } = "";
 
     public string HeadingText { get; set; } = "";
-    public string? BackUrl { get; set; }
 
     public Error[]? Errors { get; set; }
 
     public LetterModel(IConnectionRequestDistributedCache connectionRequestCache)
-        : base(connectionRequestCache)
+        : base(ConnectJourneyPage.Letter, connectionRequestCache)
     {
     }
 
@@ -75,14 +74,14 @@ public class LetterModel : ProfessionalReferralSessionModel
         model.AddressLine2 = AddressLine2;
         model.TownOrCity = TownOrCity;
         model.County = County;
-        model.Postcode = UKGdsPostcodeAttribute.SanitisePostcode(Postcode!);
+        model.Postcode = UkGdsPostcodeAttribute.SanitisePostcode(Postcode!);
 
-        return NextPage(ConnectJourneyPage.Letter, model.ContactMethodsSelected);
+        return NextPage(ConnectContactDetailsJourneyPage.Letter, model.ContactMethodsSelected);
     }
 
     private void SetPageProperties(ConnectionRequestModel model)
     {
         HeadingText = $"What is the address for {model.FamilyContactFullName}?";
-        BackUrl = PreviousPage(ConnectJourneyPage.Letter, model.ContactMethodsSelected);
+        BackUrl = GenerateBackUrl(ConnectContactDetailsJourneyPage.Letter, model.ContactMethodsSelected);
     }
 }

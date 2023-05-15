@@ -14,10 +14,9 @@ public class ContactMethodsModel : ProfessionalReferralSessionModel, ITellTheSer
     public string? TextAreaValue { get; set; }
 
     public string? TextAreaValidationErrorMessage { get; set; }
-    public string? BackUrl { get; set; }
 
     public ContactMethodsModel(IConnectionRequestDistributedCache connectionRequestCache)
-        : base(connectionRequestCache)
+        : base(ConnectJourneyPage.ContactMethods, connectionRequestCache)
     {
     }
 
@@ -35,7 +34,7 @@ public class ContactMethodsModel : ProfessionalReferralSessionModel, ITellTheSer
         if (string.IsNullOrEmpty(TextAreaValue))
         {
             SetPageProperties(model);
-            TextAreaValidationErrorMessage = "Enter details about the family";
+            TextAreaValidationErrorMessage = "Enter how best to engage with this family";
             return null;
         }
 
@@ -51,8 +50,9 @@ public class ContactMethodsModel : ProfessionalReferralSessionModel, ITellTheSer
         //todo: use next page
         return "CheckDetails";
     }
+
     private void SetPageProperties(ConnectionRequestModel model)
     {
-        BackUrl = PreviousPage(ConnectJourneyPage.ContactMethods, model.ContactMethodsSelected);
+        BackUrl = GenerateBackUrl(ConnectContactDetailsJourneyPage.ContactMethods, model.ContactMethodsSelected);
     }
 }
