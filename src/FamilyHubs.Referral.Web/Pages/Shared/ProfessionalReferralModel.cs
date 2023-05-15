@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
@@ -30,6 +31,7 @@ public enum ConnectJourneyPage
     CheckDetails
 }
 
+[Authorize]
 public class ProfessionalReferralModel : PageModel
 {
     private readonly ConnectJourneyPage _page;

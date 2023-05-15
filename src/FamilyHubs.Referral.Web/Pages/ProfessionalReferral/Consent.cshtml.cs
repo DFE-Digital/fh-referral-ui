@@ -1,10 +1,8 @@
 using FamilyHubs.Referral.Web.Pages.Shared;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-[Authorize]
 public class ConsentModel : ProfessionalReferralModel
 { 
     [BindProperty]
