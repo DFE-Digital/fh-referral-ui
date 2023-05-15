@@ -7,9 +7,7 @@ using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Core.ValidationAttributes;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
-//todo: fix check details -> change contact methods change selection e.g. from text to phone, continue, then back and back again to check details & previous captured text has now been deleted
-// need to clear not selected, either on post of last contact details page, or on get of check details page
-// will mean if you eg. select phone, enter phone, go back, select text, enter text, got back, select phone again and it will have remembered the original phone, but think that's ok
+
 public class TextModel : ProfessionalReferralSessionModel, ISingleTelephoneTextboxPageModel
 {
     public string HeadingText { get; set; } = "";
