@@ -1,5 +1,5 @@
 {
-  "name": "FamilyHubs.Referral.Web",
+  "name": "familyhubs.referral.web",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -26,6 +26,6 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "familyhubs-frontend": "1.0.36-alpha"
+    "familyhubs-frontend": "1.0.37-alpha"
   }
 }
