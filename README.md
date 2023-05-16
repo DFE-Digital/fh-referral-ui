@@ -60,3 +60,5 @@ To debug the JavaScript in Visual Studio, set breakpoints in the JavaScript file
   rather than passing it through the journey, as someone could change it in the URL
 
 * use ModelState.IsValid, rather than ValidationValid?
+ 
+* how should the nav menu respond?

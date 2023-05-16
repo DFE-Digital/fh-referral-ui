@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
@@ -32,7 +33,7 @@ public enum ConnectJourneyPage
 }
 
 [Authorize]
-public class ProfessionalReferralModel : PageModel
+public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
 {
     private readonly ConnectJourneyPage _page;
     public string? ServiceId { get; set; }
@@ -42,6 +43,13 @@ public class ProfessionalReferralModel : PageModel
     public ProfessionalReferralModel(ConnectJourneyPage page = ConnectJourneyPage.Safeguarding)
     {
         _page = page;
+    }
+
+    public bool ShowNavigationMenu => true;
+
+    public bool IsActive(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
+    {
+        return link.Text == "Search for service";
     }
 
     protected virtual Task<IActionResult> OnSafeGetAsync()
