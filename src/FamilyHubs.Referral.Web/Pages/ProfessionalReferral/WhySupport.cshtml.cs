@@ -29,7 +29,7 @@ public class WhySupportModel : ProfessionalReferralSessionModel, ITellTheService
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {
-            TextAreaValidationErrorMessage = "Enter details about the family";
+            TextAreaValidationErrorMessage = "Enter a reason for the connection request";
             return null;
         }
 
