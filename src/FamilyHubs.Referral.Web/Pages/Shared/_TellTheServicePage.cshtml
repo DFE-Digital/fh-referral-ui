@@ -29,11 +29,11 @@
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
                 <div class="govuk-form-group @(Model.TextAreaValidationErrorMessage != null ? "govuk-form-group--error" : "")">
 
-                    <h1 class="govuk-label-wrapper">
+                    <h2 class="govuk-label-wrapper">
                         <label class="govuk-label govuk-label--m" for="reason">
                             What do you want to tell the service?
                         </label>
-                    </h1>
+                    </h2>
 
                     @if (Model.TextAreaValidationErrorMessage != null)
                     {
