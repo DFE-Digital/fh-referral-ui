@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
@@ -39,6 +40,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
     public string? ServiceId { get; set; }
     public JourneyFlow Flow { get; set; }
     public string? BackUrl { get; set; }
+    public ProfessionalReferralError[]? Errors { get; set; }
 
     public ProfessionalReferralModel(ConnectJourneyPage page = ConnectJourneyPage.Safeguarding)
     {
@@ -62,7 +64,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         return Task.FromResult((IActionResult)Page());
     }
 
-    public async Task<IActionResult> OnGetAsync(string serviceId, string? changing = null)
+    public async Task<IActionResult> OnGetAsync(string serviceId, string? changing = null, string? errors = null)
     {
         if (serviceId == null)
         {
@@ -73,6 +75,8 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         }
 
         ServiceId = serviceId;
+        //todo: do we want Property:error1, etc.? to generically set the link id?
+        Errors = errors?.Split(',').Select(Enum.Parse<ProfessionalReferralError>).ToArray();
 
         Flow = GetFlow(changing);
 

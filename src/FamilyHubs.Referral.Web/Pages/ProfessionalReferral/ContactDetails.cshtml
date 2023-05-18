@@ -10,7 +10,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        @if (!Model.ValidationValid)
+        @if (Model.Errors != null)
         {
             <div class="govuk-error-summary" data-module="govuk-error-summary">
                 <div role="alert">
@@ -20,7 +20,7 @@
                     <div class="govuk-error-summary__body">
                         <ul class="govuk-list govuk-error-summary__list">
                             <li>
-                                <a href="#contact-methods" data-testid="summary-error">Select a contact method</a>
+                                <a href="#@Html.IdFor(m => m.ContactMethods[0])" data-testid="summary-error">Select a contact method</a>
                             </li>
                         </ul>
                     </div>
@@ -28,8 +28,8 @@
             </div>
         }
         <form method="post">
-            <div class="govuk-form-group  @(Model.ValidationValid ? "" : "govuk-form-group--error")">
-                <fieldset class="govuk-fieldset" aria-describedby="hint @(Model.ValidationValid ? "" : "error")">
+            <div class="govuk-form-group  @(Model.Errors != null ? "govuk-form-group--error" : "")">
+                <fieldset class="govuk-fieldset" aria-describedby="hint @(Model.Errors != null ? "error" : "")">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <h1 class="govuk-fieldset__heading">
                             How can the service contact @Model.FullName?
@@ -38,7 +38,7 @@
                     <div id="hint" class="govuk-hint">
                         Select all that apply.
                     </div>
-                    @if (!Model.ValidationValid)
+                    @if (Model.Errors != null)
                     {
                         <p id="error" class="govuk-error-message">
                             <span class="govuk-visually-hidden">Error:</span> Select a contact method

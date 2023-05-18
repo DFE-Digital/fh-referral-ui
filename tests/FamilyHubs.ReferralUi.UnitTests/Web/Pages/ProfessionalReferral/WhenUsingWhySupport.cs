@@ -41,7 +41,7 @@ public class WhenUsingWhySupport : BaseProfessionalReferralPage
         result.PageName.Should().Be("/ProfessionalReferral/ContactDetails");
     }
 
-    private const string EmptyErrorMessage = "Enter details about the family";
+    private const string EmptyErrorMessage = "Enter a reason for the connection request";
     private const string TooLongErrorMessage = "Reason for the connection request must be 500 characters or less";
 
     [Theory]

@@ -32,7 +32,7 @@ public class LetterModel : ProfessionalReferralSessionModel
 
     public string HeadingText { get; set; } = "";
 
-    public Error[]? Errors { get; set; }
+    public LetterError[]? LetterErrors { get; set; }
 
     public LetterModel(IConnectionRequestDistributedCache connectionRequestCache)
         : base(ConnectJourneyPage.Letter, connectionRequestCache)
@@ -50,21 +50,21 @@ public class LetterModel : ProfessionalReferralSessionModel
         SetPageProperties(model);
     }
 
-    public record Error(string Property, string ErrorMessage);
+    public record LetterError(string Property, string ErrorMessage);
 
     // the ordering of errors in the ModelState is not guaranteed
-    private IEnumerable<Error> GetErrors(params string[] propertyNames)
+    private IEnumerable<LetterError> GetErrors(params string[] propertyNames)
     {
         return propertyNames.Select(p => (propertyName: p, entry: ModelState[p]))
             .Where(t => t.entry!.ValidationState == ModelValidationState.Invalid)
-            .Select(t => new Error(t.propertyName, t.entry!.Errors[0].ErrorMessage));
+            .Select(t => new LetterError(t.propertyName, t.entry!.Errors[0].ErrorMessage));
     }
 
     protected override string? OnPostWithModel(ConnectionRequestModel model)
     {
         if (!ModelState.IsValid)
         {
-            Errors = GetErrors(nameof(AddressLine1), nameof(TownOrCity), nameof(Postcode)).ToArray();
+            LetterErrors = GetErrors(nameof(AddressLine1), nameof(TownOrCity), nameof(Postcode)).ToArray();
             ValidationValid = false;
             SetPageProperties(model);
             return null;

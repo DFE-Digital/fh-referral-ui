@@ -19,7 +19,25 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
     }
 
     protected abstract void OnGetWithModel(ConnectionRequestModel model);
-    protected abstract string? OnPostWithModel(ConnectionRequestModel model);
+
+    protected virtual string? OnPostWithModel(ConnectionRequestModel model)
+    {
+        // this is only here while we evolve the code, and is not expected to be called
+        throw new NotImplementedException();
+    }
+
+    //todo: move all over to this one, then remove the above and rename this to OnPostWithModel
+    // consumers will call NextPage() instead of returning a string (and we can pick up the page from the model)
+    protected virtual IActionResult OnPostWithModelNew(ConnectionRequestModel model)
+    {
+        string? nextPage = OnPostWithModel(model);
+        if (nextPage == null)
+        {
+            return Page();
+        }
+
+        return NextPage(nextPage);
+    }
 
     protected override async Task<IActionResult> OnSafeGetAsync()
     {
@@ -49,15 +67,11 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
             return RedirectToProfessionalReferralPage("LocalOfferDetail");
         }
 
-        string? nextPage = OnPostWithModel(model);
-        if (nextPage == null)
-        {
-            return Page();
-        }
+        var result = OnPostWithModelNew(model);
 
         await ConnectionRequestCache.SetAsync(model);
 
-        return NextPage(nextPage);
+        return result;
     }
 
     //todo: probably want to move these into the base?
