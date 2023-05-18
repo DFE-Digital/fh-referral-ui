@@ -49,9 +49,9 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
 
     public bool ShowNavigationMenu => true;
 
-    public bool IsActive(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
+    public LinkStatus GetStatus(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
     {
-        return link.Text == "Search for service";
+        return link.Text == "Search for service" ? LinkStatus.Active : LinkStatus.Visible;
     }
 
     protected virtual Task<IActionResult> OnSafeGetAsync()
