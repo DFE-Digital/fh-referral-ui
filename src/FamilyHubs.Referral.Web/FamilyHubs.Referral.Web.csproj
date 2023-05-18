@@ -53,10 +53,4 @@
 	  <ProjectReference Include="..\FamilyHubs.Referral.Infrastructure\FamilyHubs.Referral.Infrastructure.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Content Update="appsettings.development.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	</ItemGroup>
-
 </Project>
