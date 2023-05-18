@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
@@ -30,16 +33,25 @@ public enum ConnectJourneyPage
     CheckDetails
 }
 
-public class ProfessionalReferralModel : PageModel
+[Authorize]
+public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
 {
     private readonly ConnectJourneyPage _page;
     public string? ServiceId { get; set; }
     public JourneyFlow Flow { get; set; }
     public string? BackUrl { get; set; }
+    public ProfessionalReferralError[]? Errors { get; set; }
 
     public ProfessionalReferralModel(ConnectJourneyPage page = ConnectJourneyPage.Safeguarding)
     {
         _page = page;
+    }
+
+    public bool ShowNavigationMenu => true;
+
+    public LinkStatus GetStatus(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
+    {
+        return link.Text == "Search for service" ? LinkStatus.Active : LinkStatus.Visible;
     }
 
     protected virtual Task<IActionResult> OnSafeGetAsync()
@@ -52,7 +64,7 @@ public class ProfessionalReferralModel : PageModel
         return Task.FromResult((IActionResult)Page());
     }
 
-    public async Task<IActionResult> OnGetAsync(string serviceId, string? changing = null)
+    public async Task<IActionResult> OnGetAsync(string serviceId, string? changing = null, string? errors = null)
     {
         if (serviceId == null)
         {
@@ -63,6 +75,8 @@ public class ProfessionalReferralModel : PageModel
         }
 
         ServiceId = serviceId;
+        //todo: do we want Property:error1, etc.? to generically set the link id?
+        Errors = errors?.Split(',').Select(Enum.Parse<ProfessionalReferralError>).ToArray();
 
         Flow = GetFlow(changing);
 

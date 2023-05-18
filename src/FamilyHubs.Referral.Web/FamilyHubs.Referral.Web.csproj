@@ -24,8 +24,8 @@
   <ItemGroup>
     <PackageReference Include="Enums.NET" Version="4.0.1" />
     <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="2.0.4" />
-    <PackageReference Include="FamilyHubs.SharedKernel" Version="2.0.1" />
-    <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="1.0.34-alpha" />
+    <PackageReference Include="FamilyHubs.SharedKernel" Version="2.0.8" />
+    <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="1.0.44-alpha" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
