@@ -1,7 +1,10 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
@@ -94,4 +97,39 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
         CheckDetailsModel.ConnectionRequestModel!.County.Should().NotBeNull();
         CheckDetailsModel.ConnectionRequestModel!.Postcode.Should().NotBeNull();
     }
+
+    //todo: mock claims on HttpContext
+
+    //[Fact]
+    //public async Task ThenOnPostAsync_NextPageIsConfirmation()
+    //{
+    //    OrganisationClientService
+    //        .Setup(x => x.GetLocalOfferById(It.IsAny<string>()))
+    //        .ReturnsAsync(new ServiceDto
+    //        {
+    //            Id = 1,
+    //            Name = "Test Service",
+    //            Description = "Service Description",
+    //            // other required properties
+    //            ServiceOwnerReferenceId = "",
+    //            ServiceType = ServiceType.InformationSharing
+    //        });
+
+    //    OrganisationClientService
+    //        .Setup(x => x.GetOrganisationDtobyIdAsync(It.IsAny<long>()))
+    //        .ReturnsAsync(new OrganisationDto
+    //        {
+    //            Id = 1,
+    //            Name = "Test Organisation",
+    //            Description = "Organisation Description",
+    //            // other required properties
+    //            OrganisationType = OrganisationType.VCFS,
+    //            AdminAreaCode = ""
+    //        });
+
+    //    var result = await CheckDetailsModel.OnPostAsync("1") as RedirectToPageResult;
+
+    //    result.Should().NotBeNull();
+    //    result!.PageName.Should().Be("/ProfessionalReferral/Confirmation");
+    //}
 }
