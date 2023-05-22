@@ -92,7 +92,7 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
         var user = HttpContext.GetFamilyHubsUser();
         var team = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Team");
 
-        var referralDto = CreateReferralDto(model, user, service, organisation);
+        var referralDto = CreateReferralDto(model, user, team, service, organisation);
 
         await _referralClientService.CreateReferral(referralDto);
     }
