@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
@@ -89,6 +90,7 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
         }   
 
         var user = HttpContext.GetFamilyHubsUser();
+        var team = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Team");
 
         var referralDto = CreateReferralDto(model, user, service, organisation);
 
@@ -98,6 +100,7 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
     private static ReferralDto CreateReferralDto(
         ConnectionRequestModel model,
         FamilyHubsUser user,
+        Claim? team,
         ServiceDto service,
         OrganisationDto organisation)
     {
@@ -123,7 +126,8 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
                 EmailAddress = user.Email,
                 Name = user.FullName,
                 PhoneNumber = user.PhoneNumber,
-                Role = user.Role
+                Role = user.Role,
+                Team = team?.Value
             },
             ReferralServiceDto = new ReferralServiceDto
             {
