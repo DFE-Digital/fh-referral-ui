@@ -86,7 +86,7 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
         {
             //todo: create and throw custom exception
             throw new InvalidOperationException($"Organisation not found for service {service.Id}");
-        }
+        }   
 
         var user = HttpContext.GetFamilyHubsUser();
 

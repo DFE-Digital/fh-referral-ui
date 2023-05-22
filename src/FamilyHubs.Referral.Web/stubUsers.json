@@ -21,12 +21,8 @@
               "Value": "Active"
             },
             {
-              "Name": "FirstName",
-              "Value": "dfeAdmin"
-            },
-            {
-              "Name": "LastName",
-              "Value": "User"
+              "Name": "FullName",
+              "Value": "dfeAdmin User"
             },
             {
               "Name": "PhoneNumber",
@@ -53,12 +49,8 @@
               "Value": "Active"
             },
             {
-              "Name": "FirstName",
-              "Value": "dfeAdmin"
-            },
-            {
-              "Name": "LastName",
-              "Value": "User"
+              "Name": "FullName",
+              "Value": "dfeAdmin User"
             },
             {
               "Name": "PhoneNumber",
@@ -85,12 +77,8 @@
               "Value": "Active"
             },
             {
-              "Name": "FirstName",
-              "Value": "vcsAdmin2"
-            },
-            {
-              "Name": "LastName",
-              "Value": "User"
+              "Name": "FullName",
+              "Value": "vcsAdmin2 User"
             },
             {
               "Name": "PhoneNumber",
