@@ -77,7 +77,7 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
 
     private async Task CreateConnectionRequest(ConnectionRequestModel model)
     {
-        //todo: this throws an ArgumentNullException is the service is not found. it should return null (from a 404 from the api)
+        //todo: this throws an ArgumentNullException if the service is not found. it should return null (from a 404 from the api)
         ServiceDto service = await _organisationClientService.GetLocalOfferById(model.ServiceId!);
         OrganisationDto? organisation = await _organisationClientService.GetOrganisationDtobyIdAsync(service.OrganisationId);
 
