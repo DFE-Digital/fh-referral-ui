@@ -1,6 +1,29 @@
 ﻿@page
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.ConfirmationModel
 @{
+    ViewData["Title"] = "Connection request sent";
 }
 
-<h1>Confirmation will go here</h1>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">
+                Connection request sent
+            </h1>
+            <div class="govuk-panel__body">
+                Request number<br><strong>@Model.RequestNumber</strong>
+            </div>
+        </div>
+
+        <p>You have given the family's details to the service. This request has been added to your dashboard and you will receive an email confirmation.</p>
+
+        <h2 class="govuk-heading-m">What happens next</h2>
+
+        <p>The service will review your request. They may contact you for more details about the family.</p>
+        <p>You will be notified by email when they accept or decline the request. You should receive a response within 5 working days.</p>
+  
+        <button class="govuk-button" data-module="govuk-button">
+            Share with family
+        </button>
+    </div>
+</div>

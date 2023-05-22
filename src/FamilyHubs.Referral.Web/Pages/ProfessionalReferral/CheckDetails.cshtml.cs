@@ -70,12 +70,16 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
     {
         RemoveNonSelectedContactDetails(model);
 
-        await CreateConnectionRequest(model);
+        var requestNumber = await CreateConnectionRequest(model);
 
-        return NextPage("Confirmation");
+        return RedirectToPage($"/ProfessionalReferral/Confirmation", new
+        {
+            ServiceId,
+            requestNumber
+        });
     }
 
-    private async Task CreateConnectionRequest(ConnectionRequestModel model)
+    private async Task<string> CreateConnectionRequest(ConnectionRequestModel model)
     {
         //todo: this throws an ArgumentNullException if the service is not found. it should return null (from a 404 from the api)
         ServiceDto service = await _organisationClientService.GetLocalOfferById(model.ServiceId!);
@@ -88,17 +92,17 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
         }   
 
         var user = HttpContext.GetFamilyHubsUser();
-        var team = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Team");
+        //var team = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Team");
 
-        var referralDto = CreateReferralDto(model, user, team, service, organisation);
+        var referralDto = CreateReferralDto(model, user, /*team,*/ service, organisation);
 
-        await _referralClientService.CreateReferral(referralDto);
+        return await _referralClientService.CreateReferral(referralDto);
     }
 
     private static ReferralDto CreateReferralDto(
         ConnectionRequestModel model,
         FamilyHubsUser user,
-        Claim? team,
+        //Claim? team,
         ServiceDto service,
         OrganisationDto organisation)
     {
@@ -124,7 +128,7 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
                 Name = user.FullName,
                 PhoneNumber = user.PhoneNumber,
                 Role = user.Role,
-                Team = team?.Value
+                //Team = team?.Value
             },
             ReferralServiceDto = new ReferralServiceDto
             {
