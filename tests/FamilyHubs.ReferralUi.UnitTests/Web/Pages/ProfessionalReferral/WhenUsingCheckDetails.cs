@@ -24,10 +24,6 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
     [Fact]
     public async Task EmailOptionNotSelected_EmailIsRemoved()
     {
-        //ConnectionRequestModel.ContactMethodsSelected =
-        //    new bool[(int) ConnectContactDetailsJourneyPage.LastContactMethod + 1];
-        //{ false, true, false, true };
-
         ConnectionRequestModel.ContactMethodsSelected[(int)ConnectContactDetailsJourneyPage.Email] = false;
 
         await CheckDetailsModel.OnGetAsync("1");
@@ -64,5 +60,38 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
         CheckDetailsModel.ConnectionRequestModel!.TownOrCity.Should().BeNull();
         CheckDetailsModel.ConnectionRequestModel!.County.Should().BeNull();
         CheckDetailsModel.ConnectionRequestModel!.Postcode.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task EmailOptionSelected_EmailIsPresent()
+    {
+        await CheckDetailsModel.OnGetAsync("1");
+        CheckDetailsModel.ConnectionRequestModel!.EmailAddress.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task TelephoneOptionSelected_TelephoneIsPresent()
+    {
+        await CheckDetailsModel.OnGetAsync("1");
+        CheckDetailsModel.ConnectionRequestModel!.TelephoneNumber.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task TextOptionSelected_TextIsPresent()
+    {
+        await CheckDetailsModel.OnGetAsync("1");
+        CheckDetailsModel.ConnectionRequestModel!.TextphoneNumber.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task LetterOptionSelected_AddressIsPresent()
+    {
+        await CheckDetailsModel.OnGetAsync("1");
+
+        CheckDetailsModel.ConnectionRequestModel!.AddressLine1.Should().NotBeNull();
+        CheckDetailsModel.ConnectionRequestModel!.AddressLine2.Should().NotBeNull();
+        CheckDetailsModel.ConnectionRequestModel!.TownOrCity.Should().NotBeNull();
+        CheckDetailsModel.ConnectionRequestModel!.County.Should().NotBeNull();
+        CheckDetailsModel.ConnectionRequestModel!.Postcode.Should().NotBeNull();
     }
 }
