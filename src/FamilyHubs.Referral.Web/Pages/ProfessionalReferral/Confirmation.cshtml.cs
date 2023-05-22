@@ -4,9 +4,9 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class ConfirmationModel : PageModel
 {
-    public string? RequestNumber { get; set; }
+    public int RequestNumber { get; set; }
 
-    public void OnGet(string? requestNumber)
+    public void OnGet(int requestNumber)
     {
         RequestNumber = requestNumber;
     }
