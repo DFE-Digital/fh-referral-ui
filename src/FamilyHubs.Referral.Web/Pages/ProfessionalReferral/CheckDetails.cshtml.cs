@@ -90,9 +90,8 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
         }
 
         var user = HttpContext.GetFamilyHubsUser();
-        var team = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Team");
 
-        var referralDto = CreateReferralDto(model, user, team, service, organisation);
+        var referralDto = CreateReferralDto(model, user, service, organisation);
 
         await _referralClientService.CreateReferral(referralDto);
     }
@@ -100,7 +99,6 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
     private static ReferralDto CreateReferralDto(
         ConnectionRequestModel model,
         FamilyHubsUser user,
-        Claim? team,
         ServiceDto service,
         OrganisationDto organisation)
     {
@@ -126,8 +124,7 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
                 EmailAddress = user.Email,
                 Name = user.FullName,
                 PhoneNumber = user.PhoneNumber,
-                Role = user.Role,
-                Team = team?.Value
+                Role = user.Role
             },
             ReferralServiceDto = new ReferralServiceDto
             {
