@@ -33,23 +33,23 @@ public class ContactDetailsModel : ProfessionalReferralSessionModel
         }
     }
 
-    protected override IActionResult OnPostWithModelNew(ConnectionRequestModel model)
+    protected override Task<IActionResult> OnPostWithModelNew(ConnectionRequestModel model)
     {
         if (!(ModelState.IsValid && ContactMethods.Any(m => m)))
         {
             //ValidationValid = false;
             //todo: pass params or object (source array of error enums) to RedirectToProfessionalReferralPage for additional params
             //todo: special handling for redirect to self for p/r/g
-            return RedirectToPage("/ProfessionalReferral/ContactDetails", new
+            return Task.FromResult<IActionResult>(RedirectToPage("/ProfessionalReferral/ContactDetails", new
             {
                 ServiceId,
                 // set ValidationValid directly, or use a generic error csv, which we can convert to an array of errors
                 errors = ProfessionalReferralError.ContactDetailsNoContactMethodsSelected
-            });
+            }));
         }
 
         model.ContactMethodsSelected = ContactMethods;
 
-        return NextPage(FirstContactMethodPage(model.ContactMethodsSelected));
+        return Task.FromResult(NextPage(FirstContactMethodPage(model.ContactMethodsSelected)));
     }
 }
