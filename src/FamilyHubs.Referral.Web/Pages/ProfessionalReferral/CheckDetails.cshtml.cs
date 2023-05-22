@@ -8,8 +8,6 @@ using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Identity.Models;
 using Microsoft.AspNetCore.Mvc;
-using ReferralDto = FamilyHubs.ReferralService.Shared.Dto.ReferralDto;
-using ReferralStatusDto = FamilyHubs.ReferralService.Shared.Dto.ReferralStatusDto;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -117,8 +115,7 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
                 AddressLine1 = model.AddressLine1,
                 AddressLine2 = model.AddressLine2,
                 TownOrCity = model.TownOrCity,
-                //todo: should be County
-                Country = model.County,
+                County = model.County,
                 PostCode = model.Postcode
             },
             ReferrerDto = new ReferrerDto
