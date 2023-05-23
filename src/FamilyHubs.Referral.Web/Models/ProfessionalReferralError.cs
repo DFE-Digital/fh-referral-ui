@@ -4,6 +4,7 @@
 //could have every error message in config. would we want to do that?
 public enum ProfessionalReferralError
 {
+    SingleTextboxPage_Invalid,
     ContactDetails_NoContactMethodsSelected,
     Consent_NoConsentSelected,
 }

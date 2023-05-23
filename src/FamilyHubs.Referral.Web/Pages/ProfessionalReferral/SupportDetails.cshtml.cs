@@ -16,7 +16,6 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
     public string? HintText { get; set; } = "This must be a person aged 16 or over.";
     public string TextBoxLabel { get; set; } = "Full name";
     public string ErrorText { get; set; } = "Enter a full name";
-    public bool ValidationValid { get; set; } = true;
 
     [Required]
     [BindProperty]
@@ -34,11 +33,19 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
         //Fixes Session Changing between requests 
         HttpContext.Session.Set("What", new byte[] { 1, 2, 3, 4, 5 });
 
-        var model = await _connectionRequestDistributedCache.GetAsync();
-
-        if (!string.IsNullOrEmpty(model?.FamilyContactFullName))
+        if (Errors != null)
         {
-            TextBoxValue = model.FamilyContactFullName;
+            //todo: use Errors directly
+            ValidationValid = false;
+        }
+        else
+        {
+            var model = await _connectionRequestDistributedCache.GetAsync();
+
+            if (!string.IsNullOrEmpty(model?.FamilyContactFullName))
+            {
+                TextBoxValue = model.FamilyContactFullName;
+            }
         }
 
         return Page();
@@ -48,8 +55,7 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
     {
         if (!ModelState.IsValid)
         {
-            ValidationValid = false;
-            return Page();
+            return RedirectToSelf(ProfessionalReferralError.SingleTextboxPage_Invalid);
         }
 
         if (TextBoxValue!.Length > 255)

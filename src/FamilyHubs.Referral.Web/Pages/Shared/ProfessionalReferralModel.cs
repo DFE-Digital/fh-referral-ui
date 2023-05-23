@@ -7,6 +7,7 @@ using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
 //todo: use post redirect get pattern so that errored pages don't ask for a reload (especially when using back)
+//todo: current pattern will have to be extended when we need to keep existing user entries (possibly valid or not) 
 
 public enum JourneyFlow
 {
@@ -41,6 +42,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
     public JourneyFlow Flow { get; set; }
     public string? BackUrl { get; set; }
     public ProfessionalReferralError[]? Errors { get; set; }
+    public bool ValidationValid { get; set; } = true;
 
     public ProfessionalReferralModel(ConnectJourneyPage page = ConnectJourneyPage.Safeguarding)
     {
@@ -56,6 +58,12 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
 
     protected virtual Task<IActionResult> OnSafeGetAsync()
     {
+        if (Errors != null)
+        {
+            //todo: use Errors directly
+            ValidationValid = false;
+        }
+
         return Task.FromResult((IActionResult)Page());
     }
 

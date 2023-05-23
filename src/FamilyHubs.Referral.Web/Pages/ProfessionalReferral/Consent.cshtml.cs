@@ -9,20 +9,8 @@ public class ConsentModel : ProfessionalReferralModel
     [BindProperty]
     public string? Consent { get; set; }
 
-    [BindProperty]
-    public bool ValidationValid { get; set; } = true;
-
     public ConsentModel() : base(ConnectJourneyPage.Consent)
     {
-    }
-
-    protected override Task<IActionResult> OnSafeGetAsync()
-    {
-        if (Errors != null)
-        {
-            ValidationValid = false;
-        }
-        return Task.FromResult((IActionResult)Page());
     }
 
     protected override Task<IActionResult> OnSafePostAsync()
