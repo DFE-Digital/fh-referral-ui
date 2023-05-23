@@ -9,7 +9,8 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 //could have every error message in config. would we want to do that?
 public enum ProfessionalReferralError
 {
-    ContactDetailsNoContactMethodsSelected
+    ContactDetails_NoContactMethodsSelected,
+    Consent_NoConsentSelected,
 }
 
 public class ContactDetailsModel : ProfessionalReferralSessionModel
@@ -40,12 +41,9 @@ public class ContactDetailsModel : ProfessionalReferralSessionModel
             //ValidationValid = false;
             //todo: pass params or object (source array of error enums) to RedirectToProfessionalReferralPage for additional params
             //todo: special handling for redirect to self for p/r/g
-            return Task.FromResult<IActionResult>(RedirectToPage("/ProfessionalReferral/ContactDetails", new
-            {
-                ServiceId,
-                // set ValidationValid directly, or use a generic error csv, which we can convert to an array of errors
-                errors = ProfessionalReferralError.ContactDetailsNoContactMethodsSelected
-            }));
+            // set ValidationValid directly, or use a generic error csv, which we can convert to an array of errors
+
+            return Task.FromResult(RedirectToSelf(ProfessionalReferralError.ContactDetails_NoContactMethodsSelected));
         }
 
         model.ContactMethodsSelected = ContactMethods;

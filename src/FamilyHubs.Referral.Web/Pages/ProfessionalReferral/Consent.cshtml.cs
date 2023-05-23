@@ -15,6 +15,15 @@ public class ConsentModel : ProfessionalReferralModel
     {
     }
 
+    protected override Task<IActionResult> OnSafeGetAsync()
+    {
+        if (Errors != null)
+        {
+            ValidationValid = false;
+        }
+        return Task.FromResult((IActionResult)Page());
+    }
+
     protected override Task<IActionResult> OnSafePostAsync()
     {
         return Task.FromResult(OnSafePost());
@@ -24,8 +33,7 @@ public class ConsentModel : ProfessionalReferralModel
     {
         if (!ModelState.IsValid || Consent == null)
         {
-            ValidationValid = false;
-            return Page();
+            return RedirectToSelf(ProfessionalReferralError.Consent_NoConsentSelected);
         }
 
         if (string.Compare(Consent, "yes", StringComparison.OrdinalIgnoreCase) == 0)

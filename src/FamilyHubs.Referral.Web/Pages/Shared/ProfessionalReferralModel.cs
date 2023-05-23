@@ -49,7 +49,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
 
     public bool ShowNavigationMenu => true;
 
-    public LinkStatus GetStatus(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
+    LinkStatus IFamilyHubsHeader.GetStatus(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
     {
         return link.Text == "Search for service" ? LinkStatus.Active : LinkStatus.Visible;
     }
@@ -108,11 +108,23 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         return await OnSafePostAsync();
     }
 
-    protected IActionResult RedirectToProfessionalReferralPage(string page)
+    class RouteValues
     {
-        return RedirectToPage($"/ProfessionalReferral/{page}", new
+        public string? ServiceId { get; set; }
+        public ProfessionalReferralError[]? Errors { get; set; }
+    }
+
+    protected IActionResult RedirectToSelf(params ProfessionalReferralError[] errors)
+    {
+        return RedirectToProfessionalReferralPage(_page.ToString(), errors);
+    }
+
+    protected IActionResult RedirectToProfessionalReferralPage(string page, params ProfessionalReferralError[] errors)
+    {
+        return RedirectToPage($"/ProfessionalReferral/{page}", new RouteValues
         {
-            ServiceId
+            ServiceId = ServiceId,
+            Errors = errors
         });
     }
 
