@@ -29,10 +29,6 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
 
     protected override async Task<IActionResult> OnSafeGetAsync()
     {
-        //todo:
-        //Fixes Session Changing between requests 
-        HttpContext.Session.Set("What", new byte[] { 1, 2, 3, 4, 5 });
-
         if (Errors != null)
         {
             //todo: use Errors directly
