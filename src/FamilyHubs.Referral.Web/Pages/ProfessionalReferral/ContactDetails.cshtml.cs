@@ -25,6 +25,22 @@ public class ContactDetailsModel : ProfessionalReferralSessionModel
         {
             ContactMethods = model.ContactMethodsSelected;
         }
+
+        //todo: move this and code from CheckDetails into one place
+
+        // handle this edge case:
+        // user reaches check details page, then clicks to change Contact methods, then selects a new contact method,
+        // then clicks continue, then back to Contact methods page, then back to Check details page.
+        // without this, they will have a contact method selected, but without the appropriate contact details.
+        // with this, they won't have a back button and will be forced to re-enter contact details.
+        if ((ContactMethods[(int) ConnectContactDetailsJourneyPage.Telephone] && model.TelephoneNumber == null)
+            || (ContactMethods[(int) ConnectContactDetailsJourneyPage.Textphone] && model.TextphoneNumber == null)
+            || (ContactMethods[(int) ConnectContactDetailsJourneyPage.Email] && model.EmailAddress == null)
+            || (ContactMethods[(int) ConnectContactDetailsJourneyPage.Letter] &&
+                (model.AddressLine1 == null || model.TownOrCity == null || model.Postcode == null)))
+        {
+            BackUrl = null;
+        }
     }
 
     protected override Task<IActionResult> OnPostWithModelNew(ConnectionRequestModel model)

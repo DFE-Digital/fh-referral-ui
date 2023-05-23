@@ -5,7 +5,10 @@
 }
 
 @section Back {
-    <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
+    @if (Model.BackUrl != null)
+    {
+        <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
+    }
 }
 
 <div class="govuk-grid-row">

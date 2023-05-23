@@ -6,7 +6,7 @@ using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
-//todo: use post redirect get pattern so that errored pages don't ask for a reload (especially when using back)
+//todo: use post redirect get pattern so that invalid pages don't ask for a reload (especially when using back)
 //todo: current pattern will have to be extended when we need to keep existing user entries (possibly valid or not) 
 
 public enum JourneyFlow
@@ -104,6 +104,16 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         };
     }
 
+    private string? GetChanging(JourneyFlow flow)
+    {
+        return flow switch
+        {
+            JourneyFlow.ChangingPage => "page",
+            JourneyFlow.ChangingContactMethods => "contact-methods",
+            _ => null
+        };
+    }
+
     public async Task<IActionResult> OnPostAsync(string serviceId, string? changing = null)
     {
         ServiceId = serviceId;
@@ -120,19 +130,21 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
     {
         public string? ServiceId { get; set; }
         public ProfessionalReferralError[]? Errors { get; set; }
+        public string? Changing { get; set; }
     }
 
     protected IActionResult RedirectToSelf(params ProfessionalReferralError[] errors)
     {
-        return RedirectToProfessionalReferralPage(_page.ToString(), errors);
+        return RedirectToProfessionalReferralPage(_page.ToString(), GetChanging(Flow), errors);
     }
 
-    protected IActionResult RedirectToProfessionalReferralPage(string page, params ProfessionalReferralError[] errors)
+    protected IActionResult RedirectToProfessionalReferralPage(string page, string? changing = null, params ProfessionalReferralError[] errors)
     {
         return RedirectToPage($"/ProfessionalReferral/{page}", new RouteValues
         {
             ServiceId = ServiceId,
-            Errors = errors
+            Errors = errors,
+            Changing = changing            
         });
     }
 
