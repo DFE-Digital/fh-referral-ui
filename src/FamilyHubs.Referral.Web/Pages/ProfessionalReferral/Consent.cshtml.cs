@@ -1,3 +1,4 @@
+using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,9 +8,6 @@ public class ConsentModel : ProfessionalReferralModel
 { 
     [BindProperty]
     public string? Consent { get; set; }
-
-    [BindProperty]
-    public bool ValidationValid { get; set; } = true;
 
     public ConsentModel() : base(ConnectJourneyPage.Consent)
     {
@@ -24,13 +22,12 @@ public class ConsentModel : ProfessionalReferralModel
     {
         if (!ModelState.IsValid || Consent == null)
         {
-            ValidationValid = false;
-            return Page();
+            return RedirectToSelf(ProfessionalReferralError.Consent_NoConsentSelected);
         }
 
         if (string.Compare(Consent, "yes", StringComparison.OrdinalIgnoreCase) == 0)
         {
-            return NextPage("SupportDetails");
+            return NextPage();
         }
 
         return RedirectToProfessionalReferralPage("ConsentShutter");

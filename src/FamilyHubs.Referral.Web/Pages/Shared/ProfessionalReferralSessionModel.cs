@@ -6,8 +6,6 @@ namespace FamilyHubs.Referral.Web.Pages.Shared;
 
 public abstract class ProfessionalReferralSessionModel : ProfessionalReferralModel
 {
-    public bool ValidationValid { get; set; } = true;
-
     protected readonly IConnectionRequestDistributedCache ConnectionRequestCache;
 
     protected ProfessionalReferralSessionModel(
