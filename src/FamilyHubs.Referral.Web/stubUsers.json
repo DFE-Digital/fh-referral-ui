@@ -21,12 +21,8 @@
               "Value": "Active"
             },
             {
-              "Name": "FirstName",
-              "Value": "dfeAdmin"
-            },
-            {
-              "Name": "LastName",
-              "Value": "User"
+              "Name": "FullName",
+              "Value": "dfeAdmin user"
             },
             {
               "Name": "PhoneNumber",
@@ -53,12 +49,8 @@
               "Value": "Active"
             },
             {
-              "Name": "FirstName",
-              "Value": "dfeAdmin"
-            },
-            {
-              "Name": "LastName",
-              "Value": "User"
+              "Name": "FullName",
+              "Value": "dfeAdmin User"
             },
             {
               "Name": "PhoneNumber",
@@ -73,24 +65,24 @@
           },
           "Claims": [
             {
+              "Name": "Team",
+              "Value": "VCS Admin"
+            },
+            {
               "Name": "Role",
               "Value": "VcsAdmin"
             },
             {
               "Name": "OrganisationId",
-              "Value": "2"
+              "Value": "1"
             },
             {
               "Name": "AccountStatus",
               "Value": "Active"
             },
             {
-              "Name": "FirstName",
-              "Value": "vcsAdmin2"
-            },
-            {
-              "Name": "LastName",
-              "Value": "User"
+              "Name": "FullName",
+              "Value": "vcsAdmin2 User"
             },
             {
               "Name": "PhoneNumber",
@@ -99,6 +91,42 @@
             {
               "Name": "Email ",
               "Value": "vcs.user@email.com"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "joe.professional@stub.com",
+            "Sub": "joe.professional@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "Team",
+              "Value": "Social Worker"
+            },
+            {
+              "Name": "Role",
+              "Value": "Professional"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "FullName",
+              "Value": "joe professional"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            },
+            {
+              "Name": "Email ",
+              "Value": "joe.professional@stub.com"
             }
           ]
         }

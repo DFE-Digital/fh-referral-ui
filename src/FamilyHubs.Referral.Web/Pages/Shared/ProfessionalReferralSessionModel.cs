@@ -6,8 +6,6 @@ namespace FamilyHubs.Referral.Web.Pages.Shared;
 
 public abstract class ProfessionalReferralSessionModel : ProfessionalReferralModel
 {
-    public bool ValidationValid { get; set; } = true;
-
     protected readonly IConnectionRequestDistributedCache ConnectionRequestCache;
 
     protected ProfessionalReferralSessionModel(
@@ -28,15 +26,16 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
 
     //todo: move all over to this one, then remove the above and rename this to OnPostWithModel
     // consumers will call NextPage() instead of returning a string (and we can pick up the page from the model)
-    protected virtual IActionResult OnPostWithModelNew(ConnectionRequestModel model)
+    protected virtual Task<IActionResult> OnPostWithModelNew(ConnectionRequestModel model)
     {
         string? nextPage = OnPostWithModel(model);
         if (nextPage == null)
         {
-            return Page();
+            return Task.FromResult<IActionResult>(Page());
         }
 
-        return NextPage(nextPage);
+        //todo: change NextPage to return a Task
+        return Task.FromResult(NextPage(nextPage));
     }
 
     protected override async Task<IActionResult> OnSafeGetAsync()
@@ -67,7 +66,7 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
             return RedirectToProfessionalReferralPage("LocalOfferDetail");
         }
 
-        var result = OnPostWithModelNew(model);
+        var result = await OnPostWithModelNew(model);
 
         await ConnectionRequestCache.SetAsync(model);
 

@@ -12,6 +12,7 @@ public interface IOrganisationClientService
     Task<List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>> GetCategories();
     Task<PaginatedList<ServiceDto>> GetLocalOffers(LocalOfferFilter filter);
     Task<ServiceDto> GetLocalOfferById(string id);
+    Task<OrganisationDto?> GetOrganisationDtobyIdAsync(long id);
 }
 
 public class OrganisationClientService : ApiService, IOrganisationClientService
@@ -161,5 +162,20 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         ArgumentNullException.ThrowIfNull(retVal);
 
         return retVal;
+    }
+
+    public async Task<OrganisationDto?> GetOrganisationDtobyIdAsync(long id)
+    {
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(Client.BaseAddress + $"api/organisations/{id}"),
+        };
+
+        using var response = await Client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        return await JsonSerializer.DeserializeAsync<OrganisationDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     }
 }
