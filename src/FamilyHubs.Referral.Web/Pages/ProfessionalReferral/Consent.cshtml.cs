@@ -38,7 +38,7 @@ public class ConsentModel : ProfessionalReferralModel
 
         if (string.Compare(Consent, "yes", StringComparison.OrdinalIgnoreCase) == 0)
         {
-            return NextPage("SupportDetails");
+            return NextPage();
         }
 
         return RedirectToProfessionalReferralPage("ConsentShutter");

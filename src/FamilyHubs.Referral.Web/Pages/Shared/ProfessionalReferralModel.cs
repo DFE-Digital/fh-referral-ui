@@ -129,8 +129,10 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
     }
 
     //todo: consts, if not an enum
-    protected IActionResult NextPage(string page)
+    protected IActionResult NextPage(string? page = null)
     {
+        page ??= (_page + 1).ToString();
+
         if (Flow == JourneyFlow.ChangingContactMethods)
         {
             return RedirectToPage($"/ProfessionalReferral/{page}", new
