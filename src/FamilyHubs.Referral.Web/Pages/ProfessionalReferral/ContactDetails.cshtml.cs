@@ -1,17 +1,10 @@
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
-
-//todo: error enum per error / page / journey??
-//could have every error message in config. would we want to do that?
-public enum ProfessionalReferralError
-{
-    ContactDetails_NoContactMethodsSelected,
-    Consent_NoConsentSelected,
-}
 
 public class ContactDetailsModel : ProfessionalReferralSessionModel
 {

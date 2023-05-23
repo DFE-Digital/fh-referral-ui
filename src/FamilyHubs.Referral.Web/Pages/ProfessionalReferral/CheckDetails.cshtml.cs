@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
