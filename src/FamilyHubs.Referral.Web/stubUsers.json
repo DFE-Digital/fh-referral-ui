@@ -22,15 +22,11 @@
             },
             {
               "Name": "FullName",
-              "Value": "dfeAdmin User"
+              "Value": "dfeAdmin user"
             },
             {
               "Name": "PhoneNumber",
-              "Value": "01211211234"
-            },
-            {
-              "Name": "Team",
-              "Value": "Family Hubs"
+              "Value": "0121 121 1234"
             }
           ]
         },
@@ -58,11 +54,7 @@
             },
             {
               "Name": "PhoneNumber",
-              "Value": "01211211235"
-            },
-            {
-              "Name": "Team",
-              "Value": "Family Hubs"
+              "Value": "0121 121 1235"
             }
           ]
         },
@@ -73,12 +65,16 @@
           },
           "Claims": [
             {
+              "Name": "Team",
+              "Value": "VCS Admin"
+            },
+            {
               "Name": "Role",
               "Value": "VcsAdmin"
             },
             {
               "Name": "OrganisationId",
-              "Value": "2"
+              "Value": "1"
             },
             {
               "Name": "AccountStatus",
@@ -90,15 +86,47 @@
             },
             {
               "Name": "PhoneNumber",
-              "Value": "01211211236"
+              "Value": "0121 121 1236"
             },
             {
               "Name": "Email ",
               "Value": "vcs.user@email.com"
-            },
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "joe.professional@stub.com",
+            "Sub": "joe.professional@stub.com"
+          },
+          "Claims": [
             {
               "Name": "Team",
-              "Value": "Family Hubs"
+              "Value": "Social Worker"
+            },
+            {
+              "Name": "Role",
+              "Value": "Professional"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "FullName",
+              "Value": "joe professional"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            },
+            {
+              "Name": "Email ",
+              "Value": "joe.professional@stub.com"
             }
           ]
         }
