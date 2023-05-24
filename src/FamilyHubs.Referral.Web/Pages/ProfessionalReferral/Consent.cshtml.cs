@@ -1,3 +1,4 @@
+using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,8 @@ public class ConsentModel : ProfessionalReferralModel
     [BindProperty]
     public string? Consent { get; set; }
 
-    public ConsentModel() : base(ConnectJourneyPage.Consent)
+    public ConsentModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
+        : base(connectionRequestDistributedCache, ConnectJourneyPage.Consent)
     {
     }
 

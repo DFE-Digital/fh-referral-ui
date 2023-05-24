@@ -1,8 +1,6 @@
 ﻿using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
@@ -17,15 +15,9 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
     [Fact]
     public async Task ThenOnGetSupportDetails()
     {
-        //Arrange
-        Mock<ISession> mockSession = new Mock<ISession>();
-        var httpContext = new DefaultHttpContext() { Session = mockSession.Object };
-        _supportDetailsModel.PageContext.HttpContext = httpContext;
-
         //Act
         await _supportDetailsModel.OnGetAsync("Id");
 
-        //Assert
         _supportDetailsModel.ServiceId.Should().Be("Id");
     }
 

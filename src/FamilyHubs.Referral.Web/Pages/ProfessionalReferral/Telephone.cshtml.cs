@@ -8,7 +8,7 @@ using FamilyHubs.Referral.Core.ValidationAttributes;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class TelephoneModel : ProfessionalReferralSessionModel, ISingleTelephoneTextboxPageModel
+public class TelephoneModel : ProfessionalReferralCacheModel, ISingleTelephoneTextboxPageModel
 {
     public string HeadingText { get; set; } = "";
     public string? HintText { get; set; }

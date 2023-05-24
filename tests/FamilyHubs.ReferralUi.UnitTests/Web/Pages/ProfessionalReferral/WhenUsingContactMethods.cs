@@ -1,5 +1,4 @@
 ﻿using FamilyHubs.Referral.Core.Models;
-using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -45,7 +44,7 @@ public class WhenUsingContactMethods : BaseProfessionalReferralPage
 
         //todo: check new content
         ReferralDistributedCache.Verify(x =>
-            x.SetAsync(It.IsAny<ConnectionRequestModel>()), Times.Once);
+            x.SetAsync(It.IsAny<string>(), It.IsAny<ConnectionRequestModel>()), Times.Once);
     }
 
     [Fact]
@@ -55,7 +54,7 @@ public class WhenUsingContactMethods : BaseProfessionalReferralPage
 
         //Act
         var result = await _contactMethodsModel.OnPostAsync("1") as RedirectToPageResult;
-        
+
         ArgumentNullException.ThrowIfNull(result);
         result.PageName.Should().Be("/ProfessionalReferral/CheckDetails");
     }
