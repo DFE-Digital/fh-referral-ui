@@ -29,6 +29,10 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
 
     protected override async Task<IActionResult> OnSafeGetAsync()
     {
+        // this uses the in-memory session provider and effectively makes the session sticky
+        // todo: we need to configure the session to use redis instead
+        HttpContext.Session.Set("What", new byte[] { 1, 2, 3, 4, 5 });
+
         if (Errors != null)
         {
             //todo: use Errors directly
