@@ -6,14 +6,11 @@ namespace FamilyHubs.Referral.Web.Pages.Shared;
 
 public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
 {
-    protected readonly IConnectionRequestDistributedCache ConnectionRequestCache;
-
     protected ProfessionalReferralCacheModel(
         ConnectJourneyPage page,
         IConnectionRequestDistributedCache connectionRequestCache)
-        : base(page)
+        : base(connectionRequestCache, page)
     {
-        ConnectionRequestCache = connectionRequestCache;
     }
 
     protected abstract void OnGetWithModel(ConnectionRequestModel model);

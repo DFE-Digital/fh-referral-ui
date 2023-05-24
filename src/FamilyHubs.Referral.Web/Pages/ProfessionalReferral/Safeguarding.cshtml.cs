@@ -6,18 +6,14 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class SafeguardingModel : ProfessionalReferralModel
 {
-    private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
-
-    //todo: store IConnectionRequestDistributedCache in base?
     public SafeguardingModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
-        : base(ConnectJourneyPage.Safeguarding)
+        : base(connectionRequestDistributedCache, ConnectJourneyPage.Safeguarding)
     {
-        _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }
 
     protected override async Task<IActionResult> OnSafeGetAsync()
     {
-        await _connectionRequestDistributedCache.RemoveAsync(ProfessionalUser.Email);
+        await ConnectionRequestCache.RemoveAsync(ProfessionalUser.Email);
 
         return Page();
     }

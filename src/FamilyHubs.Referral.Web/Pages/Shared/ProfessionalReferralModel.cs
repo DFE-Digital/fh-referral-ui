@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Identity.Models;
+using FamilyHubs.Referral.Core.DistributedCache;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
@@ -40,6 +41,7 @@ public enum ConnectJourneyPage
 public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
 {
     private readonly ConnectJourneyPage _page;
+    protected IConnectionRequestDistributedCache ConnectionRequestCache { get; }
     // not set in ctor, but will always be there in Get/Set handlers
     public string ServiceId { get; set; } = default!;
     public JourneyFlow Flow { get; set; }
@@ -49,8 +51,11 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
     // not set in ctor, but will always be there in Get/Set handlers
     public FamilyHubsUser ProfessionalUser { get; set; } = default!;
 
-    public ProfessionalReferralModel(ConnectJourneyPage page)
+    public ProfessionalReferralModel(
+        IConnectionRequestDistributedCache connectionRequestDistributedCache,
+        ConnectJourneyPage page)
     {
+        ConnectionRequestCache = connectionRequestDistributedCache;
         _page = page;
     }
 
