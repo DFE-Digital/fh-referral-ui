@@ -33,10 +33,13 @@ public class WhenUsingWhySupport : BaseProfessionalReferralPage
         //Act
         var result = await _whySupportModel.OnPostAsync("1") as RedirectToPageResult;
 
-        //todo: check new content
+        //Assert
         ReferralDistributedCache.Verify(x =>
             x.SetAsync(It.IsAny<ConnectionRequestModel>()), Times.Once);
 
+        var model = await ReferralDistributedCache.Object.GetAsync();
+        ArgumentNullException.ThrowIfNull(model);
+        model.Reason.Should().Be(_whySupportModel.TextAreaValue);
         ArgumentNullException.ThrowIfNull(result);
         result.PageName.Should().Be("/ProfessionalReferral/ContactDetails");
     }

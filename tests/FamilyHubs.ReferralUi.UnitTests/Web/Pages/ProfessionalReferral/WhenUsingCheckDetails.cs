@@ -22,7 +22,10 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
         ReferralClientService = new Mock<IReferralClientService>();
 
         CheckDetailsModel = new CheckDetailsModel(ReferralDistributedCache.Object, OrganisationClientService.Object, ReferralClientService.Object);
+        CheckDetailsModel.PageContext = GetPageContextWithUserClaims();
     }
+
+    
 
     [Fact]
     public async Task EmailOptionNotSelected_EmailIsRemoved()
@@ -98,38 +101,36 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
         CheckDetailsModel.ConnectionRequestModel!.Postcode.Should().NotBeNull();
     }
 
-    //todo: mock claims on HttpContext
+    [Fact]
+    public async Task ThenOnPostAsync_NextPageIsConfirmation()
+    {
+        OrganisationClientService
+            .Setup(x => x.GetLocalOfferById(It.IsAny<string>()))
+            .ReturnsAsync(new ServiceDto
+            {
+                Id = 1,
+                Name = "Test Service",
+                Description = "Service Description",
+                // other required properties
+                ServiceOwnerReferenceId = "",
+                ServiceType = ServiceType.InformationSharing
+            });
 
-    //[Fact]
-    //public async Task ThenOnPostAsync_NextPageIsConfirmation()
-    //{
-    //    OrganisationClientService
-    //        .Setup(x => x.GetLocalOfferById(It.IsAny<string>()))
-    //        .ReturnsAsync(new ServiceDto
-    //        {
-    //            Id = 1,
-    //            Name = "Test Service",
-    //            Description = "Service Description",
-    //            // other required properties
-    //            ServiceOwnerReferenceId = "",
-    //            ServiceType = ServiceType.InformationSharing
-    //        });
+        OrganisationClientService
+            .Setup(x => x.GetOrganisationDtobyIdAsync(It.IsAny<long>()))
+            .ReturnsAsync(new OrganisationDto
+            {
+                Id = 1,
+                Name = "Test Organisation",
+                Description = "Organisation Description",
+                // other required properties
+                OrganisationType = OrganisationType.VCFS,
+                AdminAreaCode = ""
+            });
 
-    //    OrganisationClientService
-    //        .Setup(x => x.GetOrganisationDtobyIdAsync(It.IsAny<long>()))
-    //        .ReturnsAsync(new OrganisationDto
-    //        {
-    //            Id = 1,
-    //            Name = "Test Organisation",
-    //            Description = "Organisation Description",
-    //            // other required properties
-    //            OrganisationType = OrganisationType.VCFS,
-    //            AdminAreaCode = ""
-    //        });
+        var result = await CheckDetailsModel.OnPostAsync("1") as RedirectToPageResult;
 
-    //    var result = await CheckDetailsModel.OnPostAsync("1") as RedirectToPageResult;
-
-    //    result.Should().NotBeNull();
-    //    result!.PageName.Should().Be("/ProfessionalReferral/Confirmation");
-    //}
+        result.Should().NotBeNull();
+        result!.PageName.Should().Be("/ProfessionalReferral/Confirmation");
+    }
 }

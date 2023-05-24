@@ -22,19 +22,19 @@ public class WhenUsingConsent
         _consentModel.ServiceId.Should().Be("Id");
     }
 
-    //todo: check redirect to get when consent missing
-    //[Fact]
-    //public async Task ThenOnGetConsent_With_IsConsentGiven_NotSelected()
-    //{
-    //    //Arrange
-    //    _consentModel.Consent = default!;
+    [Fact]
+    public async Task ThenOnGetConsent_With_IsConsentGiven_NotSelected()
+    {
+        //Arrange
+        _consentModel.Consent = default!;
 
-    //    //Act
-    //    await _consentModel.OnPostAsync("Id");
+        //Act
+        var result = await _consentModel.OnPostAsync("Id") as RedirectToPageResult;
 
-    //    //Assert
-    //    _consentModel.ValidationValid.Should().BeFalse();
-    //}
+        //Assert
+        ArgumentNullException.ThrowIfNull(result);
+        result.PageName.Should().Be("/ProfessionalReferral/Consent");
+    }
 
     [Theory]
     [InlineData("yes", "/ProfessionalReferral/SupportDetails")]

@@ -1,6 +1,15 @@
 ﻿using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.SharedKernel.Identity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System.Security.Claims;
+using System.Security.Principal;
+using Microsoft.AspNetCore.Routing;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
@@ -42,5 +51,35 @@ public class BaseProfessionalReferralPage
         ReferralDistributedCache = new Mock<IConnectionRequestDistributedCache>(MockBehavior.Strict);
         ReferralDistributedCache.Setup(x => x.SetAsync(It.IsAny<ConnectionRequestModel>())).Returns(Task.CompletedTask);
         ReferralDistributedCache.Setup(x => x.GetAsync()).ReturnsAsync(ConnectionRequestModel);
+    }
+
+    protected PageContext GetPageContextWithUserClaims()
+    {
+        var displayName = "User name";
+        var identity = new GenericIdentity(displayName);
+        identity.AddClaim(new Claim(FamilyHubsClaimTypes.Role, "Professional"));
+        identity.AddClaim(new Claim(FamilyHubsClaimTypes.OrganisationId, "1"));
+        identity.AddClaim(new Claim(FamilyHubsClaimTypes.AccountStatus, "active"));
+        identity.AddClaim(new Claim(FamilyHubsClaimTypes.FullName, "Test User"));
+        identity.AddClaim(new Claim(FamilyHubsClaimTypes.LoginTime, DateTime.UtcNow.ToString()));
+        identity.AddClaim(new Claim(ClaimTypes.Email, "Joe.Professional@email.com"));
+        identity.AddClaim(new Claim(FamilyHubsClaimTypes.PhoneNumber, "012345678"));
+        var principle = new ClaimsPrincipal(identity);
+        // use default context with user
+        var httpContext = new DefaultHttpContext()
+        {
+            User = principle
+        };
+
+        //need these as well for the page context
+        var modelState = new ModelStateDictionary();
+        var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
+        var modelMetadataProvider = new EmptyModelMetadataProvider();
+        var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
+        // need page context for the page model
+        return new PageContext(actionContext)
+        {
+            ViewData = viewData
+        };
     }
 }
