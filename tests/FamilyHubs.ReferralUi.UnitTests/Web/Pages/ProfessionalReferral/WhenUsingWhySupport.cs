@@ -35,9 +35,9 @@ public class WhenUsingWhySupport : BaseProfessionalReferralPage
 
         //Assert
         ReferralDistributedCache.Verify(x =>
-            x.SetAsync(It.IsAny<ConnectionRequestModel>()), Times.Once);
+            x.SetAsync(It.IsAny<string>(),It.IsAny<ConnectionRequestModel>()), Times.Once);
 
-        var model = await ReferralDistributedCache.Object.GetAsync();
+        var model = await ReferralDistributedCache.Object.GetAsync(ProfessionalEmail);
         ArgumentNullException.ThrowIfNull(model);
         model.Reason.Should().Be(_whySupportModel.TextAreaValue);
         ArgumentNullException.ThrowIfNull(result);

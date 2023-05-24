@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class ContactMethodsModel : ProfessionalReferralSessionModel, ITellTheServicePageModel
+public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServicePageModel
 {
     public string DescriptionPartial => "/Pages/ProfessionalReferral/ContactMethodsContent.cshtml";
 

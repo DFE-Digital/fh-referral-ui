@@ -4,7 +4,7 @@ namespace FamilyHubs.Referral.Core.DistributedCache;
 
 public interface IConnectionRequestDistributedCache
 {
-    Task<ConnectionRequestModel?> GetAsync();
-    Task SetAsync(ConnectionRequestModel model);
-    Task RemoveAsync();
+    Task<ConnectionRequestModel?> GetAsync(string professionalsEmail);
+    Task SetAsync(string professionalsEmail, ConnectionRequestModel model);
+    Task RemoveAsync(string professionalsEmail);
 }

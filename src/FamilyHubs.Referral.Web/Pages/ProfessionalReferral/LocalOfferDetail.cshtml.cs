@@ -12,7 +12,6 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class LocalOfferDetailModel : PageModel
 {
     private readonly IOrganisationClientService _organisationClientService;
-    private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
     public ServiceDto LocalOffer { get; set; } = default!;
 
     public string? ReturnUrl { get; set; }
@@ -35,7 +34,6 @@ public class LocalOfferDetailModel : PageModel
         IConnectionRequestDistributedCache connectionRequestDistributedCache)
     {
         _organisationClientService = organisationClientService;
-        _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }
 
     public async Task<IActionResult> OnGetAsync(string serviceId)
@@ -47,8 +45,6 @@ public class LocalOfferDetailModel : PageModel
         Name = LocalOffer.Name;
         if (LocalOffer.Locations != null && LocalOffer.Locations.Any()) ExtractAddressParts(LocalOffer.Locations.First());
         GetContactDetails();
-
-        await _connectionRequestDistributedCache.RemoveAsync();
 
         return Page();
     }

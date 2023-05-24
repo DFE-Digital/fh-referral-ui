@@ -10,8 +10,6 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPageModel
 {
-    private readonly IConnectionRequestDistributedCache _connectionRequestDistributedCache;
-
     public string HeadingText { get; set; } = "Who should the service contact in the family?";
     public string? HintText { get; set; } = "This must be a person aged 16 or over.";
     public string TextBoxLabel { get; set; } = "Full name";
@@ -22,17 +20,12 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
     public string? TextBoxValue { get; set; }
 
     public SupportDetailsModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
-        : base(ConnectJourneyPage.SupportDetails)
+        : base(connectionRequestDistributedCache, ConnectJourneyPage.SupportDetails)
     {
-        _connectionRequestDistributedCache = connectionRequestDistributedCache;
     }
 
     protected override async Task<IActionResult> OnSafeGetAsync()
     {
-        // this uses the in-memory session provider and effectively makes the session sticky
-        // todo: we need to configure the session to use redis instead
-        HttpContext.Session.Set("What", new byte[] { 1, 2, 3, 4, 5 });
-
         if (Errors != null)
         {
             //todo: use Errors directly
@@ -40,7 +33,7 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
         }
         else
         {
-            var model = await _connectionRequestDistributedCache.GetAsync();
+            var model = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email);
 
             if (!string.IsNullOrEmpty(model?.FamilyContactFullName))
             {
@@ -63,14 +56,14 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
             TextBoxValue = TextBoxValue.Truncate(252);
         }
 
-        var model = await _connectionRequestDistributedCache.GetAsync()
+        var model = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email)
                     ?? new ConnectionRequestModel
                     {
                         ServiceId = ServiceId
                     };
 
         model.FamilyContactFullName = TextBoxValue;
-        await _connectionRequestDistributedCache.SetAsync(model);
+        await ConnectionRequestCache.SetAsync(ProfessionalUser.Email, model);
 
         return NextPage();
     }

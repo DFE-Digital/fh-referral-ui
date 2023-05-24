@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class ContactDetailsModel : ProfessionalReferralSessionModel
+public class ContactDetailsModel : ProfessionalReferralCacheModel
 {
     public string? FullName { get; set; }
 

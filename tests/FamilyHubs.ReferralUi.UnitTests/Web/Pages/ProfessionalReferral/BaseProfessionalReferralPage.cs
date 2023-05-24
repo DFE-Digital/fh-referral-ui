@@ -29,6 +29,8 @@ public class BaseProfessionalReferralPage
     public const string Postcode = "Postcode";
     public const string EngageReason = "EngageReason";
 
+    public const string ProfessionalEmail = "Joe.Professional@email.com";
+
     public BaseProfessionalReferralPage()
     {
         ConnectionRequestModel = new ConnectionRequestModel
@@ -49,8 +51,10 @@ public class BaseProfessionalReferralPage
         };
 
         ReferralDistributedCache = new Mock<IConnectionRequestDistributedCache>(MockBehavior.Strict);
-        ReferralDistributedCache.Setup(x => x.SetAsync(It.IsAny<ConnectionRequestModel>())).Returns(Task.CompletedTask);
-        ReferralDistributedCache.Setup(x => x.GetAsync()).ReturnsAsync(ConnectionRequestModel);
+        //todo: add pro's email to class and check key, rather than It.IsAny<string>()
+        ReferralDistributedCache.Setup(x => x.SetAsync(It.IsAny<string>(),It.IsAny<ConnectionRequestModel>())).Returns(Task.CompletedTask);
+        ReferralDistributedCache.Setup(x => x.GetAsync(It.IsAny<string>())).ReturnsAsync(ConnectionRequestModel);
+        ReferralDistributedCache.Setup(x => x.RemoveAsync(It.IsAny<string>())).Returns(Task.CompletedTask);
     }
 
     protected PageContext GetPageContextWithUserClaims()
@@ -62,7 +66,7 @@ public class BaseProfessionalReferralPage
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.AccountStatus, "active"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.FullName, "Test User"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.LoginTime, DateTime.UtcNow.ToString()));
-        identity.AddClaim(new Claim(ClaimTypes.Email, "Joe.Professional@email.com"));
+        identity.AddClaim(new Claim(ClaimTypes.Email, ProfessionalEmail));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.PhoneNumber, "012345678"));
         var principle = new ClaimsPrincipal(identity);
         // use default context with user

@@ -4,16 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
-public abstract class ProfessionalReferralSessionModel : ProfessionalReferralModel
+public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
 {
-    protected readonly IConnectionRequestDistributedCache ConnectionRequestCache;
-
-    protected ProfessionalReferralSessionModel(
+    protected ProfessionalReferralCacheModel(
         ConnectJourneyPage page,
         IConnectionRequestDistributedCache connectionRequestCache)
-        : base(page)
+        : base(connectionRequestCache, page)
     {
-        ConnectionRequestCache = connectionRequestCache;
     }
 
     protected abstract void OnGetWithModel(ConnectionRequestModel model);
@@ -40,10 +37,10 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
 
     protected override async Task<IActionResult> OnSafeGetAsync()
     {
-        var model = await ConnectionRequestCache.GetAsync();
+        var model = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email);
         if (model == null)
         {
-            // session has expired and we don't have a model to work with
+            // the journey cache entry has expired and we don't have a model to work with
             // likely the user has come back to this page after a long time
             // send them back to the start of the journey
             // not strictly a journey page, but still works
@@ -57,10 +54,10 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
 
     protected override async Task<IActionResult> OnSafePostAsync()
     {
-        var model = await ConnectionRequestCache.GetAsync();
+        var model = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email);
         if (model == null)
         {
-            // session has expired and we don't have a model to work with
+            // the journey cache entry has expired and we don't have a model to work with
             // likely the user has come back to this page after a long time
             // send them back to the start of the journey
             return RedirectToProfessionalReferralPage("LocalOfferDetail");
@@ -68,7 +65,7 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
 
         var result = await OnPostWithModelNew(model);
 
-        await ConnectionRequestCache.SetAsync(model);
+        await ConnectionRequestCache.SetAsync(ProfessionalUser.Email, model);
 
         return result;
     }

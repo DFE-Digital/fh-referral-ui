@@ -7,7 +7,7 @@ using FamilyHubs.Referral.Web.Models;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class EmailModel : ProfessionalReferralSessionModel, ISingleEmailTextboxPageModel
+public class EmailModel : ProfessionalReferralCacheModel, ISingleEmailTextboxPageModel
 {
     public string HeadingText { get; set; } = "";
     public string? HintText { get; set; }
