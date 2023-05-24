@@ -35,7 +35,7 @@ public class WhenUsingWhySupport : BaseProfessionalReferralPage
 
         //todo: check new content
         ReferralDistributedCache.Verify(x =>
-            x.SetAsync(It.IsAny<ConnectionRequestModel>()), Times.Once);
+            x.SetAsync(It.IsAny<string>(),It.IsAny<ConnectionRequestModel>()), Times.Once);
 
         ArgumentNullException.ThrowIfNull(result);
         result.PageName.Should().Be("/ProfessionalReferral/ContactDetails");

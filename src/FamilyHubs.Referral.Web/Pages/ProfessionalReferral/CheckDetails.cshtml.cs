@@ -90,10 +90,9 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
             throw new InvalidOperationException($"Organisation not found for service {service.Id}");
         }   
 
-        var user = HttpContext.GetFamilyHubsUser();
         //var team = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Team");
 
-        var referralDto = CreateReferralDto(model, user, /*team,*/ service, organisation);
+        var referralDto = CreateReferralDto(model, ProfessionalUser, /*team,*/ service, organisation);
 
         return await _referralClientService.CreateReferral(referralDto);
     }

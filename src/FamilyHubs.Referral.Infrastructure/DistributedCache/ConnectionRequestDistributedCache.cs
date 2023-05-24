@@ -7,31 +7,28 @@ namespace FamilyHubs.Referral.Infrastructure.DistributedCache;
 public class ConnectionRequestDistributedCache : IConnectionRequestDistributedCache
 {
     private readonly IDistributedCache _distributedCache;
-    private readonly ICacheKeys _cacheKeys;
     private readonly DistributedCacheEntryOptions _distributedCacheEntryOptions;
 
     public ConnectionRequestDistributedCache(
         IDistributedCache distributedCache,
-        ICacheKeys cacheKeys,
         DistributedCacheEntryOptions distributedCacheEntryOptions)
     {
         _distributedCache = distributedCache;
-        _cacheKeys = cacheKeys;
         _distributedCacheEntryOptions = distributedCacheEntryOptions;
     }
 
-    public async Task<ConnectionRequestModel?> GetAsync()
+    public async Task<ConnectionRequestModel?> GetAsync(string professionalsEmail)
     {
-        return await _distributedCache.GetAsync<ConnectionRequestModel>(_cacheKeys.ConnectionRequest);
+        return await _distributedCache.GetAsync<ConnectionRequestModel>(professionalsEmail);
     }
 
-    public async Task SetAsync(ConnectionRequestModel model)
+    public async Task SetAsync(string professionalsEmail, ConnectionRequestModel model)
     {
-        await _distributedCache.SetAsync(_cacheKeys.ConnectionRequest, model, _distributedCacheEntryOptions);
+        await _distributedCache.SetAsync(professionalsEmail, model, _distributedCacheEntryOptions);
     }
 
-    public async Task RemoveAsync()
+    public async Task RemoveAsync(string professionalsEmail)
     {
-        await _distributedCache.RemoveAsync(_cacheKeys.ConnectionRequest);
+        await _distributedCache.RemoveAsync(professionalsEmail);
     }
 }

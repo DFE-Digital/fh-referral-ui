@@ -40,7 +40,7 @@ public class BaseProfessionalReferralPage
         };
 
         ReferralDistributedCache = new Mock<IConnectionRequestDistributedCache>(MockBehavior.Strict);
-        ReferralDistributedCache.Setup(x => x.SetAsync(It.IsAny<ConnectionRequestModel>())).Returns(Task.CompletedTask);
-        ReferralDistributedCache.Setup(x => x.GetAsync()).ReturnsAsync(ConnectionRequestModel);
+        ReferralDistributedCache.Setup(x => x.SetAsync(It.IsAny<string>(),It.IsAny<ConnectionRequestModel>())).Returns(Task.CompletedTask);
+        ReferralDistributedCache.Setup(x => x.GetAsync(It.IsAny<string>())).ReturnsAsync(ConnectionRequestModel);
     }
 }

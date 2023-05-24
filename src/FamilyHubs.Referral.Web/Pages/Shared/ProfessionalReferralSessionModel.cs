@@ -40,7 +40,7 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
 
     protected override async Task<IActionResult> OnSafeGetAsync()
     {
-        var model = await ConnectionRequestCache.GetAsync();
+        var model = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email);
         if (model == null)
         {
             // session has expired and we don't have a model to work with
@@ -57,7 +57,7 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
 
     protected override async Task<IActionResult> OnSafePostAsync()
     {
-        var model = await ConnectionRequestCache.GetAsync();
+        var model = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email);
         if (model == null)
         {
             // session has expired and we don't have a model to work with
@@ -68,7 +68,7 @@ public abstract class ProfessionalReferralSessionModel : ProfessionalReferralMod
 
         var result = await OnPostWithModelNew(model);
 
-        await ConnectionRequestCache.SetAsync(model);
+        await ConnectionRequestCache.SetAsync(ProfessionalUser.Email, model);
 
         return result;
     }

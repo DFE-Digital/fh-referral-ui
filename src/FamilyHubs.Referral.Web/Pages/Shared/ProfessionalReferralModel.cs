@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
+using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.SharedKernel.Identity.Models;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
@@ -38,13 +40,16 @@ public enum ConnectJourneyPage
 public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
 {
     private readonly ConnectJourneyPage _page;
-    public string? ServiceId { get; set; }
+    // not set in ctor, but will always be there in Get/Set handlers
+    public string ServiceId { get; set; } = default!;
     public JourneyFlow Flow { get; set; }
     public string? BackUrl { get; set; }
     public ProfessionalReferralError[]? Errors { get; set; }
     public bool ValidationValid { get; set; } = true;
+    // not set in ctor, but will always be there in Get/Set handlers
+    public FamilyHubsUser ProfessionalUser { get; set; } = default!;
 
-    public ProfessionalReferralModel(ConnectJourneyPage page = ConnectJourneyPage.Safeguarding)
+    public ProfessionalReferralModel(ConnectJourneyPage page)
     {
         _page = page;
     }
@@ -91,6 +96,9 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         // default, but can be overridden
         BackUrl = GenerateBackUrl((_page-1).ToString());
 
+        //todo: could do with a version that just gets the email address
+        ProfessionalUser = HttpContext.GetFamilyHubsUser();
+
         return await OnSafeGetAsync();
     }
 
@@ -122,6 +130,8 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
 
         // default, but can be overridden
         BackUrl = GenerateBackUrl((_page-1).ToString());
+
+        ProfessionalUser = HttpContext.GetFamilyHubsUser();
 
         return await OnSafePostAsync();
     }
