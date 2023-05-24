@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class LetterModel : ProfessionalReferralSessionModel
+public class LetterModel : ProfessionalReferralCacheModel
 {
     //todo: consistency with nullable
     [BindProperty]

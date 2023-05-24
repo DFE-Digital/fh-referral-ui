@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class WhySupportModel : ProfessionalReferralSessionModel, ITellTheServicePageModel
+public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePageModel
 {
     public string DescriptionPartial => "/Pages/ProfessionalReferral/WhySupportContent.cshtml";
     public string? TextAreaValidationErrorMessage { get; set; }

@@ -4,13 +4,12 @@ using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Dto;
-using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Identity.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class CheckDetailsModel : ProfessionalReferralSessionModel
+public class CheckDetailsModel : ProfessionalReferralCacheModel
 {
     private readonly IOrganisationClientService _organisationClientService;
     private readonly IReferralClientService _referralClientService;
@@ -29,8 +28,8 @@ public class CheckDetailsModel : ProfessionalReferralSessionModel
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
         // do this now, so we don't display any previously entered contact details that are no longer selected
-        // but don't remove them from the session yet, in case the user goes back to change the contact details
-        // we'll remove them from the session when the user submits the form
+        // but don't remove them from the cache yet, in case the user goes back to change the contact details
+        // we'll remove them from the cache when the user submits the form
         RemoveNonSelectedContactDetails(model);
 
         ConnectionRequestModel = model;
