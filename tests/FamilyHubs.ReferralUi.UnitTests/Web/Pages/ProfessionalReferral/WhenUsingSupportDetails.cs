@@ -33,18 +33,22 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
         result.PageName.Should().Be("/ProfessionalReferral/WhySupport");
     }
 
-    //todo: test for redirect on error
-    //[Theory]
-    //[InlineData(default!)]
-    //[InlineData(" ")]
-    //public async Task ThenOnPostSupportDetailsWithEmptyFullName(string value)
-    //{
-    //    _supportDetailsModel.TextBoxValue = value;
-    //    _supportDetailsModel.ModelState.AddModelError("FamilyContactFullName", "Enter a full name");
+    
+    [Theory]
+    [InlineData(default!)]
+    [InlineData(" ")]
+    public async Task ThenOnPostSupportDetailsWithEmptyFullName(string value)
+    {
+        _supportDetailsModel.TextBoxValue = value;
+        _supportDetailsModel.ModelState.AddModelError("FamilyContactFullName", "Enter a full name");
 
-    //    //Act
-    //    await _supportDetailsModel.OnPostAsync("Id");
+        //Act
+        var result = await _supportDetailsModel.OnPostAsync("Id") as RedirectToPageResult;
 
-    //    _supportDetailsModel.ValidationValid.Should().BeFalse();
-    //}
+        //Assert
+        ArgumentNullException.ThrowIfNull(result);
+        result.PageName.Should().Be("/ProfessionalReferral/SupportDetails");
+
+        
+    }
 }

@@ -50,5 +50,14 @@ public class WhenUsingLetter : BaseProfessionalReferralPage
         _letterModel.ValidationValid.Should().BeFalse();
     }
 
+    [Fact]
+    public async Task ThenTheLetterBackUrl()
+    {
+        //Act
+        await _letterModel.OnPostAsync("1");
+
+        _letterModel.BackUrl.Should().Be("/ProfessionalReferral/Text?ServiceId=1");
+    }
+
     //todo: unit tests to check BackUrl
 }

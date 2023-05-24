@@ -33,18 +33,21 @@ public class WhenUsingContactMethods : BaseProfessionalReferralPage
         _contactMethodsModel.TextAreaValue.Should().Be(EngageReason);
     }
 
-    //todo: split unit test into 2
     [Fact]
     public async Task OnPostAsync_ModelIsStoredInDistributedCache()
     {
         _contactMethodsModel.TextAreaValue = "New Engage Reason";
 
         //Act
-        var result = await _contactMethodsModel.OnPostAsync("1") as RedirectToPageResult;
+        await _contactMethodsModel.OnPostAsync("1");
 
-        //todo: check new content
+        //Assert
         ReferralDistributedCache.Verify(x =>
             x.SetAsync(It.IsAny<string>(), It.IsAny<ConnectionRequestModel>()), Times.Once);
+        var content = await ReferralDistributedCache.Object.GetAsync(ProfessionalEmail);
+        ArgumentNullException.ThrowIfNull(content);
+        content.EngageReason.Should().Be(_contactMethodsModel.TextAreaValue);
+        
     }
 
     [Fact]
