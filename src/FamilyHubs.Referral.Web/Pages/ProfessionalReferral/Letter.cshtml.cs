@@ -60,14 +60,14 @@ public class LetterModel : ProfessionalReferralCacheModel
             .Select(t => new LetterError(t.propertyName, t.entry!.Errors[0].ErrorMessage));
     }
 
-    protected override string? OnPostWithModel(ConnectionRequestModel model)
+    protected override IActionResult OnPostWithModelNew(ConnectionRequestModel model)
     {
         if (!ModelState.IsValid)
         {
             LetterErrors = GetErrors(nameof(AddressLine1), nameof(TownOrCity), nameof(Postcode)).ToArray();
             ValidationValid = false;
             SetPageProperties(model);
-            return null;
+            return Page();
         }
 
         model.AddressLine1 = AddressLine1;
@@ -76,7 +76,7 @@ public class LetterModel : ProfessionalReferralCacheModel
         model.County = County;
         model.Postcode = UkGdsPostcodeAttribute.SanitisePostcode(Postcode!);
 
-        return NextPage(ConnectContactDetailsJourneyPage.Letter, model.ContactMethodsSelected);
+        return NextPage(NextPage(ConnectContactDetailsJourneyPage.Letter, model.ContactMethodsSelected));
     }
 
     private void SetPageProperties(ConnectionRequestModel model)

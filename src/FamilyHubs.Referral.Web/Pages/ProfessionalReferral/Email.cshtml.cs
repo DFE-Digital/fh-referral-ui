@@ -36,18 +36,19 @@ public class EmailModel : ProfessionalReferralCacheModel, ISingleEmailTextboxPag
         SetPageProperties(model);
     }
 
-    protected override string? OnPostWithModel(ConnectionRequestModel model)
+    protected override IActionResult OnPostWithModelNew(ConnectionRequestModel model)
     {
         if (!ModelState.IsValid)
         {
             ValidationValid = false;
             SetPageProperties(model);
-            return null;
+            return Page();
         }
 
         model.EmailAddress = TextBoxValue;
 
-        return NextPage(ConnectContactDetailsJourneyPage.Email, model.ContactMethodsSelected);
+        //todo: fix this abomination
+        return NextPage(NextPage(ConnectContactDetailsJourneyPage.Email, model.ContactMethodsSelected));
     }
 
     private void SetPageProperties(ConnectionRequestModel model)

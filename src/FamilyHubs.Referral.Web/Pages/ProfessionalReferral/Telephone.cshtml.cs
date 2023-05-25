@@ -35,7 +35,7 @@ public class TelephoneModel : ProfessionalReferralCacheModel, ISingleTelephoneTe
         SetPageProperties(model);
     }
 
-    protected override string? OnPostWithModel(ConnectionRequestModel model)
+    protected override IActionResult OnPostWithModelNew(ConnectionRequestModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -43,12 +43,12 @@ public class TelephoneModel : ProfessionalReferralCacheModel, ISingleTelephoneTe
             ErrorText = ModelState["TextBoxValue"]!.Errors[0].ErrorMessage;
 
             SetPageProperties(model);
-            return null;
+            return Page();
         }
 
         model.TelephoneNumber = TextBoxValue;
 
-        return NextPage(ConnectContactDetailsJourneyPage.Telephone, model.ContactMethodsSelected);
+        return NextPage(NextPage(ConnectContactDetailsJourneyPage.Telephone, model.ContactMethodsSelected));
     }
 
     private void SetPageProperties(ConnectionRequestModel model)

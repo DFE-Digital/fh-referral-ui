@@ -29,26 +29,25 @@ public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServi
             TextAreaValue = model.EngageReason;
     }
 
-    protected override string? OnPostWithModel(ConnectionRequestModel model)
+    protected override IActionResult OnPostWithModelNew(ConnectionRequestModel model)
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {
             SetPageProperties(model);
             TextAreaValidationErrorMessage = "Enter how best to engage with this family";
-            return null;
+            return Page();
         }
 
         if (TextAreaValue.Length > 500)
         {
             SetPageProperties(model);
             TextAreaValidationErrorMessage = "How the service can engage with the family must be 500 characters or less";
-            return null;
+            return Page();
         }
 
         model.EngageReason = TextAreaValue;
 
-        //todo: use next page
-        return "CheckDetails";
+        return NextPage();
     }
 
     private void SetPageProperties(ConnectionRequestModel model)
