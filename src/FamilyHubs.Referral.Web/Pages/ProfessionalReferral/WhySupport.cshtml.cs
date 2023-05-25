@@ -25,22 +25,22 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
             TextAreaValue = model.Reason;
     }
 
-    protected override string? OnPostWithModel(ConnectionRequestModel model)
+    protected override Task<IActionResult> OnPostWithModelNew(ConnectionRequestModel model)
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {
             TextAreaValidationErrorMessage = "Enter a reason for the connection request";
-            return null;
+            return Task.FromResult<IActionResult>(Page());
         }
 
         if (TextAreaValue.Length > 500)
         {
             TextAreaValidationErrorMessage = "Reason for the connection request must be 500 characters or less";
-            return null;
+            return Task.FromResult<IActionResult>(Page());
         }
 
         model.Reason = TextAreaValue;
 
-        return "ContactDetails";
+        return Task.FromResult(NextPage());
     }
 }
