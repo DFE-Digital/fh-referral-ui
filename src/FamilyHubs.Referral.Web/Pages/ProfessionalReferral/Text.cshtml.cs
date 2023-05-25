@@ -48,7 +48,7 @@ public class TextModel : ProfessionalReferralCacheModel, ISingleTelephoneTextbox
 
         model.TextphoneNumber = TextBoxValue;
 
-        return NextPage(NextPage(ConnectContactDetailsJourneyPage.Textphone, model.ContactMethodsSelected));
+        return NextPage(ConnectContactDetailsJourneyPage.Textphone, model.ContactMethodsSelected);
     }
 
     private void SetPageProperties(ConnectionRequestModel model)

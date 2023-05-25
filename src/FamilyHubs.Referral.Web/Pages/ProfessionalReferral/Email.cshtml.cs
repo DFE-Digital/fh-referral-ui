@@ -47,8 +47,7 @@ public class EmailModel : ProfessionalReferralCacheModel, ISingleEmailTextboxPag
 
         model.EmailAddress = TextBoxValue;
 
-        //todo: fix this abomination
-        return NextPage(NextPage(ConnectContactDetailsJourneyPage.Email, model.ContactMethodsSelected));
+        return NextPage(ConnectContactDetailsJourneyPage.Email, model.ContactMethodsSelected);
     }
 
     private void SetPageProperties(ConnectionRequestModel model)

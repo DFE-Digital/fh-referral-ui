@@ -76,7 +76,7 @@ public class LetterModel : ProfessionalReferralCacheModel
         model.County = County;
         model.Postcode = UkGdsPostcodeAttribute.SanitisePostcode(Postcode!);
 
-        return NextPage(NextPage(ConnectContactDetailsJourneyPage.Letter, model.ContactMethodsSelected));
+        return NextPage(ConnectContactDetailsJourneyPage.Letter, model.ContactMethodsSelected);
     }
 
     private void SetPageProperties(ConnectionRequestModel model)

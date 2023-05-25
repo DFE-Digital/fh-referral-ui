@@ -57,6 +57,6 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
 
         model.ContactMethodsSelected = ContactMethods;
 
-        return NextPage(FirstContactMethodPage(model.ContactMethodsSelected));
+        return FirstContactMethodPage(model.ContactMethodsSelected);
     }
 }

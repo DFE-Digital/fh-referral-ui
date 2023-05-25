@@ -72,12 +72,12 @@ public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
         "ContactMethods"
     };
 
-    protected string FirstContactMethodPage(bool[] contactMethodsSelected)
+    protected IActionResult FirstContactMethodPage(bool[] contactMethodsSelected)
     {
         return NextPage((ConnectContactDetailsJourneyPage)(-1), contactMethodsSelected);
     }
 
-    protected string NextPage(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
+    protected IActionResult NextPage(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
     {
         // we could do this, but should be handled later anyway
         //if (Flow == JourneyFlow.ChangingPage)
@@ -96,10 +96,10 @@ public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
         if (Flow == JourneyFlow.ChangingContactMethods
             && currentPage == ConnectContactDetailsJourneyPage.ContactMethods)
         {
-            return "CheckDetails";
+            return NextPage("CheckDetails");
         }
 
-        return _connectJourneyPages[(int)currentPage+1];
+        return NextPage(_connectJourneyPages[(int)currentPage+1]);
     }
 
     protected string GenerateBackUrl(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
