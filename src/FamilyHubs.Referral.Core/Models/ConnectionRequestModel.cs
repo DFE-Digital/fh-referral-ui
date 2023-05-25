@@ -27,4 +27,7 @@ public class ConnectionRequestModel
     public string? County { get; set; }
     public string? Postcode { get; set; }
     public string? EngageReason { get; set; }
+
+    public string? InvalidReason { get; set; }
+    public string? InvalidEngageReason { get; set; }
 }

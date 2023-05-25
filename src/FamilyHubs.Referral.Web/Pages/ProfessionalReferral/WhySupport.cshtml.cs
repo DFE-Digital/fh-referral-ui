@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
+//todo: redirect to get with error in url has the problem error, next, back see error, rather than valid value
+// either remove prg, or store the error in the cache and redirect to get without error in url
+
+//todo: could have new base class for TellTheService pages (this and ContactMethodsModel)
 public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePageModel
 {
     public string DescriptionPartial => "/Pages/ProfessionalReferral/WhySupportContent.cshtml";
@@ -34,14 +38,12 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
         if (Errors.Contains(ProfessionalReferralError.WhySupport_TooLong))
         {
             TextAreaValidationErrorMessage = "Reason for the connection request must be 500 characters or less";
+            TextAreaValue = model.InvalidReason;
         }
     }
 
     protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
-        //todo: truncate at some (large) value, to stop a denial of service attack
-        model.Reason = TextAreaValue;
-
         if (string.IsNullOrEmpty(TextAreaValue))
         {
             return RedirectToSelf(ProfessionalReferralError.WhySupport_NothingEntered);
@@ -49,8 +51,14 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
 
         if (TextAreaValue.Length > 500)
         {
+            // truncate at some large value, to stop a denial of service attack
+            model.InvalidReason = TextAreaValue?[..Math.Min(TextAreaValue.Length, 4500)];
+
             return RedirectToSelf(ProfessionalReferralError.WhySupport_TooLong);
         }
+
+        model.Reason = TextAreaValue;
+        model.InvalidReason = null;
 
         return NextPage();
     }

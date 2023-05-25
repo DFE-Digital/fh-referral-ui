@@ -5,9 +5,12 @@
 public enum ProfessionalReferralError
 {
     SingleTextboxPage_Invalid,
-    //todo: have generic TellTheService errors, and then have generic ones as part of the interface?
+    //todo: could have generic TellTheService enums, and then have add the different error messages to the interface?
+    // ^^ but that wouldn't work well if we want to centralise all error messages in config
     WhySupport_NothingEntered,
     WhySupport_TooLong,
+    ContactMethods_NothingEntered,
+    ContactMethods_TooLong,
     ContactDetails_NoContactMethodsSelected,
     Consent_NoConsentSelected,
 }
