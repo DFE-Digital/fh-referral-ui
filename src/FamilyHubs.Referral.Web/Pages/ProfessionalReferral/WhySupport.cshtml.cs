@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-//todo: redirect to get with error in url has the problem error, next, back see error, rather than valid value
+//todo: redirect to get with error in url has the problem: error, next, back see error, rather than valid value
 // either remove prg, or store the error in the cache and redirect to get without error in url
+// (investigate 303?)
+// clear error before redirecting to next page in post
+// clear errors on get in check details
 
 //todo: could have new base class for TellTheService pages (this and ContactMethodsModel)
 public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePageModel
