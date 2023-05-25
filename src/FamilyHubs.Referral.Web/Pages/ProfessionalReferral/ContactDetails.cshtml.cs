@@ -43,7 +43,7 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
         }
     }
 
-    protected override Task<IActionResult> OnPostWithModelNew(ConnectionRequestModel model)
+    protected override IActionResult OnPostWithModelNew(ConnectionRequestModel model)
     {
         if (!(ModelState.IsValid && ContactMethods.Any(m => m)))
         {
@@ -52,11 +52,11 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
             //todo: special handling for redirect to self for p/r/g
             // set ValidationValid directly, or use a generic error csv, which we can convert to an array of errors
 
-            return Task.FromResult(RedirectToSelf(ProfessionalReferralError.ContactDetails_NoContactMethodsSelected));
+            return RedirectToSelf(ProfessionalReferralError.ContactDetails_NoContactMethodsSelected);
         }
 
         model.ContactMethodsSelected = ContactMethods;
 
-        return Task.FromResult(NextPage(FirstContactMethodPage(model.ContactMethodsSelected)));
+        return NextPage(FirstContactMethodPage(model.ContactMethodsSelected));
     }
 }

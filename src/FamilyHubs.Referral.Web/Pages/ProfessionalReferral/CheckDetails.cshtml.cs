@@ -64,13 +64,13 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         }
     }
 
-    protected override async Task<IActionResult> OnPostWithModelNew(ConnectionRequestModel model)
+    protected override async Task<IActionResult> OnPostWithModelNewAsync(ConnectionRequestModel model)
     {
         RemoveNonSelectedContactDetails(model);
 
         var requestNumber = await CreateConnectionRequest(model);
 
-        return RedirectToPage($"/ProfessionalReferral/Confirmation", new
+        return RedirectToPage("/ProfessionalReferral/Confirmation", new
         {
             ServiceId,
             requestNumber

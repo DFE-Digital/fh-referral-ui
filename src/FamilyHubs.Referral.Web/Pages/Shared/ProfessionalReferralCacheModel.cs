@@ -21,18 +21,23 @@ public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
         throw new NotImplementedException();
     }
 
-    //todo: move all over to this one, then remove the above and rename this to OnPostWithModel
-    // consumers will call NextPage() instead of returning a string (and we can pick up the page from the model)
-    protected virtual Task<IActionResult> OnPostWithModelNew(ConnectionRequestModel model)
+    protected virtual IActionResult OnPostWithModelNew(ConnectionRequestModel model)
     {
         string? nextPage = OnPostWithModel(model);
         if (nextPage == null)
         {
-            return Task.FromResult<IActionResult>(Page());
+            return Page();
         }
 
-        //todo: change NextPage to return a Task
-        return Task.FromResult(NextPage(nextPage));
+        //todo: change NextPage to return a Task, or add a NextPageAsync
+        return NextPage(nextPage);
+    }
+
+    //todo: move all over to this one, then remove the above and rename this to OnPostWithModel
+    // consumers will call NextPage() instead of returning a string (and we can pick up the page from the model)
+    protected virtual Task<IActionResult> OnPostWithModelNewAsync(ConnectionRequestModel model)
+    {
+        return Task.FromResult(OnPostWithModelNew(model));
     }
 
     protected override async Task<IActionResult> OnSafeGetAsync()
@@ -63,7 +68,7 @@ public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
             return RedirectToProfessionalReferralPage("LocalOfferDetail");
         }
 
-        var result = await OnPostWithModelNew(model);
+        var result = await OnPostWithModelNewAsync(model);
 
         await ConnectionRequestCache.SetAsync(ProfessionalUser.Email, model);
 
