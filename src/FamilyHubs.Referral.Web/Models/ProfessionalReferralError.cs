@@ -5,6 +5,9 @@
 public enum ProfessionalReferralError
 {
     SingleTextboxPage_Invalid,
+    //todo: have generic TellTheService errors, and then have generic ones as part of the interface?
+    WhySupport_NothingEntered,
+    WhySupport_TooLong,
     ContactDetails_NoContactMethodsSelected,
     Consent_NoConsentSelected,
 }

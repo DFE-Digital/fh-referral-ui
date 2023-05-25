@@ -21,25 +21,36 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        if (!string.IsNullOrEmpty(model.Reason))
-            TextAreaValue = model.Reason;
+        TextAreaValue = model.Reason;
+
+        if (Errors == null)
+            return;
+
+        //todo: there are ways we could make this more generic and remove the need for pages to do this
+        if (Errors.Contains(ProfessionalReferralError.WhySupport_NothingEntered))
+        {
+            TextAreaValidationErrorMessage = "Enter a reason for the connection request";
+        }
+        if (Errors.Contains(ProfessionalReferralError.WhySupport_TooLong))
+        {
+            TextAreaValidationErrorMessage = "Reason for the connection request must be 500 characters or less";
+        }
     }
 
     protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
+        //todo: truncate at some (large) value, to stop a denial of service attack
+        model.Reason = TextAreaValue;
+
         if (string.IsNullOrEmpty(TextAreaValue))
         {
-            TextAreaValidationErrorMessage = "Enter a reason for the connection request";
-            return Page();
+            return RedirectToSelf(ProfessionalReferralError.WhySupport_NothingEntered);
         }
 
         if (TextAreaValue.Length > 500)
         {
-            TextAreaValidationErrorMessage = "Reason for the connection request must be 500 characters or less";
-            return Page();
+            return RedirectToSelf(ProfessionalReferralError.WhySupport_TooLong);
         }
-
-        model.Reason = TextAreaValue;
 
         return NextPage();
     }
