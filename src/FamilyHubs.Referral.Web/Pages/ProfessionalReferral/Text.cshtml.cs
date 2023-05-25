@@ -35,7 +35,7 @@ public class TextModel : ProfessionalReferralCacheModel, ISingleTelephoneTextbox
         SetPageProperties(model);
     }
 
-    protected override IActionResult OnPostWithModelNew(ConnectionRequestModel model)
+    protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
         if (!ModelState.IsValid)
         {

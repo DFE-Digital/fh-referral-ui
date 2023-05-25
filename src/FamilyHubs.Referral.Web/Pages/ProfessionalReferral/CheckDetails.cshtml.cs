@@ -64,7 +64,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         }
     }
 
-    protected override async Task<IActionResult> OnPostWithModelNewAsync(ConnectionRequestModel model)
+    protected override async Task<IActionResult> OnPostWithModelAsync(ConnectionRequestModel model)
     {
         RemoveNonSelectedContactDetails(model);
 

@@ -60,7 +60,7 @@ public class LetterModel : ProfessionalReferralCacheModel
             .Select(t => new LetterError(t.propertyName, t.entry!.Errors[0].ErrorMessage));
     }
 
-    protected override IActionResult OnPostWithModelNew(ConnectionRequestModel model)
+    protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
         if (!ModelState.IsValid)
         {

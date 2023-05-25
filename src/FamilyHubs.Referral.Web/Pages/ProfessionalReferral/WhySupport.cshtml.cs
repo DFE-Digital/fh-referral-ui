@@ -25,7 +25,7 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
             TextAreaValue = model.Reason;
     }
 
-    protected override IActionResult OnPostWithModelNew(ConnectionRequestModel model)
+    protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {

@@ -15,16 +15,14 @@ public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
 
     protected abstract void OnGetWithModel(ConnectionRequestModel model);
 
-    protected virtual IActionResult OnPostWithModelNew(ConnectionRequestModel model)
+    protected virtual IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
         return Page();
     }
 
-    //todo: move all over to this one, then remove the above and rename this to OnPostWithModel
-    // consumers will call NextPage() instead of returning a string (and we can pick up the page from the model)
-    protected virtual Task<IActionResult> OnPostWithModelNewAsync(ConnectionRequestModel model)
+    protected virtual Task<IActionResult> OnPostWithModelAsync(ConnectionRequestModel model)
     {
-        return Task.FromResult(OnPostWithModelNew(model));
+        return Task.FromResult(OnPostWithModel(model));
     }
 
     protected override async Task<IActionResult> OnSafeGetAsync()
@@ -55,7 +53,7 @@ public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
             return RedirectToProfessionalReferralPage("LocalOfferDetail");
         }
 
-        var result = await OnPostWithModelNewAsync(model);
+        var result = await OnPostWithModelAsync(model);
 
         await ConnectionRequestCache.SetAsync(ProfessionalUser.Email, model);
 

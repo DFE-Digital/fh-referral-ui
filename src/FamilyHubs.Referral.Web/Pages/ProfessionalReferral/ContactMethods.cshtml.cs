@@ -29,7 +29,7 @@ public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServi
             TextAreaValue = model.EngageReason;
     }
 
-    protected override IActionResult OnPostWithModelNew(ConnectionRequestModel model)
+    protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {
