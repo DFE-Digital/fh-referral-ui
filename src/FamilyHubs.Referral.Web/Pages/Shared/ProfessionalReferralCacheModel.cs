@@ -15,22 +15,9 @@ public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
 
     protected abstract void OnGetWithModel(ConnectionRequestModel model);
 
-    protected virtual string? OnPostWithModel(ConnectionRequestModel model)
-    {
-        // this is only here while we evolve the code, and is not expected to be called
-        throw new NotImplementedException();
-    }
-
     protected virtual IActionResult OnPostWithModelNew(ConnectionRequestModel model)
     {
-        string? nextPage = OnPostWithModel(model);
-        if (nextPage == null)
-        {
-            return Page();
-        }
-
-        //todo: change NextPage to return a Task, or add a NextPageAsync
-        return NextPage(nextPage);
+        return Page();
     }
 
     //todo: move all over to this one, then remove the above and rename this to OnPostWithModel
