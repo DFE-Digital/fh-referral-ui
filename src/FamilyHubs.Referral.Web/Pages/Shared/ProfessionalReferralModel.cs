@@ -72,7 +72,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         Flow = GetFlow(changing);
 
         // default, but can be overridden
-        BackUrl = GenerateBackUrl((CurrentPage - 1).ToString());
+        BackUrl = GenerateBackUrl(CurrentPage - 1);
 
         //todo: could do with a version that just gets the email address
         ProfessionalUser = HttpContext.GetFamilyHubsUser();
@@ -107,7 +107,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         Flow = GetFlow(changing);
 
         // default, but can be overridden
-        BackUrl = GenerateBackUrl((CurrentPage - 1).ToString());
+        BackUrl = GenerateBackUrl(CurrentPage - 1);
 
         ProfessionalUser = HttpContext.GetFamilyHubsUser();
 
@@ -147,21 +147,19 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
             Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page);
     }
 
-    //todo: work with enums until the last possible moment
     //todo: better split between this and cache model
-    protected string GenerateBackUrl(string page)
+    protected string GenerateBackUrl(ConnectJourneyPage page)
     {
-        //todo: change to enum
-        string? backUrlPage;
+        ConnectJourneyPage? backUrlPage;
             
         if (Flow == JourneyFlow.ChangingContactMethods
-            && page == ConnectJourneyPage.WhySupport.ToString()) // ContactMethods-1
+            && page == ConnectJourneyPage.WhySupport) // ContactMethods-1
         {
-            backUrlPage = "CheckDetails";
+            backUrlPage = ConnectJourneyPage.CheckDetails;
         }
         else
         {
-            backUrlPage = Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page;
+            backUrlPage = Flow == JourneyFlow.ChangingPage ? ConnectJourneyPage.CheckDetails : page;
         }
 
 
@@ -169,7 +167,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         string url = $"/ProfessionalReferral/{backUrlPage}?ServiceId={ServiceId}";
 
         if (Flow == JourneyFlow.ChangingContactMethods
-            && backUrlPage != "CheckDetails" && backUrlPage != "WhySupport")
+            && backUrlPage != ConnectJourneyPage.CheckDetails && backUrlPage != ConnectJourneyPage.WhySupport)
         {
             url = $"{url}&changing=contact-methods";
         }

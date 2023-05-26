@@ -139,7 +139,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
         return GenerateBackUrl(PreviousPage(currentPage, contactMethodsSelected));
     }
 
-    private string PreviousPage(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
+    private ConnectJourneyPage PreviousPage(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
     {
         while (--currentPage >= 0)
         {
@@ -155,7 +155,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
         //    return "CheckDetails";
         //}
 
-        return _connectJourneyPages[(int)currentPage + 1];
+        return (ConnectJourneyPage)(currentPage + (int)ConnectJourneyPage.Email);
     }
 
     //todo: version that accepts array of user input
