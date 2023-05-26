@@ -57,7 +57,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         return Task.FromResult((IActionResult)Page());
     }
 
-    public async Task<IActionResult> OnGetAsync(string serviceId, string? changing = null, string? errors = null)
+    public async Task<IActionResult> OnGetAsync(string serviceId, string? changing = null)
     {
         if (serviceId == null)
         {
