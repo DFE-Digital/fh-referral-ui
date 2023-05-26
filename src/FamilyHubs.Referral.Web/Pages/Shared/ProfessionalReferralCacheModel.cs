@@ -14,7 +14,8 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
     }
 
     // we could stop passing this to get/set
-    public ConnectionRequestModel? ConnectionRequestModel { get; set; }
+    public ConnectionRequestModel ConnectionRequestModel { get; set; } = default!;
+    //public JourneyFlow Flow { get; set; }
     private bool _redirectingToSelf;
 
     //todo: change to private set
@@ -43,8 +44,8 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
 
     protected override async Task<IActionResult> OnSafeGetAsync()
     {
-        ConnectionRequestModel = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email);
-        if (ConnectionRequestModel == null)
+        var model = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email);
+        if (model == null)
         {
             // the journey cache entry has expired and we don't have a model to work with
             // likely the user has come back to this page after a long time
@@ -52,6 +53,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
             // not strictly a journey page, but still works
             return RedirectToProfessionalReferralPage("LocalOfferDetail");
         }
+        ConnectionRequestModel = model;
 
         if (ConnectionRequestModel.ErrorState?.ErrorPage == CurrentPage)
         {
@@ -64,6 +66,8 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
             ConnectionRequestModel.ErrorState = null;
         }
 
+        //Flow = ConnectionRequestModel.JourneyFlow;
+
         await OnGetWithModelAsync(ConnectionRequestModel);
 
         return Page();
@@ -71,14 +75,17 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
 
     protected override async Task<IActionResult> OnSafePostAsync()
     {
-        ConnectionRequestModel = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email);
-        if (ConnectionRequestModel == null)
+        var model = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email);
+        if (model == null)
         {
             // the journey cache entry has expired and we don't have a model to work with
             // likely the user has come back to this page after a long time
             // send them back to the start of the journey
             return RedirectToProfessionalReferralPage("LocalOfferDetail");
         }
+        ConnectionRequestModel = model;
+
+        //Flow = ConnectionRequestModel.JourneyFlow;
 
         var result = await OnPostWithModelAsync(ConnectionRequestModel);
 
@@ -109,6 +116,29 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
         return NextPage((ConnectContactDetailsJourneyPage)(-1), contactMethodsSelected);
     }
 
+    protected override IActionResult NextPage()
+    {
+        return NextPage(null);
+    }
+
+    //todo: consts, if not an enum
+    private IActionResult NextPage(string? page)
+    {
+        page ??= (CurrentPage + 1).ToString();
+
+        if (ConnectionRequestModel.JourneyFlow == JourneyFlow.ChangingContactMethods)
+        {
+            return RedirectToPage($"/ProfessionalReferral/{page}", new
+            {
+                ServiceId,
+                changing = "contact-methods"
+            });
+        }
+
+        return RedirectToProfessionalReferralPage(
+            ConnectionRequestModel.JourneyFlow == JourneyFlow.ChangingPage ? "CheckDetails" : page);
+    }
+
     protected IActionResult NextPage(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
     {
         // we could do this, but should be handled later anyway
@@ -125,7 +155,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
             }
         }
 
-        if (Flow == JourneyFlow.ChangingContactMethods
+        if (ConnectionRequestModel.JourneyFlow == JourneyFlow.ChangingContactMethods
             && currentPage == ConnectContactDetailsJourneyPage.ContactMethods)
         {
             return NextPage("CheckDetails");
@@ -137,6 +167,32 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
     protected string GenerateBackUrl(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
     {
         return GenerateBackUrl(PreviousPage(currentPage, contactMethodsSelected));
+    }
+
+    //todo: better split between this and cache model
+    protected override string GenerateBackUrl(ConnectJourneyPage page)
+    {
+        ConnectJourneyPage? backUrlPage;
+
+        if (ConnectionRequestModel.JourneyFlow == JourneyFlow.ChangingContactMethods
+            && page == ConnectJourneyPage.WhySupport) // ContactMethods-1
+        {
+            backUrlPage = ConnectJourneyPage.CheckDetails;
+        }
+        else
+        {
+            backUrlPage = ConnectionRequestModel.JourneyFlow == JourneyFlow.ChangingPage ? ConnectJourneyPage.CheckDetails : page;
+        }
+
+        string url = base.GenerateBackUrl(backUrlPage.Value);
+
+        //if (ConnectionRequestModel.JourneyFlow == JourneyFlow.ChangingContactMethods
+        //    && backUrlPage != ConnectJourneyPage.CheckDetails && backUrlPage != ConnectJourneyPage.WhySupport)
+        //{
+        //    url = $"{url}&changing=contact-methods";
+        //}
+
+        return url;
     }
 
     private ConnectJourneyPage PreviousPage(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
@@ -169,13 +225,12 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
                 ? new[] {invalidUserInput[..Math.Min(invalidUserInput.Length, 4500)]}
                 : null;
 
-            //todo: throw if model null?
-            ConnectionRequestModel!.ErrorState =
+            ConnectionRequestModel.ErrorState =
                 new ProfessionalReferralErrorState(CurrentPage, errors, safeInvalidUserInput);
         }
 
         _redirectingToSelf = true;
 
-        return RedirectToProfessionalReferralPage(CurrentPage.ToString(), GetChanging(Flow));
+        return RedirectToProfessionalReferralPage(CurrentPage.ToString());
     }
 }

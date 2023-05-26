@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
+//todo: links will have to different submits, then set JourneyFlow in model and redirect
+// in Get, will have to blank journeyflow
 public class CheckDetailsModel : ProfessionalReferralCacheModel
 {
     private readonly IOrganisationClientService _organisationClientService;

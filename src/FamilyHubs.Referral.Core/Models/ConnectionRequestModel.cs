@@ -18,4 +18,5 @@ public class ConnectionRequestModel
     public string? EngageReason { get; set; }
 
     public ProfessionalReferralErrorState? ErrorState { get; set; }
+    public JourneyFlow JourneyFlow { get; set; }
 }
