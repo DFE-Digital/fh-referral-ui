@@ -20,7 +20,7 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
         FullName = model.FamilyContactFullName;
-        if (ValidationValid)
+        if (!HasErrors)
         {
             ContactMethods = model.ContactMethodsSelected;
         }

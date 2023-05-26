@@ -50,12 +50,6 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
 
     protected virtual Task<IActionResult> OnSafeGetAsync()
     {
-        //if (Errors != null)
-        //{
-        //    //todo: use Errors directly
-        //    ValidationValid = false;
-        //}
-
         return Task.FromResult((IActionResult)Page());
     }
 

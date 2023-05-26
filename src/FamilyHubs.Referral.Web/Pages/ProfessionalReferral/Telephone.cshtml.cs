@@ -39,7 +39,7 @@ public class TelephoneModel : ProfessionalReferralCacheModel, ISingleTelephoneTe
     {
         if (!ModelState.IsValid)
         {
-            ValidationValid = false;
+            HasErrors = true;
             ErrorText = ModelState["TextBoxValue"]!.Errors[0].ErrorMessage;
 
             SetPageProperties(model);

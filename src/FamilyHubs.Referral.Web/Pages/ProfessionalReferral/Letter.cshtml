@@ -12,7 +12,7 @@
     <div class="govuk-grid-column-two-thirds">
         
         @* move summary into partial if reused *@
-        @if (!Model.ValidationValid)
+        @if (Model.HasErrors)
         {
             <div class="govuk-error-summary" data-module="govuk-error-summary">
                 <div role="alert">

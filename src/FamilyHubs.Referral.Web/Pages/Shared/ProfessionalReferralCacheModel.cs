@@ -13,15 +13,12 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
     {
     }
 
-    //todo: let views access directly? for properties? for errorstate?
-    // property for error state (delegated)?
-    //todo: pass model to get/set anymore?
+    // we could stop passing this to get/set
     public ConnectionRequestModel? ConnectionRequestModel { get; set; }
     private bool _redirectingToSelf;
 
-    //todo: rename to HasErrors or something (with reversed logic)
     //todo: change to private set
-    public bool ValidationValid { get; set; } = true;
+    public bool HasErrors { get; set; }
 
     protected virtual void OnGetWithModel(ConnectionRequestModel model)
     {
@@ -58,7 +55,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
 
         if (ConnectionRequestModel.ErrorState?.ErrorPage == CurrentPage)
         {
-            ValidationValid = false;
+            HasErrors = true;
         }
         else
         {

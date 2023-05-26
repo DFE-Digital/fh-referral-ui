@@ -66,7 +66,7 @@ public class LetterModel : ProfessionalReferralCacheModel
         if (!ModelState.IsValid)
         {
             LetterErrors = GetErrors(nameof(AddressLine1), nameof(TownOrCity), nameof(Postcode)).ToArray();
-            ValidationValid = false;
+            HasErrors = true;
             SetPageProperties(model);
             return Page();
         }

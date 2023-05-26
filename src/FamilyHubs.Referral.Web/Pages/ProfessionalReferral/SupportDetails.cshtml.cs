@@ -26,7 +26,7 @@ public class SupportDetailsModel : ProfessionalReferralCacheModel, ISingleTextbo
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        if (ValidationValid)
+        if (!HasErrors)
         {
             TextBoxValue = model.FamilyContactFullName;
         }

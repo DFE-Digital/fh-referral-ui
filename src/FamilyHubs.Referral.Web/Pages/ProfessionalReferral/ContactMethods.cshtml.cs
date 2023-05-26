@@ -23,7 +23,7 @@ public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServi
     {
         BackUrl = GenerateBackUrl(ConnectContactDetailsJourneyPage.ContactMethods, model.ContactMethodsSelected);
 
-        if (ValidationValid)
+        if (!HasErrors)
         {
             TextAreaValue = model.EngageReason;
             return;
