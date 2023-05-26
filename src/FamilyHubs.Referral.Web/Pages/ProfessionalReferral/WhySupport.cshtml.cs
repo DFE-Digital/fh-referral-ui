@@ -33,11 +33,12 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
         {
             TextAreaValidationErrorMessage = "Enter a reason for the connection request";
         }
-        if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.WhySupport_TooLong))
+        else if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.WhySupport_TooLong))
         {
             TextAreaValidationErrorMessage = "Reason for the connection request must be 500 characters or less";
             TextAreaValue = model.ErrorState!.InvalidUserInput!.First();
         }
+        //todo: throw?
     }
 
     protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
