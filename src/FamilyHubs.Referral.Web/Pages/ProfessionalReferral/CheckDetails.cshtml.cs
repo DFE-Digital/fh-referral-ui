@@ -13,7 +13,6 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 {
     private readonly IOrganisationClientService _organisationClientService;
     private readonly IReferralClientService _referralClientService;
-    public ConnectionRequestModel? ConnectionRequestModel { get; set; }
 
     public CheckDetailsModel(
         IConnectionRequestDistributedCache connectionRequestCache,
@@ -25,14 +24,16 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         _referralClientService = referralClientService;
     }
 
-    protected override void OnGetWithModel(ConnectionRequestModel model)
+    protected override async Task OnGetWithModelAsync(ConnectionRequestModel model)
     {
         // do this now, so we don't display any previously entered contact details that are no longer selected
         // but don't remove them from the cache yet, in case the user goes back to change the contact details
         // we'll remove them from the cache when the user submits the form
         RemoveNonSelectedContactDetails(model);
 
-        ConnectionRequestModel = model;
+        // if the user has gone to change details, errored on the page, then clicked back to here, we need to clear the error state, so that if they go back to the same details page it won't be errored
+        model.ErrorState = null;
+        await ConnectionRequestCache.SetAsync(ProfessionalUser.Email, model);
     }
 
     private static void RemoveNonSelectedContactDetails(ConnectionRequestModel model)

@@ -30,18 +30,18 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
     {
         TextAreaValue = model.Reason;
 
-        if (Errors == null)
+        if (ValidationValid)
             return;
 
         //todo: there are ways we could make this more generic and remove the need for pages to do this
-        if (Errors.Contains(ProfessionalReferralError.WhySupport_NothingEntered))
+        if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.WhySupport_NothingEntered))
         {
             TextAreaValidationErrorMessage = "Enter a reason for the connection request";
         }
-        if (Errors.Contains(ProfessionalReferralError.WhySupport_TooLong))
+        if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.WhySupport_TooLong))
         {
             TextAreaValidationErrorMessage = "Reason for the connection request must be 500 characters or less";
-            TextAreaValue = model.InvalidReason;
+            TextAreaValue = model.ErrorState!.InvalidUserInput!.First();
         }
     }
 
@@ -49,19 +49,15 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {
-            return RedirectToSelf(ProfessionalReferralError.WhySupport_NothingEntered);
+            return RedirectToSelf(null, ProfessionalReferralError.WhySupport_NothingEntered);
         }
 
         if (TextAreaValue.Length > 500)
         {
-            // truncate at some large value, to stop a denial of service attack
-            model.InvalidReason = TextAreaValue?[..Math.Min(TextAreaValue.Length, 4500)];
-
-            return RedirectToSelf(ProfessionalReferralError.WhySupport_TooLong);
+            return RedirectToSelf(TextAreaValue, ProfessionalReferralError.WhySupport_TooLong);
         }
 
         model.Reason = TextAreaValue;
-        model.InvalidReason = null;
 
         return NextPage();
     }

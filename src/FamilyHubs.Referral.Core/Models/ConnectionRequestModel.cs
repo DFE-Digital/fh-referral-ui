@@ -1,4 +1,6 @@
 ﻿
+using FamilyHubs.Referral.Web.Models;
+
 namespace FamilyHubs.Referral.Core.Models;
 
 //todo: merge into one
@@ -10,6 +12,21 @@ public enum ConnectContactDetailsJourneyPage
     Letter,
     LastContactMethod = Letter,
     ContactMethods
+}
+
+//todo: record?
+public class ProfessionalReferralErrorState
+{
+    public ProfessionalReferralErrorState(ConnectJourneyPage errorPage, ProfessionalReferralError[] errors, string[]? invalidUserInput)
+    {
+        ErrorPage = errorPage;
+        Errors = errors;
+        InvalidUserInput = invalidUserInput;
+    }
+
+    public ConnectJourneyPage ErrorPage { get; }
+    public ProfessionalReferralError[] Errors { get; }
+    public string[]? InvalidUserInput { get; }
 }
 
 public class ConnectionRequestModel
@@ -28,6 +45,13 @@ public class ConnectionRequestModel
     public string? Postcode { get; set; }
     public string? EngageReason { get; set; }
 
-    public string? InvalidReason { get; set; }
-    public string? InvalidEngageReason { get; set; }
+    public ProfessionalReferralErrorState? ErrorState { get; set; }
+
+    //todo: move int class?
+    //public ConnectJourneyPage? ErrorPage { get; set; }
+    //public ProfessionalReferralError[]? Errors { get; set; }
+    //public string[]? InvalidUserInput { get; set; }
+
+    //public string? InvalidReason { get; set; }
+    //public string? InvalidEngageReason { get; set; }
 }

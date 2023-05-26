@@ -26,17 +26,17 @@ public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServi
 
         TextAreaValue = model.EngageReason;
 
-        if (Errors == null)
+        if (ValidationValid)
             return;
 
-        if (Errors.Contains(ProfessionalReferralError.ContactMethods_NothingEntered))
+        if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.ContactMethods_NothingEntered))
         {
             TextAreaValidationErrorMessage = "Enter how best to engage with this family";
         }
-        if (Errors.Contains(ProfessionalReferralError.ContactMethods_TooLong))
+        if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.ContactMethods_TooLong))
         {
             TextAreaValidationErrorMessage = "How the service can engage with the family must be 500 characters or less";
-            TextAreaValue = model.InvalidEngageReason;
+            TextAreaValue = model.ErrorState!.InvalidUserInput!.First();
         }
     }
 
@@ -44,19 +44,15 @@ public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServi
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {
-            return RedirectToSelf(ProfessionalReferralError.ContactMethods_NothingEntered);
+            return RedirectToSelf(null,ProfessionalReferralError.ContactMethods_NothingEntered);
         }
 
         if (TextAreaValue.Length > 500)
         {
-            // truncate at some large value, to stop a denial of service attack
-            model.InvalidEngageReason = TextAreaValue?[..Math.Min(TextAreaValue.Length, 4500)];
-
-            return RedirectToSelf(ProfessionalReferralError.ContactMethods_TooLong);
+            return RedirectToSelf(TextAreaValue, ProfessionalReferralError.ContactMethods_TooLong);
         }
 
         model.EngageReason = TextAreaValue;
-        model.InvalidEngageReason = null;
 
         return NextPage();
     }

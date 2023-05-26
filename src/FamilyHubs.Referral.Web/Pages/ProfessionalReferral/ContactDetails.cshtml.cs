@@ -21,8 +21,9 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
         FullName = model.FamilyContactFullName;
-        if (Errors == null)
+        if (!ValidationValid)
         {
+            //todo: view can access this directly now
             ContactMethods = model.ContactMethodsSelected;
         }
 
@@ -47,12 +48,7 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
     {
         if (!(ModelState.IsValid && ContactMethods.Any(m => m)))
         {
-            //ValidationValid = false;
-            //todo: pass params or object (source array of error enums) to RedirectToProfessionalReferralPage for additional params
-            //todo: special handling for redirect to self for p/r/g
-            // set ValidationValid directly, or use a generic error csv, which we can convert to an array of errors
-
-            return RedirectToSelf(ProfessionalReferralError.ContactDetails_NoContactMethodsSelected);
+            return RedirectToSelf(null,ProfessionalReferralError.ContactDetails_NoContactMethodsSelected);
         }
 
         model.ContactMethodsSelected = ContactMethods;
