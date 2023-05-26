@@ -24,10 +24,11 @@ public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServi
     {
         BackUrl = GenerateBackUrl(ConnectContactDetailsJourneyPage.ContactMethods, model.ContactMethodsSelected);
 
-        TextAreaValue = model.EngageReason;
-
         if (ValidationValid)
+        {
+            TextAreaValue = model.EngageReason;
             return;
+        }
 
         if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.ContactMethods_NothingEntered))
         {

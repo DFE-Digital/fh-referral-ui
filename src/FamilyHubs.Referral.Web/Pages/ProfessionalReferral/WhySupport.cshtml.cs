@@ -28,10 +28,11 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        TextAreaValue = model.Reason;
-
         if (ValidationValid)
+        {
+            TextAreaValue = model.Reason;
             return;
+        }
 
         //todo: there are ways we could make this more generic and remove the need for pages to do this
         if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.WhySupport_NothingEntered))

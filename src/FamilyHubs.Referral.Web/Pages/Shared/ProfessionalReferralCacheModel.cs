@@ -26,18 +26,6 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
 
     protected virtual void OnGetWithModel(ConnectionRequestModel model)
     {
-        if (model.ErrorState?.ErrorPage == CurrentPage)
-        {
-            ValidationValid = false;
-        }
-        else
-        {
-            // we don't save the model on Get, but we don't want the page to pick up the error state when the user has gone back
-            // (we'll clear the error state in the model on a non-redirect to self post
-            model.ErrorState = null;
-        }
-        // we could else here and clear errorstate, but it would mean we'd have to save the model each get.
-        // clearing the error state on post (and in check details get) should be enough
     }
 
     protected virtual Task OnGetWithModelAsync(ConnectionRequestModel model)
@@ -67,6 +55,17 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
             // send them back to the start of the journey
             // not strictly a journey page, but still works
             return RedirectToProfessionalReferralPage("LocalOfferDetail");
+        }
+
+        if (ConnectionRequestModel.ErrorState?.ErrorPage == CurrentPage)
+        {
+            ValidationValid = false;
+        }
+        else
+        {
+            // we don't save the model on Get, but we don't want the page to pick up the error state when the user has gone back
+            // (we'll clear the error state in the model on a non-redirect to self post
+            ConnectionRequestModel.ErrorState = null;
         }
 
         await OnGetWithModelAsync(ConnectionRequestModel);
