@@ -27,8 +27,7 @@ public class EmailModel : ProfessionalReferralCacheModel, ISingleEmailTextboxPag
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        //todo: do we need the check?
-        if (!string.IsNullOrEmpty(model.EmailAddress))
+        if (ValidationValid)
         {
             TextBoxValue = model.EmailAddress;
         }
@@ -40,9 +39,7 @@ public class EmailModel : ProfessionalReferralCacheModel, ISingleEmailTextboxPag
     {
         if (!ModelState.IsValid)
         {
-            ValidationValid = false;
-            SetPageProperties(model);
-            return Page();
+            return RedirectToSelf(null, ProfessionalReferralError.Email_NotValid);
         }
 
         model.EmailAddress = TextBoxValue;
