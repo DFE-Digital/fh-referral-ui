@@ -158,7 +158,6 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
         return _connectJourneyPages[(int)currentPage + 1];
     }
 
-    //todo: clear error state in checkdetails get & on non-error post in here
     //todo: version that accepts array of user input
     protected IActionResult RedirectToSelf(string? invalidUserInput, params ProfessionalReferralError[] errors)
     {

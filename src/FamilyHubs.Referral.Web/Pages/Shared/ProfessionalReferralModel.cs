@@ -69,9 +69,6 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         }
 
         ServiceId = serviceId;
-        //todo: do we want Property:error1, etc.? to generically set the link id?
-        //Errors = errors?.Split(',').Select(Enum.Parse<ProfessionalReferralError>).ToArray();
-
         Flow = GetFlow(changing);
 
         // default, but can be overridden
