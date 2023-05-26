@@ -9,8 +9,9 @@ using FamilyHubs.Referral.Core.Models;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
+//todo: journey navigation gets messes up when have gone back to change contact methods, then back to check details, then back through the journey
+// ^^ changing query param is in history and messes things up. move changing to cache instead and handle
 //todo: use post redirect get pattern so that invalid pages don't ask for a reload (especially when using back)
-//todo: current pattern will have to be extended when we need to keep existing user entries (possibly valid or not) 
 
 public enum JourneyFlow
 {
