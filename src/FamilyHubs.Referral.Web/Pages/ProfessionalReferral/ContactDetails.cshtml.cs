@@ -21,7 +21,7 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
         FullName = model.FamilyContactFullName;
-        if (!ValidationValid)
+        if (ValidationValid)
         {
             //todo: view can access this directly now
             ContactMethods = model.ContactMethodsSelected;
