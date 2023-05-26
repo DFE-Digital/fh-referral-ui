@@ -18,12 +18,4 @@ public class ConnectionRequestModel
     public string? EngageReason { get; set; }
 
     public ProfessionalReferralErrorState? ErrorState { get; set; }
-
-    //todo: move int class?
-    //public ConnectJourneyPage? ErrorPage { get; set; }
-    //public ProfessionalReferralError[]? Errors { get; set; }
-    //public string[]? InvalidUserInput { get; set; }
-
-    //public string? InvalidReason { get; set; }
-    //public string? InvalidEngageReason { get; set; }
 }
