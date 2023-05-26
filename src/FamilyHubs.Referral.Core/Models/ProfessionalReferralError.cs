@@ -1,4 +1,4 @@
-﻿namespace FamilyHubs.Referral.Web.Models;
+﻿namespace FamilyHubs.Referral.Core.Models;
 
 //todo: error enum per error / page / journey??
 //could have every error message in config. would we want to do that?
