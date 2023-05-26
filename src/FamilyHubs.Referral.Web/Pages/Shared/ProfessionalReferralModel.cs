@@ -29,8 +29,6 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
     public string ServiceId { get; set; } = default!;
     public JourneyFlow Flow { get; set; }
     public string? BackUrl { get; set; }
-    //public ProfessionalReferralError[]? Errors { get; set; }
-    //public bool ValidationValid { get; set; } = true;
     // not set in ctor, but will always be there in Get/Set handlers
     public FamilyHubsUser ProfessionalUser { get; set; } = default!;
 
