@@ -55,7 +55,5 @@ To debug the JavaScript in Visual Studio, set breakpoints in the JavaScript file
 ## TODO
 
 * open / close filter button doesn't work - create a component from the find site.
- 
-* fix: going through journey, then change contact methods, then continue to check details, then back though journey and then back from contact methods went back to the check details page (rather than the previous page in the journey). tried to repeat and it didn't do it the 2nd time
 
-* check: Change contacts methods, add method, continue, then back to check details and newly added methods are selected but blank
+* add prg to telephone, text & letter

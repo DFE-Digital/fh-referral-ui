@@ -8,6 +8,6 @@ public interface ISingleTextboxPageModel
     string TextBoxLabel { get; set; }
     string ErrorText { get; set; }
     string? TextBoxValue { get; set; }
-    bool ValidationValid { get; set; }
+    bool ValidationValid { get; }
 }
 
