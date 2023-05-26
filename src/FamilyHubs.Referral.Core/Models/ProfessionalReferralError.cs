@@ -4,7 +4,7 @@
 //could have every error message in config. would we want to do that?
 public enum ProfessionalReferralError
 {
-    SingleTextboxPage_Invalid,
+    SupportDetails_Invalid,
     //todo: could have generic TellTheService enums, and then have add the different error messages to the interface?
     // ^^ but that wouldn't work well if we want to centralise all error messages in config
     // ok now we have the page as part of the error state

@@ -26,13 +26,7 @@ public class SupportDetailsModel : ProfessionalReferralCacheModel, ISingleTextbo
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        if (model.ErrorState != null)
-        {
-            //todo: use ErrorState directly in view?
-            ValidationValid = false;
-            TextBoxValue = model.ErrorState?.InvalidUserInput?.FirstOrDefault();
-        }
-        else
+        if (ValidationValid)
         {
             TextBoxValue = model.FamilyContactFullName;
         }
@@ -42,7 +36,7 @@ public class SupportDetailsModel : ProfessionalReferralCacheModel, ISingleTextbo
     {
         if (!ModelState.IsValid)
         {
-            return RedirectToSelf(null, ProfessionalReferralError.SingleTextboxPage_Invalid);
+            return RedirectToSelf(null, ProfessionalReferralError.SupportDetails_Invalid);
         }
 
         if (TextBoxValue!.Length > 255)
