@@ -50,6 +50,7 @@ public class LetterModel : ProfessionalReferralCacheModel
         SetPageProperties(model);
     }
 
+    //todo: make this generic
     public record LetterError(string Property, string ErrorMessage);
 
     // the ordering of errors in the ModelState is not guaranteed
