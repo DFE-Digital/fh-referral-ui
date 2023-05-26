@@ -9,11 +9,10 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServicePageModel
 {
     public string DescriptionPartial => "/Pages/ProfessionalReferral/ContactMethodsContent.cshtml";
+    public string? TextAreaValidationErrorMessage { get; set; }
 
     [BindProperty]
     public string? TextAreaValue { get; set; }
-
-    public string? TextAreaValidationErrorMessage { get; set; }
 
     public ContactMethodsModel(IConnectionRequestDistributedCache connectionRequestCache)
         : base(ConnectJourneyPage.ContactMethods, connectionRequestCache)
@@ -22,37 +21,40 @@ public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServi
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        SetPageProperties(model);
+        BackUrl = GenerateBackUrl(ConnectContactDetailsJourneyPage.ContactMethods, model.ContactMethodsSelected);
 
-        //todo: need the check??
-        if (!string.IsNullOrEmpty(model.EngageReason))
+        if (!HasErrors)
+        {
             TextAreaValue = model.EngageReason;
+            return;
+        }
+
+        if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.ContactMethods_NothingEntered))
+        {
+            TextAreaValidationErrorMessage = "Enter how best to engage with this family";
+        }
+        else if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.ContactMethods_TooLong))
+        {
+            TextAreaValidationErrorMessage = "How the service can engage with the family must be 500 characters or less";
+            TextAreaValue = model.ErrorState!.InvalidUserInput!.First();
+        }
+        //todo: throw?
     }
 
-    protected override string? OnPostWithModel(ConnectionRequestModel model)
+    protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {
-            SetPageProperties(model);
-            TextAreaValidationErrorMessage = "Enter how best to engage with this family";
-            return null;
+            return RedirectToSelf(null,ProfessionalReferralError.ContactMethods_NothingEntered);
         }
 
         if (TextAreaValue.Length > 500)
         {
-            SetPageProperties(model);
-            TextAreaValidationErrorMessage = "How the service can engage with the family must be 500 characters or less";
-            return null;
+            return RedirectToSelf(TextAreaValue, ProfessionalReferralError.ContactMethods_TooLong);
         }
 
         model.EngageReason = TextAreaValue;
 
-        //todo: use next page
-        return "CheckDetails";
-    }
-
-    private void SetPageProperties(ConnectionRequestModel model)
-    {
-        BackUrl = GenerateBackUrl(ConnectContactDetailsJourneyPage.ContactMethods, model.ContactMethodsSelected);
+        return NextPage();
     }
 }

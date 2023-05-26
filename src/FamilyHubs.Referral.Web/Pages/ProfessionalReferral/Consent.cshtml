@@ -11,7 +11,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        @if (!Model.ValidationValid)
+        @if (Model.HasErrors)
         {
             <div class="govuk-error-summary" data-module="govuk-error-summary">
                 <h2 class="govuk-error-summary__title" id="error-summary-title">
@@ -39,7 +39,7 @@
                 <li>why the family needs help</li>
             </ul>
 
-            <div class="govuk-form-group @(Model.ValidationValid == false ? "govuk-form-group--error" : "")">
+            <div class="govuk-form-group @(Model.HasErrors ? "govuk-form-group--error" : "")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                         <h2 class="govuk-fieldset__heading">
@@ -48,7 +48,7 @@
                     </legend>
                     <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
                         @{
-                            if (Model.ValidationValid == false)
+                            if (Model.HasErrors)
                             {
                                 <p class="govuk-error-message">
                                     <span class="govuk-visually-hidden">Error:</span> Select whether you have permission from the family to share details.

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPageModel
+public class SupportDetailsModel : ProfessionalReferralCacheModel, ISingleTextboxPageModel
 {
     public string HeadingText { get; set; } = "Who should the service contact in the family?";
     public string? HintText { get; set; } = "This must be a person aged 16 or over.";
@@ -20,35 +20,23 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
     public string? TextBoxValue { get; set; }
 
     public SupportDetailsModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
-        : base(connectionRequestDistributedCache, ConnectJourneyPage.SupportDetails)
+        : base(ConnectJourneyPage.SupportDetails, connectionRequestDistributedCache)
     {
     }
 
-    protected override async Task<IActionResult> OnSafeGetAsync()
+    protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        if (Errors != null)
+        if (!HasErrors)
         {
-            //todo: use Errors directly
-            ValidationValid = false;
+            TextBoxValue = model.FamilyContactFullName;
         }
-        else
-        {
-            var model = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email);
-
-            if (!string.IsNullOrEmpty(model?.FamilyContactFullName))
-            {
-                TextBoxValue = model.FamilyContactFullName;
-            }
-        }
-
-        return Page();
     }
 
-    protected override async Task<IActionResult> OnSafePostAsync()
+    protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
         if (!ModelState.IsValid)
         {
-            return RedirectToSelf(ProfessionalReferralError.SingleTextboxPage_Invalid);
+            return RedirectToSelf(null, ProfessionalReferralError.SupportDetails_Invalid);
         }
 
         if (TextBoxValue!.Length > 255)
@@ -56,14 +44,7 @@ public class SupportDetailsModel : ProfessionalReferralModel, ISingleTextboxPage
             TextBoxValue = TextBoxValue.Truncate(252);
         }
 
-        var model = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email)
-                    ?? new ConnectionRequestModel
-                    {
-                        ServiceId = ServiceId
-                    };
-
         model.FamilyContactFullName = TextBoxValue;
-        await ConnectionRequestCache.SetAsync(ProfessionalUser.Email, model);
 
         return NextPage();
     }

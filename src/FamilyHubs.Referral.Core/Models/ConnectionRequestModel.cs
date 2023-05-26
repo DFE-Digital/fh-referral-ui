@@ -1,17 +1,6 @@
 ﻿
 namespace FamilyHubs.Referral.Core.Models;
 
-//todo: merge into one
-public enum ConnectContactDetailsJourneyPage
-{
-    Email,
-    Telephone,
-    Textphone,
-    Letter,
-    LastContactMethod = Letter,
-    ContactMethods
-}
-
 public class ConnectionRequestModel
 {
     public string? ServiceId { get; set; }
@@ -27,4 +16,6 @@ public class ConnectionRequestModel
     public string? County { get; set; }
     public string? Postcode { get; set; }
     public string? EngageReason { get; set; }
+
+    public ProfessionalReferralErrorState? ErrorState { get; set; }
 }

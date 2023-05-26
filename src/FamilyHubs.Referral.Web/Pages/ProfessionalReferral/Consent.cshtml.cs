@@ -1,30 +1,26 @@
 using FamilyHubs.Referral.Core.DistributedCache;
+using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class ConsentModel : ProfessionalReferralModel
+public class ConsentModel : ProfessionalReferralCacheModel
 { 
     [BindProperty]
     public string? Consent { get; set; }
 
     public ConsentModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
-        : base(connectionRequestDistributedCache, ConnectJourneyPage.Consent)
+        : base(ConnectJourneyPage.Consent, connectionRequestDistributedCache)
     {
     }
 
-    protected override Task<IActionResult> OnSafePostAsync()
-    {
-        return Task.FromResult(OnSafePost());
-    }
-
-    private IActionResult OnSafePost()
+    protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
         if (!ModelState.IsValid || Consent == null)
         {
-            return RedirectToSelf(ProfessionalReferralError.Consent_NoConsentSelected);
+            return RedirectToSelf(null, ProfessionalReferralError.Consent_NoConsentSelected);
         }
 
         if (string.Compare(Consent, "yes", StringComparison.OrdinalIgnoreCase) == 0)

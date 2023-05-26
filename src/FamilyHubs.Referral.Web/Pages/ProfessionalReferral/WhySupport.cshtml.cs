@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
+//todo: could have new base class for TellTheService pages (this and ContactMethodsModel)
 public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePageModel
 {
     public string DescriptionPartial => "/Pages/ProfessionalReferral/WhySupportContent.cshtml";
@@ -21,26 +22,39 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        if (!string.IsNullOrEmpty(model.Reason))
+        if (!HasErrors)
+        {
             TextAreaValue = model.Reason;
+            return;
+        }
+
+        //todo: there are ways we could make this more generic and remove the need for pages to do this
+        if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.WhySupport_NothingEntered))
+        {
+            TextAreaValidationErrorMessage = "Enter a reason for the connection request";
+        }
+        else if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.WhySupport_TooLong))
+        {
+            TextAreaValidationErrorMessage = "Reason for the connection request must be 500 characters or less";
+            TextAreaValue = model.ErrorState!.InvalidUserInput!.First();
+        }
+        //todo: throw?
     }
 
-    protected override string? OnPostWithModel(ConnectionRequestModel model)
+    protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {
-            TextAreaValidationErrorMessage = "Enter a reason for the connection request";
-            return null;
+            return RedirectToSelf(null, ProfessionalReferralError.WhySupport_NothingEntered);
         }
 
         if (TextAreaValue.Length > 500)
         {
-            TextAreaValidationErrorMessage = "Reason for the connection request must be 500 characters or less";
-            return null;
+            return RedirectToSelf(TextAreaValue, ProfessionalReferralError.WhySupport_TooLong);
         }
 
         model.Reason = TextAreaValue;
 
-        return "ContactDetails";
+        return NextPage();
     }
 }

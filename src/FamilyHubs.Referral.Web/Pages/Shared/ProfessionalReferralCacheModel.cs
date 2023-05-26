@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
-public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
+public class ProfessionalReferralCacheModel : ProfessionalReferralModel
 {
     protected ProfessionalReferralCacheModel(
         ConnectJourneyPage page,
@@ -13,32 +13,38 @@ public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
     {
     }
 
-    protected abstract void OnGetWithModel(ConnectionRequestModel model);
+    // we could stop passing this to get/set
+    public ConnectionRequestModel? ConnectionRequestModel { get; set; }
+    private bool _redirectingToSelf;
 
-    protected virtual string? OnPostWithModel(ConnectionRequestModel model)
+    //todo: change to private set
+    public bool HasErrors { get; set; }
+
+    protected virtual void OnGetWithModel(ConnectionRequestModel model)
     {
-        // this is only here while we evolve the code, and is not expected to be called
-        throw new NotImplementedException();
     }
 
-    //todo: move all over to this one, then remove the above and rename this to OnPostWithModel
-    // consumers will call NextPage() instead of returning a string (and we can pick up the page from the model)
-    protected virtual Task<IActionResult> OnPostWithModelNew(ConnectionRequestModel model)
+    protected virtual Task OnGetWithModelAsync(ConnectionRequestModel model)
     {
-        string? nextPage = OnPostWithModel(model);
-        if (nextPage == null)
-        {
-            return Task.FromResult<IActionResult>(Page());
-        }
+        OnGetWithModel(model);
 
-        //todo: change NextPage to return a Task
-        return Task.FromResult(NextPage(nextPage));
+        return Task.CompletedTask;
+    }
+
+    protected virtual IActionResult OnPostWithModel(ConnectionRequestModel model)
+    {
+        return Page();
+    }
+
+    protected virtual Task<IActionResult> OnPostWithModelAsync(ConnectionRequestModel model)
+    {
+        return Task.FromResult(OnPostWithModel(model));
     }
 
     protected override async Task<IActionResult> OnSafeGetAsync()
     {
-        var model = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email);
-        if (model == null)
+        ConnectionRequestModel = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email);
+        if (ConnectionRequestModel == null)
         {
             // the journey cache entry has expired and we don't have a model to work with
             // likely the user has come back to this page after a long time
@@ -47,15 +53,26 @@ public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
             return RedirectToProfessionalReferralPage("LocalOfferDetail");
         }
 
-        OnGetWithModel(model);
+        if (ConnectionRequestModel.ErrorState?.ErrorPage == CurrentPage)
+        {
+            HasErrors = true;
+        }
+        else
+        {
+            // we don't save the model on Get, but we don't want the page to pick up the error state when the user has gone back
+            // (we'll clear the error state in the model on a non-redirect to self post
+            ConnectionRequestModel.ErrorState = null;
+        }
+
+        await OnGetWithModelAsync(ConnectionRequestModel);
 
         return Page();
     }
 
     protected override async Task<IActionResult> OnSafePostAsync()
     {
-        var model = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email);
-        if (model == null)
+        ConnectionRequestModel = await ConnectionRequestCache.GetAsync(ProfessionalUser.Email);
+        if (ConnectionRequestModel == null)
         {
             // the journey cache entry has expired and we don't have a model to work with
             // likely the user has come back to this page after a long time
@@ -63,9 +80,14 @@ public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
             return RedirectToProfessionalReferralPage("LocalOfferDetail");
         }
 
-        var result = await OnPostWithModelNew(model);
+        var result = await OnPostWithModelAsync(ConnectionRequestModel);
 
-        await ConnectionRequestCache.SetAsync(ProfessionalUser.Email, model);
+        if (!_redirectingToSelf)
+        {
+            ConnectionRequestModel.ErrorState = null;
+        }
+
+        await ConnectionRequestCache.SetAsync(ProfessionalUser.Email, ConnectionRequestModel);
 
         return result;
     }
@@ -82,12 +104,12 @@ public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
         "ContactMethods"
     };
 
-    protected string FirstContactMethodPage(bool[] contactMethodsSelected)
+    protected IActionResult FirstContactMethodPage(bool[] contactMethodsSelected)
     {
         return NextPage((ConnectContactDetailsJourneyPage)(-1), contactMethodsSelected);
     }
 
-    protected string NextPage(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
+    protected IActionResult NextPage(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
     {
         // we could do this, but should be handled later anyway
         //if (Flow == JourneyFlow.ChangingPage)
@@ -106,10 +128,10 @@ public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
         if (Flow == JourneyFlow.ChangingContactMethods
             && currentPage == ConnectContactDetailsJourneyPage.ContactMethods)
         {
-            return "CheckDetails";
+            return NextPage("CheckDetails");
         }
 
-        return _connectJourneyPages[(int)currentPage+1];
+        return NextPage(_connectJourneyPages[(int)currentPage+1]);
     }
 
     protected string GenerateBackUrl(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
@@ -117,7 +139,7 @@ public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
         return GenerateBackUrl(PreviousPage(currentPage, contactMethodsSelected));
     }
 
-    private string PreviousPage(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
+    private ConnectJourneyPage PreviousPage(ConnectContactDetailsJourneyPage currentPage, bool[] contactMethodsSelected)
     {
         while (--currentPage >= 0)
         {
@@ -133,6 +155,27 @@ public abstract class ProfessionalReferralCacheModel : ProfessionalReferralModel
         //    return "CheckDetails";
         //}
 
-        return _connectJourneyPages[(int)currentPage + 1];
+        return (ConnectJourneyPage)(currentPage + (int)ConnectJourneyPage.Email);
+    }
+
+    //todo: version that accepts array of user input
+    protected IActionResult RedirectToSelf(string? invalidUserInput, params ProfessionalReferralError[] errors)
+    {
+        //todo: throw if none? is that something this should be used for?
+        if (errors.Any())
+        {
+            // truncate at some large value, to stop a denial of service attack
+            var safeInvalidUserInput = invalidUserInput != null
+                ? new[] {invalidUserInput[..Math.Min(invalidUserInput.Length, 4500)]}
+                : null;
+
+            //todo: throw if model null?
+            ConnectionRequestModel!.ErrorState =
+                new ProfessionalReferralErrorState(CurrentPage, errors, safeInvalidUserInput);
+        }
+
+        _redirectingToSelf = true;
+
+        return RedirectToProfessionalReferralPage(CurrentPage.ToString(), GetChanging(Flow));
     }
 }

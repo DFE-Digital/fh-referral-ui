@@ -35,15 +35,15 @@ public class TelephoneModel : ProfessionalReferralCacheModel, ISingleTelephoneTe
         SetPageProperties(model);
     }
 
-    protected override string? OnPostWithModel(ConnectionRequestModel model)
+    protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
         if (!ModelState.IsValid)
         {
-            ValidationValid = false;
+            HasErrors = true;
             ErrorText = ModelState["TextBoxValue"]!.Errors[0].ErrorMessage;
 
             SetPageProperties(model);
-            return null;
+            return Page();
         }
 
         model.TelephoneNumber = TextBoxValue;

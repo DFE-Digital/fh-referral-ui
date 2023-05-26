@@ -1,6 +1,5 @@
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
-using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +20,7 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
         FullName = model.FamilyContactFullName;
-        if (Errors == null)
+        if (!HasErrors)
         {
             ContactMethods = model.ContactMethodsSelected;
         }
@@ -43,20 +42,15 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
         }
     }
 
-    protected override Task<IActionResult> OnPostWithModelNew(ConnectionRequestModel model)
+    protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
         if (!(ModelState.IsValid && ContactMethods.Any(m => m)))
         {
-            //ValidationValid = false;
-            //todo: pass params or object (source array of error enums) to RedirectToProfessionalReferralPage for additional params
-            //todo: special handling for redirect to self for p/r/g
-            // set ValidationValid directly, or use a generic error csv, which we can convert to an array of errors
-
-            return Task.FromResult(RedirectToSelf(ProfessionalReferralError.ContactDetails_NoContactMethodsSelected));
+            return RedirectToSelf(null,ProfessionalReferralError.ContactDetails_NoContactMethodsSelected);
         }
 
         model.ContactMethodsSelected = ContactMethods;
 
-        return Task.FromResult(NextPage(FirstContactMethodPage(model.ContactMethodsSelected)));
+        return FirstContactMethodPage(model.ContactMethodsSelected);
     }
 }

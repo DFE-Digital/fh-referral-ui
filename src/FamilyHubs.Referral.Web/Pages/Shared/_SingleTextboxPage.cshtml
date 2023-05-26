@@ -5,7 +5,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        @if (!Model.ValidationValid)
+        @if (Model.HasErrors)
         {
             <div class="govuk-error-summary" data-module="govuk-error-summary">
                 <div role="alert">
@@ -28,7 +28,7 @@
         <h1 class="govuk-heading-l">@Model.HeadingText</h1>
 
         <form method="post" novalidate>
-            <div class="govuk-form-group @(Model.ValidationValid ? "": "govuk-form-group--error")">
+            <div class="govuk-form-group @(Model.HasErrors ? "govuk-form-group--error" : "")">
                 @*todo: check which should be hint*@
                 @if (!string.IsNullOrEmpty(Model.HintText))
                 {
@@ -36,7 +36,7 @@
                         @Model.HintText
                     </div>
                 }
-                @if (!Model.ValidationValid)
+                @if (Model.HasErrors)
                 {
                     <p id="error" class="govuk-error-message">
                         <span class="govuk-visually-hidden">Error:</span> @Model.ErrorText
@@ -62,9 +62,9 @@
                 @* we're' currently using this to gather emails, which GDS recommends to switch spellcheck off for, *@
                 @* and to gather names and telephone numbers, for which it doesn't make sense to have spellcheck enabled. *@
 
-                <input class="govuk-input @(Model.ValidationValid ? "" : "govuk-input--error")"
+                <input class="govuk-input @(Model.HasErrors ? "govuk-input--error" : "")"
                        name="TextBoxValue" type="@type" value="@Model.TextBoxValue" inputmode="@type"
-                       spellcheck="false" autocomplete="off" id="textbox" aria-describedby="@(string.IsNullOrEmpty(Model.HintText)?"":"hint ")@(Model.ValidationValid ? "" : "error")">
+                       spellcheck="false" autocomplete="off" id="textbox" aria-describedby="@(string.IsNullOrEmpty(Model.HintText)?"":"hint ")@(Model.HasErrors ? "error" : "")">
             </div>
             <button type="submit" class="govuk-button" data-module="govuk-button">
                 Continue

@@ -1,16 +1,17 @@
-﻿using FamilyHubs.Referral.Web.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Identity.Models;
 using FamilyHubs.Referral.Core.DistributedCache;
+using FamilyHubs.Referral.Core.Models;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
+//todo: journey navigation gets messes up when have gone back to change contact methods, then back to check details, then back through the journey
+// ^^ changing query param is in history and messes things up. move changing to cache instead and handle
 //todo: use post redirect get pattern so that invalid pages don't ask for a reload (especially when using back)
-//todo: current pattern will have to be extended when we need to keep existing user entries (possibly valid or not) 
 
 public enum JourneyFlow
 {
@@ -19,35 +20,15 @@ public enum JourneyFlow
     ChangingContactMethods
 }
 
-//todo: have only one of these
-//todo: work into next page?
-public enum ConnectJourneyPage
-{
-    LocalOfferDetail,
-    Safeguarding,
-    Consent,
-    SupportDetails,
-    WhySupport,
-    ContactDetails,
-    Email,
-    Telephone,
-    Text,
-    Letter,
-    ContactMethods,
-    CheckDetails
-}
-
 [Authorize]
 public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
 {
-    private readonly ConnectJourneyPage _page;
+    protected readonly ConnectJourneyPage CurrentPage;
     protected IConnectionRequestDistributedCache ConnectionRequestCache { get; }
     // not set in ctor, but will always be there in Get/Set handlers
     public string ServiceId { get; set; } = default!;
     public JourneyFlow Flow { get; set; }
     public string? BackUrl { get; set; }
-    public ProfessionalReferralError[]? Errors { get; set; }
-    public bool ValidationValid { get; set; } = true;
     // not set in ctor, but will always be there in Get/Set handlers
     public FamilyHubsUser ProfessionalUser { get; set; } = default!;
 
@@ -56,7 +37,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         ConnectJourneyPage page)
     {
         ConnectionRequestCache = connectionRequestDistributedCache;
-        _page = page;
+        CurrentPage = page;
     }
 
     public bool ShowNavigationMenu => true;
@@ -68,12 +49,6 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
 
     protected virtual Task<IActionResult> OnSafeGetAsync()
     {
-        if (Errors != null)
-        {
-            //todo: use Errors directly
-            ValidationValid = false;
-        }
-
         return Task.FromResult((IActionResult)Page());
     }
 
@@ -82,7 +57,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         return Task.FromResult((IActionResult)Page());
     }
 
-    public async Task<IActionResult> OnGetAsync(string serviceId, string? changing = null, string? errors = null)
+    public async Task<IActionResult> OnGetAsync(string serviceId, string? changing = null)
     {
         if (serviceId == null)
         {
@@ -93,13 +68,10 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         }
 
         ServiceId = serviceId;
-        //todo: do we want Property:error1, etc.? to generically set the link id?
-        Errors = errors?.Split(',').Select(Enum.Parse<ProfessionalReferralError>).ToArray();
-
         Flow = GetFlow(changing);
 
         // default, but can be overridden
-        BackUrl = GenerateBackUrl((_page-1).ToString());
+        BackUrl = GenerateBackUrl(CurrentPage - 1);
 
         //todo: could do with a version that just gets the email address
         ProfessionalUser = HttpContext.GetFamilyHubsUser();
@@ -107,7 +79,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         return await OnSafeGetAsync();
     }
 
-    private JourneyFlow GetFlow(string? changing)
+    protected JourneyFlow GetFlow(string? changing)
     {
         return changing switch
         {
@@ -117,7 +89,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         };
     }
 
-    private string? GetChanging(JourneyFlow flow)
+    protected string? GetChanging(JourneyFlow flow)
     {
         return flow switch
         {
@@ -134,7 +106,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         Flow = GetFlow(changing);
 
         // default, but can be overridden
-        BackUrl = GenerateBackUrl((_page-1).ToString());
+        BackUrl = GenerateBackUrl(CurrentPage - 1);
 
         ProfessionalUser = HttpContext.GetFamilyHubsUser();
 
@@ -144,21 +116,14 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
     class RouteValues
     {
         public string? ServiceId { get; set; }
-        public ProfessionalReferralError[]? Errors { get; set; }
         public string? Changing { get; set; }
     }
 
-    protected IActionResult RedirectToSelf(params ProfessionalReferralError[] errors)
-    {
-        return RedirectToProfessionalReferralPage(_page.ToString(), GetChanging(Flow), errors);
-    }
-
-    protected IActionResult RedirectToProfessionalReferralPage(string page, string? changing = null, params ProfessionalReferralError[] errors)
+    protected IActionResult RedirectToProfessionalReferralPage(string page, string? changing = null)
     {
         return RedirectToPage($"/ProfessionalReferral/{page}", new RouteValues
         {
             ServiceId = ServiceId,
-            Errors = errors,
             Changing = changing            
         });
     }
@@ -166,7 +131,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
     //todo: consts, if not an enum
     protected IActionResult NextPage(string? page = null)
     {
-        page ??= (_page + 1).ToString();
+        page ??= (CurrentPage + 1).ToString();
 
         if (Flow == JourneyFlow.ChangingContactMethods)
         {
@@ -181,20 +146,19 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
             Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page);
     }
 
-    //todo: work with enums until the last possible moment
     //todo: better split between this and cache model
-    protected string GenerateBackUrl(string page)
+    protected string GenerateBackUrl(ConnectJourneyPage page)
     {
-        string? backUrlPage;
+        ConnectJourneyPage? backUrlPage;
             
         if (Flow == JourneyFlow.ChangingContactMethods
-            && page == ConnectJourneyPage.WhySupport.ToString()) // ContactMethods-1
+            && page == ConnectJourneyPage.WhySupport) // ContactMethods-1
         {
-            backUrlPage = "CheckDetails";
+            backUrlPage = ConnectJourneyPage.CheckDetails;
         }
         else
         {
-            backUrlPage = Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page;
+            backUrlPage = Flow == JourneyFlow.ChangingPage ? ConnectJourneyPage.CheckDetails : page;
         }
 
 
@@ -202,7 +166,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         string url = $"/ProfessionalReferral/{backUrlPage}?ServiceId={ServiceId}";
 
         if (Flow == JourneyFlow.ChangingContactMethods
-            && backUrlPage != "CheckDetails" && backUrlPage != "WhySupport")
+            && backUrlPage != ConnectJourneyPage.CheckDetails && backUrlPage != ConnectJourneyPage.WhySupport)
         {
             url = $"{url}&changing=contact-methods";
         }
