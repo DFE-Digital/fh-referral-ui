@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-//todo: check: check details -> here, clear -> error -> back.
 public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServicePageModel
 {
     public string DescriptionPartial => "/Pages/ProfessionalReferral/ContactMethodsContent.cshtml";

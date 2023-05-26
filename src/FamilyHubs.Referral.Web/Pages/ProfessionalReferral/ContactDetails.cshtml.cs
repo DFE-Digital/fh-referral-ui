@@ -1,6 +1,5 @@
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
-using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +22,6 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
         FullName = model.FamilyContactFullName;
         if (ValidationValid)
         {
-            //todo: view can access this directly now
             ContactMethods = model.ContactMethodsSelected;
         }
 
