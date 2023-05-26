@@ -28,6 +28,6 @@ public class SafeguardingModel : ProfessionalReferralModel
 
         await ConnectionRequestCache.SetAsync(ProfessionalUser.Email, model);
 
-        return Page();
+        return NextPage();
     }
 }
