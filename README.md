@@ -56,4 +56,8 @@ To debug the JavaScript in Visual Studio, set breakpoints in the JavaScript file
 
 * open / close filter button doesn't work - create a component from the find site.
 
+* journey edge case
+
+* sign-in expiry (cookie expires with session, but no session)
+
 * add prg to telephone, text & letter

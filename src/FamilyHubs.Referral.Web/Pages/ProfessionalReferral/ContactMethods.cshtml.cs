@@ -48,7 +48,9 @@ public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServi
             return RedirectToSelf(null,ProfessionalReferralError.ContactMethods_NothingEntered);
         }
 
-        if (TextAreaValue.Length > 500)
+        // workaround the front end counting line endings as 1 chars (\n) as per HTML spec,
+        // and the http transport/.net/windows using 2 chars for line ends (\r\n)
+        if (TextAreaValue.Replace("\r", "").Length > 500)
         {
             return RedirectToSelf(TextAreaValue, ProfessionalReferralError.ContactMethods_TooLong);
         }
