@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.SharedKernel.Razor.DistributedCache;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace FamilyHubs.Referral.Infrastructure.DistributedCache;

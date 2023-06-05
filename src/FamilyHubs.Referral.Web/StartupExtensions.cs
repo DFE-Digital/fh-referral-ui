@@ -1,4 +1,6 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
+using FamilyHubs.Referral.Core.DistributedCache;
+using FamilyHubs.Referral.Infrastructure.DistributedCache;
 using FamilyHubs.SharedKernel.GovLogin.AppStart;
 using FamilyHubs.SharedKernel.Identity;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -60,7 +62,9 @@ public static class StartupExtensions
 
         services.AddReferralDistributedCache(
             configuration["RedisCache:Connection"],
-            int.Parse(configuration["RedisCache:SlidingExpirationInMinutes"] ?? "240"));
+            int.Parse(configuration["RedisCache:SlidingExpirationInMinutes"] ?? "240"),
+            "ReferralWeb");
+        services.AddTransient<IConnectionRequestDistributedCache, ConnectionRequestDistributedCache>();
     }
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
