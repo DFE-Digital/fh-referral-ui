@@ -36,7 +36,7 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
         else if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.WhySupport_TooLong))
         {
             TextAreaValidationErrorMessage = "Reason for the connection request must be 500 characters or less";
-            TextAreaValue = model.ErrorState!.InvalidUserInput!.First();
+            TextAreaValue = model.ErrorState!.InvalidUserInput![0];
         }
         //todo: throw?
     }

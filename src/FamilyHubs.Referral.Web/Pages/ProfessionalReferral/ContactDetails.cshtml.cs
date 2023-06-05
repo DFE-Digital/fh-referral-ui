@@ -44,7 +44,9 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
 
     protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
+#pragma warning disable S6605
         if (!(ModelState.IsValid && ContactMethods.Any(m => m)))
+#pragma warning restore S6605
         {
             return RedirectToSelf(null,ProfessionalReferralError.ContactDetails_NoContactMethodsSelected);
         }

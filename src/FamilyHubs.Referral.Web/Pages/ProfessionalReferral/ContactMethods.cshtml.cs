@@ -36,7 +36,7 @@ public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServi
         else if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.ContactMethods_TooLong))
         {
             TextAreaValidationErrorMessage = "How the service can engage with the family must be 500 characters or less";
-            TextAreaValue = model.ErrorState!.InvalidUserInput!.First();
+            TextAreaValue = model.ErrorState!.InvalidUserInput![0];
         }
         //todo: throw?
     }
