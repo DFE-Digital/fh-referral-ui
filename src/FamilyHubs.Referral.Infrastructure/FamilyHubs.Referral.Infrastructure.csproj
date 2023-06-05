@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -9,7 +9,7 @@
 
   <ItemGroup>
 	  <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="1.0.56-alpha" />
-	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.0.0.68202">
+	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.2.0.71021">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

@@ -61,6 +61,7 @@ public class LocalOfferDetailModel : PageModel
         return result;
     }
 
+    //todo: looks like a custom implementation of string.Join
     public string GetLanguagesAsString(ICollection<LanguageDto>? languageDtos)
     {
         var result = string.Empty;
@@ -75,7 +76,7 @@ public class LocalOfferDetailModel : PageModel
         result = stringBuilder.ToString();
 
         //Remove last comma if present
-        if (result.EndsWith(","))
+        if (result.EndsWith(','))
         {
             result = result.Remove(result.Length - 1);
         }
