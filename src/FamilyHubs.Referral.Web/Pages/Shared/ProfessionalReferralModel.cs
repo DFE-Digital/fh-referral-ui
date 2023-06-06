@@ -13,22 +13,18 @@ namespace FamilyHubs.Referral.Web.Pages.Shared;
 // ^^ changing query param is in history and messes things up. move changing to cache instead and handle
 //todo: use post redirect get pattern so that invalid pages don't ask for a reload (especially when using back)
 
-public enum JourneyFlow
-{
-    Normal,
-    ChangingPage,
-    ChangingContactMethods
-}
-
 [Authorize]
 public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
 {
     protected readonly ConnectJourneyPage CurrentPage;
+
     protected IConnectionRequestDistributedCache ConnectionRequestCache { get; }
+
     // not set in ctor, but will always be there in Get/Set handlers
     public string ServiceId { get; set; } = default!;
-    public JourneyFlow Flow { get; set; }
+
     public string? BackUrl { get; set; }
+
     // not set in ctor, but will always be there in Get/Set handlers
     public FamilyHubsUser ProfessionalUser { get; set; } = default!;
 
@@ -49,15 +45,15 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
 
     protected virtual Task<IActionResult> OnSafeGetAsync()
     {
-        return Task.FromResult((IActionResult)Page());
+        return Task.FromResult((IActionResult) Page());
     }
 
     protected virtual Task<IActionResult> OnSafePostAsync()
     {
-        return Task.FromResult((IActionResult)Page());
+        return Task.FromResult((IActionResult) Page());
     }
 
-    public async Task<IActionResult> OnGetAsync(string serviceId, string? changing = null)
+    public async Task<IActionResult> OnGetAsync(string serviceId)
     {
         if (serviceId == null)
         {
@@ -68,8 +64,10 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         }
 
         ServiceId = serviceId;
-        Flow = GetFlow(changing);
+        //todo: in derived
+        //Flow = GetFlow(changing);
 
+        //todo: in derived
         // default, but can be overridden
         BackUrl = GenerateBackUrl(CurrentPage - 1);
 
@@ -79,32 +77,34 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         return await OnSafeGetAsync();
     }
 
-    protected JourneyFlow GetFlow(string? changing)
-    {
-        return changing switch
-        {
-            "page" => JourneyFlow.ChangingPage,
-            "contact-methods" => JourneyFlow.ChangingContactMethods,
-            _ => JourneyFlow.Normal
-        };
-    }
+    //protected JourneyFlow GetFlow(string? changing)
+    //{
+    //    return changing switch
+    //    {
+    //        "page" => JourneyFlow.ChangingPage,
+    //        "contact-methods" => JourneyFlow.ChangingContactMethods,
+    //        _ => JourneyFlow.Normal
+    //    };
+    //}
 
-    protected string? GetChanging(JourneyFlow flow)
-    {
-        return flow switch
-        {
-            JourneyFlow.ChangingPage => "page",
-            JourneyFlow.ChangingContactMethods => "contact-methods",
-            _ => null
-        };
-    }
+    //protected string? GetChanging(JourneyFlow flow)
+    //{
+    //    return flow switch
+    //    {
+    //        JourneyFlow.ChangingPage => "page",
+    //        JourneyFlow.ChangingContactMethods => "contact-methods",
+    //        _ => null
+    //    };
+    //}
 
-    public async Task<IActionResult> OnPostAsync(string serviceId, string? changing = null)
+    public async Task<IActionResult> OnPostAsync(string serviceId)
     {
         ServiceId = serviceId;
 
-        Flow = GetFlow(changing);
+        //todo: in derived
+        //Flow = GetFlow(changing);
 
+        //todo: in derived
         // default, but can be overridden
         BackUrl = GenerateBackUrl(CurrentPage - 1);
 
@@ -113,64 +113,23 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
         return await OnSafePostAsync();
     }
 
-    class RouteValues
+    //todo: accept enum
+    protected IActionResult RedirectToProfessionalReferralPage(string page)
     {
-        public string? ServiceId { get; set; }
-        public string? Changing { get; set; }
-    }
-
-    protected IActionResult RedirectToProfessionalReferralPage(string page, string? changing = null)
-    {
-        return RedirectToPage($"/ProfessionalReferral/{page}", new RouteValues
+        return RedirectToPage($"/ProfessionalReferral/{page}", new
         {
-            ServiceId = ServiceId,
-            Changing = changing            
+            ServiceId
         });
     }
 
-    //todo: consts, if not an enum
-    protected IActionResult NextPage(string? page = null)
+    protected virtual IActionResult NextPage()
     {
-        page ??= (CurrentPage + 1).ToString();
-
-        if (Flow == JourneyFlow.ChangingContactMethods)
-        {
-            return RedirectToPage($"/ProfessionalReferral/{page}", new
-            {
-                ServiceId,
-                changing = "contact-methods"
-            });
-        }
-
-        return RedirectToProfessionalReferralPage(
-            Flow == JourneyFlow.ChangingPage ? "CheckDetails" : page);
+        return RedirectToProfessionalReferralPage((CurrentPage + 1).ToString());
     }
 
-    //todo: better split between this and cache model
-    protected string GenerateBackUrl(ConnectJourneyPage page)
+    protected virtual string GenerateBackUrl(ConnectJourneyPage page)
     {
-        ConnectJourneyPage? backUrlPage;
-            
-        if (Flow == JourneyFlow.ChangingContactMethods
-            && page == ConnectJourneyPage.WhySupport) // ContactMethods-1
-        {
-            backUrlPage = ConnectJourneyPage.CheckDetails;
-        }
-        else
-        {
-            backUrlPage = Flow == JourneyFlow.ChangingPage ? ConnectJourneyPage.CheckDetails : page;
-        }
-
-
         //todo: check ServiceId for null
-        string url = $"/ProfessionalReferral/{backUrlPage}?ServiceId={ServiceId}";
-
-        if (Flow == JourneyFlow.ChangingContactMethods
-            && backUrlPage != ConnectJourneyPage.CheckDetails && backUrlPage != ConnectJourneyPage.WhySupport)
-        {
-            url = $"{url}&changing=contact-methods";
-        }
-
-        return url;
+        return $"/ProfessionalReferral/{page}?ServiceId={ServiceId}";
     }
 }
