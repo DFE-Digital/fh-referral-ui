@@ -29,7 +29,7 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
     public string ServiceId { get; set; } = default!;
     public JourneyFlow Flow { get; set; }
     public string? BackUrl { get; set; }
-    // not set in ctor, but will always be there in Get/Set handlers
+    // not set in ctor, but will always be there in Get/Post handlers
     public FamilyHubsUser ProfessionalUser { get; set; } = default!;
 
     public ProfessionalReferralModel(
