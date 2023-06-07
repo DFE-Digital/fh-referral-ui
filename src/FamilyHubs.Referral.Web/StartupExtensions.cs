@@ -60,10 +60,21 @@ public static class StartupExtensions
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 
-        services.AddReferralDistributedCache(
-            configuration["RedisCache:Connection"],
-            int.Parse(configuration["RedisCache:SlidingExpirationInMinutes"] ?? "240"),
-            "ReferralWeb");
+        string? connectionString = configuration["SqlServerCache:Connection"];
+        string? schemaName = configuration["SqlServerCache:SchemaName"];
+        string? tableName = configuration["SqlServerCache:TableName"];
+
+        if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(schemaName) ||
+            string.IsNullOrEmpty(tableName))
+        {
+            //todo: config exception?
+            throw new InvalidOperationException("Missing config in SqlServerCache section");
+        }
+
+        services.AddSqlServerDistributedCache(
+            connectionString,
+            int.Parse(configuration["SqlServerCache:SlidingExpirationInMinutes"] ?? "240"),
+            schemaName, tableName);
         services.AddTransient<IConnectionRequestDistributedCache, ConnectionRequestDistributedCache>();
     }
 

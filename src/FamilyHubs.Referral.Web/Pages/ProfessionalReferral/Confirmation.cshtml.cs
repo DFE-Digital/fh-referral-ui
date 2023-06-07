@@ -1,3 +1,5 @@
+using FamilyHubs.Referral.Core.DistributedCache;
+using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,10 +9,20 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 [Authorize]
 public class ConfirmationModel : PageModel, IFamilyHubsHeader
 {
+    private readonly IConnectionRequestDistributedCache _connectionRequestCache;
+
+    public ConfirmationModel(IConnectionRequestDistributedCache connectionRequestCache)
+    {
+        _connectionRequestCache = connectionRequestCache;
+    }
+
     public int RequestNumber { get; set; }
 
     public void OnGet(int requestNumber)
     {
+        var professionalUser = HttpContext.GetFamilyHubsUser();
+        _connectionRequestCache.RemoveAsync(professionalUser.Email);
+
         RequestNumber = requestNumber;
     }
 
