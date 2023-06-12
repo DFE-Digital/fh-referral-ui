@@ -41,9 +41,7 @@ public class NotificationsApi : INotifications //todo: , IHealthCheckUrlGroup
 
         if (!response.IsSuccessStatusCode)
         {
-            //throw new NotificationsClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
-            //todo:
-            throw new NotImplementedException();
+            throw new NotificationsClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
         }
     }
 
