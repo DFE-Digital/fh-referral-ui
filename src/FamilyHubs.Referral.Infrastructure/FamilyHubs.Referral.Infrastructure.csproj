@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+	  <PackageReference Include="FamilyHubs.Notification.Api.Contracts" Version="1.0.0" />
 	  <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="1.0.64-alpha" />
 	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.3.0.71466">
       <PrivateAssets>all</PrivateAssets>
