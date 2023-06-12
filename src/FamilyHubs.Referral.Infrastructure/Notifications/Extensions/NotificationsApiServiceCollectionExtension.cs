@@ -1,4 +1,6 @@
 ﻿using FamilyHubs.Referral.Core.Notifications;
+using FamilyHubs.SharedKernel.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -28,9 +30,13 @@ public static class NotificationsApiServiceCollectionExtension
             medianFirstRetryDelay: TimeSpan.FromSeconds(1),
             retryCount: 2);
 
-        services.AddHttpClient(NotificationsApi.HttpClientName, client =>
+        services.AddHttpClient(NotificationsApi.HttpClientName, (serviceProvider, client) =>
         {
             client.BaseAddress = new Uri(NotificationsApi.GetEndpoint(configuration));
+
+            var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>()
+                                      ?? throw new ArgumentException($"IHttpContextAccessor required for {nameof(AddNotificationsApiClient)}");
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {httpContextAccessor.HttpContext!.GetBearerToken()}");
         })
             .AddPolicyHandler((callbackServices, request) => HttpPolicyExtensions
                 .HandleTransientHttpError()

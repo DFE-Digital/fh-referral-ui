@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Serilog.Events;
 using System.Diagnostics.CodeAnalysis;
+using FamilyHubs.Referral.Infrastructure.Notifications.Extensions;
 
 namespace FamilyHubs.Referral.Web;
 
@@ -56,6 +57,8 @@ public static class StartupExtensions
     public static void AddWebUiServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpContextAccessor();
+
+        services.AddNotificationsApiClient(configuration);
 
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
