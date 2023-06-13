@@ -87,7 +87,10 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         var referralDto = CreateReferralDto(model, ProfessionalUser, /*team,*/ service, organisation);
 
-        return await _referralClientService.CreateReferral(referralDto);
+        string referralIdBase10 = await _referralClientService.CreateReferral(referralDto);
+
+        //todo: do this in API?
+        return int.Parse(referralIdBase10).ToString("X6");
     }
 
     private async Task TrySendVcsNotificationEmails(ServiceDto service, string requestNumber)
