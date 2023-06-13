@@ -16,19 +16,22 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     private readonly IReferralClientService _referralClientService;
     private readonly INotifications _notifications;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<CheckDetailsModel> _logger;
 
     public CheckDetailsModel(
         IConnectionRequestDistributedCache connectionRequestCache,
         IOrganisationClientService organisationClientService,
         IReferralClientService referralClientService,
         INotifications notifications,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        ILogger<CheckDetailsModel> logger)
         : base(ConnectJourneyPage.CheckDetails, connectionRequestCache)
     {
         _organisationClientService = organisationClientService;
         _referralClientService = referralClientService;
         _notifications = notifications;
         _configuration = configuration;
+        _logger = logger;
     }
 
     protected override async Task OnGetWithModelAsync(ConnectionRequestModel model)
@@ -53,7 +56,16 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         string requestNumber = await CreateConnectionRequest(service, model);
 
-        await SendVcsNotificationEmail(ProfessionalUser.Email, requestNumber, service.Name);
+        try
+        {
+            //todo: VCS email, not professional
+            await SendVcsNotificationEmail(ProfessionalUser.Email, requestNumber, service.Name);
+        }
+        catch (Exception e)
+        {
+            _logger.LogWarning(e, "Unable to send VcsNewRequest email for request {RequestNumber}", requestNumber);
+            throw;
+        }
 
         return RedirectToPage("/ProfessionalReferral/Confirmation", new { requestNumber });
     }

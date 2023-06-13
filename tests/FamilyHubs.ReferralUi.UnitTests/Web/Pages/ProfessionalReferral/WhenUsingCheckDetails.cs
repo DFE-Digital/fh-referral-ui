@@ -7,6 +7,7 @@ using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
@@ -19,6 +20,7 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
     public Mock<IReferralClientService> ReferralClientService;
     public Mock<INotifications> Notifications;
     public Mock<IConfiguration> Configuration;
+    public Mock<ILogger<CheckDetailsModel>> Logger;
 
     public WhenUsingCheckDetails()
     {
@@ -26,6 +28,7 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
         ReferralClientService = new Mock<IReferralClientService>();
         Notifications = new Mock<INotifications>();
         Configuration = new Mock<IConfiguration>();
+        Logger = new Mock<ILogger<CheckDetailsModel>>();
 
         Configuration.Setup(x => x["RequestsSentUrl"]).Returns("https://example.com");
         Configuration.Setup(x => x["NotificationTemplateIds:VcsNewRequest"]).Returns("123");
@@ -35,7 +38,8 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
             OrganisationClientService.Object,
             ReferralClientService.Object,
             Notifications.Object,
-            Configuration.Object)
+            Configuration.Object,
+            Logger.Object)
         {
             PageContext = GetPageContextWithUserClaims()
         };
