@@ -97,7 +97,6 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         {
             try
             {
-                //todo: VCS email, not professional
                 await SendVcsNotificationEmail(serviceEmail, requestNumber, service.Name);
             }
             catch (Exception e)
@@ -123,6 +122,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         var viewConnectionRequestUrl = new UriBuilder(requestsSent!)
         {
+            //todo: real page name
             Path = "VcsRequestForSupport/pagename",
             Query = $"referralId={requestNumber}"
         }.Uri;
@@ -134,10 +134,10 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
             { "ViewConnectionRequestUrl", viewConnectionRequestUrl.ToString()}
         };
 
-        string? vcsNewRequestTemplateId = _configuration["NotificationTemplateIds:VcsNewRequest"];
+        string? vcsNewRequestTemplateId = _configuration["Notification:TemplateIds:VcsNewRequest"];
         if (string.IsNullOrEmpty(vcsNewRequestTemplateId))
         {
-            throw new InvalidOperationException("NotificationTemplateIds:VcsNewRequest not set in config");
+            throw new InvalidOperationException("Notification:TemplateIds:VcsNewRequest not set in config");
         }
 
         await _notifications.SendEmailAsync(vcsEmailAddress, vcsNewRequestTemplateId, emailTokens);
