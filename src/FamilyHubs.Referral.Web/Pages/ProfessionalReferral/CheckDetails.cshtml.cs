@@ -33,45 +33,17 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         // do this now, so we don't display any previously entered contact details that are no longer selected
         // but don't remove them from the cache yet, in case the user goes back to change the contact details
         // we'll remove them from the cache when the user submits the form
-        RemoveNonSelectedContactDetails(model);
+        model.RemoveNonSelectedContactDetails();
 
         // if the user has gone to change details, errored on the page, then clicked back to here, we need to clear the error state, so that if they go back to the same details page it won't be errored
         model.ErrorState = null;
         await ConnectionRequestCache.SetAsync(ProfessionalUser.Email, model);
     }
 
-    private static void RemoveNonSelectedContactDetails(ConnectionRequestModel model)
-    {
-        // remove any previously entered contact details that are no longer selected
-        //todo: can we do this generically?
-        if (!model.ContactMethodsSelected[(int) ConnectContactDetailsJourneyPage.Email])
-        {
-            model.EmailAddress = null;
-        }
-
-        if (!model.ContactMethodsSelected[(int) ConnectContactDetailsJourneyPage.Telephone])
-        {
-            model.TelephoneNumber = null;
-        }
-
-        if (!model.ContactMethodsSelected[(int) ConnectContactDetailsJourneyPage.Textphone])
-        {
-            model.TextphoneNumber = null;
-        }
-
-        if (!model.ContactMethodsSelected[(int) ConnectContactDetailsJourneyPage.Letter])
-        {
-            model.AddressLine1 = null;
-            model.AddressLine2 = null;
-            model.TownOrCity = null;
-            model.County = null;
-            model.Postcode = null;
-        }
-    }
-
     protected override async Task<IActionResult> OnPostWithModelAsync(ConnectionRequestModel model)
     {
-        RemoveNonSelectedContactDetails(model);
+        // remove any previously entered contact details that are no longer selected
+        model.RemoveNonSelectedContactDetails();
 
         //todo: this throws an ArgumentNullException if the service is not found. it should return null (from a 404 from the api)
         var service = await _organisationClientService.GetLocalOfferById(model.ServiceId!);

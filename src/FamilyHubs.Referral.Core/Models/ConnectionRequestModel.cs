@@ -18,4 +18,32 @@ public class ConnectionRequestModel
     public string? EngageReason { get; set; }
 
     public ProfessionalReferralErrorState? ErrorState { get; set; }
+
+    public void RemoveNonSelectedContactDetails()
+    {
+        //todo: can we do this generically?
+        if (!ContactMethodsSelected[(int)ConnectContactDetailsJourneyPage.Email])
+        {
+            EmailAddress = null;
+        }
+
+        if (!ContactMethodsSelected[(int)ConnectContactDetailsJourneyPage.Telephone])
+        {
+            TelephoneNumber = null;
+        }
+
+        if (!ContactMethodsSelected[(int)ConnectContactDetailsJourneyPage.Textphone])
+        {
+            TextphoneNumber = null;
+        }
+
+        if (!ContactMethodsSelected[(int)ConnectContactDetailsJourneyPage.Letter])
+        {
+            AddressLine1 = null;
+            AddressLine2 = null;
+            TownOrCity = null;
+            County = null;
+            Postcode = null;
+        }
+    }
 }
