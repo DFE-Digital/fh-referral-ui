@@ -104,6 +104,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
             try
             {
                 //todo: would be better if the API accepted multiple emails
+                //todo: add callback to API, so that we can flag invalid emails/unsent emails
                 var sendEmailTasks = serviceEmail.Select(email =>
                     SendVcsNotificationEmail(email, requestNumber, service.Name));
                 await Task.WhenAll(sendEmailTasks);
