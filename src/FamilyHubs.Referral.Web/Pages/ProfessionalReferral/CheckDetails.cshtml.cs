@@ -7,6 +7,7 @@ using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.SharedKernel.Identity.Models;
 using Microsoft.AspNetCore.Mvc;
 using FamilyHubs.Referral.Core.Notifications;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -56,7 +57,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         string requestNumber = await CreateConnectionRequest(service, model);
 
-        await TrySendVcsNotificationEmail(service, requestNumber);
+        await TrySendVcsNotificationEmails(service, requestNumber);
 
         return RedirectToPage("/ProfessionalReferral/Confirmation", new { requestNumber });
     }
@@ -79,6 +80,9 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     {
         var organisation = await GetOrganisation(service);
 
+        //todo: should we check if the organisation is a VCFS organisation?
+        //organisation.OrganisationType == OrganisationType.VCFS
+
         //var team = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Team");
 
         var referralDto = CreateReferralDto(model, ProfessionalUser, /*team,*/ service, organisation);
@@ -86,22 +90,27 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         return await _referralClientService.CreateReferral(referralDto);
     }
 
-    private async Task TrySendVcsNotificationEmail(ServiceDto service, string requestNumber)
+    private async Task TrySendVcsNotificationEmails(ServiceDto service, string requestNumber)
     {
-        var serviceEmail = service.Contacts.FirstOrDefault(c => c.Email != null)?.Email;
-        if (serviceEmail == null)
+        var serviceEmail = service.Contacts
+            .Where(c => !string.IsNullOrEmpty(c.Email))
+            .Select(c => c.Email!);
+        if (!serviceEmail.Any())
         {
-            _logger.LogWarning("Service {ServiceId} has no email address. Unable to send VcsNewRequest email for request {RequestNumber}", service.Id, requestNumber);
+            _logger.LogWarning("Service {ServiceId} has no email addresses. Unable to send VcsNewRequest email for request {RequestNumber}", service.Id, requestNumber);
         }
         else
         {
             try
             {
-                await SendVcsNotificationEmail(serviceEmail, requestNumber, service.Name);
+                //todo: would be better if the API accepted multiple emails
+                var sendEmailTasks = serviceEmail.Select(email =>
+                    SendVcsNotificationEmail(email, requestNumber, service.Name));
+                await Task.WhenAll(sendEmailTasks);
             }
             catch (Exception e)
             {
-                _logger.LogWarning(e, "Unable to send VcsNewRequest email for request {RequestNumber}", requestNumber);
+                _logger.LogWarning(e, "Unable to send VcsNewRequest email(s) for request {RequestNumber}", requestNumber);
                 throw;
             }
         }
@@ -122,8 +131,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         var viewConnectionRequestUrl = new UriBuilder(requestsSent!)
         {
-            //todo: real page name
-            Path = "VcsRequestForSupport/pagename",
+            Path = "VcsRequestForSupport/Request",
             Query = $"referralId={requestNumber}"
         }.Uri;
 
