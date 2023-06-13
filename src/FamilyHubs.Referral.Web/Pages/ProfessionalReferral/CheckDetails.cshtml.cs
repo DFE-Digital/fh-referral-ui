@@ -56,23 +56,12 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         string requestNumber = await CreateConnectionRequest(service, model);
 
-        try
-        {
-            //todo: VCS email, not professional
-            await SendVcsNotificationEmail(ProfessionalUser.Email, requestNumber, service.Name);
-        }
-        catch (Exception e)
-        {
-            _logger.LogWarning(e, "Unable to send VcsNewRequest email for request {RequestNumber}", requestNumber);
-            throw;
-        }
+        await TrySendVcsNotificationEmail(service, requestNumber);
 
         return RedirectToPage("/ProfessionalReferral/Confirmation", new { requestNumber });
     }
 
-    private async Task<string> CreateConnectionRequest(
-        ServiceDto service,
-        ConnectionRequestModel model)
+    private async Task<OrganisationDto> GetOrganisation(ServiceDto service)
     {
         OrganisationDto? organisation = await _organisationClientService.GetOrganisationDtobyIdAsync(service.OrganisationId);
 
@@ -80,7 +69,15 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         {
             //todo: create and throw custom exception
             throw new InvalidOperationException($"Organisation not found for service {service.Id}");
-        }   
+        }
+        return organisation;
+    }
+
+    private async Task<string> CreateConnectionRequest(
+        ServiceDto service,
+        ConnectionRequestModel model)
+    {
+        var organisation = await GetOrganisation(service);
 
         //var team = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Team");
 
@@ -89,8 +86,30 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         return await _referralClientService.CreateReferral(referralDto);
     }
 
+    private async Task TrySendVcsNotificationEmail(ServiceDto service, string requestNumber)
+    {
+        var serviceEmail = service.Contacts.FirstOrDefault(c => c.Email != null)?.Email;
+        if (serviceEmail == null)
+        {
+            _logger.LogWarning("Service {ServiceId} has no email address. Unable to send VcsNewRequest email for request {RequestNumber}", service.Id, requestNumber);
+        }
+        else
+        {
+            try
+            {
+                //todo: VCS email, not professional
+                await SendVcsNotificationEmail(serviceEmail, requestNumber, service.Name);
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning(e, "Unable to send VcsNewRequest email for request {RequestNumber}", requestNumber);
+                throw;
+            }
+        }
+    }
+
     private async Task SendVcsNotificationEmail(
-        string professionalEmail,
+        string vcsEmailAddress,
         string requestNumber,
         string serviceName)
     {
@@ -121,7 +140,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
             throw new InvalidOperationException("NotificationTemplateIds:VcsNewRequest not set in config");
         }
 
-        await _notifications.SendEmailAsync(professionalEmail, vcsNewRequestTemplateId, emailTokens);
+        await _notifications.SendEmailAsync(vcsEmailAddress, vcsNewRequestTemplateId, emailTokens);
     }
 
     private static ReferralDto CreateReferralDto(
