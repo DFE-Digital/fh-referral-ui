@@ -15,17 +15,20 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     private readonly IOrganisationClientService _organisationClientService;
     private readonly IReferralClientService _referralClientService;
     private readonly INotifications _notifications;
+    private readonly IConfiguration _configuration;
 
     public CheckDetailsModel(
         IConnectionRequestDistributedCache connectionRequestCache,
         IOrganisationClientService organisationClientService,
         IReferralClientService referralClientService,
-        INotifications notifications)
+        INotifications notifications,
+        IConfiguration configuration)
         : base(ConnectJourneyPage.CheckDetails, connectionRequestCache)
     {
         _organisationClientService = organisationClientService;
         _referralClientService = referralClientService;
         _notifications = notifications;
+        _configuration = configuration;
     }
 
     protected override async Task OnGetWithModelAsync(ConnectionRequestModel model)
@@ -74,18 +77,39 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         return await _referralClientService.CreateReferral(referralDto);
     }
 
-    private async Task SendVcsNotificationEmail(string professionalEmail, string requestNumber, string serviceName)
+    private async Task SendVcsNotificationEmail(
+        string professionalEmail,
+        string requestNumber,
+        string serviceName)
     {
+        string? requestsSent = _configuration["RequestsSentUrl"];
+
+        //todo: config exception
+        if (string.IsNullOrEmpty(requestsSent))
+        {
+            throw new InvalidOperationException("RequestsSentUrl not set in config");
+        }
+
+        var viewConnectionRequestUrl = new UriBuilder(requestsSent!)
+        {
+            Path = "VcsRequestForSupport/pagename",
+            Query = $"referralId={requestNumber}"
+        }.Uri;
+
         var emailTokens = new Dictionary<string, string>
         {
             { "RequestNumber", requestNumber },
             { "ServiceName", serviceName },
-            //todo: from config
-            {"ViewConnectionRequestUrl", $"https://test.manage-connection-requests.education.gov.uk/VcsRequestForSupport/pagename?referralId={requestNumber}"}
+            { "ViewConnectionRequestUrl", viewConnectionRequestUrl.ToString()}
         };
 
-        //todo: from config
-        await _notifications.SendEmailAsync(professionalEmail, "d460f57c-9c5e-4c33-8420-cdde4fca85c2", emailTokens);
+        string? vcsNewRequestTemplateId = _configuration["NotificationTemplateIds:VcsNewRequest"];
+        if (string.IsNullOrEmpty(vcsNewRequestTemplateId))
+        {
+            throw new InvalidOperationException("NotificationTemplateIds:VcsNewRequest not set in config");
+        }
+
+        await _notifications.SendEmailAsync(professionalEmail, vcsNewRequestTemplateId, emailTokens);
     }
 
     private static ReferralDto CreateReferralDto(

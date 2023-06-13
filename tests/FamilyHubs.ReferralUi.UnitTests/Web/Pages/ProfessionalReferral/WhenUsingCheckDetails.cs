@@ -6,6 +6,7 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Moq;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
@@ -17,19 +18,27 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
     public Mock<IOrganisationClientService> OrganisationClientService;
     public Mock<IReferralClientService> ReferralClientService;
     public Mock<INotifications> Notifications;
+    public Mock<IConfiguration> Configuration;
 
     public WhenUsingCheckDetails()
     {
         OrganisationClientService = new Mock<IOrganisationClientService>();
         ReferralClientService = new Mock<IReferralClientService>();
         Notifications = new Mock<INotifications>();
+        Configuration = new Mock<IConfiguration>();
+
+        Configuration.Setup(x => x["RequestsSentUrl"]).Returns("https://example.com");
+        Configuration.Setup(x => x["NotificationTemplateIds:VcsNewRequest"]).Returns("123");
 
         CheckDetailsModel = new CheckDetailsModel(
             ReferralDistributedCache.Object,
             OrganisationClientService.Object,
             ReferralClientService.Object,
-            Notifications.Object);
-        CheckDetailsModel.PageContext = GetPageContextWithUserClaims();
+            Notifications.Object,
+            Configuration.Object)
+        {
+            PageContext = GetPageContextWithUserClaims()
+        };
     }
 
     [Fact]
@@ -137,5 +146,73 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
 
         result.Should().NotBeNull();
         result!.PageName.Should().Be("/ProfessionalReferral/Confirmation");
+    }
+
+    [Fact]
+    public async Task OnPostAsync_ThenNotificationIsSent()
+    {
+        OrganisationClientService
+            .Setup(x => x.GetLocalOfferById(It.IsAny<string>()))
+            .ReturnsAsync(new ServiceDto
+            {
+                Id = 1,
+                Name = "Test Service",
+                Description = "Service Description",
+                // other required properties
+                ServiceOwnerReferenceId = "",
+                ServiceType = ServiceType.InformationSharing
+            });
+
+        OrganisationClientService
+            .Setup(x => x.GetOrganisationDtobyIdAsync(It.IsAny<long>()))
+            .ReturnsAsync(new OrganisationDto
+            {
+                Id = 1,
+                Name = "Test Organisation",
+                Description = "Organisation Description",
+                // other required properties
+                OrganisationType = OrganisationType.VCFS,
+                AdminAreaCode = ""
+            });
+
+        await CheckDetailsModel.OnPostAsync("1");
+
+        Notifications.Verify(x => x.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Theory]
+    [InlineData("https://example.com")]
+    [InlineData("https://example.com/")]
+    public async Task OnPostAsync_HandlesRequestSentUrlWithAndWithoutTrailingSlash(string requestSentUrl)
+    {
+        Configuration.Setup(x => x["RequestsSentUrl"]).Returns(requestSentUrl);
+
+        OrganisationClientService
+            .Setup(x => x.GetLocalOfferById(It.IsAny<string>()))
+            .ReturnsAsync(new ServiceDto
+            {
+                Id = 1,
+                Name = "Test Service",
+                Description = "Service Description",
+                // other required properties
+                ServiceOwnerReferenceId = "",
+                ServiceType = ServiceType.InformationSharing
+            });
+
+        OrganisationClientService
+            .Setup(x => x.GetOrganisationDtobyIdAsync(It.IsAny<long>()))
+            .ReturnsAsync(new OrganisationDto
+            {
+                Id = 1,
+                Name = "Test Organisation",
+                Description = "Organisation Description",
+                // other required properties
+                OrganisationType = OrganisationType.VCFS,
+                AdminAreaCode = ""
+            });
+
+        await CheckDetailsModel.OnPostAsync("1");
+
+        Notifications.Verify(x => x.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }
