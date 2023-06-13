@@ -6,6 +6,7 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.SharedKernel.Identity.Models;
 using Microsoft.AspNetCore.Mvc;
+using FamilyHubs.Referral.Core.Notifications;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -13,15 +14,18 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 {
     private readonly IOrganisationClientService _organisationClientService;
     private readonly IReferralClientService _referralClientService;
+    private readonly INotifications _notifications;
 
     public CheckDetailsModel(
         IConnectionRequestDistributedCache connectionRequestCache,
         IOrganisationClientService organisationClientService,
-        IReferralClientService referralClientService)
+        IReferralClientService referralClientService,
+        INotifications notifications)
         : base(ConnectJourneyPage.CheckDetails, connectionRequestCache)
     {
         _organisationClientService = organisationClientService;
         _referralClientService = referralClientService;
+        _notifications = notifications;
     }
 
     protected override async Task OnGetWithModelAsync(ConnectionRequestModel model)
@@ -69,19 +73,20 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     {
         RemoveNonSelectedContactDetails(model);
 
-        var requestNumber = await CreateConnectionRequest(model);
+        //todo: this throws an ArgumentNullException if the service is not found. it should return null (from a 404 from the api)
+        var service = await _organisationClientService.GetLocalOfferById(model.ServiceId!);
 
-        return RedirectToPage("/ProfessionalReferral/Confirmation", new
-        {
-            ServiceId,
-            requestNumber
-        });
+        string requestNumber = await CreateConnectionRequest(service, model);
+
+        await SendVcsNotificationEmail(ProfessionalUser.Email, requestNumber, service.Name);
+
+        return RedirectToPage("/ProfessionalReferral/Confirmation", new { requestNumber });
     }
 
-    private async Task<string> CreateConnectionRequest(ConnectionRequestModel model)
+    private async Task<string> CreateConnectionRequest(
+        ServiceDto service,
+        ConnectionRequestModel model)
     {
-        //todo: this throws an ArgumentNullException if the service is not found. it should return null (from a 404 from the api)
-        ServiceDto service = await _organisationClientService.GetLocalOfferById(model.ServiceId!);
         OrganisationDto? organisation = await _organisationClientService.GetOrganisationDtobyIdAsync(service.OrganisationId);
 
         if (organisation == null)
@@ -95,6 +100,20 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         var referralDto = CreateReferralDto(model, ProfessionalUser, /*team,*/ service, organisation);
 
         return await _referralClientService.CreateReferral(referralDto);
+    }
+
+    private async Task SendVcsNotificationEmail(string professionalEmail, string requestNumber, string serviceName)
+    {
+        var emailTokens = new Dictionary<string, string>
+        {
+            { "RequestNumber", requestNumber },
+            { "ServiceName", serviceName },
+            //todo: from config
+            {"ViewConnectionRequestUrl", $"https://test.manage-connection-requests.education.gov.uk/VcsRequestForSupport/pagename?referralId={requestNumber}"}
+        };
+
+        //todo: from config
+        await _notifications.SendEmailAsync(professionalEmail, "d460f57c-9c5e-4c33-8420-cdde4fca85c2", emailTokens);
     }
 
     private static ReferralDto CreateReferralDto(

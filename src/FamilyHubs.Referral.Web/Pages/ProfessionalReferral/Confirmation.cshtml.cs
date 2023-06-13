@@ -1,5 +1,4 @@
 using FamilyHubs.Referral.Core.DistributedCache;
-using FamilyHubs.Referral.Core.Notifications;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using Microsoft.AspNetCore.Authorization;
@@ -11,14 +10,10 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class ConfirmationModel : PageModel, IFamilyHubsHeader
 {
     private readonly IConnectionRequestDistributedCache _connectionRequestCache;
-    private readonly INotifications _notifications;
 
-    public ConfirmationModel(
-        IConnectionRequestDistributedCache connectionRequestCache,
-        INotifications notifications)
+    public ConfirmationModel(IConnectionRequestDistributedCache connectionRequestCache)
     {
         _connectionRequestCache = connectionRequestCache;
-        _notifications = notifications;
     }
 
     public int RequestNumber { get; set; }
@@ -29,20 +24,6 @@ public class ConfirmationModel : PageModel, IFamilyHubsHeader
         await _connectionRequestCache.RemoveAsync(professionalUser.Email);
 
         RequestNumber = requestNumber;
-
-        string requestNumberString = requestNumber.ToString();
-
-        var emailTokens = new Dictionary<string, string>
-        {
-            { "RequestNumber", requestNumberString },
-            //todo: change base now?, or move to details post?
-            //{ "ServiceName", service.Name }
-            //todo: page & from config
-            //{"ViewConnectionRequestUrl", $"https://test.manage-connection-requests.education.gov.uk/VcsRequestForSupport/pagename?referralId={requestNumberString}"}
-        };
-
-        //todo: from config
-        await _notifications.SendEmailAsync(professionalUser.Email, "d460f57c-9c5e-4c33-8420-cdde4fca85c2", emailTokens);
     }
 
     LinkStatus IFamilyHubsHeader.GetStatus(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)

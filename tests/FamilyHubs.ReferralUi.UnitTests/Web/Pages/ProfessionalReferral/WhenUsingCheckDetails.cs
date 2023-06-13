@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Core.Notifications;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
@@ -15,17 +16,21 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
 
     public Mock<IOrganisationClientService> OrganisationClientService;
     public Mock<IReferralClientService> ReferralClientService;
+    public Mock<INotifications> Notifications;
 
     public WhenUsingCheckDetails()
     {
         OrganisationClientService = new Mock<IOrganisationClientService>();
         ReferralClientService = new Mock<IReferralClientService>();
+        Notifications = new Mock<INotifications>();
 
-        CheckDetailsModel = new CheckDetailsModel(ReferralDistributedCache.Object, OrganisationClientService.Object, ReferralClientService.Object);
+        CheckDetailsModel = new CheckDetailsModel(
+            ReferralDistributedCache.Object,
+            OrganisationClientService.Object,
+            ReferralClientService.Object,
+            Notifications.Object);
         CheckDetailsModel.PageContext = GetPageContextWithUserClaims();
     }
-
-    
 
     [Fact]
     public async Task EmailOptionNotSelected_EmailIsRemoved()
