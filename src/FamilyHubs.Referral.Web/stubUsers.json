@@ -197,6 +197,62 @@
               "Value": "0121 121 1227"
             }
           ]
+        },
+        {
+          "User": {
+            "Email": "phil.davies@education.gov.uk",
+            "Sub": "phil.davies@education.gov.uk"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "LaDualRole"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "97"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Phil Davies"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "harsha.reddy@education.gov.uk",
+            "Sub": "harsha.reddy@education.gov.uk"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "LaDualRole"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "165"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Harsha Reddy"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            }
+          ]
         }
       ]
     }
