@@ -65,10 +65,6 @@
           },
           "Claims": [
             {
-              "Name": "Team",
-              "Value": "VCS Admin"
-            },
-            {
               "Name": "role",
               "Value": "VcsManager"
             },
@@ -96,10 +92,6 @@
             "Sub": "LaProfessional@example.com"
           },
           "Claims": [
-            {
-              "Name": "Team",
-              "Value": "Social Worker"
-            },
             {
               "Name": "role",
               "Value": "LaProfessional"
@@ -129,10 +121,6 @@
           },
           "Claims": [
             {
-              "Name": "Team",
-              "Value": "Team"
-            },
-            {
               "Name": "role",
               "Value": "Vcs Professional"
             },
@@ -161,10 +149,6 @@
           },
           "Claims": [
             {
-              "Name": "Team",
-              "Value": "Team"
-            },
-            {
               "Name": "role",
               "Value": "VcsDualRole"
             },
@@ -192,10 +176,6 @@
             "Sub": "LaDualRole@example.com"
           },
           "Claims": [
-            {
-              "Name": "Team",
-              "Value": "Team"
-            },
             {
               "Name": "role",
               "Value": "LaDualRole"
