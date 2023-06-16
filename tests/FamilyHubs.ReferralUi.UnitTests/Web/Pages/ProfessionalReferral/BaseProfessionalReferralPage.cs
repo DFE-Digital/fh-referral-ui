@@ -63,6 +63,7 @@ public class BaseProfessionalReferralPage
         var identity = new GenericIdentity(displayName);
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.Role, "Professional"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.OrganisationId, "1"));
+        identity.AddClaim(new Claim(FamilyHubsClaimTypes.AccountId, "1"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.AccountStatus, "active"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.FullName, "Test User"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.LoginTime, DateTime.UtcNow.ToString()));

@@ -122,11 +122,11 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
             },
             ReferrerDto = new ReferrerDto
             {
+                Id = long.Parse(user.AccountId),
                 EmailAddress = user.Email,
                 Name = user.FullName,
                 PhoneNumber = user.PhoneNumber,
-                Role = user.Role,
-                //Team = team?.Value
+                Role = user.Role
             },
             ReferralServiceDto = new ReferralServiceDto
             {
