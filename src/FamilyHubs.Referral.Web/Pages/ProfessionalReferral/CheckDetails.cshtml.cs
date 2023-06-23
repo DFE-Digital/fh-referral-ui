@@ -4,6 +4,7 @@ using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Extensions;
 using FamilyHubs.SharedKernel.Identity.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -104,6 +105,10 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         ServiceDto service,
         OrganisationDto organisation)
     {
+        var contact = service.GetContact();
+
+        string? serviceWebsite = GetWebsiteUrl(contact?.Url);
+
         var referralDto = new ReferralDto
         {
             ReasonForSupport = model.Reason!,
@@ -133,6 +138,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
                 Id = service.Id,
                 Name = service.Name,
                 Description = service.Description,
+                Url = serviceWebsite,
                 ReferralOrganisationDto = new ReferralOrganisationDto
                 {
                     Id = organisation.Id,
@@ -148,5 +154,17 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         };
         referralDto.LastModified = referralDto.Created;
         return referralDto;
+    }
+
+    private static string? GetWebsiteUrl(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+            return default;
+
+        if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            return url;
+
+        // assume http! (UriBuilder interprets a single string as a host and insists on adding a '/' on the end, which doesn't work if the url contains query params)
+        return $"http://{url}";
     }
 }

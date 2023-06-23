@@ -20,7 +20,8 @@ public enum JourneyFlow
     ChangingContactMethods
 }
 
-[Authorize]
+//todo: will need 401/403 pages
+[Authorize(Roles = RoleGroups.LaProfessionalOrDualRole)]
 public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
 {
     protected readonly ConnectJourneyPage CurrentPage;

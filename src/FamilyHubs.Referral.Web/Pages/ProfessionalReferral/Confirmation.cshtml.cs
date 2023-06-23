@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-[Authorize]
+[Authorize(Roles = RoleGroups.LaProfessionalOrDualRole)]
 public class ConfirmationModel : PageModel, IFamilyHubsHeader
 {
     private readonly IConnectionRequestDistributedCache _connectionRequestCache;
