@@ -4,6 +4,10 @@
     ViewData["Title"] = "How can the service contact you for more details about this request?";
 }
 
+@section Back {
+    <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
+}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
@@ -21,7 +25,7 @@
                     </div>
                     <div class="govuk-radios" data-module="govuk-radios">
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="email" name="contact" type="radio" value="email"
+                            <input class="govuk-radios__input" id="email" name="Contact" type="radio" value="email"
                                    aria-describedby="email-hint" aria-controls="conditional-email" aria-expanded="false">
                             <label class="govuk-label govuk-radios__label" for="email">
                                 Email only
@@ -34,7 +38,7 @@
                         </div>
 
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="telephone-and-email" name="contact" type="radio" value="telephoneAndEmail"
+                            <input class="govuk-radios__input" id="telephone-and-email" name="Contact" type="radio" value="telephoneAndEmail"
                                    aria-describedby-by="telephone-and-email-hint" aria-controls="conditional-telephone-and-email" aria-expanded="false">
                             <label class="govuk-label govuk-radios__label" for="telephone-and-email">
                                 Telephone and email
@@ -49,7 +53,7 @@
                                     Telephone number
                                 </label>
                                 @* makes sense to have autocomplete on for this telephone number, as it will be the user's (same) tel number each time *@
-                                <input class="govuk-input govuk-!-width-one-third" id="contact-by-phone" name="contact-by-phone" type="tel" autocomplete="tel" spellcheck="false">
+                                <input class="govuk-input govuk-!-width-one-third" id="contact-by-phone" name="telephoneNumber" type="tel" autocomplete="tel" spellcheck="false">
                             </div>
                         </div>
                     </div>

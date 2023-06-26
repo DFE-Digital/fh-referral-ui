@@ -7,6 +7,20 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class ContactByPhoneModel : ProfessionalReferralCacheModel
 {
+    public enum ContactType
+    {
+        Email,
+        TelephoneAndEmail
+    }
+
+    //[Required(ErrorMessage = "Enter a UK telephone number", AllowEmptyStrings = false)]
+    //[UkGdsTelephoneNumber]
+    [BindProperty]
+    public string? TelephoneNumber { get; set; }
+
+    [BindProperty]
+    public ContactType? Contact { get; set; }
+
     public ContactByPhoneModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
         : base(ConnectJourneyPage.ContactByPhone, connectionRequestDistributedCache)
     {
