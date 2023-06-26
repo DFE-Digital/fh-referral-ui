@@ -92,7 +92,7 @@ public class ContactByPhoneModel : ProfessionalReferralCacheModel, IErrorSummary
     //    return ErrorIds.Contains(errorId);
     //}
 
-    public bool HasTriggeredError(params int[] errorIds)
+    public bool HasError(params int[] errorIds)
     {
         return GetErrorIdIfTriggered(errorIds) != null;
 //#pragma warning disable S3267 // Loops should be simplified with "LINQ" expressions
