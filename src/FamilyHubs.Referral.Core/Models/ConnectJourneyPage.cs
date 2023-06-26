@@ -15,5 +15,6 @@ public enum ConnectJourneyPage
     Text,
     Letter,
     ContactMethods,
+    ContactByPhone,
     CheckDetails
 }

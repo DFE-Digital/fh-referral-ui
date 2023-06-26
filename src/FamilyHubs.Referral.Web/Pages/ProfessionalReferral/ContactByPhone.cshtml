@@ -1,0 +1,63 @@
+﻿@page
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.ContactByPhoneModel
+@{
+    ViewData["Title"] = "How can the service contact you for more details about this request?";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form method="post" novalidate>
+
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            How can the service contact you for more details about this request?
+                        </h1>
+                    </legend>
+                    <div id="contact-hint" class="govuk-hint">
+                        Select one option.
+                    </div>
+                    <div class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="email" name="contact" type="radio" value="email"
+                                   aria-describedby="email-hint" aria-controls="conditional-email" aria-expanded="false">
+                            <label class="govuk-label govuk-radios__label" for="email">
+                                Email only
+                            </label>
+                        </div>
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-email">
+                            <div id="email-hint" class="govuk-hint">
+                                The service can contact me through my account email.
+                            </div>
+                        </div>
+
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="telephone-and-email" name="contact" type="radio" value="telephoneAndEmail"
+                                   aria-describedby-by="telephone-and-email-hint" aria-controls="conditional-telephone-and-email" aria-expanded="false">
+                            <label class="govuk-label govuk-radios__label" for="telephone-and-email">
+                                Telephone and email
+                            </label>
+                        </div>
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-telephone-and-email">
+                            <div class="govuk-form-group">
+                                <div id="telephone-and-email-hint" class="govuk-hint">
+                                    The service can contact me by telephone and account email.
+                                </div>
+                                <label class="govuk-label" for="contact-by-phone">
+                                    Telephone number
+                                </label>
+                                @* makes sense to have autocomplete on for this telephone number, as it will be the user's (same) tel number each time *@
+                                <input class="govuk-input govuk-!-width-one-third" id="contact-by-phone" name="contact-by-phone" type="tel" autocomplete="tel" spellcheck="false">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Continue
+            </button>
+        </form>
+    </div>
+</div>
