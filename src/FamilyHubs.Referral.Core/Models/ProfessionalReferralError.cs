@@ -15,5 +15,8 @@ public enum ProfessionalReferralError
     ContactMethods_TooLong,
     ContactDetails_NoContactMethodsSelected,
     Consent_NoConsentSelected,
-    Email_NotValid
+    Email_NotValid,
+    ContactByPhone_NoContactSelected,
+    ContactByPhone_NoTelephoneNumber,
+    ContactByPhone_InvalidTelephoneNumber
 }

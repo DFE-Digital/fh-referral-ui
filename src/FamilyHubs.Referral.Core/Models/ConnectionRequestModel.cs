@@ -16,6 +16,8 @@ public class ConnectionRequestModel
     public string? County { get; set; }
     public string? Postcode { get; set; }
     public string? EngageReason { get; set; }
+    public ReferrerContactType? ReferrerContact { get; set; }
+    public string? ReferrerTelephone { get; set; }
 
     public ProfessionalReferralErrorState? ErrorState { get; set; }
 }

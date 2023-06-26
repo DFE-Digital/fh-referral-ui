@@ -138,7 +138,7 @@ public class UKGdsTelephoneNumberAttributeTests
     [InlineData(false, "01632 960 001")]
     // this is a designated example mobile number, and is in  a valid format, but it's not a real mobile area code
     [InlineData(false, "07700 900 982")]
-    public void IsValid_ShouldReturnIfNumberIsValid(bool expected, string number)
+    public void IsValid_ShouldReturnIfNumberIsValid(bool expected, object number)
     {
         UKGdsTelephoneNumberAttribute.IsValid(number).Should().Be(expected);
     }

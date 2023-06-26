@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Web.Models;
+using System.Web;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -49,7 +50,7 @@ public class EmailModel : ProfessionalReferralCacheModel, ISingleEmailTextboxPag
 
     private void SetPageProperties(ConnectionRequestModel model)
     {
-        HeadingText = $"What is the email address for {model.FamilyContactFullName}?";
+        HeadingText = $"What is the email address for {HttpUtility.HtmlEncode(model.FamilyContactFullName)}?";
         BackUrl = GenerateBackUrl(ConnectContactDetailsJourneyPage.Email, model.ContactMethodsSelected);
     }
 }

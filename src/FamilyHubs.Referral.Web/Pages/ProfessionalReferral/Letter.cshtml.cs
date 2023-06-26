@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Web;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Core.ValidationAttributes;
@@ -82,7 +83,7 @@ public class LetterModel : ProfessionalReferralCacheModel
 
     private void SetPageProperties(ConnectionRequestModel model)
     {
-        HeadingText = $"What is the address for {model.FamilyContactFullName}?";
+        HeadingText = $"What is the address for {HttpUtility.HtmlEncode(model.FamilyContactFullName)}?";
         BackUrl = GenerateBackUrl(ConnectContactDetailsJourneyPage.Letter, model.ContactMethodsSelected);
     }
 }
