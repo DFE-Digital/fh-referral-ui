@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Core.ValidationAttributes;
@@ -62,6 +63,7 @@ public class ContactByPhoneModel : ProfessionalReferralCacheModel, IErrorSummary
         return NextPage();
     }
 
+    //todo: work these into base
     public IEnumerable<int> ErrorIds
     {
         get
@@ -72,15 +74,62 @@ public class ContactByPhoneModel : ProfessionalReferralCacheModel, IErrorSummary
 
     public Error GetError(int errorId)
     {
+        //todo: have a static immutable dictionary
         return (ProfessionalReferralError) errorId switch
         {
             ProfessionalReferralError.ContactByPhone_NoContactSelected
-                => new Error("email", "Select how the service can contact you"),
+                => new Error((int)ProfessionalReferralError.ContactByPhone_NoContactSelected, "email", "Select how the service can contact you"),
             ProfessionalReferralError.ContactByPhone_NoTelephoneNumber
-                => new Error("contact-by-phone", "Enter a UK telephone number"),
+                => new Error((int)ProfessionalReferralError.ContactByPhone_NoTelephoneNumber, "contact-by-phone", "Enter a UK telephone number"),
             ProfessionalReferralError.ContactByPhone_InvalidTelephoneNumber
-                => new Error("contact-by-phone", "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192"),
+                => new Error((int)ProfessionalReferralError.ContactByPhone_InvalidTelephoneNumber, "contact-by-phone", "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192"),
             _ => throw new NotImplementedException()
         };
+    }
+
+    //public bool HasError(int errorId)
+    //{
+    //    return ErrorIds.Contains(errorId);
+    //}
+
+    public bool HasTriggeredError(params int[] errorIds)
+    {
+        return GetErrorIdIfTriggered(errorIds) != null;
+//#pragma warning disable S3267 // Loops should be simplified with "LINQ" expressions
+//        foreach (int errorId in errorIds)
+//        {
+//            if (ErrorIds.Contains(errorId))
+//            {
+//                return true;
+//            }
+//        }
+//#pragma warning restore S3267 // Loops should be simplified with "LINQ" expressions
+
+//        return false;
+    }
+
+    [SuppressMessage("Minor Code Smell", "S3267:Loops should be simplified with \"LINQ\" expressions", Justification = "LINQ expression version is less simple")]
+    public int? GetErrorIdIfTriggered(params int[] mutuallyExclusiveErrorIds)
+    {
+        if (!mutuallyExclusiveErrorIds.Any())
+        {
+            return ErrorIds.Any() ? ErrorIds.First() : null;
+        }
+
+        foreach (int errorId in mutuallyExclusiveErrorIds)
+        {
+            if (ErrorIds.Contains(errorId))
+            {
+                return errorId;
+            }
+        }
+
+        return null;
+    }
+
+    public Error? GetErrorIfTriggered(params int[] mutuallyExclusiveErrorIds)
+    {
+        int? currentErrorId = GetErrorIdIfTriggered(mutuallyExclusiveErrorIds);
+        return currentErrorId != null ? GetError(currentErrorId.Value) : null;
     }
 }
