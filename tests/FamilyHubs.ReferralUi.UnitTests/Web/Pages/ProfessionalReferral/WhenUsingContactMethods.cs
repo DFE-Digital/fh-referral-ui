@@ -59,7 +59,7 @@ public class WhenUsingContactMethods : BaseProfessionalReferralPage
         var result = await _contactMethodsModel.OnPostAsync("1") as RedirectToPageResult;
 
         ArgumentNullException.ThrowIfNull(result);
-        result.PageName.Should().Be("/ProfessionalReferral/CheckDetails");
+        result.PageName.Should().Be("/ProfessionalReferral/ContactByPhone");
     }
 
     //todo: need to test error messages on get, rather than post
