@@ -41,6 +41,7 @@
                     <div class="govuk-radios" data-module="govuk-radios">
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="email" name="Contact" type="radio" value="@ReferrerContactType.Email"
+                                   @(Model.Contact == ReferrerContactType.Email ? "checked" : "")
                                    aria-describedby="email-hint" aria-controls="conditional-email" aria-expanded="false">
                             <label class="govuk-label govuk-radios__label" for="email">
                                 Email only
