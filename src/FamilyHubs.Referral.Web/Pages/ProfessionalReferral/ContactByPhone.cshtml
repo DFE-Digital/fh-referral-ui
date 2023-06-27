@@ -9,7 +9,7 @@
     <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
 }
 
-<partial name="Shared/_ErrorSummary" for="@Model"/>
+<partial name="Shared/_ErrorSummary" for="@Model.ErrorState"/>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -17,7 +17,7 @@
         <form method="post" novalidate>
             
             @{
-                Error? triggeredError = Model.GetErrorIfTriggered();
+                Error? triggeredError = Model.ErrorState?.GetErrorIfTriggered();
             }
 
             <div class="govuk-form-group @(triggeredError?.Id == (int)ProfessionalReferralError.ContactByPhone_NoContactSelected ? "govuk-form-group--error" : "")">
@@ -41,7 +41,7 @@
                     }
                     <div class="govuk-radios" data-module="govuk-radios">
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="email" name="Contact" type="radio" value="email"
+                            <input class="govuk-radios__input" id="email" name="Contact" type="radio" value="@ReferrerContactType.Email"
                                    aria-describedby="email-hint" aria-controls="conditional-email" aria-expanded="false">
                             <label class="govuk-label govuk-radios__label" for="email">
                                 Email only
@@ -58,8 +58,8 @@
                             or (int) ProfessionalReferralError.ContactByPhone_InvalidTelephoneNumber;
 
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="telephone-and-email" name="Contact" type="radio" value="telephoneAndEmail"
-                                   aria-describedby-by="telephone-and-email-hint" @(telephoneError ? "checked" : "")
+                                <input class="govuk-radios__input" id="telephone-and-email" name="Contact" type="radio" value="@ReferrerContactType.TelephoneAndEmail"
+                                   aria-describedby-by="telephone-and-email-hint" @(telephoneError || Model.TelephoneNumber != null ? "checked" : "")
                                    aria-controls="conditional-telephone-and-email" aria-expanded="false">
                             <label class="govuk-label govuk-radios__label" for="telephone-and-email">
                                 Telephone and email
@@ -80,8 +80,8 @@
                                     </p>
                                 }
                                 @* makes sense to have autocomplete on for this telephone number, as it will be the user's (same) tel number each time *@
-                                <input class="govuk-input govuk-!-width-one-third" id="contact-by-phone" name="telephoneNumber" type="tel" autocomplete="tel" spellcheck="false"
-                                       aria-describedby="@(telephoneError ? "contact-by-phone-error" : "")">
+                                <input asp-for="TelephoneNumber" id="contact-by-phone" class="govuk-input govuk-!-width-one-third" type="tel" autocomplete="tel" spellcheck="false"
+                                    aria-describedby="@(telephoneError ? "contact-by-phone-error" : "")">
                             </div>
                         </div>
                     }
