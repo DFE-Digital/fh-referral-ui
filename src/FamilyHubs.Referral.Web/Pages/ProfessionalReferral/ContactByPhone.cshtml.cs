@@ -33,15 +33,11 @@ public class ContactByPhoneModel : ProfessionalReferralCacheModel
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        if (HasErrors)
-        {
-            ErrorState = new ErrorState(PossibleErrors,
-                ConnectionRequestModel?.ErrorState?.Errors.Select(e => (int) e) ?? Enumerable.Empty<int>());
-        }
-        else if (model.ReferrerContact != null)
+        ErrorState = ErrorState.Create(PossibleErrors, ConnectionRequestModel?.ErrorState?.Errors);
+        if (!HasErrors && model.ReferrerContact != null)
         {
             Contact = model.ReferrerContact;
-            TelephoneNumber = model.TelephoneNumber;
+            TelephoneNumber = model.ReferrerTelephone;
         }
     }
 

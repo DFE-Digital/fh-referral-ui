@@ -1,10 +1,8 @@
-﻿@model FamilyHubs.Referral.Web.Errors.IErrorSummary?
+﻿@model FamilyHubs.Referral.Web.Errors.IErrorSummary
 
 @* todo: once this has been battle hardened, consider moving it to shared *@
-@* have stash which makes this more generic, but sticking point of can't have generic model in a razor class *@
-@* could use int in IErrorSummary and cast, but that's a bit ugly *@
 
-@if (Model?.HasErrors == true)
+@if (Model.HasErrors == true)
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">

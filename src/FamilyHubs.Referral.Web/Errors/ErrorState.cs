@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using FamilyHubs.Referral.Core.Models;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FamilyHubs.Referral.Web.Errors;
@@ -13,6 +14,19 @@ public class ErrorState : IErrorSummary
         _possibleErrors = possibleErrors;
         ErrorIds = triggeredErrors;
     }
+
+    //todo: generic concrete, but non-generic interface?
+    public static ErrorState Create<T>(ImmutableDictionary<int, Error> possibleErrors, IEnumerable<T>? triggeredErrors)
+        where T : struct, Enum, IConvertible
+    {
+        return new ErrorState(possibleErrors, triggeredErrors?.Select(e => (int)(IConvertible)e) ?? Enumerable.Empty<int>());
+    }
+
+    //todo: use this (possibly without possible) instead of check for null Model?
+    //public static ErrorState Empty(ImmutableDictionary<int, Error> possibleErrors)
+    //{
+    //    return new ErrorState(possibleErrors, Enumerable.Empty<int>());
+    //}
 
     public bool HasErrors => ErrorIds.Any();
 
