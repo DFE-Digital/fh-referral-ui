@@ -22,12 +22,6 @@ public class ErrorState : IErrorSummary
         return new ErrorState(possibleErrors, triggeredErrors?.Select(e => (int)(IConvertible)e) ?? Enumerable.Empty<int>());
     }
 
-    //todo: use this (possibly without possible) instead of check for null Model?
-    //public static ErrorState Empty(ImmutableDictionary<int, Error> possibleErrors)
-    //{
-    //    return new ErrorState(possibleErrors, Enumerable.Empty<int>());
-    //}
-
     public bool HasErrors => ErrorIds.Any();
 
     public IEnumerable<int> ErrorIds { get; }
