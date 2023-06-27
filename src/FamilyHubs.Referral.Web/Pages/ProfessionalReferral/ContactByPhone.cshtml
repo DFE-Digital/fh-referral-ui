@@ -53,9 +53,14 @@
                             </div>
                         </div>
 
+                    @{
+                        bool telephoneError = triggeredError?.Id is (int) ProfessionalReferralError.ContactByPhone_NoTelephoneNumber
+                            or (int) ProfessionalReferralError.ContactByPhone_InvalidTelephoneNumber;
+
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="telephone-and-email" name="Contact" type="radio" value="telephoneAndEmail"
-                                   aria-describedby-by="telephone-and-email-hint" aria-controls="conditional-telephone-and-email" aria-expanded="false">
+                                   aria-describedby-by="telephone-and-email-hint" @(telephoneError ? "checked" : "")
+                                   aria-controls="conditional-telephone-and-email" aria-expanded="false">
                             <label class="govuk-label govuk-radios__label" for="telephone-and-email">
                                 Telephone and email
                             </label>
@@ -68,10 +73,18 @@
                                 <label class="govuk-label" for="contact-by-phone">
                                     Telephone number
                                 </label>
+                                @if (telephoneError)
+                                {
+                                    <p id="contact-by-phone-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> @triggeredError!.ErrorMessage
+                                    </p>
+                                }
                                 @* makes sense to have autocomplete on for this telephone number, as it will be the user's (same) tel number each time *@
-                                <input class="govuk-input govuk-!-width-one-third" id="contact-by-phone" name="telephoneNumber" type="tel" autocomplete="tel" spellcheck="false">
+                                <input class="govuk-input govuk-!-width-one-third" id="contact-by-phone" name="telephoneNumber" type="tel" autocomplete="tel" spellcheck="false"
+                                       aria-describedby="@(telephoneError ? "contact-by-phone-error" : "")">
                             </div>
                         </div>
+                    }
                     </div>
                 </fieldset>
             </div>
