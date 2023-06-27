@@ -58,7 +58,7 @@ public class ContactByPhoneModel : ProfessionalReferralCacheModel, IErrorSummary
         }
 
         model.ReferrerContact = Contact;
-        model.TelephoneNumber = TelephoneNumber;
+        model.ReferrerTelephone = TelephoneNumber;
 
         return NextPage();
     }
