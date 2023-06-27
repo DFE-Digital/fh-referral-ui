@@ -14,9 +14,9 @@ public class ContactByPhoneModel : ProfessionalReferralCacheModel
     // one of these for all errors?
     private static readonly ImmutableDictionary<int, Error> PossibleErrors = ImmutableDictionary
         .Create<int, Error>()
-        .Add((int)ProfessionalReferralError.ContactByPhone_NoContactSelected, new Error((int)ProfessionalReferralError.ContactByPhone_NoContactSelected, "email", "Select how the service can contact you"))
-        .Add((int)ProfessionalReferralError.ContactByPhone_NoTelephoneNumber, new Error((int)ProfessionalReferralError.ContactByPhone_NoTelephoneNumber, "contact-by-phone", "Enter a UK telephone number"))
-        .Add((int)ProfessionalReferralError.ContactByPhone_InvalidTelephoneNumber, new Error((int)ProfessionalReferralError.ContactByPhone_InvalidTelephoneNumber, "contact-by-phone", "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192"));
+        .Add((int)ErrorId.ContactByPhone_NoContactSelected, new Error((int)ErrorId.ContactByPhone_NoContactSelected, "email", "Select how the service can contact you"))
+        .Add((int)ErrorId.ContactByPhone_NoTelephoneNumber, new Error((int)ErrorId.ContactByPhone_NoTelephoneNumber, "contact-by-phone", "Enter a UK telephone number"))
+        .Add((int)ErrorId.ContactByPhone_InvalidTelephoneNumber, new Error((int)ErrorId.ContactByPhone_InvalidTelephoneNumber, "contact-by-phone", "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192"));
 
     public ErrorState? ErrorState { get; private set; }
 
@@ -43,20 +43,20 @@ public class ContactByPhoneModel : ProfessionalReferralCacheModel
 
     protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
-        ProfessionalReferralError? error = null;
+        ErrorId? error = null;
         if (Contact == null)
         {
-            error = ProfessionalReferralError.ContactByPhone_NoContactSelected;
+            error = ErrorId.ContactByPhone_NoContactSelected;
         }
         else if (Contact == ReferrerContactType.TelephoneAndEmail)
         {
             if (string.IsNullOrEmpty(TelephoneNumber))
             {
-                error = ProfessionalReferralError.ContactByPhone_NoTelephoneNumber;
+                error = ErrorId.ContactByPhone_NoTelephoneNumber;
             }
             else if (UkGdsTelephoneNumberAttribute.IsValid(TelephoneNumber) != ValidationResult.Success)
             {
-                error = ProfessionalReferralError.ContactByPhone_InvalidTelephoneNumber;
+                error = ErrorId.ContactByPhone_InvalidTelephoneNumber;
             }
         }
 

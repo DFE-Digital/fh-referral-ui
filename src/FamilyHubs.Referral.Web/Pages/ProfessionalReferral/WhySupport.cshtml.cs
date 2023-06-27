@@ -29,11 +29,11 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
         }
 
         //todo: there are ways we could make this more generic and remove the need for pages to do this
-        if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.WhySupport_NothingEntered))
+        if (model.ErrorState!.Errors.Contains(ErrorId.WhySupport_NothingEntered))
         {
             TextAreaValidationErrorMessage = "Enter a reason for the connection request";
         }
-        else if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.WhySupport_TooLong))
+        else if (model.ErrorState!.Errors.Contains(ErrorId.WhySupport_TooLong))
         {
             TextAreaValidationErrorMessage = "Reason for the connection request must be 500 characters or less";
             TextAreaValue = model.ErrorState!.InvalidUserInput![0];
@@ -45,14 +45,14 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {
-            return RedirectToSelf(null, ProfessionalReferralError.WhySupport_NothingEntered);
+            return RedirectToSelf(null, ErrorId.WhySupport_NothingEntered);
         }
 
         // workaround the front end counting line endings as 1 chars (\n) as per HTML spec,
         // and the http transport/.net/windows using 2 chars for line ends (\r\n)
         if (TextAreaValue.Replace("\r", "").Length > 500)
         {
-            return RedirectToSelf(TextAreaValue, ProfessionalReferralError.WhySupport_TooLong);
+            return RedirectToSelf(TextAreaValue, ErrorId.WhySupport_TooLong);
         }
 
         model.Reason = TextAreaValue;

@@ -40,7 +40,7 @@ public class EmailModel : ProfessionalReferralCacheModel, ISingleEmailTextboxPag
     {
         if (!ModelState.IsValid)
         {
-            return RedirectToSelf(null, ProfessionalReferralError.Email_NotValid);
+            return RedirectToSelf(null, ErrorId.Email_NotValid);
         }
 
         model.EmailAddress = TextBoxValue;

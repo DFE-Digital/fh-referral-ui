@@ -19,8 +19,8 @@
                 Error? triggeredError = Model.ErrorState?.GetErrorIfTriggered();
             }
 
-            <div class="govuk-form-group @(triggeredError?.Id == (int)ProfessionalReferralError.ContactByPhone_NoContactSelected ? "govuk-form-group--error" : "")">
-                <fieldset class="govuk-fieldset" aria-describedby="contact-hint @(triggeredError?.Id == (int)ProfessionalReferralError.ContactByPhone_NoContactSelected ? "no-contact-selected-error" : "")">
+            <div class="govuk-form-group @(triggeredError?.Id == (int)ErrorId.ContactByPhone_NoContactSelected ? "govuk-form-group--error" : "")">
+                <fieldset class="govuk-fieldset" aria-describedby="contact-hint @(triggeredError?.Id == (int)ErrorId.ContactByPhone_NoContactSelected ? "no-contact-selected-error" : "")">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <h1 class="govuk-fieldset__heading">
                             How can the service contact you for more details about this request?
@@ -30,7 +30,7 @@
                         Select one option.
                     </div>
                     @{
-                        if (triggeredError?.Id == (int)ProfessionalReferralError.ContactByPhone_NoContactSelected)
+                        if (triggeredError?.Id == (int)ErrorId.ContactByPhone_NoContactSelected)
                         {
                             <span id="no-contact-selected-error" class="govuk-error-message">
                                 <span class="govuk-visually-hidden">Error:</span> @triggeredError.ErrorMessage
@@ -53,8 +53,8 @@
                         </div>
 
                     @{
-                        bool telephoneError = triggeredError?.Id is (int) ProfessionalReferralError.ContactByPhone_NoTelephoneNumber
-                            or (int) ProfessionalReferralError.ContactByPhone_InvalidTelephoneNumber;
+                        bool telephoneError = triggeredError?.Id is (int) ErrorId.ContactByPhone_NoTelephoneNumber
+                            or (int) ErrorId.ContactByPhone_InvalidTelephoneNumber;
 
                         <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="telephone-and-email" name="Contact" type="radio" value="@ReferrerContactType.TelephoneAndEmail"

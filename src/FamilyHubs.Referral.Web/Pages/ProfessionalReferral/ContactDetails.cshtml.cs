@@ -49,7 +49,7 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
         if (!(ModelState.IsValid && ContactMethods.Any(m => m)))
 #pragma warning restore S6605
         {
-            return RedirectToSelf(null,ProfessionalReferralError.ContactDetails_NoContactMethodsSelected);
+            return RedirectToSelf(null,ErrorId.ContactDetails_NoContactMethodsSelected);
         }
 
         model.ContactMethodsSelected = ContactMethods;
