@@ -59,7 +59,7 @@
 
                         <div class="govuk-radios__item">
                                 <input class="govuk-radios__input" id="telephone-and-email" name="Contact" type="radio" value="@ReferrerContactType.TelephoneAndEmail"
-                                   aria-describedby-by="telephone-and-email-hint" @(telephoneError || Model.TelephoneNumber != null ? "checked" : "")
+                                   aria-describedby="telephone-and-email-hint" @(telephoneError || Model.TelephoneNumber != null ? "checked" : "")
                                    aria-controls="conditional-telephone-and-email" aria-expanded="false">
                             <label class="govuk-label govuk-radios__label" for="telephone-and-email">
                                 Telephone and email
