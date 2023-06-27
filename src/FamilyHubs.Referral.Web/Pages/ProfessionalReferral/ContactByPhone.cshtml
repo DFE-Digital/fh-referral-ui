@@ -20,7 +20,7 @@
             }
 
             <div class="govuk-form-group @(triggeredError?.Id == (int)ProfessionalReferralError.ContactByPhone_NoContactSelected ? "govuk-form-group--error" : "")">
-                <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
+                <fieldset class="govuk-fieldset" aria-describedby="contact-hint @(triggeredError?.Id == (int)ProfessionalReferralError.ContactByPhone_NoContactSelected ? "no-contact-selected-error" : "")">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <h1 class="govuk-fieldset__heading">
                             How can the service contact you for more details about this request?
@@ -29,11 +29,10 @@
                     <div id="contact-hint" class="govuk-hint">
                         Select one option.
                     </div>
-                    @* todo: id & arria *@
                     @{
                         if (triggeredError?.Id == (int)ProfessionalReferralError.ContactByPhone_NoContactSelected)
                         {
-                            <span class="govuk-error-message">
+                            <span id="no-contact-selected-error" class="govuk-error-message">
                                 <span class="govuk-visually-hidden">Error:</span> @triggeredError.ErrorMessage
                             </span>
                         }
