@@ -5,8 +5,10 @@ namespace FamilyHubs.Referral.Web.Errors;
 
 public static class PossibleErrors
 {
+    //todo: helper?
     public static readonly ImmutableDictionary<int, Error> All = ImmutableDictionary
         .Create<int, Error>()
+        .Add((int)ErrorId.Consent_NoConsentSelected, new Error((int)ErrorId.Consent_NoConsentSelected, "consent-yes", "Select whether you have permission from the family to share details"))
         .Add((int)ErrorId.SharePrivacy_NoSelection, new Error((int)ErrorId.SharePrivacy_NoSelection, "shared-privacy-yes", "Select whether you have shared our privacy statement with the family"))
         .Add((int)ErrorId.ContactByPhone_NoContactSelected, new Error((int)ErrorId.ContactByPhone_NoContactSelected, "email", "Select how the service can contact you"))
         .Add((int)ErrorId.ContactByPhone_NoTelephoneNumber, new Error((int)ErrorId.ContactByPhone_NoTelephoneNumber, "contact-by-phone", "Enter a UK telephone number"))
