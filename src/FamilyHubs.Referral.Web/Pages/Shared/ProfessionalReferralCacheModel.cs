@@ -159,7 +159,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
     }
 
     //todo: version that accepts array of user input
-    protected IActionResult RedirectToSelf(string? invalidUserInput, params ProfessionalReferralError[] errors)
+    protected IActionResult RedirectToSelf(string? invalidUserInput, params ErrorId[] errors)
     {
         //todo: throw if none? is that something this should be used for?
         if (errors.Any())

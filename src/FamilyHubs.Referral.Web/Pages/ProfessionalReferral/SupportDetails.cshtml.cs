@@ -36,7 +36,7 @@ public class SupportDetailsModel : ProfessionalReferralCacheModel, ISingleTextbo
     {
         if (!ModelState.IsValid)
         {
-            return RedirectToSelf(null, ProfessionalReferralError.SupportDetails_Invalid);
+            return RedirectToSelf(null, ErrorId.SupportDetails_Invalid);
         }
 
         if (TextBoxValue!.Length > 255)

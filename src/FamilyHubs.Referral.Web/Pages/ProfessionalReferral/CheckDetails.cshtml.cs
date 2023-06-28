@@ -113,6 +113,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         {
             ReasonForSupport = model.Reason!,
             EngageWithFamily = model.EngageReason!,
+            ReferrerTelephone = model.ReferrerTelephone,
             RecipientDto = new RecipientDto
             {
                 Name = model.FamilyContactFullName!,

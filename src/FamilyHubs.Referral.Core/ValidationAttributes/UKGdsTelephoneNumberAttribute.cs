@@ -13,33 +13,40 @@ public class UkGdsTelephoneNumberAttribute : ValidationAttribute
 {
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if (value != null)
+        if (value == null)
         {
-            string phoneNumberString = (string)value;
-            bool isValid = false;
-
-            PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.GetInstance();
-            try
-            {
-                // throws if not a possible number somewhere in the world
-                var phoneNumber = phoneNumberUtil.Parse(phoneNumberString, "GB");
-                // does more in depth validation, including if it's a valid UK number
-                isValid = phoneNumberUtil.IsValidNumber(phoneNumber)
-                    && phoneNumberUtil.GetRegionCodeForNumber(phoneNumber) == "GB"
-                    // libphonenumber allows some characters that we don't want to allow
-                    && !phoneNumberString.Intersect("!\"£$%^&*={}'@~\\|?/").Any();
-            }
-            catch (NumberParseException)
-            {
-                // PhoneNumberUtil.Parse calls IsViablePhoneNumber(), which throws a NumberParseException if the number isn't a viable telephone number somewhere in the world
-            }
-
-            if (!isValid)
-            {
-                return new ValidationResult("Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192");
-            }
+            return ValidationResult.Success;
         }
 
-        return ValidationResult.Success;
+        string phoneNumberString = (string)value;
+        return IsValid(phoneNumberString);
+    }
+
+    public static ValidationResult IsValid(string phoneNumber)
+    {
+        bool isValid = false;
+
+        PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.GetInstance();
+        try
+        {
+            // throws if not a possible number somewhere in the world
+            var parsedPhoneNumber = phoneNumberUtil.Parse(phoneNumber, "GB");
+            // does more in depth validation, including if it's a valid UK number
+            isValid = phoneNumberUtil.IsValidNumber(parsedPhoneNumber)
+                      && phoneNumberUtil.GetRegionCodeForNumber(parsedPhoneNumber) == "GB"
+                      // libphonenumber allows some characters that we don't want to allow
+                      && !phoneNumber.Intersect("!\"£$%^&*={}'@~\\|?/").Any();
+        }
+        catch (NumberParseException)
+        {
+            // PhoneNumberUtil.Parse calls IsViablePhoneNumber(), which throws a NumberParseException if the number isn't a viable telephone number somewhere in the world
+        }
+
+        if (!isValid)
+        {
+            return new ValidationResult("Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192");
+        }
+
+        return ValidationResult.Success!;
     }
 }

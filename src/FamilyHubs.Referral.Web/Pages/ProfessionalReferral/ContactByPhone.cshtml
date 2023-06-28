@@ -1,0 +1,95 @@
+﻿@page
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.ContactByPhoneModel
+@{
+    ViewData["Title"] = "How can the service contact you for more details about this request?";
+}
+
+@section Back {
+    <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
+}
+
+<partial name="Shared/_ErrorSummary" for="@Model.ErrorState"/>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form method="post" novalidate>
+            
+            @{
+                Error? triggeredError = Model.ErrorState?.GetErrorIfTriggered();
+            }
+
+            <div class="govuk-form-group @(triggeredError?.Id == (int)ErrorId.ContactByPhone_NoContactSelected ? "govuk-form-group--error" : "")">
+                <fieldset class="govuk-fieldset" aria-describedby="contact-hint @(triggeredError?.Id == (int)ErrorId.ContactByPhone_NoContactSelected ? "no-contact-selected-error" : "")">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            How can the service contact you for more details about this request?
+                        </h1>
+                    </legend>
+                    <div id="contact-hint" class="govuk-hint">
+                        Select one option.
+                    </div>
+                    @{
+                        if (triggeredError?.Id == (int)ErrorId.ContactByPhone_NoContactSelected)
+                        {
+                            <span id="no-contact-selected-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> @triggeredError.ErrorMessage
+                            </span>
+                        }
+                    }
+                    <div class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="email" name="Contact" type="radio" value="@ReferrerContactType.Email"
+                                   @(Model.Contact == ReferrerContactType.Email ? "checked" : "")
+                                   aria-describedby="email-hint" aria-controls="conditional-email" aria-expanded="false">
+                            <label class="govuk-label govuk-radios__label" for="email">
+                                Email only
+                            </label>
+                        </div>
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-email">
+                            <div id="email-hint" class="govuk-hint">
+                                The service can contact me through my account email.
+                            </div>
+                        </div>
+
+                    @{
+                        bool telephoneError = triggeredError?.Id is (int) ErrorId.ContactByPhone_NoTelephoneNumber
+                            or (int) ErrorId.ContactByPhone_InvalidTelephoneNumber;
+
+                        <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="telephone-and-email" name="Contact" type="radio" value="@ReferrerContactType.TelephoneAndEmail"
+                                   aria-describedby="telephone-and-email-hint" @(telephoneError || Model.TelephoneNumber != null ? "checked" : "")
+                                   aria-controls="conditional-telephone-and-email" aria-expanded="false">
+                            <label class="govuk-label govuk-radios__label" for="telephone-and-email">
+                                Telephone and email
+                            </label>
+                        </div>
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-telephone-and-email">
+                                <div class="govuk-form-group @(telephoneError ? "govuk-form-group--error":"")">
+                                <div id="telephone-and-email-hint" class="govuk-hint">
+                                    The service can contact me by telephone and account email.
+                                </div>
+                                <label class="govuk-label" for="contact-by-phone">
+                                    Telephone number
+                                </label>
+                                @if (telephoneError)
+                                {
+                                    <p id="contact-by-phone-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> @triggeredError!.ErrorMessage
+                                    </p>
+                                }
+                                @* makes sense to have autocomplete on for this telephone number, as it will be the user's (same) tel number each time *@
+                                <input asp-for="TelephoneNumber" id="contact-by-phone" class="govuk-input govuk-!-width-one-third" type="tel" autocomplete="tel" spellcheck="false"
+                                    aria-describedby="@(telephoneError ? "contact-by-phone-error" : "")">
+                            </div>
+                        </div>
+                    }
+                    </div>
+                </fieldset>
+            </div>
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Continue
+            </button>
+        </form>
+    </div>
+</div>

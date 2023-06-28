@@ -2,7 +2,7 @@
 
 //todo: error enum per error / page / journey??
 //could have every error message in config. would we want to do that?
-public enum ProfessionalReferralError
+public enum ErrorId
 {
     SupportDetails_Invalid,
     //todo: could have generic TellTheService enums, and then have add the different error messages to the interface?
@@ -15,5 +15,8 @@ public enum ProfessionalReferralError
     ContactMethods_TooLong,
     ContactDetails_NoContactMethodsSelected,
     Consent_NoConsentSelected,
-    Email_NotValid
+    Email_NotValid,
+    ContactByPhone_NoContactSelected,
+    ContactByPhone_NoTelephoneNumber,
+    ContactByPhone_InvalidTelephoneNumber
 }

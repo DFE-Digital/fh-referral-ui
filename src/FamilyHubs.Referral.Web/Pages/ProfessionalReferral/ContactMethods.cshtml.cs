@@ -29,11 +29,11 @@ public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServi
             return;
         }
 
-        if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.ContactMethods_NothingEntered))
+        if (model.ErrorState!.Errors.Contains(ErrorId.ContactMethods_NothingEntered))
         {
             TextAreaValidationErrorMessage = "Enter how best to engage with this family";
         }
-        else if (model.ErrorState!.Errors.Contains(ProfessionalReferralError.ContactMethods_TooLong))
+        else if (model.ErrorState!.Errors.Contains(ErrorId.ContactMethods_TooLong))
         {
             TextAreaValidationErrorMessage = "How the service can engage with the family must be 500 characters or less";
             TextAreaValue = model.ErrorState!.InvalidUserInput![0];
@@ -45,14 +45,14 @@ public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServi
     {
         if (string.IsNullOrEmpty(TextAreaValue))
         {
-            return RedirectToSelf(null,ProfessionalReferralError.ContactMethods_NothingEntered);
+            return RedirectToSelf(null,ErrorId.ContactMethods_NothingEntered);
         }
 
         // workaround the front end counting line endings as 1 chars (\n) as per HTML spec,
         // and the http transport/.net/windows using 2 chars for line ends (\r\n)
         if (TextAreaValue.Replace("\r", "").Length > 500)
         {
-            return RedirectToSelf(TextAreaValue, ProfessionalReferralError.ContactMethods_TooLong);
+            return RedirectToSelf(TextAreaValue, ErrorId.ContactMethods_TooLong);
         }
 
         model.EngageReason = TextAreaValue;

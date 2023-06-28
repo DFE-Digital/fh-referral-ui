@@ -19,7 +19,7 @@ public class ConsentModel : ProfessionalReferralCacheModel
     {
         if (!ModelState.IsValid || Consent == null)
         {
-            return RedirectToSelf(null, ProfessionalReferralError.Consent_NoConsentSelected);
+            return RedirectToSelf(null, ErrorId.Consent_NoConsentSelected);
         }
 
         if (string.Compare(Consent, "yes", StringComparison.OrdinalIgnoreCase) == 0)

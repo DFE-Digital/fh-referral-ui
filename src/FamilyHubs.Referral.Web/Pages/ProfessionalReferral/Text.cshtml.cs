@@ -5,6 +5,7 @@ using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Core.ValidationAttributes;
+using System.Web;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -53,7 +54,7 @@ public class TextModel : ProfessionalReferralCacheModel, ISingleTelephoneTextbox
 
     private void SetPageProperties(ConnectionRequestModel model)
     {
-        HeadingText = $"What telephone number should the service use to text {model.FamilyContactFullName}?";
+        HeadingText = $"What telephone number should the service use to text {HttpUtility.HtmlEncode(model.FamilyContactFullName)}?";
         BackUrl = GenerateBackUrl(ConnectContactDetailsJourneyPage.Textphone, model.ContactMethodsSelected);
     }
 }
