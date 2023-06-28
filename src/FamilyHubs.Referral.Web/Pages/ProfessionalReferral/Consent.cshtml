@@ -40,13 +40,13 @@
                             </p>
                         }
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="consent-yes" name="Consent" type="radio" value="yes" @(Model.Consent != null && Model.Consent == "yes" ? "checked" : "")>
+                            <input class="govuk-radios__input" id="consent-yes" name="Consent" type="radio" value="true" @(Model.Consent == true ? "checked" : "")>
                             <label class="govuk-label govuk-radios__label" for="consent-yes">
                                 Yes
                             </label>
                         </div>
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="consent-no" name="Consent" type="radio" value="no" @(Model.Consent != null && Model.Consent == "no" ? "checked" : "")>
+                            <input class="govuk-radios__input" id="consent-no" name="Consent" type="radio" value="false" @(Model.Consent == false ? "checked" : "")>
                             <label class="govuk-label govuk-radios__label" for="consent-no">
                                 No
                             </label>
