@@ -6,6 +6,7 @@ public enum ConnectJourneyPage
 {
     LocalOfferDetail,
     Safeguarding,
+    SharePrivacy,
     Consent,
     SupportDetails,
     WhySupport,
