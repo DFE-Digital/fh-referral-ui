@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
@@ -11,13 +10,6 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class ContactByPhoneModel : ProfessionalReferralCacheModel
 {
-    // one of these for all errors?
-    private static readonly ImmutableDictionary<int, Error> PossibleErrors = ImmutableDictionary
-        .Create<int, Error>()
-        .Add((int)ErrorId.ContactByPhone_NoContactSelected, new Error((int)ErrorId.ContactByPhone_NoContactSelected, "email", "Select how the service can contact you"))
-        .Add((int)ErrorId.ContactByPhone_NoTelephoneNumber, new Error((int)ErrorId.ContactByPhone_NoTelephoneNumber, "contact-by-phone", "Enter a UK telephone number"))
-        .Add((int)ErrorId.ContactByPhone_InvalidTelephoneNumber, new Error((int)ErrorId.ContactByPhone_InvalidTelephoneNumber, "contact-by-phone", "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192"));
-
     public ErrorState? ErrorState { get; private set; }
 
     [BindProperty]
@@ -33,7 +25,7 @@ public class ContactByPhoneModel : ProfessionalReferralCacheModel
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        ErrorState = ErrorState.Create(PossibleErrors, ConnectionRequestModel?.ErrorState?.Errors);
+        ErrorState = ErrorState.Create(PossibleErrors.All, ConnectionRequestModel?.ErrorState?.Errors);
         if (!HasErrors && model.ReferrerContact != null)
         {
             Contact = model.ReferrerContact;
