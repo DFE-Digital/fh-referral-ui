@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Core.ValidationAttributes;
-using FamilyHubs.Referral.Web.Errors;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,8 +9,6 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class ContactByPhoneModel : ProfessionalReferralCacheModel
 {
-    public ErrorState? ErrorState { get; private set; }
-
     [BindProperty]
     public string? TelephoneNumber { get; set; }
 
@@ -25,7 +22,6 @@ public class ContactByPhoneModel : ProfessionalReferralCacheModel
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
-        ErrorState = ErrorState.Create(PossibleErrors.All, ConnectionRequestModel?.ErrorState?.Errors);
         if (!HasErrors && model.ReferrerContact != null)
         {
             Contact = model.ReferrerContact;

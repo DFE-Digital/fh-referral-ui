@@ -8,25 +8,10 @@
     <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
 }
 
+<partial name="Shared/_ErrorSummary" for="@Model.ErrorState" />
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        
-        @* todo: errorsummary component *@
-        @if (Model.HasErrors)
-        {
-            <div class="govuk-error-summary" data-module="govuk-error-summary">
-                <h2 class="govuk-error-summary__title" id="error-summary-title">
-                    There is a problem
-                </h2>
-                <div class="govuk-error-summary__body">
-                    <ul class="govuk-list govuk-error-summary__list">
-                        <li>
-                            <a href="#consent" data-testid="permission-not-selected-error">Select whether you have permission from the family to share details</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        }
 
         <h1 class="govuk-heading-l">
             Share our privacy statement
@@ -51,13 +36,11 @@
                         </h2>
                     </legend>
                     <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
-                        @{
-                            if (Model.HasErrors)
-                            {
-                                <p class="govuk-error-message">
-                                    <span class="govuk-visually-hidden">Error:</span> Select whether you have permission from the family to share details
-                                </p>
-                            }
+                        @if (Model.HasErrors)
+                        {
+                            <p class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> Select whether you have permission from the family to share details
+                            </p>
                         }
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="shared-privacy-yes" name="SharedPrivacy" type="radio" value="true" @(Model.SharedPrivacy == true ? "checked" : "")>

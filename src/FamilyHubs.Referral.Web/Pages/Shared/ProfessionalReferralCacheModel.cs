@@ -1,11 +1,17 @@
 ﻿using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Errors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
 public class ProfessionalReferralCacheModel : ProfessionalReferralModel
 {
+    // we could stop passing this to get/set
+    public ConnectionRequestModel? ConnectionRequestModel { get; set; }
+    public ErrorState? ErrorState { get; private set; }
+    private bool _redirectingToSelf;
+
     protected ProfessionalReferralCacheModel(
         ConnectJourneyPage page,
         IConnectionRequestDistributedCache connectionRequestCache)
@@ -13,11 +19,8 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
     {
     }
 
-    // we could stop passing this to get/set
-    public ConnectionRequestModel? ConnectionRequestModel { get; set; }
-    private bool _redirectingToSelf;
-
     //todo: change to private set
+    //todo: remove this and reference ErrorState directly
     public bool HasErrors { get; set; }
 
     protected virtual void OnGetWithModel(ConnectionRequestModel model)
@@ -63,6 +66,8 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
             // (we'll clear the error state in the model on a non-redirect to self post
             ConnectionRequestModel.ErrorState = null;
         }
+
+        ErrorState = ErrorState.Create(PossibleErrors.All, ConnectionRequestModel.ErrorState?.Errors);
 
         await OnGetWithModelAsync(ConnectionRequestModel);
 
