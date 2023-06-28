@@ -15,6 +15,14 @@ public class ConsentModel : ProfessionalReferralCacheModel
     {
     }
 
+    protected override void OnGetWithModel(ConnectionRequestModel model)
+    {
+        if (model.ConsentGiven)
+        {
+            Consent = true;
+        }
+    }
+
     protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
         if (!ModelState.IsValid || Consent == null)
@@ -24,6 +32,7 @@ public class ConsentModel : ProfessionalReferralCacheModel
 
         if (Consent.Value)
         {
+            model.ConsentGiven = true;
             return NextPage();
         }
 

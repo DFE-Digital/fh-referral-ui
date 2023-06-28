@@ -37,9 +37,9 @@ public class WhenUsingConsent : BaseProfessionalReferralPage
     }
 
     [Theory]
-    [InlineData("yes", "/ProfessionalReferral/SupportDetails")]
-    [InlineData("no", "/ProfessionalReferral/ConsentShutter")]
-    public async Task ThenOnGetConsent_With_IsImmediateHarm_Selected(string isConsentGiven, string pageName)
+    [InlineData(true, "/ProfessionalReferral/SupportDetails")]
+    [InlineData(false, "/ProfessionalReferral/ConsentShutter")]
+    public async Task ThenOnGetConsent_With_IsImmediateHarm_Selected(bool isConsentGiven, string pageName)
     {
         //Arrange
         _consentModel.Consent = isConsentGiven;

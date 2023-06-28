@@ -7,13 +7,20 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class SharePrivacyModel : ProfessionalReferralCacheModel
 {
-    //todo: change consent too
     [BindProperty]
     public bool? SharedPrivacy { get; set; }
 
     public SharePrivacyModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
         : base(ConnectJourneyPage.SharePrivacy, connectionRequestDistributedCache)
     {
+    }
+
+    protected override void OnGetWithModel(ConnectionRequestModel model)
+    {
+        if (model.PrivacyShared)
+        {
+            SharedPrivacy = true;
+        }
     }
 
     protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
@@ -26,6 +33,7 @@ public class SharePrivacyModel : ProfessionalReferralCacheModel
 
         if (SharedPrivacy.Value)
         {
+            model.PrivacyShared = true;
             return NextPage();
         }
 
