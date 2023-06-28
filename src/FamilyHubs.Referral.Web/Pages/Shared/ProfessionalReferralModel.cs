@@ -22,7 +22,7 @@ public enum JourneyFlow
 
 //todo: will need 401/403 pages
 [Authorize(Roles = RoleGroups.LaProfessionalOrDualRole)]
-public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
+public class ProfessionalReferralModel : HeaderPageModel
 {
     protected readonly ConnectJourneyPage CurrentPage;
     protected IConnectionRequestDistributedCache ConnectionRequestCache { get; }
@@ -39,13 +39,6 @@ public class ProfessionalReferralModel : PageModel, IFamilyHubsHeader
     {
         ConnectionRequestCache = connectionRequestDistributedCache;
         CurrentPage = page;
-    }
-
-    public bool ShowNavigationMenu => true;
-
-    LinkStatus IFamilyHubsHeader.GetStatus(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
-    {
-        return link.Text == "Search for service" ? LinkStatus.Active : LinkStatus.Visible;
     }
 
     protected virtual Task<IActionResult> OnSafeGetAsync()
