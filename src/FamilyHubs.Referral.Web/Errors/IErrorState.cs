@@ -1,5 +1,18 @@
 ﻿namespace FamilyHubs.Referral.Web.Errors;
 
+public interface IErrorState<T> : IErrorState where T : struct, Enum, IConvertible
+{
+    //method instead?
+    new IEnumerable<T> ErrorIds { get; }
+
+    Error GetError(T errorId);
+
+    bool HasError(params T[] errorIds);
+
+    T? GetErrorIdIfTriggered(params T[] mutuallyExclusiveErrorIds);
+    Error? GetErrorIfTriggered(params T[] mutuallyExclusiveErrorIds);
+}
+
 public interface IErrorState
 {
     //todo: better naming of all these. GetError is the odd one out as it's not referring to the current state
