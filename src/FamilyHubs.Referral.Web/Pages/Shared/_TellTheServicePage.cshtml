@@ -10,7 +10,7 @@
 
         <form method="post">
 
-            @{ Error? error = Model.ErrorState?.GetErrorIfTriggered();}
+            @{ Error? error = Model.ErrorState.GetErrorIfTriggered();}
 
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
                 <div class="govuk-form-group @(error != null ? "govuk-form-group--error" : "")">

@@ -9,7 +9,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
 {
     // we could stop passing this to get/set
     public ConnectionRequestModel? ConnectionRequestModel { get; set; }
-    public ErrorState? ErrorState { get; private set; }
+    public IErrorState ErrorState { get; private set; }
     private bool _redirectingToSelf;
 
     protected ProfessionalReferralCacheModel(
@@ -17,6 +17,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
         IConnectionRequestDistributedCache connectionRequestCache)
         : base(connectionRequestCache, page)
     {
+        ErrorState = Errors.ErrorState.Empty;
     }
 
     //todo: change to private set
@@ -67,7 +68,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
             ConnectionRequestModel.ErrorState = null;
         }
 
-        ErrorState = ErrorState.Create(PossibleErrors.All, ConnectionRequestModel.ErrorState?.Errors);
+        ErrorState = Errors.ErrorState.Create(PossibleErrors.All, ConnectionRequestModel.ErrorState?.Errors);
 
         await OnGetWithModelAsync(ConnectionRequestModel);
 

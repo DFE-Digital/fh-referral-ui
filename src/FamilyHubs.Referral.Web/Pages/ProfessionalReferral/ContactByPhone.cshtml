@@ -16,7 +16,7 @@
         <form method="post" novalidate>
             
             @{
-                Error? triggeredError = Model.ErrorState?.GetErrorIfTriggered();
+                Error? triggeredError = Model.ErrorState.GetErrorIfTriggered();
             }
 
             <div class="govuk-form-group @(triggeredError?.Id == (int)ErrorId.ContactByPhone_NoContactSelected ? "govuk-form-group--error" : "")">

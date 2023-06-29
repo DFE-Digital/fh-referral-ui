@@ -1,11 +1,11 @@
-﻿using FamilyHubs.Referral.Core.Models;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FamilyHubs.Referral.Web.Errors;
 
 //todo: combine error handling from base class into this too?
-public class ErrorState : IErrorSummary
+//todo: separate generic and non-generic interfaces?
+public class ErrorState : IErrorState
 {
     private readonly ImmutableDictionary<int, Error> _possibleErrors;
 
@@ -15,15 +15,24 @@ public class ErrorState : IErrorSummary
         ErrorIds = triggeredErrors;
     }
 
-    //todo: generic concrete, but non-generic interface?
-    public static ErrorState Create<T>(ImmutableDictionary<int, Error> possibleErrors, IEnumerable<T>? triggeredErrors)
+    public static IErrorState Empty { get; }
+        = new ErrorState(ImmutableDictionary<int, Error>.Empty, Enumerable.Empty<int>());
+
+    public static IErrorState Create<T>(ImmutableDictionary<int, Error> possibleErrors, IEnumerable<T>? triggeredErrors)
         where T : struct, Enum, IConvertible
     {
-        return new ErrorState(possibleErrors, triggeredErrors?.Select(e => (int)(IConvertible)e) ?? Enumerable.Empty<int>());
+        if (triggeredErrors?.Any() == true)
+        {
+            return new ErrorState(possibleErrors,
+                triggeredErrors.Select(e => (int) (IConvertible) e));
+        }
+
+        return Empty;
     }
 
     public bool HasErrors => ErrorIds.Any();
 
+    //todo: either/and IEnumerable<Error>?
     public IEnumerable<int> ErrorIds { get; }
 
     public Error GetError(int errorId)

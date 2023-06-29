@@ -27,7 +27,7 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
             return;
         }
 
-        if (ErrorState?.HasError((int)ErrorId.WhySupport_TooLong) == true)
+        if (ErrorState.HasError((int)ErrorId.WhySupport_TooLong))
         {
             TextAreaValue = model.ErrorState!.InvalidUserInput![0];
         }

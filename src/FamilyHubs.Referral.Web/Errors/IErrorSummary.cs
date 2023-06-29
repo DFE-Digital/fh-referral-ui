@@ -5,6 +5,7 @@ public record Error(int Id, string HtmlElementId, string ErrorMessage);
 //todo: better naming of all these. GetError is the odd one out as it's not referring to the current state
 //todo: single interface? copy methods? better naming?
 
+//todo: merge this into IErrorState?
 public interface IErrorSummary
 {
     bool HasErrors { get; }
