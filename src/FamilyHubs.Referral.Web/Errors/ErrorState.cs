@@ -3,37 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FamilyHubs.Referral.Web.Errors;
 
-public class ErrorState<T> : ErrorState, IErrorState<T>
-    where T : struct, Enum, IConvertible
-{
-    public ErrorState(ImmutableDictionary<int, Error> possibleErrors, IEnumerable<int> triggeredErrors)
-        : base(possibleErrors, triggeredErrors)
-    {
-    }
-
-    public new IEnumerable<T> ErrorIds => base.ErrorIds.Select(e => (T) (IConvertible) e);
-
-    public Error GetError(T errorId)
-    {
-        return GetError((int) (IConvertible) errorId);
-    }
-
-    public bool HasError(params T[] errorIds)
-    {
-        return HasError(errorIds.Select(e => (int) (IConvertible) e).ToArray());
-    }
-
-    public T? GetErrorIdIfTriggered(params T[] mutuallyExclusiveErrorIds)
-    {
-        return (T?) (IConvertible?) GetErrorIdIfTriggered(mutuallyExclusiveErrorIds.Select(e => (int) (IConvertible) e).ToArray());
-    }
-
-    public Error? GetErrorIfTriggered(params T[] mutuallyExclusiveErrorIds)
-    {
-        return GetErrorIfTriggered(mutuallyExclusiveErrorIds.Select(e => (int) (IConvertible) e).ToArray());
-    }
-}
-
 //todo: combine error handling from base class into this too?
 public class ErrorState : IErrorState
 {
