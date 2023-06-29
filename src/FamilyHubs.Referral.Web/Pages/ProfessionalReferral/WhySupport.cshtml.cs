@@ -10,7 +10,6 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePageModel
 {
     public string DescriptionPartial => "/Pages/ProfessionalReferral/WhySupportContent.cshtml";
-    public string? TextAreaValidationErrorMessage { get; set; }
 
     [BindProperty]
     public string? TextAreaValue { get; set; }
@@ -28,17 +27,10 @@ public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePa
             return;
         }
 
-        //todo: there are ways we could make this more generic and remove the need for pages to do this
-        if (model.ErrorState!.Errors.Contains(ErrorId.WhySupport_NothingEntered))
+        if (ErrorState?.HasError((int)ErrorId.WhySupport_TooLong) == true)
         {
-            TextAreaValidationErrorMessage = "Enter a reason for the connection request";
-        }
-        else if (model.ErrorState!.Errors.Contains(ErrorId.WhySupport_TooLong))
-        {
-            TextAreaValidationErrorMessage = "Reason for the connection request must be 500 characters or less";
             TextAreaValue = model.ErrorState!.InvalidUserInput![0];
         }
-        //todo: throw?
     }
 
     protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
