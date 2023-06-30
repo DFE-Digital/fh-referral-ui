@@ -2,6 +2,7 @@
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.ContactByPhoneModel
 @{
     ViewData["Title"] = "How can the service contact you for more details about this request?";
+    Error? triggeredError = Model.ErrorState.GetErrorIfTriggered();
 }
 
 @section Back {
@@ -14,10 +15,6 @@
     <div class="govuk-grid-column-two-thirds">
 
         <form method="post" novalidate>
-            
-            @{
-                Error? triggeredError = Model.ErrorState.GetErrorIfTriggered();
-            }
 
             <div class="govuk-form-group @(triggeredError?.Id == (int)ErrorId.ContactByPhone_NoContactSelected ? "govuk-form-group--error" : "")">
                 <fieldset class="govuk-fieldset" aria-describedby="contact-hint @(triggeredError?.Id == (int)ErrorId.ContactByPhone_NoContactSelected ? "no-contact-selected-error" : "")">
