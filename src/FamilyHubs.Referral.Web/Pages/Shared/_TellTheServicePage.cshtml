@@ -1,33 +1,19 @@
 ﻿@model ITellTheServicePageModel
 
+<partial name="_ErrorSummary" for="@Model.ErrorState"/>
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        @if (Model.TextAreaValidationErrorMessage != null)
-        {
-            <div class="govuk-error-summary" data-module="govuk-error-summary">
-                <div role="alert">
-                    <h2 class="govuk-error-summary__title" id="error-summary-title">
-                        There is a problem
-                    </h2>
-                    <div class="govuk-error-summary__body">
-                        <ul class="govuk-list govuk-error-summary__list">
-                            <li>
-                                <a href="#reason" data-testid="summary-error">
-                                    @Model.TextAreaValidationErrorMessage
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        }
         
         @* we _could_ pass the heading, lead in and ul items *@
         <partial name="@Model.DescriptionPartial" />
 
         <form method="post">
+
+            @{ Error? error = Model.ErrorState.GetErrorIfTriggered();}
+
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
-                <div class="govuk-form-group @(Model.TextAreaValidationErrorMessage != null ? "govuk-form-group--error" : "")">
+                <div class="govuk-form-group @(error != null ? "govuk-form-group--error" : "")">
 
                     <h2 class="govuk-label-wrapper">
                         <label class="govuk-label govuk-label--m" for="reason">
@@ -35,15 +21,15 @@
                         </label>
                     </h2>
 
-                    @if (Model.TextAreaValidationErrorMessage != null)
+                    @if (error != null)
                     {
                         <p class="govuk-error-message" id="reason-error">
-                            <span class="govuk-visually-hidden">Error:</span> @Model.TextAreaValidationErrorMessage
+                            <span class="govuk-visually-hidden">Error:</span> @error.ErrorMessage
                         </p>
                     }
 
-                    <textarea asp-for="TextAreaValue" class="govuk-textarea govuk-js-character-count @(Model.TextAreaValidationErrorMessage != null ? "govuk-textarea--error" : "")"
-                              rows="10" id="reason" aria-describedby="reason-info @(Model.TextAreaValidationErrorMessage != null ? "reason-error" : "")"></textarea>
+                    <textarea asp-for="TextAreaValue" class="govuk-textarea govuk-js-character-count @(error != null ? "govuk-textarea--error" : "")"
+                              rows="10" id="reason" aria-describedby="reason-info @(error != null ? "reason-error" : "")"></textarea>
                 </div>
 
                 <div id="reason-info" class="govuk-hint govuk-character-count__message">

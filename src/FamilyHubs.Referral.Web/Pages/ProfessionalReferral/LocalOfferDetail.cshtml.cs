@@ -29,9 +29,7 @@ public class LocalOfferDetailModel : PageModel
     public string Website { get; set; } = default!;
     public string Email { get; set; } = default!;
 
-    public LocalOfferDetailModel(
-        IOrganisationClientService organisationClientService,
-        IConnectionRequestDistributedCache connectionRequestDistributedCache)
+    public LocalOfferDetailModel(IOrganisationClientService organisationClientService)
     {
         _organisationClientService = organisationClientService;
     }

@@ -19,6 +19,19 @@
         <dl class="govuk-summary-list govuk-!-margin-bottom-9">
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
+                    Shared privacy statement
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    Yes
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a asp-page="/ProfessionalReferral/SharePrivacy" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
+                        Change<span class="govuk-visually-hidden"> shared privacy statement</span>
+                    </a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
                     Permission to share details
                 </dt>
                 <dd class="govuk-summary-list__value">
@@ -72,7 +85,7 @@
                         };
 
                         List<string> contactMethodsSelected = new List<string>();
-                        for (int contactMethod = 0; contactMethod <= (int)ConnectContactDetailsJourneyPage.LastContactMethod; ++contactMethod)
+                        for (int contactMethod = 0; contactMethod <= (int) ConnectContactDetailsJourneyPage.LastContactMethod; ++contactMethod)
                         {
                             if (Model.ConnectionRequestModel.ContactMethodsSelected[contactMethod])
                             {
@@ -122,7 +135,7 @@
                     </dd>
                 </div>
             }
-            
+
             @if (Model.ConnectionRequestModel.TextphoneNumber != null)
             {
                 <div class="govuk-summary-list__row">
@@ -139,28 +152,28 @@
                     </dd>
                 </div>
             }
-            
+
             @* AddressLine1 is a mandatory field, so we use it as a proxy for the whole address *@
             @if (Model.ConnectionRequestModel.AddressLine1 != null)
             {
                 <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Address
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @Html.Raw(string.Join("<br>", RemoveEmpty(
-                        Model.ConnectionRequestModel.AddressLine1,
-                        Model.ConnectionRequestModel.AddressLine2,
-                        Model.ConnectionRequestModel.TownOrCity,
-                        Model.ConnectionRequestModel.County,
-                        Model.ConnectionRequestModel.Postcode)))
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                    <a asp-page="/ProfessionalReferral/Letter" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
-                        Change<span class="govuk-visually-hidden"> address</span>
-                    </a>
-                </dd>
-            </div>
+                    <dt class="govuk-summary-list__key">
+                        Address
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Html.Raw(string.Join("<br>", RemoveEmpty(
+                            Model.ConnectionRequestModel.AddressLine1,
+                            Model.ConnectionRequestModel.AddressLine2,
+                            Model.ConnectionRequestModel.TownOrCity,
+                            Model.ConnectionRequestModel.County,
+                            Model.ConnectionRequestModel.Postcode)))
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a asp-page="/ProfessionalReferral/Letter" asp-route-serviceId="@Model.ServiceId" asp-route-changing="page">
+                            Change<span class="govuk-visually-hidden"> address</span>
+                        </a>
+                    </dd>
+                </div>
             }
 
             <div class="govuk-summary-list__row">
@@ -176,7 +189,7 @@
                     </a>
                 </dd>
             </div>
-            
+
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     How the service can contact you

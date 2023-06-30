@@ -14,6 +14,7 @@ public enum ErrorId
     ContactMethods_NothingEntered,
     ContactMethods_TooLong,
     ContactDetails_NoContactMethodsSelected,
+    SharePrivacy_NoSelection,
     Consent_NoConsentSelected,
     Email_NotValid,
     ContactByPhone_NoContactSelected,

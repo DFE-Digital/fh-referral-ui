@@ -1,7 +1,7 @@
 ﻿@page
-@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.ConsentModel
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.SharePrivacyModel
 @{
-    ViewData["Title"] = "Permission to share details";
+    ViewData["Title"] = "Share our privacy statement";
 }
 
 @section Back {
@@ -14,22 +14,25 @@
     <div class="govuk-grid-column-two-thirds">
 
         <h1 class="govuk-heading-l">
-            Permission to share details
+            Share our privacy statement
         </h1>
         <form method="post">
-            <p>You must have permission from the family to give their details to the service.</p>
-            <p>Those details include:</p>
+            <p>You must <a href="/ProfessionalReferral/PrivacyStatement" rel="noreferrer noopener" target="_blank">share our privacy statement (opens in new tab)</a> with the family before you can make a request.</p>
+            <p>The privacy statement tells them more about:</p>
             <ul class="govuk-list govuk-list--bullet">
-                <li>who to contact in the family</li>
-                <li>ways to contact the family</li>
-                <li>why the family needs help</li>
+                <li>what data we collect about them and why we need it</li>
+                <li>who is responsible for data within the service</li>
+                <li>how we protect, process and store their data</li>
+                <li>how long we keep their data</li>
+                <li>their personal data rights</li>
             </ul>
-
+            
+            @* todo: do we want a component/partial for a yes/no binary choice? *@
             <div class="govuk-form-group @(Model.HasErrors ? "govuk-form-group--error" : "")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                         <h2 class="govuk-fieldset__heading">
-                            Do you have permission from the family?
+                            Have you shared our privacy statement with the family?
                         </h2>
                     </legend>
                     <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
@@ -40,14 +43,14 @@
                             </p>
                         }
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="consent-yes" name="Consent" type="radio" value="true" @(Model.Consent == true ? "checked" : "")>
-                            <label class="govuk-label govuk-radios__label" for="consent-yes">
+                            <input class="govuk-radios__input" id="shared-privacy-yes" name="SharedPrivacy" type="radio" value="true" @(Model.SharedPrivacy == true ? "checked" : "")>
+                            <label class="govuk-label govuk-radios__label" for="shared-privacy-yes">
                                 Yes
                             </label>
                         </div>
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="consent-no" name="Consent" type="radio" value="false" @(Model.Consent == false ? "checked" : "")>
-                            <label class="govuk-label govuk-radios__label" for="consent-no">
+                            <input class="govuk-radios__input" id="shared-privacy-no" name="SharedPrivacy" type="radio" value="false" @(Model.SharedPrivacy == false ? "checked" : "")>
+                            <label class="govuk-label govuk-radios__label" for="shared-privacy-no">
                                 No
                             </label>
                         </div>

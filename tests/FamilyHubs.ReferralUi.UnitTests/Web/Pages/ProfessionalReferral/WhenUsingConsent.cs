@@ -26,7 +26,7 @@ public class WhenUsingConsent : BaseProfessionalReferralPage
     public async Task ThenOnGetConsent_With_IsConsentGiven_NotSelected()
     {
         //Arrange
-        _consentModel.Consent = default!;
+        _consentModel.Consent = null;
 
         //Act
         var result = await _consentModel.OnPostAsync("Id") as RedirectToPageResult;
@@ -37,9 +37,9 @@ public class WhenUsingConsent : BaseProfessionalReferralPage
     }
 
     [Theory]
-    [InlineData("yes", "/ProfessionalReferral/SupportDetails")]
-    [InlineData("no", "/ProfessionalReferral/ConsentShutter")]
-    public async Task ThenOnGetConsent_With_IsImmediateHarm_Selected(string isConsentGiven, string pageName)
+    [InlineData(true, "/ProfessionalReferral/SupportDetails")]
+    [InlineData(false, "/ProfessionalReferral/ConsentShutter")]
+    public async Task ThenOnGetConsent_With_IsImmediateHarm_Selected(bool isConsentGiven, string pageName)
     {
         //Arrange
         _consentModel.Consent = isConsentGiven;

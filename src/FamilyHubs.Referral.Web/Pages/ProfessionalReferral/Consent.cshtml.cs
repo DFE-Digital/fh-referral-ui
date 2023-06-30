@@ -8,11 +8,19 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class ConsentModel : ProfessionalReferralCacheModel
 { 
     [BindProperty]
-    public string? Consent { get; set; }
+    public bool? Consent { get; set; }
 
     public ConsentModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
         : base(ConnectJourneyPage.Consent, connectionRequestDistributedCache)
     {
+    }
+
+    protected override void OnGetWithModel(ConnectionRequestModel model)
+    {
+        if (model.ConsentGiven)
+        {
+            Consent = true;
+        }
     }
 
     protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
@@ -22,8 +30,9 @@ public class ConsentModel : ProfessionalReferralCacheModel
             return RedirectToSelf(null, ErrorId.Consent_NoConsentSelected);
         }
 
-        if (string.Compare(Consent, "yes", StringComparison.OrdinalIgnoreCase) == 0)
+        if (Consent.Value)
         {
+            model.ConsentGiven = true;
             return NextPage();
         }
 

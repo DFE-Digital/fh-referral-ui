@@ -3,6 +3,8 @@ namespace FamilyHubs.Referral.Core.Models;
 
 public class ConnectionRequestModel
 {
+    public bool PrivacyShared { get; set; }
+    public bool ConsentGiven { get; set; }
     public string? ServiceId { get; set; }
     public string? FamilyContactFullName { get; set; }
     public string? Reason { get; set; }
