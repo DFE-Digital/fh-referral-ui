@@ -26,7 +26,7 @@ public class WhenUsingConsent : BaseProfessionalReferralPage
     public async Task ThenOnGetConsent_With_IsConsentGiven_NotSelected()
     {
         //Arrange
-        _consentModel.Consent = default!;
+        _consentModel.Consent = null;
 
         //Act
         var result = await _consentModel.OnPostAsync("Id") as RedirectToPageResult;
