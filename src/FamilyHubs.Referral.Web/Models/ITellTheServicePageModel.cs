@@ -1,4 +1,4 @@
-﻿using FamilyHubs.Referral.Web.Errors;
+﻿using FamilyHubs.SharedKernel.Razor.Errors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Models;

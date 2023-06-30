@@ -1,6 +1,7 @@
 ﻿using FamilyHubs.Referral.Core.Models;
 using System.Collections.Immutable;
-using ErrorDictionary = System.Collections.Immutable.ImmutableDictionary<int, FamilyHubs.Referral.Web.Errors.Error>;
+using FamilyHubs.SharedKernel.Razor.Errors;
+using ErrorDictionary = System.Collections.Immutable.ImmutableDictionary<int, FamilyHubs.SharedKernel.Razor.Errors.Error>;
 
 namespace FamilyHubs.Referral.Web.Errors;
 
