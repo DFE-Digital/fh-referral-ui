@@ -92,9 +92,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         var referralDto = CreateReferralDto(model, ProfessionalUser, service, organisation);
 
-        string referralIdBase10 = await _referralClientService.CreateReferral(referralDto);
-
-        return int.Parse(referralIdBase10);
+        return await _referralClientService.CreateReferral(referralDto);
     }
 
     //todo: common TrySend
