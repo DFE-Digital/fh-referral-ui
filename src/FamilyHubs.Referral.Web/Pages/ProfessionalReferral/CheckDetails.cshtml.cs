@@ -167,7 +167,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         var viewConnectionRequestUrl = new UriBuilder(dashboardUrl)
         {
             Path = $"{notificationType}/RequestDetails",
-            Query = $"referralId={requestNumber}"
+            Query = $"id={requestNumber}"
         }.Uri;
 
         var emailTokens = new Dictionary<string, string>

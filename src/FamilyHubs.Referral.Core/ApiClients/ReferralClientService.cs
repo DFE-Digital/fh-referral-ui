@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net.Http.Json;
+using System.Text;
 using FamilyHubs.ReferralService.Shared.Dto;
 
 namespace FamilyHubs.Referral.Core.ApiClients;
@@ -17,15 +18,7 @@ public class ReferralClientService : ApiService, IReferralClientService
 
     public async Task<int> CreateReferral(ReferralDto referralDto, CancellationToken cancellationToken = default)
     {
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Post,
-            RequestUri = new Uri(Client.BaseAddress + "api/referrals"),
-            Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(referralDto), Encoding.UTF8, "application/json"),
-        };
-
-        using var response = await Client.SendAsync(request, cancellationToken);
-
+        using var response = await Client.PostAsJsonAsync($"{Client.BaseAddress}api/referrals", referralDto, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             throw new ReferralClientServiceException(response, await response.Content.ReadAsStringAsync(cancellationToken));
