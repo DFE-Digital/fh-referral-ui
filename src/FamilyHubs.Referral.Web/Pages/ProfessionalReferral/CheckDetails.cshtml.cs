@@ -8,7 +8,6 @@ using FamilyHubs.ServiceDirectory.Shared.Extensions;
 using FamilyHubs.SharedKernel.Identity.Models;
 using Microsoft.AspNetCore.Mvc;
 using FamilyHubs.Referral.Core.Notifications;
-using FamilyHubs.ServiceDirectory.Shared.Enums;
 using SharedOrganisationDto = FamilyHubs.ServiceDirectory.Shared.Dto.OrganisationDto;
 using ReferralOrganisationDto = FamilyHubs.ReferralService.Shared.Dto.OrganisationDto;
 
@@ -65,10 +64,9 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         return RedirectToPage("/ProfessionalReferral/Confirmation", new { requestNumber });
     }
 
-    private async Task<OrganisationDto> GetOrganisation(ServiceDto service)
+    private async Task<SharedOrganisationDto> GetOrganisation(ServiceDto service)
     {
-        OrganisationDto? organisation = await _organisationClientService.GetOrganisationDtobyIdAsync(service.OrganisationId);
-
+        var organisation = await _organisationClientService.GetOrganisationDtobyIdAsync(service.OrganisationId);
         if (organisation == null)
         {
             //todo: create and throw custom exception
@@ -86,9 +84,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         //todo: should we check if the organisation is a VCFS organisation?
         //organisation.OrganisationType == OrganisationType.VCFS
 
-        //var team = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Team");
-
-        var referralDto = CreateReferralDto(model, ProfessionalUser, /*team,*/ service, organisation);
+        var referralDto = CreateReferralDto(model, ProfessionalUser, service, organisation);
 
         string referralIdBase10 = await _referralClientService.CreateReferral(referralDto);
 
