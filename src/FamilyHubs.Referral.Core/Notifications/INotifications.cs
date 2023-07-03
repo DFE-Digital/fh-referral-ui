@@ -3,5 +3,9 @@ namespace FamilyHubs.Referral.Core.Notifications;
 
 public interface INotifications
 {
-    Task SendEmailAsync(string emailAddress, string templateId, IDictionary<string, string> tokens, CancellationToken cancellationToken = default);
+    Task SendEmailsAsync(
+        IEnumerable<string> emailAddresses,
+        string templateId,
+        IDictionary<string, string> tokens,
+        CancellationToken cancellationToken = default);
 }

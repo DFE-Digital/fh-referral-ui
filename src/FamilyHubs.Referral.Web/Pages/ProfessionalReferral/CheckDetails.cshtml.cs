@@ -59,8 +59,14 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         int requestNumber = await CreateConnectionRequest(service, model);
 
+        string dashboardUrl = GetDashboardUrl();
+
         //todo: will need to get vcs org's emails from idams and pass through
-        await TrySendVcsNotificationEmails(Enumerable.Empty<string>(), service.Name, requestNumber);
+        await TrySendVcsNotificationEmails(
+            Enumerable.Empty<string>(), service.Name, requestNumber, dashboardUrl);
+
+        await TrySendProfessionalNotificationEmails(
+            ProfessionalUser.Email, service.Name, requestNumber, dashboardUrl);
 
         //todo: need to send the non-hex version
         return RedirectToPage("/ProfessionalReferral/Confirmation", new { requestNumber });
@@ -88,14 +94,14 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         string referralIdBase10 = await _referralClientService.CreateReferral(referralDto);
 
-        //todo: do this in API?
-        return int.Parse(referralIdBase10); //.ToString("X6");
+        return int.Parse(referralIdBase10);
     }
 
     private async Task TrySendVcsNotificationEmails(
         IEnumerable<string> emailAddresses,
         string serviceName,
-        int requestNumber)
+        int requestNumber,
+        string dashboardUrl)
     {
         if (!emailAddresses.Any())
         {
@@ -105,12 +111,9 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         try
         {
-            //todo: would be better if the API accepted multiple emails
             //todo: add callback to API, so that we can flag invalid emails/unsent emails
-            var sendEmailTasks = emailAddresses.Select(email =>
-                SendVcsNotificationEmail(email, requestNumber, serviceName));
             //todo: as we silently chomp any exceptions, should we just fire and forget?
-            await Task.WhenAll(sendEmailTasks);
+            await SendVcsNotificationEmails(emailAddresses, requestNumber, serviceName, dashboardUrl);
         }
         catch (Exception e)
         {
@@ -119,22 +122,70 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         }
     }
 
-    private async Task SendVcsNotificationEmail(
-        string vcsEmailAddress,
-        int requestNumber,
-        string serviceName)
+    private async Task TrySendProfessionalNotificationEmails(
+        string emailAddress, string serviceName, int requestNumber, string dashboardUrl)
+    {
+        try
+        {
+            await SendProfessionalNotificationEmails(emailAddress, serviceName, requestNumber, dashboardUrl);
+        }
+        catch (Exception e)
+        {
+            _logger.LogWarning(e, "Unable to send ProfessionalSentRequest email for request {RequestNumber}", requestNumber);
+            throw;
+        }
+    }
+
+    private string GetDashboardUrl()
     {
         string? requestsSent = _configuration["RequestsSentUrl"];
 
         //todo: config exception
         if (string.IsNullOrEmpty(requestsSent))
         {
+            //todo: use config exception
             throw new InvalidOperationException("RequestsSentUrl not set in config");
         }
 
-        var viewConnectionRequestUrl = new UriBuilder(requestsSent!)
+        return requestsSent;
+    }
+
+    private async Task SendProfessionalNotificationEmails(
+        string emailAddress, string serviceName, int requestNumber, string dashboardUrl)
+    {
+        string? professionalSentRequestTemplateId = _configuration["Notification:TemplateIds:ProfessionalSentRequest"];
+        if (string.IsNullOrEmpty(professionalSentRequestTemplateId))
         {
-            Path = "VcsRequestForSupport/Request",
+            //todo: use config exception
+            throw new InvalidOperationException("Notification:TemplateIds:ProfessionalSentRequest not set in config");
+        }
+
+        var viewConnectionRequestUrl = new UriBuilder(dashboardUrl)
+        {
+            Path = "La/RequestDetails",
+            Query = $"referralId={requestNumber}"
+        }.Uri;
+
+        var emailTokens = new Dictionary<string, string>
+        {
+            { "RequestNumber", requestNumber.ToString("X6") },
+            { "ServiceName", serviceName },
+            { "ViewConnectionRequestUrl", viewConnectionRequestUrl.ToString()}
+        };
+
+        await _notifications.SendEmailsAsync(
+            new List<string> { emailAddress }, professionalSentRequestTemplateId, emailTokens);
+    }
+
+    private async Task SendVcsNotificationEmails(
+        IEnumerable<string> vcsEmailAddresses,
+        int requestNumber,
+        string serviceName,
+        string dashboardUrl)
+    {
+        var viewConnectionRequestUrl = new UriBuilder(dashboardUrl)
+        {
+            Path = "Vcs/RequestDetails",
             Query = $"referralId={requestNumber}"
         }.Uri;
 
@@ -148,10 +199,11 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         string? vcsNewRequestTemplateId = _configuration["Notification:TemplateIds:VcsNewRequest"];
         if (string.IsNullOrEmpty(vcsNewRequestTemplateId))
         {
+            //todo: use config exception
             throw new InvalidOperationException("Notification:TemplateIds:VcsNewRequest not set in config");
         }
 
-        await _notifications.SendEmailAsync(vcsEmailAddress, vcsNewRequestTemplateId, emailTokens);
+        await _notifications.SendEmailsAsync(vcsEmailAddresses, vcsNewRequestTemplateId, emailTokens);
     }
 
     private static ReferralDto CreateReferralDto(

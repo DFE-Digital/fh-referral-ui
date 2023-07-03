@@ -19,8 +19,8 @@ public class NotificationsApi : INotifications //todo: , IHealthCheckUrlGroup
         _httpClientFactory = httpClientFactory;
     }
 
-    public async Task SendEmailAsync(
-        string emailAddress, 
+    public async Task SendEmailsAsync(
+        IEnumerable<string> emailAddresses, 
         string templateId, 
         IDictionary<string, string> tokens, 
         CancellationToken cancellationToken = default)
@@ -32,7 +32,8 @@ public class NotificationsApi : INotifications //todo: , IHealthCheckUrlGroup
 
         var message = new MessageDto
         {
-            RecipientEmail = emailAddress,
+            ApiKeyType = ApiKeyType.ConnectKey,
+            NotificationEmails = emailAddresses as List<string> ?? emailAddresses.ToList(),
             TemplateId = templateId,
             TemplateTokens = tokenDic
         };
