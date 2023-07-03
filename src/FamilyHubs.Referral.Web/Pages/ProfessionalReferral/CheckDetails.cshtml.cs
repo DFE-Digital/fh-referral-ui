@@ -7,6 +7,8 @@ using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Extensions;
 using FamilyHubs.SharedKernel.Identity.Models;
 using Microsoft.AspNetCore.Mvc;
+using SharedOrganisationDto = FamilyHubs.ServiceDirectory.Shared.Dto.OrganisationDto;
+using ReferralOrganisationDto = FamilyHubs.ReferralService.Shared.Dto.OrganisationDto;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -83,7 +85,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     {
         //todo: this throws an ArgumentNullException if the service is not found. it should return null (from a 404 from the api)
         ServiceDto service = await _organisationClientService.GetLocalOfferById(model.ServiceId!);
-        OrganisationDto? organisation = await _organisationClientService.GetOrganisationDtobyIdAsync(service.OrganisationId);
+        var organisation = await _organisationClientService.GetOrganisationDtobyIdAsync(service.OrganisationId);
 
         if (organisation == null)
         {
@@ -101,9 +103,8 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     private static ReferralDto CreateReferralDto(
         ConnectionRequestModel model,
         FamilyHubsUser user,
-        //Claim? team,
         ServiceDto service,
-        OrganisationDto organisation)
+        SharedOrganisationDto organisation)
     {
         var contact = service.GetContact();
 
@@ -126,7 +127,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
                 County = model.County,
                 PostCode = model.Postcode
             },
-            ReferrerDto = new ReferrerDto
+            ReferrerDto = new ReferralUserAccountDto()
             {
                 Id = long.Parse(user.AccountId),
                 EmailAddress = user.Email,
@@ -140,7 +141,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
                 Name = service.Name,
                 Description = service.Description,
                 Url = serviceWebsite,
-                ReferralOrganisationDto = new ReferralOrganisationDto
+                OrganisationDto = new ReferralOrganisationDto
                 {
                     Id = organisation.Id,
                     Name = organisation.Name,

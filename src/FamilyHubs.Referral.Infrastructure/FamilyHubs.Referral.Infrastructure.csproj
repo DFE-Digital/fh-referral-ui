@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="1.0.66-alpha" />
+	  <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="1.1.0" />
 	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.4.0.72892">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
