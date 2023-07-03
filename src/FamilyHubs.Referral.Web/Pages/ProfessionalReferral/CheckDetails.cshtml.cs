@@ -97,6 +97,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         return int.Parse(referralIdBase10);
     }
 
+    //todo: common TrySend
     private async Task TrySendVcsNotificationEmails(
         IEnumerable<string> emailAddresses,
         string serviceName,
@@ -113,7 +114,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         {
             //todo: add callback to API, so that we can flag invalid emails/unsent emails
             //todo: as we silently chomp any exceptions, should we just fire and forget?
-            await SendVcsNotificationEmails(emailAddresses, requestNumber, serviceName, dashboardUrl);
+            await SendNotificationEmails(emailAddresses, NotificationType.Vcs, requestNumber, serviceName, dashboardUrl);
         }
         catch (Exception e)
         {
@@ -127,7 +128,8 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     {
         try
         {
-            await SendProfessionalNotificationEmails(emailAddress, serviceName, requestNumber, dashboardUrl);
+            await SendNotificationEmails(new List<string> { emailAddress },
+                NotificationType.La, requestNumber, serviceName, dashboardUrl);
         }
         catch (Exception e)
         {
@@ -150,42 +152,23 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         return requestsSent;
     }
 
-    private async Task SendProfessionalNotificationEmails(
-        string emailAddress, string serviceName, int requestNumber, string dashboardUrl)
+    public enum NotificationType
     {
-        string? professionalSentRequestTemplateId = _configuration["Notification:TemplateIds:ProfessionalSentRequest"];
-        if (string.IsNullOrEmpty(professionalSentRequestTemplateId))
-        {
-            //todo: use config exception
-            throw new InvalidOperationException("Notification:TemplateIds:ProfessionalSentRequest not set in config");
-        }
-
-        var viewConnectionRequestUrl = new UriBuilder(dashboardUrl)
-        {
-            Path = "La/RequestDetails",
-            Query = $"referralId={requestNumber}"
-        }.Uri;
-
-        var emailTokens = new Dictionary<string, string>
-        {
-            { "RequestNumber", requestNumber.ToString("X6") },
-            { "ServiceName", serviceName },
-            { "ViewConnectionRequestUrl", viewConnectionRequestUrl.ToString()}
-        };
-
-        await _notifications.SendEmailsAsync(
-            new List<string> { emailAddress }, professionalSentRequestTemplateId, emailTokens);
+        La,
+        Vcs
     }
 
-    private async Task SendVcsNotificationEmails(
+    //todo: can be generic, pass la/vcs & template id
+    private async Task SendNotificationEmails(
         IEnumerable<string> vcsEmailAddresses,
+        NotificationType notificationType,
         int requestNumber,
         string serviceName,
         string dashboardUrl)
     {
         var viewConnectionRequestUrl = new UriBuilder(dashboardUrl)
         {
-            Path = "Vcs/RequestDetails",
+            Path = $"{notificationType}/RequestDetails",
             Query = $"referralId={requestNumber}"
         }.Uri;
 
@@ -196,14 +179,21 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
             { "ViewConnectionRequestUrl", viewConnectionRequestUrl.ToString()}
         };
 
-        string? vcsNewRequestTemplateId = _configuration["Notification:TemplateIds:VcsNewRequest"];
-        if (string.IsNullOrEmpty(vcsNewRequestTemplateId))
+        string templateName = notificationType switch
+        {
+            NotificationType.La => "ProfessionalSentRequest",
+            NotificationType.Vcs => "VcsNewRequest",
+            _ => throw new ArgumentOutOfRangeException(nameof(notificationType), notificationType, null)
+        };
+
+        string? templateId = _configuration[$"Notification:TemplateIds:{templateName}"];
+        if (string.IsNullOrEmpty(templateId))
         {
             //todo: use config exception
-            throw new InvalidOperationException("Notification:TemplateIds:VcsNewRequest not set in config");
+            throw new InvalidOperationException($"Notification:TemplateIds:{templateName} not set in config");
         }
 
-        await _notifications.SendEmailsAsync(vcsEmailAddresses, vcsNewRequestTemplateId, emailTokens);
+        await _notifications.SendEmailsAsync(vcsEmailAddresses, templateId, emailTokens);
     }
 
     private static ReferralDto CreateReferralDto(
