@@ -57,10 +57,12 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         //todo: this throws an ArgumentNullException if the service is not found. it should return null (from a 404 from the api)
         var service = await _organisationClientService.GetLocalOfferById(model.ServiceId!);
 
-        string requestNumber = await CreateConnectionRequest(service, model);
+        int requestNumber = await CreateConnectionRequest(service, model);
 
-        await TrySendVcsNotificationEmails(service, requestNumber);
+        //todo: will need to get vcs org's emails from idams and pass through
+        await TrySendVcsNotificationEmails(Enumerable.Empty<string>(), service.Name, requestNumber);
 
+        //todo: need to send the non-hex version
         return RedirectToPage("/ProfessionalReferral/Confirmation", new { requestNumber });
     }
 
@@ -75,9 +77,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         return organisation;
     }
 
-    private async Task<string> CreateConnectionRequest(
-        ServiceDto service,
-        ConnectionRequestModel model)
+    private async Task<int> CreateConnectionRequest(ServiceDto service, ConnectionRequestModel model)
     {
         var organisation = await GetOrganisation(service);
 
@@ -89,39 +89,39 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         string referralIdBase10 = await _referralClientService.CreateReferral(referralDto);
 
         //todo: do this in API?
-        return int.Parse(referralIdBase10).ToString("X6");
+        return int.Parse(referralIdBase10); //.ToString("X6");
     }
 
-    private async Task TrySendVcsNotificationEmails(ServiceDto service, string requestNumber)
+    private async Task TrySendVcsNotificationEmails(
+        IEnumerable<string> emailAddresses,
+        string serviceName,
+        int requestNumber)
     {
-        var serviceEmail = service.Contacts
-            .Where(c => !string.IsNullOrEmpty(c.Email))
-            .Select(c => c.Email!);
-        if (!serviceEmail.Any())
+        if (!emailAddresses.Any())
         {
-            _logger.LogWarning("Service {ServiceId} has no email addresses. Unable to send VcsNewRequest email for request {RequestNumber}", service.Id, requestNumber);
+            _logger.LogWarning("VCS organisation has no email addresses. Unable to send VcsNewRequest email for request {RequestNumber}", requestNumber);
+            return;
         }
-        else
+
+        try
         {
-            try
-            {
-                //todo: would be better if the API accepted multiple emails
-                //todo: add callback to API, so that we can flag invalid emails/unsent emails
-                var sendEmailTasks = serviceEmail.Select(email =>
-                    SendVcsNotificationEmail(email, requestNumber, service.Name));
-                await Task.WhenAll(sendEmailTasks);
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning(e, "Unable to send VcsNewRequest email(s) for request {RequestNumber}", requestNumber);
-                throw;
-            }
+            //todo: would be better if the API accepted multiple emails
+            //todo: add callback to API, so that we can flag invalid emails/unsent emails
+            var sendEmailTasks = emailAddresses.Select(email =>
+                SendVcsNotificationEmail(email, requestNumber, serviceName));
+            //todo: as we silently chomp any exceptions, should we just fire and forget?
+            await Task.WhenAll(sendEmailTasks);
+        }
+        catch (Exception e)
+        {
+            _logger.LogWarning(e, "Unable to send VcsNewRequest email(s) for request {RequestNumber}", requestNumber);
+            throw;
         }
     }
 
     private async Task SendVcsNotificationEmail(
         string vcsEmailAddress,
-        string requestNumber,
+        int requestNumber,
         string serviceName)
     {
         string? requestsSent = _configuration["RequestsSentUrl"];
@@ -140,7 +140,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         var emailTokens = new Dictionary<string, string>
         {
-            { "RequestNumber", requestNumber },
+            { "RequestNumber", requestNumber.ToString("X6") },
             { "ServiceName", serviceName },
             { "ViewConnectionRequestUrl", viewConnectionRequestUrl.ToString()}
         };
