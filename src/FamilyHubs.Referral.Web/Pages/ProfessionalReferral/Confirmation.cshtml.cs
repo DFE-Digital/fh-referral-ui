@@ -18,10 +18,10 @@ public class ConfirmationModel : PageModel, IFamilyHubsHeader
 
     public int RequestNumber { get; set; }
 
-    public void OnGet(int requestNumber)
+    public async Task OnGetAsync(int requestNumber)
     {
         var professionalUser = HttpContext.GetFamilyHubsUser();
-        _connectionRequestCache.RemoveAsync(professionalUser.Email);
+        await _connectionRequestCache.RemoveAsync(professionalUser.Email);
 
         RequestNumber = requestNumber;
     }

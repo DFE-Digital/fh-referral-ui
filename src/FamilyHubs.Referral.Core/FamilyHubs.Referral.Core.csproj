@@ -10,6 +10,8 @@
 	  <PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.0.9" />
 	  <PackageReference Include="libphonenumber-csharp" Version="8.13.14" />
     <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="2.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="7.0.5" />
+    <PackageReference Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="9.4.0.72892">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

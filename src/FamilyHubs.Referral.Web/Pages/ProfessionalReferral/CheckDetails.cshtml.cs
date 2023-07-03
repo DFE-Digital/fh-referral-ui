@@ -7,6 +7,8 @@ using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Extensions;
 using FamilyHubs.SharedKernel.Identity.Models;
 using Microsoft.AspNetCore.Mvc;
+using FamilyHubs.Referral.Core.Notifications;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using SharedOrganisationDto = FamilyHubs.ServiceDirectory.Shared.Dto.OrganisationDto;
 using ReferralOrganisationDto = FamilyHubs.ReferralService.Shared.Dto.OrganisationDto;
 
@@ -16,15 +18,24 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 {
     private readonly IOrganisationClientService _organisationClientService;
     private readonly IReferralClientService _referralClientService;
+    private readonly INotifications _notifications;
+    private readonly IConfiguration _configuration;
+    private readonly ILogger<CheckDetailsModel> _logger;
 
     public CheckDetailsModel(
         IConnectionRequestDistributedCache connectionRequestCache,
         IOrganisationClientService organisationClientService,
-        IReferralClientService referralClientService)
+        IReferralClientService referralClientService,
+        INotifications notifications,
+        IConfiguration configuration,
+        ILogger<CheckDetailsModel> logger)
         : base(ConnectJourneyPage.CheckDetails, connectionRequestCache)
     {
         _organisationClientService = organisationClientService;
         _referralClientService = referralClientService;
+        _notifications = notifications;
+        _configuration = configuration;
+        _logger = logger;
     }
 
     protected override async Task OnGetWithModelAsync(ConnectionRequestModel model)
@@ -32,72 +43,119 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         // do this now, so we don't display any previously entered contact details that are no longer selected
         // but don't remove them from the cache yet, in case the user goes back to change the contact details
         // we'll remove them from the cache when the user submits the form
-        RemoveNonSelectedContactDetails(model);
+        model.RemoveNonSelectedContactDetails();
 
         // if the user has gone to change details, errored on the page, then clicked back to here, we need to clear the error state, so that if they go back to the same details page it won't be errored
         model.ErrorState = null;
         await ConnectionRequestCache.SetAsync(ProfessionalUser.Email, model);
     }
 
-    private static void RemoveNonSelectedContactDetails(ConnectionRequestModel model)
-    {
-        // remove any previously entered contact details that are no longer selected
-        //todo: can we do this generically?
-        if (!model.ContactMethodsSelected[(int) ConnectContactDetailsJourneyPage.Email])
-        {
-            model.EmailAddress = null;
-        }
-
-        if (!model.ContactMethodsSelected[(int) ConnectContactDetailsJourneyPage.Telephone])
-        {
-            model.TelephoneNumber = null;
-        }
-
-        if (!model.ContactMethodsSelected[(int) ConnectContactDetailsJourneyPage.Textphone])
-        {
-            model.TextphoneNumber = null;
-        }
-
-        if (!model.ContactMethodsSelected[(int) ConnectContactDetailsJourneyPage.Letter])
-        {
-            model.AddressLine1 = null;
-            model.AddressLine2 = null;
-            model.TownOrCity = null;
-            model.County = null;
-            model.Postcode = null;
-        }
-    }
-
     protected override async Task<IActionResult> OnPostWithModelAsync(ConnectionRequestModel model)
     {
-        RemoveNonSelectedContactDetails(model);
+        // remove any previously entered contact details that are no longer selected
+        model.RemoveNonSelectedContactDetails();
 
-        var requestNumber = await CreateConnectionRequest(model);
+        //todo: this throws an ArgumentNullException if the service is not found. it should return null (from a 404 from the api)
+        var service = await _organisationClientService.GetLocalOfferById(model.ServiceId!);
 
-        return RedirectToPage("/ProfessionalReferral/Confirmation", new
-        {
-            ServiceId,
-            requestNumber
-        });
+        string requestNumber = await CreateConnectionRequest(service, model);
+
+        await TrySendVcsNotificationEmails(service, requestNumber);
+
+        return RedirectToPage("/ProfessionalReferral/Confirmation", new { requestNumber });
     }
 
-    private async Task<string> CreateConnectionRequest(ConnectionRequestModel model)
+    private async Task<OrganisationDto> GetOrganisation(ServiceDto service)
     {
-        //todo: this throws an ArgumentNullException if the service is not found. it should return null (from a 404 from the api)
-        ServiceDto service = await _organisationClientService.GetLocalOfferById(model.ServiceId!);
-        var organisation = await _organisationClientService.GetOrganisationDtobyIdAsync(service.OrganisationId);
+        OrganisationDto? organisation = await _organisationClientService.GetOrganisationDtobyIdAsync(service.OrganisationId);
 
         if (organisation == null)
         {
             //todo: create and throw custom exception
             throw new InvalidOperationException($"Organisation not found for service {service.Id}");
-        }   
+        }
+        return organisation;
+    }
+
+    private async Task<string> CreateConnectionRequest(
+        ServiceDto service,
+        ConnectionRequestModel model)
+    {
+        var organisation = await GetOrganisation(service);
+
+        //todo: should we check if the organisation is a VCFS organisation?
+        //organisation.OrganisationType == OrganisationType.VCFS
 
         //var team = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Team");
 
         var referralDto = CreateReferralDto(model, ProfessionalUser, /*team,*/ service, organisation);
 
-        return await _referralClientService.CreateReferral(referralDto);
+        string referralIdBase10 = await _referralClientService.CreateReferral(referralDto);
+
+        //todo: do this in API?
+        return int.Parse(referralIdBase10).ToString("X6");
+    }
+
+    private async Task TrySendVcsNotificationEmails(ServiceDto service, string requestNumber)
+    {
+        var serviceEmail = service.Contacts
+            .Where(c => !string.IsNullOrEmpty(c.Email))
+            .Select(c => c.Email!);
+        if (!serviceEmail.Any())
+        {
+            _logger.LogWarning("Service {ServiceId} has no email addresses. Unable to send VcsNewRequest email for request {RequestNumber}", service.Id, requestNumber);
+        }
+        else
+        {
+            try
+            {
+                //todo: would be better if the API accepted multiple emails
+                //todo: add callback to API, so that we can flag invalid emails/unsent emails
+                var sendEmailTasks = serviceEmail.Select(email =>
+                    SendVcsNotificationEmail(email, requestNumber, service.Name));
+                await Task.WhenAll(sendEmailTasks);
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning(e, "Unable to send VcsNewRequest email(s) for request {RequestNumber}", requestNumber);
+                throw;
+            }
+        }
+    }
+
+    private async Task SendVcsNotificationEmail(
+        string vcsEmailAddress,
+        string requestNumber,
+        string serviceName)
+    {
+        string? requestsSent = _configuration["RequestsSentUrl"];
+
+        //todo: config exception
+        if (string.IsNullOrEmpty(requestsSent))
+        {
+            throw new InvalidOperationException("RequestsSentUrl not set in config");
+        }
+
+        var viewConnectionRequestUrl = new UriBuilder(requestsSent!)
+        {
+            Path = "VcsRequestForSupport/Request",
+            Query = $"referralId={requestNumber}"
+        }.Uri;
+
+        var emailTokens = new Dictionary<string, string>
+        {
+            { "RequestNumber", requestNumber },
+            { "ServiceName", serviceName },
+            { "ViewConnectionRequestUrl", viewConnectionRequestUrl.ToString()}
+        };
+
+        string? vcsNewRequestTemplateId = _configuration["Notification:TemplateIds:VcsNewRequest"];
+        if (string.IsNullOrEmpty(vcsNewRequestTemplateId))
+        {
+            throw new InvalidOperationException("Notification:TemplateIds:VcsNewRequest not set in config");
+        }
+
+        await _notifications.SendEmailAsync(vcsEmailAddress, vcsNewRequestTemplateId, emailTokens);
     }
 
     private static ReferralDto CreateReferralDto(
