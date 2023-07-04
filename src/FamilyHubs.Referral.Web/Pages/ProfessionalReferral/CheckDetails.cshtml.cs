@@ -68,7 +68,6 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         await TrySendProfessionalNotificationEmails(
             ProfessionalUser.Email, service.Name, requestNumber, dashboardUrl);
 
-        //todo: need to send the non-hex version
         return RedirectToPage("/ProfessionalReferral/Confirmation", new { requestNumber });
     }
 
@@ -117,7 +116,6 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         catch (Exception e)
         {
             _logger.LogWarning(e, "Unable to send VcsNewRequest email(s) for request {RequestNumber}", requestNumber);
-            throw;
         }
     }
 
@@ -132,7 +130,6 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         catch (Exception e)
         {
             _logger.LogWarning(e, "Unable to send ProfessionalSentRequest email for request {RequestNumber}", requestNumber);
-            throw;
         }
     }
 
