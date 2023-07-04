@@ -1,10 +1,13 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Core.Notifications;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
@@ -15,17 +18,36 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
 
     public Mock<IOrganisationClientService> OrganisationClientService;
     public Mock<IReferralClientService> ReferralClientService;
+    public Mock<INotifications> Notifications;
+    public Mock<IConfiguration> Configuration;
+    public Mock<ILogger<CheckDetailsModel>> Logger;
+
+    public const string VcsNewRequestTemplateId = "123";
+    public const string ProfessionalSentRequestTemplateId = "456";
 
     public WhenUsingCheckDetails()
     {
         OrganisationClientService = new Mock<IOrganisationClientService>();
         ReferralClientService = new Mock<IReferralClientService>();
+        Notifications = new Mock<INotifications>();
+        Configuration = new Mock<IConfiguration>();
+        Logger = new Mock<ILogger<CheckDetailsModel>>();
 
-        CheckDetailsModel = new CheckDetailsModel(ReferralDistributedCache.Object, OrganisationClientService.Object, ReferralClientService.Object);
-        CheckDetailsModel.PageContext = GetPageContextWithUserClaims();
+        Configuration.Setup(x => x["RequestsSentUrl"]).Returns("https://example.com");
+        Configuration.Setup(x => x["Notification:TemplateIds:VcsNewRequest"]).Returns(VcsNewRequestTemplateId);
+        Configuration.Setup(x => x["Notification:TemplateIds:ProfessionalSentRequest"]).Returns(ProfessionalSentRequestTemplateId);
+
+        CheckDetailsModel = new CheckDetailsModel(
+            ReferralDistributedCache.Object,
+            OrganisationClientService.Object,
+            ReferralClientService.Object,
+            Notifications.Object,
+            Configuration.Object,
+            Logger.Object)
+        {
+            PageContext = GetPageContextWithUserClaims()
+        };
     }
-
-    
 
     [Fact]
     public async Task EmailOptionNotSelected_EmailIsRemoved()
@@ -132,5 +154,85 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
 
         result.Should().NotBeNull();
         result!.PageName.Should().Be("/ProfessionalReferral/Confirmation");
+    }
+
+    [Fact]
+    public async Task OnPostAsync_ThenNotificationIsSent()
+    {
+        OrganisationClientService
+            .Setup(x => x.GetLocalOfferById(It.IsAny<string>()))
+            .ReturnsAsync(new ServiceDto
+            {
+                Id = 1,
+                Name = "Test Service",
+                Description = "Service Description",
+                // other required properties
+                ServiceOwnerReferenceId = "",
+                ServiceType = ServiceType.InformationSharing
+            });
+
+        OrganisationClientService
+            .Setup(x => x.GetOrganisationDtobyIdAsync(It.IsAny<long>()))
+            .ReturnsAsync(new OrganisationDto
+            {
+                Id = 1,
+                Name = "Test Organisation",
+                Description = "Organisation Description",
+                // other required properties
+                OrganisationType = OrganisationType.VCFS,
+                AdminAreaCode = ""
+            });
+
+        await CheckDetailsModel.OnPostAsync("1");
+
+        Notifications.Verify(x =>
+                x.SendEmailsAsync(
+                    new List<string> {ProfessionalEmail},
+                    ProfessionalSentRequestTemplateId,
+                    It.IsAny<IDictionary<string, string>>(),
+                    It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Theory]
+    [InlineData("https://example.com")]
+    [InlineData("https://example.com/")]
+    public async Task OnPostAsync_HandlesRequestSentUrlWithAndWithoutTrailingSlash(string requestSentUrl)
+    {
+        Configuration.Setup(x => x["RequestsSentUrl"]).Returns(requestSentUrl);
+
+        OrganisationClientService
+            .Setup(x => x.GetLocalOfferById(It.IsAny<string>()))
+            .ReturnsAsync(new ServiceDto
+            {
+                Id = 1,
+                Name = "Test Service",
+                Description = "Service Description",
+                // other required properties
+                ServiceOwnerReferenceId = "",
+                ServiceType = ServiceType.InformationSharing
+            });
+
+        OrganisationClientService
+            .Setup(x => x.GetOrganisationDtobyIdAsync(It.IsAny<long>()))
+            .ReturnsAsync(new OrganisationDto
+            {
+                Id = 1,
+                Name = "Test Organisation",
+                Description = "Organisation Description",
+                // other required properties
+                OrganisationType = OrganisationType.VCFS,
+                AdminAreaCode = ""
+            });
+
+        await CheckDetailsModel.OnPostAsync("1");
+
+        Notifications.Verify(x => 
+            x.SendEmailsAsync(
+                new List<string>{ ProfessionalEmail },
+                ProfessionalSentRequestTemplateId,
+                It.IsAny<IDictionary<string, string>>(),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 }

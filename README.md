@@ -61,4 +61,22 @@ To debug the JavaScript in Visual Studio, set breakpoints in the JavaScript file
 
 * sign-in expiry (cookie expires with session, but no session)
 
-* add prg to telephone, text & letter
+* add prg to telephone, text & letter & switch to standard ErrorState
+
+* add site url helper to shared razor config, so available in views. something like...
+ SiteUrl.Get(int siteId, relativeUrl)
+config
+{		
+"SiteUrls": [
+	{
+		"SiteId": 1,
+		"Url": "https://localhost:5001"
+	},
+	{
+		"SiteId": 2,
+		"Url": "https://localhost:5002"
+	}
+]
+}
+
+* change ErrorId to static const class with const ints? 
