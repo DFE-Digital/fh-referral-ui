@@ -195,10 +195,10 @@
                     How the service can contact you
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    @Model.ProfessionalUser.Email
+                    <p>Email: @Model.ProfessionalUser.Email</p>
                     @if (Model.ConnectionRequestModel.ReferrerTelephone != null)
                     {
-                        <p>@Model.ConnectionRequestModel.ReferrerTelephone</p>
+                        <p>Telephone: @Model.ConnectionRequestModel.ReferrerTelephone</p>
                     }
                 </dd>
                 <dd class="govuk-summary-list__actions">
