@@ -1,6 +1,6 @@
-﻿using FamilyHubs.Referral.Core.ApiClients;
+﻿using FamilyHubs.Notification.Api.Client;
+using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.Models;
-using FamilyHubs.Referral.Core.Notifications;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
