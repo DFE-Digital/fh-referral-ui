@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Serilog.Events;
 using System.Diagnostics.CodeAnalysis;
-using FamilyHubs.Referral.Infrastructure.Notifications.Extensions;
+using FamilyHubs.Notification.Api.Client.Extensions;
 
 namespace FamilyHubs.Referral.Web;
 
