@@ -218,13 +218,28 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
                 County = model.County,
                 PostCode = model.Postcode
             },
-            ReferrerDto = new ReferralUserAccountDto()
+            ReferralUserAccountDto = new UserAccountDto
             {
                 Id = long.Parse(user.AccountId),
                 EmailAddress = user.Email,
                 Name = user.FullName,
                 PhoneNumber = user.PhoneNumber,
-                Role = user.Role
+                //todo: this would be better (less leaky and simpler)...
+                //Role = user.Role,
+                UserAccountRoles = new List<UserAccountRoleDto>
+                {
+                    new()
+                    {
+                        UserAccount = new UserAccountDto
+                        {
+                            EmailAddress = user.Email,
+                        },
+                        Role = new RoleDto
+                        {
+                            Name = user.Role
+                        }
+                    }
+                }
             },
             ReferralServiceDto = new ReferralServiceDto
             {
