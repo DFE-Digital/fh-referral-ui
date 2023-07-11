@@ -16,6 +16,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class CheckDetailsModel : ProfessionalReferralCacheModel
 {
     private readonly IOrganisationClientService _organisationClientService;
+    private readonly IIdamsClient _idamsClient;
     private readonly IReferralClientService _referralClientService;
     private readonly INotifications _notifications;
     private readonly IConfiguration _configuration;
@@ -24,6 +25,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     public CheckDetailsModel(
         IConnectionRequestDistributedCache connectionRequestCache,
         IOrganisationClientService organisationClientService,
+        IIdamsClient idamsClient,
         IReferralClientService referralClientService,
         INotifications notifications,
         IConfiguration configuration,
@@ -31,6 +33,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         : base(ConnectJourneyPage.CheckDetails, connectionRequestCache)
     {
         _organisationClientService = organisationClientService;
+        _idamsClient = idamsClient;
         _referralClientService = referralClientService;
         _notifications = notifications;
         _configuration = configuration;
@@ -61,9 +64,8 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         string dashboardUrl = GetDashboardUrl();
 
-        //todo: will need to get vcs org's emails from idams and pass through
         await TrySendVcsNotificationEmails(
-            Enumerable.Empty<string>(), service.Name, requestNumber, dashboardUrl);
+            service.OrganisationId, service.Name, requestNumber, dashboardUrl);
 
         await TrySendProfessionalNotificationEmails(
             ProfessionalUser.Email, service.Name, requestNumber, dashboardUrl);
@@ -94,13 +96,13 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         return await _referralClientService.CreateReferral(referralDto);
     }
 
-    //todo: common TrySend
     private async Task TrySendVcsNotificationEmails(
-        IEnumerable<string> emailAddresses,
+        long organisationId,
         string serviceName,
         int requestNumber,
         string dashboardUrl)
     {
+        var emailAddresses = await _idamsClient.GetVcsProfessionalsEmailsAsync(organisationId);
         if (!emailAddresses.Any())
         {
             _logger.LogWarning("VCS organisation has no email addresses. Unable to send VcsNewRequest email for request {RequestNumber}", requestNumber);

@@ -59,6 +59,7 @@ public static class StartupExtensions
         services.AddHttpContextAccessor();
 
         services.AddNotificationsApiClient(configuration);
+        services.AddIdamsClient(configuration);
 
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);

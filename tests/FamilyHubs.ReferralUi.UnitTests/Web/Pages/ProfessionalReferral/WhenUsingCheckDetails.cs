@@ -17,6 +17,7 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
     public CheckDetailsModel CheckDetailsModel { get; set; }
 
     public Mock<IOrganisationClientService> OrganisationClientService;
+    public Mock<IIdamsClient> IdamsClient;
     public Mock<IReferralClientService> ReferralClientService;
     public Mock<INotifications> Notifications;
     public Mock<IConfiguration> Configuration;
@@ -28,6 +29,7 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
     public WhenUsingCheckDetails()
     {
         OrganisationClientService = new Mock<IOrganisationClientService>();
+        IdamsClient = new Mock<IIdamsClient>();
         ReferralClientService = new Mock<IReferralClientService>();
         Notifications = new Mock<INotifications>();
         Configuration = new Mock<IConfiguration>();
@@ -40,6 +42,7 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
         CheckDetailsModel = new CheckDetailsModel(
             ReferralDistributedCache.Object,
             OrganisationClientService.Object,
+            IdamsClient.Object,
             ReferralClientService.Object,
             Notifications.Object,
             Configuration.Object,
