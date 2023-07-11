@@ -1,7 +1,6 @@
 ﻿using System.Net.Http.Json;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.SharedKernel.Security;
-using System.Net.Http.Json;
 
 namespace FamilyHubs.Referral.Core.ApiClients;
 
