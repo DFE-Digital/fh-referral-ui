@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Json;
-using System.Text;
 using FamilyHubs.ReferralService.Shared.Dto;
 
 namespace FamilyHubs.Referral.Core.ApiClients;
