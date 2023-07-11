@@ -10,7 +10,8 @@ using Serilog.Events;
 using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.Notification.Api.Client.Extensions;
 using FamilyHubs.Notification.Api.Client.Templates;
-using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
+using FamilyHubs.Referral.Core;
+using FamilyHubs.Referral.Infrastructure.Notifications;
 
 namespace FamilyHubs.Referral.Web;
 
@@ -62,6 +63,7 @@ public static class StartupExtensions
 
         services.AddNotificationsApiClient(configuration);
         services.AddSingleton<INotificationTemplates<NotificationType>, NotificationTemplates<NotificationType>>();
+        services.AddTransient<IReferralNotificationService, ReferralNotificationService>();
 
         services.AddIdamsClient(configuration);
 
