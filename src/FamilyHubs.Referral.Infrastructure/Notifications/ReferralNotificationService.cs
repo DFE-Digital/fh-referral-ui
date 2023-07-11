@@ -109,9 +109,13 @@ public class ReferralNotificationService : IReferralNotificationService
         string serviceName,
         string dashboardUrl)
     {
+        string path = notificationType == NotificationType.ProfessionalSentRequest
+            ? "La"
+            : "Vcs";
+
         var viewConnectionRequestUrl = new UriBuilder(dashboardUrl)
         {
-            Path = $"{notificationType}/RequestDetails",
+            Path = $"{path}/RequestDetails",
             Query = $"id={requestNumber}"
         }.Uri;
 
