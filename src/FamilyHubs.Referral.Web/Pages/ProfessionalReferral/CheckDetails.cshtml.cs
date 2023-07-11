@@ -1,4 +1,4 @@
-using FamilyHubs.Notification.Api.Client;
+using FamilyHubs.Referral.Core;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
@@ -17,24 +17,18 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 {
     private readonly IOrganisationClientService _organisationClientService;
     private readonly IReferralClientService _referralClientService;
-    private readonly INotifications _notifications;
-    private readonly IConfiguration _configuration;
-    private readonly ILogger<CheckDetailsModel> _logger;
+    private readonly IReferralNotificationService _referralNotificationService;
 
     public CheckDetailsModel(
         IConnectionRequestDistributedCache connectionRequestCache,
         IOrganisationClientService organisationClientService,
         IReferralClientService referralClientService,
-        INotifications notifications,
-        IConfiguration configuration,
-        ILogger<CheckDetailsModel> logger)
+        IReferralNotificationService referralNotificationService)
         : base(ConnectJourneyPage.CheckDetails, connectionRequestCache)
     {
         _organisationClientService = organisationClientService;
         _referralClientService = referralClientService;
-        _notifications = notifications;
-        _configuration = configuration;
-        _logger = logger;
+        _referralNotificationService = referralNotificationService;
     }
 
     protected override async Task OnGetWithModelAsync(ConnectionRequestModel model)
@@ -59,14 +53,8 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         int requestNumber = await CreateConnectionRequest(service, model);
 
-        string dashboardUrl = GetDashboardUrl();
-
-        //todo: will need to get vcs org's emails from idams and pass through
-        await TrySendVcsNotificationEmails(
-            Enumerable.Empty<string>(), service.Name, requestNumber, dashboardUrl);
-
-        await TrySendProfessionalNotificationEmails(
-            ProfessionalUser.Email, service.Name, requestNumber, dashboardUrl);
+        await _referralNotificationService.OnCreateReferral(
+            ProfessionalUser.Email, service.OrganisationId, service.Name, requestNumber);
 
         return RedirectToPage("/ProfessionalReferral/Confirmation", new { requestNumber });
     }
@@ -92,103 +80,6 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         var referralDto = CreateReferralDto(model, ProfessionalUser, service, organisation);
 
         return await _referralClientService.CreateReferral(referralDto);
-    }
-
-    //todo: common TrySend
-    private async Task TrySendVcsNotificationEmails(
-        IEnumerable<string> emailAddresses,
-        string serviceName,
-        int requestNumber,
-        string dashboardUrl)
-    {
-        if (!emailAddresses.Any())
-        {
-            _logger.LogWarning("VCS organisation has no email addresses. Unable to send VcsNewRequest email for request {RequestNumber}", requestNumber);
-            return;
-        }
-
-        try
-        {
-            //todo: add callback to API, so that we can flag invalid emails/unsent emails
-            //todo: as we silently chomp any exceptions, should we just fire and forget?
-            await SendNotificationEmails(emailAddresses, NotificationType.Vcs, requestNumber, serviceName, dashboardUrl);
-        }
-        catch (Exception e)
-        {
-            _logger.LogWarning(e, "Unable to send VcsNewRequest email(s) for request {RequestNumber}", requestNumber);
-        }
-    }
-
-    private async Task TrySendProfessionalNotificationEmails(
-        string emailAddress, string serviceName, int requestNumber, string dashboardUrl)
-    {
-        try
-        {
-            await SendNotificationEmails(new List<string> { emailAddress },
-                NotificationType.La, requestNumber, serviceName, dashboardUrl);
-        }
-        catch (Exception e)
-        {
-            _logger.LogWarning(e, "Unable to send ProfessionalSentRequest email for request {RequestNumber}", requestNumber);
-        }
-    }
-
-    private string GetDashboardUrl()
-    {
-        string? requestsSent = _configuration["RequestsSentUrl"];
-
-        //todo: config exception
-        if (string.IsNullOrEmpty(requestsSent))
-        {
-            //todo: use config exception
-            throw new InvalidOperationException("RequestsSentUrl not set in config");
-        }
-
-        return requestsSent;
-    }
-
-    public enum NotificationType
-    {
-        La,
-        Vcs
-    }
-
-    //todo: can be generic, pass la/vcs & template id
-    private async Task SendNotificationEmails(
-        IEnumerable<string> vcsEmailAddresses,
-        NotificationType notificationType,
-        int requestNumber,
-        string serviceName,
-        string dashboardUrl)
-    {
-        var viewConnectionRequestUrl = new UriBuilder(dashboardUrl)
-        {
-            Path = $"{notificationType}/RequestDetails",
-            Query = $"id={requestNumber}"
-        }.Uri;
-
-        var emailTokens = new Dictionary<string, string>
-        {
-            { "RequestNumber", requestNumber.ToString("X6") },
-            { "ServiceName", serviceName },
-            { "ViewConnectionRequestUrl", viewConnectionRequestUrl.ToString()}
-        };
-
-        string templateName = notificationType switch
-        {
-            NotificationType.La => "ProfessionalSentRequest",
-            NotificationType.Vcs => "VcsNewRequest",
-            _ => throw new ArgumentOutOfRangeException(nameof(notificationType), notificationType, null)
-        };
-
-        string? templateId = _configuration[$"Notification:TemplateIds:{templateName}"];
-        if (string.IsNullOrEmpty(templateId))
-        {
-            //todo: use config exception
-            throw new InvalidOperationException($"Notification:TemplateIds:{templateName} not set in config");
-        }
-
-        await _notifications.SendEmailsAsync(vcsEmailAddresses, templateId, emailTokens);
     }
 
     private static ReferralDto CreateReferralDto(

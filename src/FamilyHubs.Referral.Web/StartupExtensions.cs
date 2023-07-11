@@ -9,6 +9,9 @@ using Serilog;
 using Serilog.Events;
 using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.Notification.Api.Client.Extensions;
+using FamilyHubs.Notification.Api.Client.Templates;
+using FamilyHubs.Referral.Core;
+using FamilyHubs.Referral.Infrastructure.Notifications;
 using FamilyHubs.SharedKernel.Security;
 
 namespace FamilyHubs.Referral.Web;
@@ -62,6 +65,10 @@ public static class StartupExtensions
         services.AddHttpContextAccessor();
 
         services.AddNotificationsApiClient(configuration);
+        services.AddSingleton<INotificationTemplates<NotificationType>, NotificationTemplates<NotificationType>>();
+        services.AddTransient<IReferralNotificationService, ReferralNotificationService>();
+
+        services.AddIdamsClient(configuration);
 
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
