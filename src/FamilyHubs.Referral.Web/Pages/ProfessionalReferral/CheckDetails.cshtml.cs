@@ -1,4 +1,5 @@
 using FamilyHubs.Notification.Api.Client;
+using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
@@ -13,21 +14,30 @@ using ReferralOrganisationDto = FamilyHubs.ReferralService.Shared.Dto.Organisati
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
+public enum NotificationType
+{
+    ProfessionalSentRequest,
+    VcsNewRequest
+}
+
 public class CheckDetailsModel : ProfessionalReferralCacheModel
 {
     private readonly IOrganisationClientService _organisationClientService;
     private readonly IIdamsClient _idamsClient;
     private readonly IReferralClientService _referralClientService;
     private readonly INotifications _notifications;
+    private readonly INotificationTemplates<NotificationType> _notificationTemplates;
     private readonly IConfiguration _configuration;
     private readonly ILogger<CheckDetailsModel> _logger;
 
+    //todo: split out notifications into a separate service?
     public CheckDetailsModel(
         IConnectionRequestDistributedCache connectionRequestCache,
         IOrganisationClientService organisationClientService,
         IIdamsClient idamsClient,
         IReferralClientService referralClientService,
         INotifications notifications,
+        INotificationTemplates<NotificationType> notificationTemplates,
         IConfiguration configuration,
         ILogger<CheckDetailsModel> logger)
         : base(ConnectJourneyPage.CheckDetails, connectionRequestCache)
@@ -36,6 +46,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         _idamsClient = idamsClient;
         _referralClientService = referralClientService;
         _notifications = notifications;
+        _notificationTemplates = notificationTemplates;
         _configuration = configuration;
         _logger = logger;
     }
@@ -113,7 +124,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         {
             //todo: add callback to API, so that we can flag invalid emails/unsent emails
             //todo: as we silently chomp any exceptions, should we just fire and forget?
-            await SendNotificationEmails(emailAddresses, NotificationType.Vcs, requestNumber, serviceName, dashboardUrl);
+            await SendNotificationEmails(emailAddresses, NotificationType.VcsNewRequest, requestNumber, serviceName, dashboardUrl);
         }
         catch (Exception e)
         {
@@ -127,7 +138,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         try
         {
             await SendNotificationEmails(new List<string> { emailAddress },
-                NotificationType.La, requestNumber, serviceName, dashboardUrl);
+                NotificationType.ProfessionalSentRequest, requestNumber, serviceName, dashboardUrl);
         }
         catch (Exception e)
         {
@@ -147,12 +158,6 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         }
 
         return requestsSent;
-    }
-
-    public enum NotificationType
-    {
-        La,
-        Vcs
     }
 
     //todo: can be generic, pass la/vcs & template id
@@ -176,19 +181,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
             { "ViewConnectionRequestUrl", viewConnectionRequestUrl.ToString()}
         };
 
-        string templateName = notificationType switch
-        {
-            NotificationType.La => "ProfessionalSentRequest",
-            NotificationType.Vcs => "VcsNewRequest",
-            _ => throw new ArgumentOutOfRangeException(nameof(notificationType), notificationType, null)
-        };
-
-        string? templateId = _configuration[$"Notification:TemplateIds:{templateName}"];
-        if (string.IsNullOrEmpty(templateId))
-        {
-            //todo: use config exception
-            throw new InvalidOperationException($"Notification:TemplateIds:{templateName} not set in config");
-        }
+        string templateId = _notificationTemplates.GetTemplateId(notificationType);
 
         await _notifications.SendEmailsAsync(vcsEmailAddresses, templateId, emailTokens);
     }

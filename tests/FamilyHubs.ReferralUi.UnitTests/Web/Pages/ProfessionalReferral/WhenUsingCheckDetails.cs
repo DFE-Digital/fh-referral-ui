@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.Notification.Api.Client;
+using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
@@ -20,6 +21,7 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
     public Mock<IIdamsClient> IdamsClient;
     public Mock<IReferralClientService> ReferralClientService;
     public Mock<INotifications> Notifications;
+    public Mock<INotificationTemplates<NotificationType>> NotificationTemplates;
     public Mock<IConfiguration> Configuration;
     public Mock<ILogger<CheckDetailsModel>> Logger;
 
@@ -32,6 +34,7 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
         IdamsClient = new Mock<IIdamsClient>();
         ReferralClientService = new Mock<IReferralClientService>();
         Notifications = new Mock<INotifications>();
+        NotificationTemplates = new Mock<INotificationTemplates<NotificationType>>();
         Configuration = new Mock<IConfiguration>();
         Logger = new Mock<ILogger<CheckDetailsModel>>();
 
@@ -45,6 +48,7 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
             IdamsClient.Object,
             ReferralClientService.Object,
             Notifications.Object,
+            NotificationTemplates.Object,
             Configuration.Object,
             Logger.Object)
         {

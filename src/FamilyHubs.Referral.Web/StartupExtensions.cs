@@ -9,6 +9,8 @@ using Serilog;
 using Serilog.Events;
 using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.Notification.Api.Client.Extensions;
+using FamilyHubs.Notification.Api.Client.Templates;
+using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 namespace FamilyHubs.Referral.Web;
 
@@ -59,6 +61,8 @@ public static class StartupExtensions
         services.AddHttpContextAccessor();
 
         services.AddNotificationsApiClient(configuration);
+        services.AddSingleton<INotificationTemplates<NotificationType>, NotificationTemplates<NotificationType>>();
+
         services.AddIdamsClient(configuration);
 
         // Customise default API behaviour
