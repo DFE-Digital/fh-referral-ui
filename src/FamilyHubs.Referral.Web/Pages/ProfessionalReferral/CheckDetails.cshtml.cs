@@ -19,7 +19,6 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     private readonly IReferralClientService _referralClientService;
     private readonly IReferralNotificationService _referralNotificationService;
 
-    //todo: split out notifications into a separate service?
     public CheckDetailsModel(
         IConnectionRequestDistributedCache connectionRequestCache,
         IOrganisationClientService organisationClientService,
