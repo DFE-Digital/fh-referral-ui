@@ -9,6 +9,7 @@ using Serilog;
 using Serilog.Events;
 using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.Notification.Api.Client.Extensions;
+using FamilyHubs.SharedKernel.Security;
 
 namespace FamilyHubs.Referral.Web;
 
@@ -56,6 +57,8 @@ public static class StartupExtensions
 
     public static void AddWebUiServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddTransient<ICrypto, Crypto>();
+
         services.AddHttpContextAccessor();
 
         services.AddNotificationsApiClient(configuration);
