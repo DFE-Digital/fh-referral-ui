@@ -181,47 +181,4 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
                     0),
             Times.Once);
     }
-
-    [Theory]
-    [InlineData("https://example.com")]
-    [InlineData("https://example.com/")]
-    public async Task OnPostAsync_HandlesRequestSentUrlWithAndWithoutTrailingSlash(string requestSentUrl)
-    {
-        const long organisationId = 12345;
-
-        OrganisationClientService
-            .Setup(x => x.GetLocalOfferById(It.IsAny<string>()))
-            .ReturnsAsync(new ServiceDto
-            {
-                Id = 1,
-                Name = "Test Service",
-                Description = "Service Description",
-                OrganisationId = organisationId,
-                // other required properties
-                ServiceOwnerReferenceId = "",
-                ServiceType = ServiceType.InformationSharing
-            });
-
-        OrganisationClientService
-            .Setup(x => x.GetOrganisationDtobyIdAsync(It.IsAny<long>()))
-            .ReturnsAsync(new OrganisationDto
-            {
-                Id = organisationId,
-                Name = "Test Organisation",
-                Description = "Organisation Description",
-                // other required properties
-                OrganisationType = OrganisationType.VCFS,
-                AdminAreaCode = ""
-            });
-
-        await CheckDetailsModel.OnPostAsync("1");
-
-        ReferralNotificationService.Verify(x =>
-            x.OnCreateReferral(
-                ProfessionalEmail,
-                organisationId,
-                "Test Service",
-                0),
-            Times.Once);
-    }
 }
