@@ -49,11 +49,11 @@ public class IdamsClient : IIdamsClient //todo: , IHealthCheckUrlGroup
             throw new IdamsClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
         }
 
-        //todo: when is null returned? if when empty, return empty list. try changing AccountDto to not match and check
+        // if no accounts found, returns an empty list
         List<AccountDto>? accounts = await response.Content.ReadFromJsonAsync<List<AccountDto>>(cancellationToken: cancellationToken);
         if (accounts == null)
         {
-            throw new IdamsClientException(response, "todo");
+            throw new IdamsClientException(response, "null");
         }
 
         return accounts.Select(a => a.Email);
