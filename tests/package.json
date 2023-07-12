@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/DFE-Digital/fh-referral-ui#readme",
   "dependencies": {
-    "cypress-mochawesome-reporter": "^1.3.0",
+    "cypress-mochawesome-reporter": "^3.2.3",
     "cypress-multi-reporters": "^1.6.2",
     "govuk-frontend": "^4.1.0",
     "junit-report-merger": "^4.0.0",
@@ -31,13 +31,13 @@
     "mocha-junit-reporter": "^2.2.0"
   },
   "devDependencies": {
-    "@badeball/cypress-cucumber-preprocessor": "^18.0.1",
+    "@badeball/cypress-cucumber-preprocessor": "^11.4.0",
     "@cypress/webpack-preprocessor": "^5.12.0",
     "axe-core": "^4.4.2",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
-    "cypress": "^12.17.0",
-    "cypress-axe": "^0.14.0",
+    "cypress": "^10.3.0",
+    "cypress-axe": "^1.0.0",
     "mini-css-extract-plugin": "^2.6.0",
     "sass": "1.32.13",
     "sass-loader": "^13.0.0",
