@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
+using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
@@ -388,5 +389,27 @@ public static class ClientHelper
                 Email = "TestUser2@email.com"
             }
         };
+    }
+
+    public static PostcodesIoResponse FillPostcodesIoResponse(string postcode, string adminArea, double latitude, double longitude, string outCode)
+    {
+        var response = new PostcodesIoResponse
+        {
+            Error = 0,
+            Result = new PostcodeInfo
+            {
+                Postcode = postcode,
+                Latitude = latitude,
+                Longitude = longitude,
+                OutCode = outCode,
+                Codes = new Codes
+                {
+                    AdminCounty = adminArea,
+                    AdminDistrict = "Some Admin District" // Replace with the appropriate value
+                }
+            }
+        };
+
+        return response;
     }
 }

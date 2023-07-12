@@ -4,14 +4,8 @@ using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Core.ApiClients;
 
