@@ -6,21 +6,29 @@ using FamilyHubs.ServiceDirectory.Shared.Enums;
 using Moq;
 using Moq.Protected;
 using System.Net;
+using System.Net.Http;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Core.ApiClients;
 
 public static class ClientHelper
 {
-    public static HttpClient GetMockClient<T>(T content)
+    public static HttpClient GetMockClient<T>(T content, bool badRequest = false)
     {
         ArgumentNullException.ThrowIfNull(content);
         var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+
+        HttpStatusCode httpStatusCode = HttpStatusCode.OK;
+        if (badRequest)
+        {
+            httpStatusCode = HttpStatusCode.BadRequest;
+        }
+
         mockHttpMessageHandler.Protected()
             .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(new HttpResponseMessage
             {
                 Content = new StringContent(content.ToString() ?? string.Empty),
-                StatusCode = HttpStatusCode.OK
+                StatusCode = httpStatusCode,
             });
 
         var client = new HttpClient(mockHttpMessageHandler.Object);

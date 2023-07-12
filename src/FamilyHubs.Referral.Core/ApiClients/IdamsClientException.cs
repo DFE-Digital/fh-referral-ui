@@ -18,7 +18,7 @@ public class IdamsClientException : Exception
         StatusCode = httpResponseMessage.StatusCode;
         ReasonPhrase = httpResponseMessage.ReasonPhrase;
         //todo: when is RequestMessage null?
-        RequestUri = httpResponseMessage.RequestMessage!.RequestUri;
+        RequestUri = httpResponseMessage.RequestMessage?.RequestUri;
         ErrorResponse = errorResponse;
     }
 
