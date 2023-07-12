@@ -12,6 +12,7 @@ using FamilyHubs.Notification.Api.Client.Extensions;
 using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.Referral.Core;
 using FamilyHubs.Referral.Infrastructure.Notifications;
+using FamilyHubs.SharedKernel.Security;
 
 namespace FamilyHubs.Referral.Web;
 
@@ -59,6 +60,8 @@ public static class StartupExtensions
 
     public static void AddWebUiServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddTransient<ICrypto, Crypto>();
+
         services.AddHttpContextAccessor();
 
         services.AddNotificationsApiClient(configuration);
