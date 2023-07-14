@@ -19,7 +19,7 @@ public class WhenUsingReferralClientService
     {
         _referralDto = GetReferralDto();
         _cryptoMock = new Mock<ICrypto>();
-        _cryptoMock.Setup(c => c.EncryptData(It.IsAny<string>())).Returns<string>(s => "encrypted_" + s); 
+        _cryptoMock.Setup(c => c.EncryptData(It.IsAny<string>())).Returns((string s) => Task.FromResult("encrypted_" + s));
     }
 
     [Fact]

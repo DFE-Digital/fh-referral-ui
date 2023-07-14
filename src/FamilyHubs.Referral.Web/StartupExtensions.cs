@@ -60,6 +60,7 @@ public static class StartupExtensions
 
     public static void AddWebUiServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddTransient<IKeyProvider, KeyProvider>();
         services.AddTransient<ICrypto, Crypto>();
 
         services.AddHttpContextAccessor();
