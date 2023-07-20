@@ -1,12 +1,23 @@
-﻿@page "{id:Guid}"
+﻿@page
 @model LocalOfferDetailModel
 @{
     ViewData["Title"] = Model.LocalOffer.Name;
-    ViewData["Description"] = "Description TBC";
 }
 
 @section Back {
-    <a href="@Model.ReturnUrl" class="govuk-back-link" data-testid="back-button">Back</a>
+    @if (!string.IsNullOrEmpty(Model.ReturnUrl) && Model.ReturnUrl.Contains("Safeguarding"))
+    {
+        @* we _could_ store the postcode (and current page) through the journey and take them back to the correct results page *@
+        @* <a asp-page="/ProfessionalReferral/LocalOfferResults" class="govuk-back-link" data-testid="back-button"
+           asp-route-postcode="" asp-route-currentPage="">Back</a>*@
+
+        @* as we don't, send them back to the search page instead *@
+        <a asp-page="/ProfessionalReferral/Search" class="govuk-back-link" data-testid="back-button">Back</a>
+    }
+    else
+    {
+        <a href="@Model.ReturnUrl" class="govuk-back-link" data-testid="back-button">Back</a>
+    }
 }
 
 <div class="govuk-grid-row">
@@ -86,81 +97,86 @@
         <h2 class="govuk-heading-m">More details</h2>
         <p data-testid="description-value">@Model.LocalOffer?.Description</p>
         <h2 class="govuk-heading-m">Connect a family to this service</h2>
+        
+        <dl class="govuk-summary-list">
+            <!-- Contact details -->
+            <!-- Phone-->
+            @if (!string.IsNullOrEmpty(Model.Phone))
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Phone
+                    </dt>
+                    <dd class="govuk-summary-list__value" data-testid="detailsphone">
+                        <a href="tel:@Model.Phone">@Model.Phone</a>
+                    </dd>
+                </div>
+            }
 
-        <!-- Contact details -->
-        <!-- Phone-->
-        @if (!string.IsNullOrEmpty(Model.Phone))
-        {
-            <dl class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Phone
-                </dt>
-                <dd class="govuk-summary-list__value" data-testid="detailsphone">
-                    <a href="tel:@Model.Phone">@Model.Phone</a>
-                </dd>
-            </dl>
-        }
+            <!--Email-->
+            @if (!string.IsNullOrEmpty(Model.Email))
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Email
+                    </dt>
+                    <dd class="govuk-summary-list__value" data-testid="detailsemail">
+                        <a href="mailto:@Model.Email">
+                            @Model.Email
+                        </a>
+                    </dd>
+                </div>
+            }
 
-        <!--Email-->
-        @if (!string.IsNullOrEmpty(Model.Email))
-        {
-            <dl class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Email
-                </dt>
-                <dd class="govuk-summary-list__value" data-testid="detailsemail">
-                    <a href="mailto:@Model.Email">
-                        @Model.Email
-                    </a>
-                </dd>
-            </dl>
-        }
+            <!--Address-->
+            @if (!string.IsNullOrEmpty(Model.PostalCode))
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Address
+                    </dt>
+                    <dd class="govuk-summary-list__value" data-testid="detailsaddress">
+                        @if (!string.IsNullOrEmpty(Model.Address1))
+                        {
+                            @Model.Address1
+                            <br />
+                        }
+                        @if (!string.IsNullOrEmpty(Model.City))
+                        {
+                            @Model.City
+                            <br />
+                        }
+                        @if (!string.IsNullOrEmpty(Model.StateProvince))
+                        {
+                            @Model.StateProvince
+                            <br />
+                        }
+                        @if (!string.IsNullOrEmpty(Model.PostalCode))
+                        {
+                            @Model.PostalCode
+                            <br />
+                        }
+                    </dd>
+                </div>
+            }
 
-        <!--Address-->
-        @if (!string.IsNullOrEmpty(Model.PostalCode))
-        {
-            <dl class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Address
-                </dt>
-                <dd class="govuk-summary-list__value" data-testid="detailsaddress">
-                    @if (!string.IsNullOrEmpty(Model.Address1))
-                    {
-                        @Model.Address1
-                        <br />
-                    }
-                    @if (!string.IsNullOrEmpty(Model.City))
-                    {
-                        @Model.City
-                        <br />
-                    }
-                    @if (!string.IsNullOrEmpty(Model.StateProvince))
-                    {
-                        @Model.StateProvince
-                        <br />
-                    }
-                    @if (!string.IsNullOrEmpty(Model.PostalCode))
-                    {
-                        @Model.PostalCode
-                        <br />
-                    }
-                </dd>
-            </dl>
-        }
+            <!--Website-->
+            @if (!string.IsNullOrEmpty(Model.Website))
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Website
+                    </dt>
+                    <dd class="govuk-summary-list__value" data-testid="detailswebsite">
+                        <a href="@Model.Website">
+                            @Model.Website
+                        </a>
+                    </dd>
+                </div>
+            }
+        </dl>
 
-        <!--Website-->
-        @if (!string.IsNullOrEmpty(Model.Website))
-        {
-            <dl class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Website
-                </dt>
-                <dd class="govuk-summary-list__value" data-testid="detailswebsite">
-                    <a href="@Model.Website">
-                        @Model.Website
-                    </a>
-                </dd>
-            </dl>
-        }
+        <a asp-page="/ProfessionalReferral/Safeguarding" role="button" draggable="false" class="govuk-button" data-module="govuk-button"
+           asp-route-serviceId="@Model.ServiceId">Request a connection</a>
     </div>
 </div>

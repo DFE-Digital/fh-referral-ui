@@ -1,0 +1,324 @@
+{
+  "GovUkOidcConfiguration": {
+    "StubAuthentication": {
+      "StubUsers": [
+        {
+          "User": {
+            "Email": "DfeAdmin@example.com",
+            "Sub": "DfeAdmin@example.com"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "DfeAdmin"
+            },
+            {
+              "Name": "AccountId",
+              "Value": "3"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "-1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Dfe Admin"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1234"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "LaManager@example.com",
+            "Sub": "LaManager@example.com"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "LaManager"
+            },
+            {
+              "Name": "AccountId",
+              "Value": "4"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "La Manager"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1235"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "VcsManager@example.com",
+            "Sub": "VcsManager@example.com"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "VcsManager"
+            },
+            {
+              "Name": "AccountId",
+              "Value": "5"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Vcs Manager"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1236"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "LaProfessional@example.com",
+            "Sub": "LaProfessional@example.com"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "LaProfessional"
+            },
+            {
+              "Name": "AccountId",
+              "Value": "6"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "La Professional"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "VcsProfessional@example.com",
+            "Sub": "VcsProfessional@example.com"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "Vcs Professional"
+            },
+            {
+              "Name": "AccountId",
+              "Value": "7"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Vcs Professional"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "VcsDualRole@example.com",
+            "Sub": "VcsDualRole@example.com"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "VcsDualRole"
+            },
+            {
+              "Name": "AccountId",
+              "Value": "8"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Vcs Dual Role"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "LaDualRole@example.com",
+            "Sub": "LaDualRole@example.com"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "LaDualRole"
+            },
+            {
+              "Name": "AccountId",
+              "Value": "9"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "La Dual Role"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "phil.davies@education.gov.uk",
+            "Sub": "phil.davies@education.gov.uk"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "LaDualRole"
+            },
+            {
+              "Name": "AccountId",
+              "Value": "10"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "97"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Phil Davies"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "harsha.reddy@education.gov.uk",
+            "Sub": "harsha.reddy@education.gov.uk"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "LaDualRole"
+            },
+            {
+              "Name": "AccountId",
+              "Value": "11"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "165"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Harsha Reddy"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "harsha.reddy@talentconsulting.uk",
+            "Sub": "harsha.reddy@talentconsulting.uk"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "LaDualRole"
+            },
+            {
+              "Name": "AccountId",
+              "Value": "300"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Harsha Reddy"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

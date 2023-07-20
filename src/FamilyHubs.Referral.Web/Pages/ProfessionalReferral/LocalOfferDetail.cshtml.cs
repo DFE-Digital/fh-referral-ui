@@ -1,10 +1,11 @@
-using System.Text;
-using System.Text.RegularExpressions;
-using EnumsNET;
 using FamilyHubs.Referral.Core.ApiClients;
+using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Primitives;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -28,19 +29,19 @@ public class LocalOfferDetailModel : PageModel
     public string Website { get; set; } = default!;
     public string Email { get; set; } = default!;
 
-    public LocalOfferDetailModel(IOrganisationClientService organisationClientService, IConfiguration configuration)
+    public LocalOfferDetailModel(IOrganisationClientService organisationClientService)
     {
         _organisationClientService = organisationClientService;
     }
 
-    //Needs to pass dummy id so service id can be any string
-    public async Task<IActionResult> OnGetAsync(string id, string serviceid)
+    public async Task<IActionResult> OnGetAsync(string serviceId)
     {
-        ServiceId = serviceid;
-        ReturnUrl = Request.Headers["Referer"].ToString();
-        LocalOffer = await _organisationClientService.GetLocalOfferById(serviceid);
+        ServiceId = serviceId;
+        var referer = Request.Headers["Referer"];
+        ReturnUrl = StringValues.IsNullOrEmpty(referer) ? Url.Page("Search") : referer.ToString();
+        LocalOffer = await _organisationClientService.GetLocalOfferById(serviceId);
         Name = LocalOffer.Name;
-        if (LocalOffer.Locations.Count != 0) ExtractAddressParts(LocalOffer.Locations.First());
+        if (LocalOffer.Locations != null && LocalOffer.Locations.Any()) ExtractAddressParts(LocalOffer.Locations.First());
         GetContactDetails();
 
         return Page();
@@ -53,23 +54,12 @@ public class LocalOfferDetailModel : PageModel
         if (serviceDeliveries == null || serviceDeliveries.Count == 0)
             return result;
 
-        foreach (var name in serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name))
-        {
-            result += result +
-                    (!string.IsNullOrWhiteSpace(name.AsString(EnumFormat.Description)) ?
-                    name.AsString(EnumFormat.Description) + "," :
-                    string.Empty);
-        }
-
-        //Remove last comma if present
-        if (result.EndsWith(","))
-        {
-            result = result.Remove(result.Length - 1);
-        }
+        result = string.Join(',', serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name).ToArray());
 
         return result;
     }
 
+    //todo: looks like a custom implementation of string.Join
     public string GetLanguagesAsString(ICollection<LanguageDto>? languageDtos)
     {
         var result = string.Empty;
@@ -84,7 +74,7 @@ public class LocalOfferDetailModel : PageModel
         result = stringBuilder.ToString();
 
         //Remove last comma if present
-        if (result.EndsWith(","))
+        if (result.EndsWith(','))
         {
             result = result.Remove(result.Length - 1);
         }
@@ -97,9 +87,9 @@ public class LocalOfferDetailModel : PageModel
         if (string.IsNullOrEmpty(addressDto.Address1))
             return;
 
-        Address1 = addressDto.Address1 + ",";
-        City = !string.IsNullOrWhiteSpace(addressDto.City) ? addressDto.City + "," : string.Empty;
-        StateProvince = !string.IsNullOrWhiteSpace(addressDto.StateProvince) ? addressDto.StateProvince + "," : string.Empty;
+        Address1 = addressDto.Address1.Replace(",", "") + ",";
+        City = !string.IsNullOrWhiteSpace(addressDto.City) ? addressDto.City.Replace(",", "") + "," : string.Empty;
+        StateProvince = !string.IsNullOrWhiteSpace(addressDto.StateProvince) ? addressDto.StateProvince.Replace(",", "") + "," : string.Empty;
         PostalCode = addressDto.PostCode;
     }
 
@@ -121,6 +111,8 @@ public class LocalOfferDetailModel : PageModel
         }
         else
         {
+            if (LocalOffer.Contacts == null)
+                return;
             //if there are more then one contact then bellow code will pick the last record
             foreach (var contactDto in LocalOffer.Contacts)
             {

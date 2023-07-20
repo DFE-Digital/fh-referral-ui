@@ -1,0 +1,11 @@
+﻿@page
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.TelephoneModel
+@{
+    ViewData["Title"] = Model.HeadingText;
+}
+
+@section Back {
+    <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
+}
+
+<partial name="_SingleTextboxPage" for="@Model" />

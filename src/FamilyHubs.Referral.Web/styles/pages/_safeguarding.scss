@@ -1,0 +1,9 @@
+﻿
+.interrupt-panel {
+    @include govuk-responsive-padding(6);
+    background: $govuk-brand-colour;
+}
+
+.interrupt-panel h1, .interrupt-panel p {
+    color: govuk-colour("white");
+}

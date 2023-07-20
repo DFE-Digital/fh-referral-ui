@@ -15,7 +15,7 @@ var gulp = require("gulp"),
     del = require('del');
 
 gulp.task('sass-to-min-css', async function () {
-    return gulp.src('./styles/scss/application.scss')
+    return gulp.src('./styles/application.scss')
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
         .pipe(csso())
@@ -72,7 +72,7 @@ gulp.task('transpile-ts', function () {
 //});
 
 gulp.task('bundle-and-minify-js', () => {
-//    return gulp.src('./tmp/js/bundle.js')
+    //    return gulp.src('./tmp/js/bundle.js')
     return gulp.src('./tmp/js/app.js')
         .pipe(sourcemaps.init())
         .pipe(rollup({}, 'es'))

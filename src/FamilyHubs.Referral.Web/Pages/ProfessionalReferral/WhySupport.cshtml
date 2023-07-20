@@ -1,0 +1,12 @@
+﻿@page
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.WhySupportModel
+@{
+    //todo: get h1 from model
+    ViewData["Title"] = "Reason for the connection request";
+}
+
+@section Back {
+    <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
+}
+
+<partial name="/Pages/Shared/_TellTheServicePage.cshtml" model="Model"/>

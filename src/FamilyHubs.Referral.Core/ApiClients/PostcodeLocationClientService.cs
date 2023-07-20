@@ -9,7 +9,9 @@ namespace FamilyHubs.Referral.Core.ApiClients
     }
     public class PostcodeLocationClientService : ApiService, IPostcodeLocationClientService
     {
+#pragma warning disable S1075 // URIs should not be hardcoded
         private const string PostCodeUrl = "http://api.postcodes.io";
+#pragma warning restore S1075 // URIs should not be hardcoded
         public PostcodeLocationClientService(HttpClient client)
             : base(client)
         {

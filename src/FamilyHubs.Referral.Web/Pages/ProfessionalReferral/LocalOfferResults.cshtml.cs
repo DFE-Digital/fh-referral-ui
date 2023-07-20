@@ -6,6 +6,7 @@ using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
+using FamilyHubs.SharedKernel.Razor.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -160,10 +161,10 @@ public class LocalOfferResultsModel : PageModel
     public string? SearchText { get; set; }
 
     [BindProperty]
-    public string SearchPostCode { get; set; } = string.Empty;
+    public string postcode { get; set; } = string.Empty;
 
     [BindProperty]
-    public int CurrentPage { get; set; } = 1;
+    public int PageNum { get; set; } = 1;
 
     public int PageSize { get; set; } = 10;
     public IPagination Pagination { get; set; }
@@ -182,23 +183,23 @@ public class LocalOfferResultsModel : PageModel
     }
 
     public async Task<IActionResult> OnGetAsync(
-        string postCode, string? searchText, string? searchAge,
+        string postcode, string? searchText, string? searchAge,
         string? selectedLanguage, string? subcategorySelection,
         string? costSelection, string? serviceDeliverySelection,
-        int? currentPage, bool forChildrenAndYoungPeople
+        int? pageNum, bool forChildrenAndYoungPeople
         )
     {
-        SearchPostCode = postCode;
+        this.postcode = postcode;
         SearchText = searchText;
         SearchAge = searchAge;
         SelectedLanguage = selectedLanguage == "All languages" ? null : selectedLanguage;
-        CurrentPage = currentPage ?? 1;
+        PageNum = pageNum ?? 1;
         ForChildrenAndYoungPeople = forChildrenAndYoungPeople;
         SubcategorySelection = subcategorySelection?.Split(",").ToList();
         CostSelection = costSelection?.Split(",").ToList();
         ServiceDeliverySelection = serviceDeliverySelection?.Split(",").ToList();
 
-        await GetLocationDetails(SearchPostCode);
+        await GetLocationDetails(this.postcode);
 
         await GetCategoriesTreeAsync();
 
@@ -232,7 +233,7 @@ public class LocalOfferResultsModel : PageModel
             MaximumAge = null,
             PageSize = PageSize,
             IsPaidFor = isPaidFor,
-            PageNumber = CurrentPage,
+            PageNumber = PageNum,
             Text = SearchText ?? null,
             DistrictCode = DistrictCode ?? null,
             Latitude = CurrentLatitude != 0.0D ? CurrentLatitude : null,
@@ -246,7 +247,7 @@ public class LocalOfferResultsModel : PageModel
 
         SearchResults = await _organisationClientService.GetLocalOffers(localOfferFilter);
 
-        Pagination = new LargeSetPagination(SearchResults.TotalPages, CurrentPage);
+        Pagination = new LargeSetPagination(SearchResults.TotalPages, PageNum);
 
         TotalResults = SearchResults.TotalCount;
     }

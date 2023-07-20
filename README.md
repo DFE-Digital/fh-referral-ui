@@ -1,8 +1,11 @@
 # fh-referral-ui
+
 Ui for the management of a person/family referral to a Local Authority, Voluntary, Charitable or Faith organisation.
+
 # fh-service-referral-ui
 
 ## Requirements
+
 * .Net 7.0 and any supported IDE for DEV running.
 
 ## About
@@ -49,3 +52,31 @@ The entry point for the site's JavaScript is `scripts\app.ts`.
 To debug the JavaScript in Visual Studio, set breakpoints in the JavaScript files under the `Script documents` folder in the Solution Explorer when debugging.
 
 (Note, we might switch to [environment-based bundling and minification at a later point](https://learn.microsoft.com/en-us/aspnet/core/client-side/bundling-and-minification?view=aspnetcore-6.0).)
+
+## TODO
+
+* open / close filter button doesn't work - create a component from the find site.
+
+* journey edge case
+
+* sign-in expiry (cookie expires with session, but no session)
+
+* add prg to telephone, text & letter & switch to standard ErrorState
+
+* add site url helper to shared razor config, so available in views. something like...
+ SiteUrl.Get(int siteId, relativeUrl)
+config
+{		
+"SiteUrls": [
+	{
+		"SiteId": 1,
+		"Url": "https://localhost:5001"
+	},
+	{
+		"SiteId": 2,
+		"Url": "https://localhost:5002"
+	}
+]
+}
+
+* change ErrorId to static const class with const ints? 

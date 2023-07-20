@@ -1,0 +1,12 @@
+﻿@page
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.ContactMethodsModel
+@{
+    //todo: get h1 from model
+    ViewData["Title"] = "How can the service engage with this family?";
+}
+
+@section Back {
+    <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
+}
+
+<partial name="/Pages/Shared/_TellTheServicePage.cshtml" model="Model"/>

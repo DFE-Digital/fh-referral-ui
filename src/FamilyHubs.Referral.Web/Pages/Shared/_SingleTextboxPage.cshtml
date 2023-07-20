@@ -1,0 +1,75 @@
+﻿@model ISingleTextboxPageModel
+
+<!-- This control can only be used when there are no other inputs on the page -->
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        @if (Model.HasErrors)
+        {
+            <div class="govuk-error-summary" data-module="govuk-error-summary">
+                <div role="alert">
+                    <h2 class="govuk-error-summary__title">
+                        There is a problem
+                    </h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            <li>
+                                <a href="#textbox" data-testid="summary-error">@Model.ErrorText</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+        
+@*      not even the GDS error summary page is consistent in whether the heading goes in the form-group or not!
+        so we follow the prototype's lead (which I think looks better anyway)*@
+        <h1 class="govuk-heading-l">@Model.HeadingText</h1>
+
+        <form method="post" novalidate>
+            <div class="govuk-form-group @(Model.HasErrors ? "govuk-form-group--error" : "")">
+                @*todo: check which should be hint*@
+                @if (!string.IsNullOrEmpty(Model.HintText))
+                {
+                    <div id="hint" class="govuk-hint">
+                        @Model.HintText
+                    </div>
+                }
+                @if (Model.HasErrors)
+                {
+                    <p id="error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> @Model.ErrorText
+                    </p>
+                }
+                <label class="govuk-label" for="textbox">
+                    @Model.TextBoxLabel
+                </label>
+                @{
+                    // we could get type, inputmode and autocomplete from the interface itself (if we swapped the text to base and introduced a text derived)
+                    // which in some ways would be neat, but it would mean that view info would be out of the view and in the interfaces
+                    string type = Model switch
+                    {
+                        ISingleTelephoneTextboxPageModel => "tel",
+                        ISingleEmailTextboxPageModel => "email",
+                        _ => "text"
+                    };
+                }
+                @* we're currently using this to gather details (name, email) that are not the person filling in the form. *@
+                @* so it doesn't make sense to autocomplete with the user's details, so we set it to off (despite GDS guidelines). *@
+                @* we might end up setting autocomplete anyway, as it can help with accessibility tools. *@
+                
+                @* we're' currently using this to gather emails, which GDS recommends to switch spellcheck off for, *@
+                @* and to gather names and telephone numbers, for which it doesn't make sense to have spellcheck enabled. *@
+
+                <input class="govuk-input @(Model.HasErrors ? "govuk-input--error" : "")"
+                       name="TextBoxValue" type="@type" value="@Model.TextBoxValue" inputmode="@type"
+                       spellcheck="false" autocomplete="off" id="textbox" aria-describedby="@(string.IsNullOrEmpty(Model.HintText)?"":"hint ")@(Model.HasErrors ? "error" : "")">
+            </div>
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Continue
+            </button>
+        </form>
+    </div>
+</div>
+

@@ -1,9 +1,8 @@
-﻿@page "{postCode}"
-@using FamilyHubs.Referral.Web.Extensions
+﻿@page
+@using FamilyHubs.Referral.Core.Helper
 @model LocalOfferResultsModel
 @{
     ViewData["Title"] = "Search results";
-    ViewData["Description"] = "Description TBC";
 }
 
 @section Back {
@@ -13,18 +12,20 @@
 <form method="post">
 
 <!-- Hidden fields -->
-<input asp-for="@Model.SearchPostCode" type="hidden"/>
+<input asp-for="@Model.postcode" type="hidden"/>
 
 @if (Model.SearchResults.TotalCount == 0 && Model.InitialLoad)
 {
-    <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-l">No results found</h1>
-        <p class="govuk-caption-m">
-            Sorry, there are no activities, groups or services listed in your area yet.
-        </p>
-        <p class="govuk-caption-m">
-            You can <a href="https://www.gov.uk/find-local-council" data-testid="">check your council’s website</a> for your local family support services.
-        </p>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-l">No results found</h1>
+            <p class="govuk-caption-m">
+                Sorry, there are no activities, groups or services listed in your area yet.
+            </p>
+            <p class="govuk-caption-m">
+                You can <a href="https://www.gov.uk/find-local-council" data-testid="">check your council’s website</a> for your local family support services.
+            </p>
+        </div>
     </div>
 }
 else
@@ -32,7 +33,7 @@ else
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Services, groups and activities in this area</h1>
-            <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/ProfessionalReferral/Search">@Model.SearchPostCode</a></span>
+                <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/ProfessionalReferral/Search">@Model.postcode</a></span>
         </div>
     </div>
 
@@ -72,7 +73,7 @@ else
                                 {
                                     <ul class="moj-filter-tags filters-component__remove-tags">
                                         <li>
-                                            <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removesubcategorySelection" value="@subcategorySelection" data-testid="@subcategorySelection-remove">
+                                            <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removesubcategorySelection" value="@subcategorySelection" data-testid="@subcategorySelection-remove">
                                                 <span class="govuk-visually-hidden">Remove this filter</span>
                                                 @Model.Categories.FirstOrDefault(c => c.Id.ToString() == subcategorySelection)?.Name
                                             </button>
@@ -89,7 +90,7 @@ else
                                 {
                                     <ul class="moj-filter-tags filters-component__remove-tags">
                                         <li>
-                                            <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeCostSelection" value="@costSelected" data-testid="@costSelected-remove">
+                                            <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeCostSelection" value="@costSelected" data-testid="@costSelected-remove">
                                                 <span class="govuk-visually-hidden">Remove this filter</span>
                                                 @(costSelected == "paid" ? "Pay to use" : costSelected.ToSentenceCase())
                                             </button>
@@ -108,7 +109,7 @@ else
                                     {
                                         <ul class="moj-filter-tags filters-component__remove-tags">
                                             <li>
-                                                <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
+                                                <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
                                                     <span class="govuk-visually-hidden">Remove this filter</span>
                                                     In Person
                                                 </button>
@@ -119,7 +120,7 @@ else
                                     {
                                         <ul class="moj-filter-tags filters-component__remove-tags">
                                             <li>
-                                                <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
+                                                <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
                                                     <span class="govuk-visually-hidden">Remove this filter</span>
                                                     Online
                                                 </button>
@@ -130,7 +131,7 @@ else
                                     {
                                         <ul class="moj-filter-tags filters-component__remove-tags">
                                             <li>
-                                                <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
+                                                <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
                                                     <span class="govuk-visually-hidden">Remove this filter</span>
                                                     Telephone
                                                 </button>
@@ -146,7 +147,7 @@ else
                                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Language</h3>
                                 <ul class="moj-filter-tags filters-component__remove-tags">
                                     <li>
-                                        <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeSelectedLanguage" value="@Model.SelectedLanguage" data-testid="@Model.SelectedLanguage-remove">
+                                        <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeSelectedLanguage" value="@Model.SelectedLanguage" data-testid="@Model.SelectedLanguage-remove">
                                             <span class="govuk-visually-hidden">Remove this filter</span>
                                             @Model.SelectedLanguage
                                         </button>
@@ -160,7 +161,7 @@ else
                                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1">For children and young people</h3>
                                 <ul class="moj-filter-tags filters-component__remove-tags">
                                     <li>
-                                        <button type="submit" class="moj-filter__tag icon--cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeSearchAge" value="@Model.SearchAge" data-testid="@Model.SearchAge-remove">
+                                        <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeSearchAge" value="@Model.SearchAge" data-testid="@Model.SearchAge-remove">
                                             <span class="govuk-visually-hidden">Remove this filter</span>Age @Model.SearchAge
                                         </button>
                                     </li>
@@ -369,7 +370,7 @@ else
                     {
                         <li role="listitem" tab-index="0">
                             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-                                <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-id="@Guid.NewGuid().ToString()" asp-route-serviceid="@item.Id" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
+                                <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-serviceid="@item.Id" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
                             </h2>
                             <p class="govuk-caption-m">
                                 @if (item.Locations.FirstOrDefault() != null)
@@ -406,9 +407,9 @@ else
                             @if (item.ServiceDeliveries.Count > 0)
                             {
                                 <dl class="govuk-body-s dtmargins">
-                                <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-                                <dd>@Model.GetDeliveryMethodsAsString(item.ServiceDeliveries)</dd>
-                            </dl>
+                                    <dt class="govuk-!-font-weight-bold">Delivery method</dt>
+                                    <dd>@Model.GetDeliveryMethodsAsString(item.ServiceDeliveries)</dd>
+                                </dl>
                             }
                             @if (item.Languages.Any(l => !string.IsNullOrWhiteSpace(l.Name)))
                             {
@@ -420,51 +421,7 @@ else
                         </li>
                     }
                 </ul>
-                <!-- DONE - Navigation -->
-                @if (Model.Pagination.Show)
-                {
-                    <nav class="govuk-pagination" role="navigation" aria-label="results">
-                        @if (Model.Pagination.PreviousPage != null)
-                        {
-                            <div class="govuk-pagination__prev">
-                                <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@(Model.Pagination.PreviousPage)" rel="next">
-                                    <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
-                                        <path d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"></path>
-                                    </svg>
-                                    <span class="govuk-pagination__link-title">Previous</span>
-                                </button>
-                            </div>
-                        }
-
-                        <ul class="govuk-pagination__list">
-                            @foreach (var item in Model.Pagination.PaginationItems)
-                            {
-                                if (item.ShowSkippedPages)
-                                {
-                                    <li class="govuk-pagination__item govuk-pagination__item--ellipses">&ctdot;</li>
-                                }
-                                else
-                                {
-                                    <li class="govuk-pagination__item @(item.IsCurrentPage ? "govuk-pagination__item--current" : "")">
-                                        <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@item.Page" aria-label="Page @(item.Page)" @(item.IsCurrentPage ? "aria-current=\"page\"" : "")>@item.Page</button>
-                                    </li>
-                                }
-                            }
-                        </ul>
-
-                        @if (Model.Pagination.NextPage != null)
-                        {
-                            <div class="govuk-pagination__next">
-                                <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@(Model.Pagination.NextPage)" rel="next">
-                                    <span class="govuk-pagination__link-title">Next</span>
-                                    <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
-                                        <path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        }
-                    </nav>
-                }
+                <partial name="_LargeSetPaginationForm" model='Model.Pagination'/>
             }
         </div>
     </div>

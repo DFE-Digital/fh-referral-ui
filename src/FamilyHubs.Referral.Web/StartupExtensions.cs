@@ -1,9 +1,18 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
-using FamilyHubs.SharedKernel.Security;
+using FamilyHubs.Referral.Core.DistributedCache;
+using FamilyHubs.Referral.Infrastructure.DistributedCache;
+using FamilyHubs.SharedKernel.GovLogin.AppStart;
+using FamilyHubs.SharedKernel.Identity;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Serilog.Events;
+using System.Diagnostics.CodeAnalysis;
+using FamilyHubs.Notification.Api.Client.Extensions;
+using FamilyHubs.Notification.Api.Client.Templates;
+using FamilyHubs.Referral.Core;
+using FamilyHubs.Referral.Infrastructure.Notifications;
+using FamilyHubs.SharedKernel.Security;
 
 namespace FamilyHubs.Referral.Web;
 
@@ -26,6 +35,8 @@ public static class StartupExtensions
             loggerConfiguration.WriteTo.Console(
                 parsed ? logLevel : LogEventLevel.Warning);
         });
+
+        builder.Services.AddAndConfigureGovUkAuthentication(builder.Configuration);
     }
 
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
@@ -38,15 +49,47 @@ public static class StartupExtensions
         services.AddWebUiServices(configuration);
 
         // Add services to the container.
-        services.AddRazorPages();
+        services.AddRazorPages()
+            .AddViewOptions(options =>
+            {
+                options.HtmlHelperOptions.ClientValidationEnabled = false;
+            });
+
+        services.AddFamilyHubs(configuration);
     }
 
     public static void AddWebUiServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddTransient<IKeyProvider, KeyProvider>();
+        services.AddTransient<ICrypto, Crypto>();
+
         services.AddHttpContextAccessor();
+
+        services.AddNotificationsApiClient(configuration);
+        services.AddSingleton<INotificationTemplates<NotificationType>, NotificationTemplates<NotificationType>>();
+        services.AddTransient<IReferralNotificationService, ReferralNotificationService>();
+
+        services.AddIdamsClient(configuration);
 
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
+
+        string? connectionString = configuration["SqlServerCache:Connection"];
+        string? schemaName = configuration["SqlServerCache:SchemaName"];
+        string? tableName = configuration["SqlServerCache:TableName"];
+
+        if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(schemaName) ||
+            string.IsNullOrEmpty(tableName))
+        {
+            //todo: config exception?
+            throw new InvalidOperationException("Missing config in SqlServerCache section");
+        }
+
+        services.AddSqlServerDistributedCache(
+            connectionString,
+            int.Parse(configuration["SqlServerCache:SlidingExpirationInMinutes"] ?? "240"),
+            schemaName, tableName);
+        services.AddTransient<IConnectionRequestDistributedCache, ConnectionRequestDistributedCache>();
     }
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
@@ -61,21 +104,44 @@ public static class StartupExtensions
         {
             client.BaseAddress = new Uri(configuration.GetValue<string>("ServiceDirectoryUrl")!);
         });
+
+        services.AddSecuredTypedHttpClient<IReferralClientService, ReferralClientService>((serviceProvider, httpClient) =>
+        {
+            httpClient.BaseAddress = new Uri(configuration.GetValue<string>("ReferralApiUrl")!);
+        });
     }
+
+    public static IServiceCollection AddSecuredTypedHttpClient<TClient, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TImplementation>(
+            this IServiceCollection services, Action<IServiceProvider, HttpClient> configureClient)
+            where TClient : class
+            where TImplementation : class, TClient
+    {
+        services.AddHttpClient<TClient, TImplementation>((serviceProvider, httpClient) =>
+        {
+            configureClient(serviceProvider, httpClient);
+            var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+            if (httpContextAccessor == null)
+                throw new ArgumentException($"IHttpContextAccessor required for {nameof(AddSecuredTypedHttpClient)}");
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {httpContextAccessor.HttpContext!.GetBearerToken()}");
+
+        });
+
+        return services;
+    }
+
     public static IServiceProvider ConfigureWebApplication(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
 
-        app.UseAppSecurityHeaders();
+        app.UseFamilyHubs();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
-            app.UseExceptionHandler("/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
-        app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 #if use_https
         app.UseHttpsRedirection();
@@ -85,8 +151,7 @@ public static class StartupExtensions
 
         app.UseRouting();
 
-        //app.UseAuthentication();
-        //app.UseAuthorization();
+        app.UseGovLoginAuthentication();
 
         app.MapRazorPages();
 

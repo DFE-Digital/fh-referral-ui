@@ -22,18 +22,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Enums.NET" Version="4.0.1" />
-    <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="2.0.4" />
-    <PackageReference Include="FamilyHubs.SharedKernel" Version="2.0.1" />
+    <PackageReference Include="FamilyHubs.Notification.Api.Client" Version="1.1.0" />
+    <PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.0.11" />
+    <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="2.0.5" />
+    <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="1.3.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.18.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
-    <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="7.0.0" />
     <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.5.0.73987">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 	<ItemGroup>
@@ -48,14 +51,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\FamilyHubs.Referral.Core\FamilyHubs.Referral.Core.csproj" />
+	  <ProjectReference Include="..\FamilyHubs.Referral.Infrastructure\FamilyHubs.Referral.Infrastructure.csproj" />
 	</ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\lib\govuk\assets\js\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\js\" />
-  </ItemGroup>
 
 </Project>
