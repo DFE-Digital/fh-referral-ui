@@ -66,7 +66,7 @@ public class BaseProfessionalReferralPage
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.AccountId, "1"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.AccountStatus, "active"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.FullName, "Test User"));
-        identity.AddClaim(new Claim(FamilyHubsClaimTypes.LoginTime, DateTime.UtcNow.ToString()));
+        identity.AddClaim(new Claim(FamilyHubsClaimTypes.ClaimsValidTillTime, DateTime.UtcNow.AddMinutes(30).ToString()));
         identity.AddClaim(new Claim(ClaimTypes.Email, ProfessionalEmail));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.PhoneNumber, "012345678"));
         var principle = new ClaimsPrincipal(identity);

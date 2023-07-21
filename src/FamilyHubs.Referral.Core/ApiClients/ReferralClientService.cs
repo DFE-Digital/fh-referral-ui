@@ -21,8 +21,8 @@ public class ReferralClientService : ApiService, IReferralClientService
 
     public async Task<int> CreateReferral(ReferralDto referralDto, CancellationToken cancellationToken = default)
     {
-        referralDto.ReasonForSupport = _crypto.EncryptData(referralDto.ReasonForSupport);
-        referralDto.EngageWithFamily = _crypto.EncryptData(referralDto.EngageWithFamily);
+        referralDto.ReasonForSupport = await _crypto.EncryptData(referralDto.ReasonForSupport);
+        referralDto.EngageWithFamily = await _crypto.EncryptData(referralDto.EngageWithFamily);
 
         using var response = await Client.PostAsJsonAsync($"{Client.BaseAddress}api/referrals", referralDto, cancellationToken);
         if (!response.IsSuccessStatusCode)
