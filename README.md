@@ -55,6 +55,8 @@ To debug the JavaScript in Visual Studio, set breakpoints in the JavaScript file
 
 ## TODO
 
+* ConnectCache not being created
+
 * open / close filter button doesn't work - create a component from the find site.
 
 * journey edge case
@@ -80,3 +82,4 @@ config
 }
 
 * change ErrorId to static const class with const ints? 
+
