@@ -1,6 +1,6 @@
 using FamilyHubs.Referral.Web.Pages.Shared;
 
-namespace FamilyHubs.Referral.Web.Pages.Errors;
+namespace FamilyHubs.Referral.Web.Pages.Error;
 
 public class Error403Model : HeaderPageModel
 {
