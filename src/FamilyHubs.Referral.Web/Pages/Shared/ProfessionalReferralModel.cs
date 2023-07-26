@@ -20,7 +20,6 @@ public enum JourneyFlow
     ChangingContactMethods
 }
 
-//todo: will need 401/403 pages
 [Authorize(Roles = RoleGroups.LaProfessionalOrDualRole)]
 public class ProfessionalReferralModel : HeaderPageModel
 {
