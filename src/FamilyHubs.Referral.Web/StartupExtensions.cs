@@ -13,6 +13,7 @@ using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.Referral.Core;
 using FamilyHubs.Referral.Infrastructure.Notifications;
 using FamilyHubs.SharedKernel.Security;
+using FamilyHubs.SharedKernel.DataProtection;
 
 namespace FamilyHubs.Referral.Web;
 
@@ -60,6 +61,9 @@ public static class StartupExtensions
 
     public static void AddWebUiServices(this IServiceCollection services, IConfiguration configuration)
     {
+        const string dataProtectionAppName = "Connect";
+        services.AddFamilyHubsDataProtection(configuration, dataProtectionAppName);
+
         services.AddTransient<IKeyProvider, KeyProvider>();
         services.AddTransient<ICrypto, Crypto>();
 
@@ -133,6 +137,8 @@ public static class StartupExtensions
     public static IServiceProvider ConfigureWebApplication(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
+
+        app.UseFamilyHubsDataProtection();
 
         app.UseFamilyHubs();
 
