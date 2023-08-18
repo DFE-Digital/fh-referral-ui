@@ -2,8 +2,10 @@
 using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.Referral.Core;
 using FamilyHubs.Referral.Core.ApiClients;
-using Microsoft.Extensions.Configuration;
+using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace FamilyHubs.Referral.Infrastructure.Notifications;
 
@@ -18,20 +20,20 @@ public class ReferralNotificationService : IReferralNotificationService
     private readonly INotifications _notifications;
     private readonly INotificationTemplates<NotificationType> _notificationTemplates;
     private readonly IIdamsClient _idamsClient;
-    private readonly IConfiguration _configuration;
+    private readonly FamilyHubsUiOptions _familyHubsUiOptions;
     private readonly ILogger<ReferralNotificationService> _logger;
 
     public ReferralNotificationService(
         INotifications notifications,
         INotificationTemplates<NotificationType> notificationTemplates,
         IIdamsClient idamsClient,
-        IConfiguration configuration,
+        IOptions<FamilyHubsUiOptions> familyHubsUiOptions,
         ILogger<ReferralNotificationService> logger)
     {
         _notifications = notifications;
         _notificationTemplates = notificationTemplates;
         _idamsClient = idamsClient;
-        _configuration = configuration;
+        _familyHubsUiOptions = familyHubsUiOptions.Value;
         _logger = logger;
     }
 
@@ -41,20 +43,15 @@ public class ReferralNotificationService : IReferralNotificationService
         string serviceName,
         int requestNumber)
     {
-        string dashboardUrl = GetDashboardUrl();
+        await TrySendVcsNotificationEmails(serviceOrgansiationId, serviceName, requestNumber);
 
-        await TrySendVcsNotificationEmails(
-            serviceOrgansiationId, serviceName, requestNumber, dashboardUrl);
-
-        await TrySendProfessionalNotificationEmails(
-            laProfessionalEmailAddress, serviceName, requestNumber, dashboardUrl);
+        await TrySendProfessionalNotificationEmails(laProfessionalEmailAddress, serviceName, requestNumber);
     }
 
     private async Task TrySendVcsNotificationEmails(
-    long organisationId,
-    string serviceName,
-    int requestNumber,
-    string dashboardUrl)
+        long organisationId,
+        string serviceName,
+        int requestNumber)
     {
         var emailAddresses = await _idamsClient.GetVcsProfessionalsEmailsAsync(organisationId);
         if (!emailAddresses.Any())
@@ -67,7 +64,7 @@ public class ReferralNotificationService : IReferralNotificationService
         {
             //todo: add callback to API, so that we can flag invalid emails/unsent emails
             //todo: as we silently chomp any exceptions, should we just fire and forget?
-            await SendNotificationEmails(emailAddresses, NotificationType.VcsNewRequest, requestNumber, serviceName, dashboardUrl);
+            await SendNotificationEmails(emailAddresses, NotificationType.VcsNewRequest, requestNumber, serviceName);
         }
         catch (Exception e)
         {
@@ -76,12 +73,14 @@ public class ReferralNotificationService : IReferralNotificationService
     }
 
     private async Task TrySendProfessionalNotificationEmails(
-        string emailAddress, string serviceName, int requestNumber, string dashboardUrl)
+        string emailAddress,
+        string serviceName,
+        int requestNumber)
     {
         try
         {
             await SendNotificationEmails(new List<string> { emailAddress },
-                NotificationType.ProfessionalSentRequest, requestNumber, serviceName, dashboardUrl);
+                NotificationType.ProfessionalSentRequest, requestNumber, serviceName);
         }
         catch (Exception e)
         {
@@ -89,41 +88,24 @@ public class ReferralNotificationService : IReferralNotificationService
         }
     }
 
-    private string GetDashboardUrl()
-    {
-        string? requestsSent = _configuration["RequestsSentUrl"];
-
-        if (string.IsNullOrEmpty(requestsSent))
-        {
-            //todo: use config exception
-            throw new InvalidOperationException("RequestsSentUrl not set in config");
-        }
-
-        return requestsSent;
-    }
-
     private async Task SendNotificationEmails(
         IEnumerable<string> vcsEmailAddresses,
         NotificationType notificationType,
         int requestNumber,
-        string serviceName,
-        string dashboardUrl)
+        string serviceName)
     {
         string path = notificationType == NotificationType.ProfessionalSentRequest
             ? "La"
             : "Vcs";
 
-        var viewConnectionRequestUrl = new UriBuilder(dashboardUrl)
-        {
-            Path = $"{path}/RequestDetails",
-            Query = $"id={requestNumber}"
-        }.Uri;
+        var viewConnectionRequestUrl =
+            _familyHubsUiOptions.Url(UrlKeys.DashboardWeb, $"{path}/RequestDetails?id={requestNumber}").ToString();
 
         var emailTokens = new Dictionary<string, string>
         {
             { "RequestNumber", requestNumber.ToString("X6") },
             { "ServiceName", serviceName },
-            { "ViewConnectionRequestUrl", viewConnectionRequestUrl.ToString()}
+            { "ViewConnectionRequestUrl", viewConnectionRequestUrl}
         };
 
         string templateId = _notificationTemplates.GetTemplateId(notificationType);
