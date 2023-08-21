@@ -41,8 +41,10 @@ public class ReferralNotificationService : IReferralNotificationService
         string laProfessionalEmailAddress,
         long serviceOrgansiationId,
         string serviceName,
-        int requestNumber)
+        long requestNumber)
     {
+        //todo: either fire and forget (but be mindful of cancellation!), or WhenAll
+
         await TrySendVcsNotificationEmails(serviceOrgansiationId, serviceName, requestNumber);
 
         await TrySendProfessionalNotificationEmails(laProfessionalEmailAddress, serviceName, requestNumber);
@@ -51,7 +53,7 @@ public class ReferralNotificationService : IReferralNotificationService
     private async Task TrySendVcsNotificationEmails(
         long organisationId,
         string serviceName,
-        int requestNumber)
+        long requestNumber)
     {
         var emailAddresses = await _idamsClient.GetVcsProfessionalsEmailsAsync(organisationId);
         if (!emailAddresses.Any())
@@ -75,7 +77,7 @@ public class ReferralNotificationService : IReferralNotificationService
     private async Task TrySendProfessionalNotificationEmails(
         string emailAddress,
         string serviceName,
-        int requestNumber)
+        long requestNumber)
     {
         try
         {
@@ -91,7 +93,7 @@ public class ReferralNotificationService : IReferralNotificationService
     private async Task SendNotificationEmails(
         IEnumerable<string> vcsEmailAddresses,
         NotificationType notificationType,
-        int requestNumber,
+        long requestNumber,
         string serviceName)
     {
         string path = notificationType == NotificationType.ProfessionalSentRequest

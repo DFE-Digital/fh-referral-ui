@@ -5,10 +5,9 @@ using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Dto;
-using FamilyHubs.ServiceDirectory.Shared.Extensions;
+using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.SharedKernel.Identity.Models;
 using Microsoft.AspNetCore.Mvc;
-using SharedOrganisationDto = FamilyHubs.ServiceDirectory.Shared.Dto.OrganisationDto;
 using ReferralOrganisationDto = FamilyHubs.ReferralService.Shared.Dto.OrganisationDto;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
@@ -51,33 +50,17 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         //todo: this throws an ArgumentNullException if the service is not found. it should return null (from a 404 from the api)
         var service = await _organisationClientService.GetLocalOfferById(model.ServiceId!);
 
-        int requestNumber = await CreateConnectionRequest(service, model);
+        var referralResponse = await CreateConnectionRequest(service, model);
 
         await _referralNotificationService.OnCreateReferral(
-            ProfessionalUser.Email, service.OrganisationId, service.Name, requestNumber);
+            ProfessionalUser.Email, service.OrganisationId, referralResponse.ServiceName, referralResponse.Id);
 
-        return RedirectToPage("/ProfessionalReferral/Confirmation", new { requestNumber });
+        return RedirectToPage("/ProfessionalReferral/Confirmation", new { referralResponse.Id });
     }
 
-    private async Task<SharedOrganisationDto> GetOrganisation(ServiceDto service)
+    private async Task<ReferralResponse> CreateConnectionRequest(ServiceDto service, ConnectionRequestModel model)
     {
-        var organisation = await _organisationClientService.GetOrganisationDtobyIdAsync(service.OrganisationId);
-        if (organisation == null)
-        {
-            //todo: create and throw custom exception
-            throw new InvalidOperationException($"Organisation not found for service {service.Id}");
-        }
-        return organisation;
-    }
-
-    private async Task<int> CreateConnectionRequest(ServiceDto service, ConnectionRequestModel model)
-    {
-        var organisation = await GetOrganisation(service);
-
-        //todo: should we check if the organisation is a VCFS organisation?
-        //organisation.OrganisationType == OrganisationType.VCFS
-
-        var referralDto = CreateReferralDto(model, ProfessionalUser, service, organisation);
+        var referralDto = CreateReferralDto(model, ProfessionalUser, service.Id, service.OrganisationId);
 
         return await _referralClientService.CreateReferral(referralDto);
     }
@@ -85,13 +68,9 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     private static ReferralDto CreateReferralDto(
         ConnectionRequestModel model,
         FamilyHubsUser user,
-        ServiceDto service,
-        SharedOrganisationDto organisation)
+        long serviceId,
+        long organisationId)
     {
-        var contact = service.GetContact();
-
-        string? serviceWebsite = GetWebsiteUrl(contact?.Url);
-
         var referralDto = new ReferralDto
         {
             ReasonForSupport = model.Reason!,
@@ -134,15 +113,10 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
             },
             ReferralServiceDto = new ReferralServiceDto
             {
-                Id = service.Id,
-                Name = service.Name,
-                Description = service.Description,
-                Url = serviceWebsite,
+                Id = serviceId,
                 OrganisationDto = new ReferralOrganisationDto
                 {
-                    Id = organisation.Id,
-                    Name = organisation.Name,
-                    Description = organisation.Description
+                    Id = organisationId,
                 }
             },
             Status = new ReferralStatusDto
@@ -153,17 +127,5 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         };
         referralDto.LastModified = referralDto.Created;
         return referralDto;
-    }
-
-    private static string? GetWebsiteUrl(string? url)
-    {
-        if (string.IsNullOrWhiteSpace(url))
-            return default;
-
-        if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
-            return url;
-
-        // assume http! (UriBuilder interprets a single string as a host and insists on adding a '/' on the end, which doesn't work if the url contains query params)
-        return $"http://{url}";
     }
 }
