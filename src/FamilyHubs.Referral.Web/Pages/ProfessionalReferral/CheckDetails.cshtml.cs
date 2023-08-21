@@ -3,7 +3,6 @@ using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
-using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.SharedKernel.Identity.Models;
@@ -14,18 +13,15 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class CheckDetailsModel : ProfessionalReferralCacheModel
 {
-    private readonly IOrganisationClientService _organisationClientService;
     private readonly IReferralClientService _referralClientService;
     private readonly IReferralNotificationService _referralNotificationService;
 
     public CheckDetailsModel(
         IConnectionRequestDistributedCache connectionRequestCache,
-        IOrganisationClientService organisationClientService,
         IReferralClientService referralClientService,
         IReferralNotificationService referralNotificationService)
         : base(ConnectJourneyPage.CheckDetails, connectionRequestCache)
     {
-        _organisationClientService = organisationClientService;
         _referralClientService = referralClientService;
         _referralNotificationService = referralNotificationService;
     }
@@ -47,20 +43,17 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         // remove any previously entered contact details that are no longer selected
         model.RemoveNonSelectedContactDetails();
 
-        //todo: this throws an ArgumentNullException if the service is not found. it should return null (from a 404 from the api)
-        var service = await _organisationClientService.GetLocalOfferById(model.ServiceId!);
-
-        var referralResponse = await CreateConnectionRequest(service, model);
+        var referralResponse = await CreateConnectionRequest(long.Parse(model.ServiceId!), model);
 
         await _referralNotificationService.OnCreateReferral(
-            ProfessionalUser.Email, service.OrganisationId, referralResponse.ServiceName, referralResponse.Id);
+            ProfessionalUser.Email, referralResponse.OrganisationId, referralResponse.ServiceName, referralResponse.Id);
 
-        return RedirectToPage("/ProfessionalReferral/Confirmation", new { referralResponse.Id });
+        return RedirectToPage("/ProfessionalReferral/Confirmation", new { requestNumber = referralResponse.Id });
     }
 
-    private async Task<ReferralResponse> CreateConnectionRequest(ServiceDto service, ConnectionRequestModel model)
+    private async Task<ReferralResponse> CreateConnectionRequest(long serviceId, ConnectionRequestModel model)
     {
-        var referralDto = CreateReferralDto(model, ProfessionalUser, service.Id, service.OrganisationId);
+        var referralDto = CreateReferralDto(model, ProfessionalUser, serviceId);
 
         return await _referralClientService.CreateReferral(referralDto);
     }
@@ -68,8 +61,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     private static ReferralDto CreateReferralDto(
         ConnectionRequestModel model,
         FamilyHubsUser user,
-        long serviceId,
-        long organisationId)
+        long serviceId)
     {
         var referralDto = new ReferralDto
         {
@@ -114,10 +106,8 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
             ReferralServiceDto = new ReferralServiceDto
             {
                 Id = serviceId,
-                OrganisationDto = new ReferralOrganisationDto
-                {
-                    Id = organisationId,
-                }
+                //todo: make OrganisationDto not required
+                OrganisationDto = new ReferralOrganisationDto()
             },
             Status = new ReferralStatusDto
             {

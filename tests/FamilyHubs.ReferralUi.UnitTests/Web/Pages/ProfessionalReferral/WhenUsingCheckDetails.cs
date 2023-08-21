@@ -14,19 +14,16 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
 {
     public CheckDetailsModel CheckDetailsModel { get; set; }
 
-    public Mock<IOrganisationClientService> OrganisationClientService;
     public Mock<IReferralClientService> ReferralClientService;
     public Mock<IReferralNotificationService> ReferralNotificationService;
 
     public WhenUsingCheckDetails()
     {
-        OrganisationClientService = new Mock<IOrganisationClientService>();
         ReferralClientService = new Mock<IReferralClientService>();
         ReferralNotificationService = new Mock<IReferralNotificationService>();
 
         CheckDetailsModel = new CheckDetailsModel(
             ReferralDistributedCache.Object,
-            OrganisationClientService.Object,
             ReferralClientService.Object,
             ReferralNotificationService.Object)
         {
@@ -111,29 +108,29 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
     [Fact]
     public async Task ThenOnPostAsync_NextPageIsConfirmation()
     {
-        OrganisationClientService
-            .Setup(x => x.GetLocalOfferById(It.IsAny<string>()))
-            .ReturnsAsync(new ServiceDto
-            {
-                Id = 1,
-                Name = "Test Service",
-                Description = "Service Description",
-                // other required properties
-                ServiceOwnerReferenceId = "",
-                ServiceType = ServiceType.InformationSharing
-            });
+        //OrganisationClientService
+        //    .Setup(x => x.GetLocalOfferById(It.IsAny<string>()))
+        //    .ReturnsAsync(new ServiceDto
+        //    {
+        //        Id = 1,
+        //        Name = "Test Service",
+        //        Description = "Service Description",
+        //        // other required properties
+        //        ServiceOwnerReferenceId = "",
+        //        ServiceType = ServiceType.InformationSharing
+        //    });
 
-        OrganisationClientService
-            .Setup(x => x.GetOrganisationDtobyIdAsync(It.IsAny<long>()))
-            .ReturnsAsync(new OrganisationDto
-            {
-                Id = 1,
-                Name = "Test Organisation",
-                Description = "Organisation Description",
-                // other required properties
-                OrganisationType = OrganisationType.VCFS,
-                AdminAreaCode = ""
-            });
+        //OrganisationClientService
+        //    .Setup(x => x.GetOrganisationDtobyIdAsync(It.IsAny<long>()))
+        //    .ReturnsAsync(new OrganisationDto
+        //    {
+        //        Id = 1,
+        //        Name = "Test Organisation",
+        //        Description = "Organisation Description",
+        //        // other required properties
+        //        OrganisationType = OrganisationType.VCFS,
+        //        AdminAreaCode = ""
+        //    });
 
         var result = await CheckDetailsModel.OnPostAsync("1") as RedirectToPageResult;
 
@@ -145,31 +142,6 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
     public async Task OnPostAsync_ThenNotificationIsSent()
     {
         const long organisationId = 12345;
-
-        OrganisationClientService
-            .Setup(x => x.GetLocalOfferById(It.IsAny<string>()))
-            .ReturnsAsync(new ServiceDto
-            {
-                Id = 1,
-                Name = "Test Service",
-                Description = "Service Description",
-                OrganisationId = organisationId,
-                // other required properties
-                ServiceOwnerReferenceId = "",
-                ServiceType = ServiceType.InformationSharing
-            });
-
-        OrganisationClientService
-            .Setup(x => x.GetOrganisationDtobyIdAsync(organisationId))
-            .ReturnsAsync(new OrganisationDto
-            {
-                Id = organisationId,
-                Name = "Test Organisation",
-                Description = "Organisation Description",
-                // other required properties
-                OrganisationType = OrganisationType.VCFS,
-                AdminAreaCode = ""
-            });
 
         await CheckDetailsModel.OnPostAsync("1");
 
