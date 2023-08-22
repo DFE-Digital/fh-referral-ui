@@ -5,6 +5,8 @@ using FluentAssertions;
 using Moq;
 using Moq.Protected;
 using System.Net;
+using System.Text.Json;
+using FamilyHubs.ReferralService.Shared.Models;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Core.ApiClients;
 
@@ -26,7 +28,14 @@ public class WhenUsingReferralClientService
     public async Task CreateReferral_WithValidData_ReturnsReferralId()
     {
         // Arrange
-        _httpClient = ClientHelper.GetMockClient<long>(123);
+        var jsonString = JsonSerializer.Serialize(new ReferralResponse
+        {
+            Id = 123,
+            ServiceName = "At your service",
+            OrganisationId = 456
+        });
+
+        _httpClient = ClientHelper.GetMockClient(jsonString);
         _referralClientService = new ReferralClientService(_httpClient, _cryptoMock.Object);
         _httpClient.DefaultRequestHeaders.Clear();
         _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer token");
@@ -36,7 +45,7 @@ public class WhenUsingReferralClientService
         var result = await _referralClientService.CreateReferral(_referralDto);
 
         // Assert
-        result.Should().Be(123);
+        result.Id.Should().Be(123);
         _cryptoMock.Verify(c => c.EncryptData(It.IsAny<string>()), Times.Exactly(2));
     }
 

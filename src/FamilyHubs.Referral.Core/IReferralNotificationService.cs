@@ -7,5 +7,5 @@ public interface IReferralNotificationService
         string laProfessionalEmailAddress,
         long serviceOrgansiationId,
         string serviceName,
-        int requestNumber);
+        long requestNumber);
 };
