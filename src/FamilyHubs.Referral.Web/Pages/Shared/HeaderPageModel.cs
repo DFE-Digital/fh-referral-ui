@@ -6,6 +6,7 @@ namespace FamilyHubs.Referral.Web.Pages.Shared;
 
 public class HeaderPageModel : PageModel, IFamilyHubsHeader
 {
+    public bool ShowActionLinks => User.Identity?.IsAuthenticated == true;
     public bool ShowNavigationMenu => true;
 
     LinkStatus IFamilyHubsHeader.GetStatus(FhLinkOptions link)
