@@ -2,6 +2,7 @@
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.SharedKernel.Security;
 using FamilyHubs.ReferralService.Shared.Models;
+using FamilyHubs.Referral.Core.Helper;
 
 namespace FamilyHubs.Referral.Core.ApiClients;
 
@@ -22,8 +23,7 @@ public class ReferralClientService : ApiService, IReferralClientService
 
     public async Task<ReferralResponse> CreateReferral(ReferralDto referralDto, CancellationToken cancellationToken = default)
     {
-        referralDto.ReasonForSupport = await _crypto.EncryptData(referralDto.ReasonForSupport);
-        referralDto.EngageWithFamily = await _crypto.EncryptData(referralDto.EngageWithFamily);
+        referralDto = await referralDto.EncrptReferralAsync(_crypto);
 
         using var response = await Client.PostAsJsonAsync($"{Client.BaseAddress}api/referrals", referralDto, cancellationToken);
         if (!response.IsSuccessStatusCode)
