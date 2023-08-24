@@ -26,7 +26,6 @@
     <PackageReference Include="FamilyHubs.Notification.Api.Client" Version="1.1.1" />
     <PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.0.14" />
     <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="2.0.5" />
-    <PackageReference Include="FamilyHubs.SharedKernel" Version="2.0.35" />
     <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="1.14.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
