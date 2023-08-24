@@ -46,7 +46,7 @@ public class WhenUsingReferralClientService
 
         // Assert
         result.Id.Should().Be(123);
-        _cryptoMock.Verify(c => c.EncryptData(It.IsAny<string>()), Times.Exactly(2));
+        _cryptoMock.Verify(c => c.EncryptData(It.IsAny<string>()), Times.Exactly(11));
     }
 
     [Fact]
@@ -76,7 +76,7 @@ public class WhenUsingReferralClientService
 
         // Act and Assert
         await Assert.ThrowsAsync<ReferralClientServiceException>(() => _referralClientService.CreateReferral(_referralDto));
-        _cryptoMock.Verify(c => c.EncryptData(It.IsAny<string>()), Times.Exactly(2));
+        _cryptoMock.Verify(c => c.EncryptData(It.IsAny<string>()), Times.Exactly(11));
         
     }
 
