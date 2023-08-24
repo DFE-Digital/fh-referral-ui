@@ -7,12 +7,14 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
 using FamilyHubs.SharedKernel.Razor.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
+[Authorize]
 public class LocalOfferResultsModel : PageModel
 {
     private readonly IPostcodeLocationClientService _postcodeLocationClientService;
@@ -23,114 +25,114 @@ public class LocalOfferResultsModel : PageModel
     public List<TaxonomyDto> Categories { get; set; } = default!;
     public double CurrentLatitude { get; set; }
     public double CurrentLongitude { get; set; }
-    public PaginatedList<ServiceDto> SearchResults { get; set; } = new PaginatedList<ServiceDto>();
+    public PaginatedList<ServiceDto> SearchResults { get; set; } = new();
     public string SelectedDistance { get; set; } = "212892";
-    public List<SelectListItem> AgeRange { get; set; } = new List<SelectListItem>
+    public List<SelectListItem> AgeRange { get; set; } = new()
     {
-        new SelectListItem{ Value="-1", Text="All ages" , Selected = true},
-        new SelectListItem{ Value="0", Text="0 to 12 months" },
-        new SelectListItem{ Value="1", Text="1 year old"},
-        new SelectListItem{ Value="2", Text="2 years old"},
-        new SelectListItem{ Value="3", Text="3 years old"},
-        new SelectListItem{ Value="4", Text="4 years old"},
-        new SelectListItem{ Value="5", Text="5 years old"},
-        new SelectListItem{ Value="6", Text="6 years old"},
-        new SelectListItem{ Value="7", Text="7 years old"},
-        new SelectListItem{ Value="8", Text="8 years old"},
-        new SelectListItem{ Value="9", Text="9 years old"},
-        new SelectListItem{ Value="10", Text="10 years old"},
-        new SelectListItem{ Value="11", Text="11 years old"},
-        new SelectListItem{ Value="12", Text="12 years old"},
-        new SelectListItem{ Value="13", Text="13 years old"},
-        new SelectListItem{ Value="14", Text="14 years old"},
-        new SelectListItem{ Value="15", Text="15 years old"},
-        new SelectListItem{ Value="16", Text="16 years old"},
-        new SelectListItem{ Value="17", Text="17 years old"},
-        new SelectListItem{ Value="18", Text="18 years old"},
-        new SelectListItem{ Value="19", Text="19 years old"},
-        new SelectListItem{ Value="20", Text="20 years old"},
-        new SelectListItem{ Value="21", Text="21 years old"},
-        new SelectListItem{ Value="22", Text="22 years old"},
-        new SelectListItem{ Value="23", Text="23 years old"},
-        new SelectListItem{ Value="24", Text="24 years old"},
-        new SelectListItem{ Value="25", Text="25 years old"},
+        new() { Value="-1", Text="All ages" , Selected = true},
+        new() { Value="0", Text="0 to 12 months" },
+        new() { Value="1", Text="1 year old"},
+        new() { Value="2", Text="2 years old"},
+        new() { Value="3", Text="3 years old"},
+        new() { Value="4", Text="4 years old"},
+        new() { Value="5", Text="5 years old"},
+        new() { Value="6", Text="6 years old"},
+        new() { Value="7", Text="7 years old"},
+        new() { Value="8", Text="8 years old"},
+        new() { Value="9", Text="9 years old"},
+        new() { Value="10", Text="10 years old"},
+        new() { Value="11", Text="11 years old"},
+        new() { Value="12", Text="12 years old"},
+        new() { Value="13", Text="13 years old"},
+        new() { Value="14", Text="14 years old"},
+        new() { Value="15", Text="15 years old"},
+        new() { Value="16", Text="16 years old"},
+        new() { Value="17", Text="17 years old"},
+        new() { Value="18", Text="18 years old"},
+        new() { Value="19", Text="19 years old"},
+        new() { Value="20", Text="20 years old"},
+        new() { Value="21", Text="21 years old"},
+        new() { Value="22", Text="22 years old"},
+        new() { Value="23", Text="23 years old"},
+        new() { Value="24", Text="24 years old"},
+        new() { Value="25", Text="25 years old"},
     };
-    public List<SelectListItem> Languages { get; set; } = new List<SelectListItem>
+    public List<SelectListItem> Languages { get; set; } = new()
     {
-        new SelectListItem { Value = "All languages", Text="All languages" , Selected = true},
-        new SelectListItem { Value = "Afrikaans", Text = "Afrikaans" },
-        new SelectListItem { Value = "Albanian", Text = "Albanian" },
-        new SelectListItem { Value = "Arabic", Text = "Arabic" },
-        new SelectListItem { Value = "Armenian", Text = "Armenian" },
-        new SelectListItem { Value = "Basque", Text = "Basque" },
-        new SelectListItem { Value = "Bengali", Text = "Bengali" },
-        new SelectListItem { Value = "Bulgarian", Text = "Bulgarian" },
-        new SelectListItem { Value = "Catalan", Text = "Catalan" },
-        new SelectListItem { Value = "Cambodian", Text = "Cambodian" },
-        new SelectListItem { Value = "Chinese (Mandarin)", Text = "Chinese (Mandarin)" },
-        new SelectListItem { Value = "Croatian", Text = "Croatian" },
-        new SelectListItem { Value = "Czech", Text = "Czech" },
-        new SelectListItem { Value = "Danish", Text = "Danish" },
-        new SelectListItem { Value = "Dutch", Text = "Dutch" },
-        new SelectListItem { Value = "English", Text = "English"},
-        new SelectListItem { Value = "Estonian", Text = "Estonian" },
-        new SelectListItem { Value = "Fiji", Text = "Fiji" },
-        new SelectListItem { Value = "Finnish", Text = "Finnish" },
-        new SelectListItem { Value = "French", Text = "French" },
-        new SelectListItem { Value = "Georgian", Text = "Georgian" },
-        new SelectListItem { Value = "German", Text = "German" },
-        new SelectListItem { Value = "Greek", Text = "Greek" },
-        new SelectListItem { Value = "Gujarati", Text = "Gujarati" },
-        new SelectListItem { Value = "Hebrew", Text = "Hebrew" },
-        new SelectListItem { Value = "Hindi", Text = "Hindi" },
-        new SelectListItem { Value = "Hungarian", Text = "Hungarian" },
-        new SelectListItem { Value = "Icelandic", Text = "Icelandic" },
-        new SelectListItem { Value = "Indonesian", Text = "Indonesian" },
-        new SelectListItem { Value = "Irish", Text = "Irish" },
-        new SelectListItem { Value = "Italian", Text = "Italian" },
-        new SelectListItem { Value = "Japanese", Text = "Japanese" },
-        new SelectListItem { Value = "Javanese", Text = "Javanese" },
-        new SelectListItem { Value = "Korean", Text = "Korean" },
-        new SelectListItem { Value = "Latin", Text = "Latin" },
-        new SelectListItem { Value = "Latvian", Text = "Latvian" },
-        new SelectListItem { Value = "Lithuanian", Text = "Lithuanian" },
-        new SelectListItem { Value = "Macedonian", Text = "Macedonian" },
-        new SelectListItem { Value = "Malay", Text = "Malay" },
-        new SelectListItem { Value = "Malayalam", Text = "Malayalam" },
-        new SelectListItem { Value = "Maltese", Text = "Maltese" },
-        new SelectListItem { Value = "Maori", Text = "Maori" },
-        new SelectListItem { Value = "Marathi", Text = "Marathi" },
-        new SelectListItem { Value = "Mongolian", Text = "Mongolian" },
-        new SelectListItem { Value = "Nepali", Text = "Nepali" },
-        new SelectListItem { Value = "Norwegian", Text = "Norwegian" },
-        new SelectListItem { Value = "Persian", Text = "Persian" },
-        new SelectListItem { Value = "Polish", Text = "Polish" },
-        new SelectListItem { Value = "Portuguese", Text = "Portuguese" },
-        new SelectListItem { Value = "Punjabi", Text = "Punjabi" },
-        new SelectListItem { Value = "Quechua", Text = "Quechua" },
-        new SelectListItem { Value = "Romanian", Text = "Romanian" },
-        new SelectListItem { Value = "Russian", Text = "Russian" },
-        new SelectListItem { Value = "Samoan", Text = "Samoan" },
-        new SelectListItem { Value = "Serbian", Text = "Serbian" },
-        new SelectListItem { Value = "Slovak", Text = "Slovak" },
-        new SelectListItem { Value = "Slovenian", Text = "Slovenian" },
-        new SelectListItem { Value = "Somali", Text = "Somali" },
-        new SelectListItem { Value = "Spanish", Text = "Spanish" },
-        new SelectListItem { Value = "Swahili", Text = "Swahili" },
-        new SelectListItem { Value = "Swedish ", Text = "Swedish " },
-        new SelectListItem { Value = "Tamil", Text = "Tamil" },
-        new SelectListItem { Value = "Tatar", Text = "Tatar" },
-        new SelectListItem { Value = "Telugu", Text = "Telugu" },
-        new SelectListItem { Value = "Thai", Text = "Thai" },
-        new SelectListItem { Value = "Tibetan", Text = "Tibetan" },
-        new SelectListItem { Value = "Tonga", Text = "Tonga" },
-        new SelectListItem { Value = "Turkish", Text = "Turkish" },
-        new SelectListItem { Value = "Ukrainian", Text = "Ukrainian" },
-        new SelectListItem { Value = "Urdu", Text = "Urdu" },
-        new SelectListItem { Value = "Uzbek", Text = "Uzbek" },
-        new SelectListItem { Value = "Vietnamese", Text = "Vietnamese" },
-        new SelectListItem { Value = "Welsh", Text = "Welsh" },
-        new SelectListItem { Value = "Xhosa", Text = "Xhosa" },
+        new() { Value = "All languages", Text="All languages" , Selected = true},
+        new() { Value = "Afrikaans", Text = "Afrikaans" },
+        new() { Value = "Albanian", Text = "Albanian" },
+        new() { Value = "Arabic", Text = "Arabic" },
+        new() { Value = "Armenian", Text = "Armenian" },
+        new() { Value = "Basque", Text = "Basque" },
+        new() { Value = "Bengali", Text = "Bengali" },
+        new() { Value = "Bulgarian", Text = "Bulgarian" },
+        new() { Value = "Catalan", Text = "Catalan" },
+        new() { Value = "Cambodian", Text = "Cambodian" },
+        new() { Value = "Chinese (Mandarin)", Text = "Chinese (Mandarin)" },
+        new() { Value = "Croatian", Text = "Croatian" },
+        new() { Value = "Czech", Text = "Czech" },
+        new() { Value = "Danish", Text = "Danish" },
+        new() { Value = "Dutch", Text = "Dutch" },
+        new() { Value = "English", Text = "English"},
+        new() { Value = "Estonian", Text = "Estonian" },
+        new() { Value = "Fiji", Text = "Fiji" },
+        new() { Value = "Finnish", Text = "Finnish" },
+        new() { Value = "French", Text = "French" },
+        new() { Value = "Georgian", Text = "Georgian" },
+        new() { Value = "German", Text = "German" },
+        new() { Value = "Greek", Text = "Greek" },
+        new() { Value = "Gujarati", Text = "Gujarati" },
+        new() { Value = "Hebrew", Text = "Hebrew" },
+        new() { Value = "Hindi", Text = "Hindi" },
+        new() { Value = "Hungarian", Text = "Hungarian" },
+        new() { Value = "Icelandic", Text = "Icelandic" },
+        new() { Value = "Indonesian", Text = "Indonesian" },
+        new() { Value = "Irish", Text = "Irish" },
+        new() { Value = "Italian", Text = "Italian" },
+        new() { Value = "Japanese", Text = "Japanese" },
+        new() { Value = "Javanese", Text = "Javanese" },
+        new() { Value = "Korean", Text = "Korean" },
+        new() { Value = "Latin", Text = "Latin" },
+        new() { Value = "Latvian", Text = "Latvian" },
+        new() { Value = "Lithuanian", Text = "Lithuanian" },
+        new() { Value = "Macedonian", Text = "Macedonian" },
+        new() { Value = "Malay", Text = "Malay" },
+        new() { Value = "Malayalam", Text = "Malayalam" },
+        new() { Value = "Maltese", Text = "Maltese" },
+        new() { Value = "Maori", Text = "Maori" },
+        new() { Value = "Marathi", Text = "Marathi" },
+        new() { Value = "Mongolian", Text = "Mongolian" },
+        new() { Value = "Nepali", Text = "Nepali" },
+        new() { Value = "Norwegian", Text = "Norwegian" },
+        new() { Value = "Persian", Text = "Persian" },
+        new() { Value = "Polish", Text = "Polish" },
+        new() { Value = "Portuguese", Text = "Portuguese" },
+        new() { Value = "Punjabi", Text = "Punjabi" },
+        new() { Value = "Quechua", Text = "Quechua" },
+        new() { Value = "Romanian", Text = "Romanian" },
+        new() { Value = "Russian", Text = "Russian" },
+        new() { Value = "Samoan", Text = "Samoan" },
+        new() { Value = "Serbian", Text = "Serbian" },
+        new() { Value = "Slovak", Text = "Slovak" },
+        new() { Value = "Slovenian", Text = "Slovenian" },
+        new() { Value = "Somali", Text = "Somali" },
+        new() { Value = "Spanish", Text = "Spanish" },
+        new() { Value = "Swahili", Text = "Swahili" },
+        new() { Value = "Swedish ", Text = "Swedish " },
+        new() { Value = "Tamil", Text = "Tamil" },
+        new() { Value = "Tatar", Text = "Tatar" },
+        new() { Value = "Telugu", Text = "Telugu" },
+        new() { Value = "Thai", Text = "Thai" },
+        new() { Value = "Tibetan", Text = "Tibetan" },
+        new() { Value = "Tonga", Text = "Tonga" },
+        new() { Value = "Turkish", Text = "Turkish" },
+        new() { Value = "Ukrainian", Text = "Ukrainian" },
+        new() { Value = "Urdu", Text = "Urdu" },
+        new() { Value = "Uzbek", Text = "Uzbek" },
+        new() { Value = "Vietnamese", Text = "Vietnamese" },
+        new() { Value = "Welsh", Text = "Welsh" },
+        new() { Value = "Xhosa", Text = "Xhosa" },
     };
 
     [BindProperty]
@@ -176,7 +178,7 @@ public class LocalOfferResultsModel : PageModel
 
     public LocalOfferResultsModel(IPostcodeLocationClientService postcodeLocationClientService, IOrganisationClientService organisationClientService)
     {
-        DictServiceDelivery = new Dictionary<int, string>();
+        DictServiceDelivery = new();
         _postcodeLocationClientService = postcodeLocationClientService;
         _organisationClientService = organisationClientService;
         Pagination = new DontShowPagination();
@@ -375,9 +377,9 @@ public class LocalOfferResultsModel : PageModel
     private async Task GetCategoriesTreeAsync()
     {
         var categories = await _organisationClientService.GetCategories();
-        NestedCategories = new List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>(categories);
+        NestedCategories = new(categories);
 
-        Categories = new List<TaxonomyDto>();
+        Categories = new();
 
         foreach (var category in NestedCategories)
         {

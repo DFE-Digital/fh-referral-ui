@@ -1,10 +1,12 @@
 using System.Text.RegularExpressions;
 using FamilyHubs.Referral.Core.ApiClients;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
+[Authorize]
 public partial class SearchModel : PageModel
 {
     [BindProperty]
