@@ -1,13 +1,13 @@
 using System.Text.RegularExpressions;
 using FamilyHubs.Referral.Core.ApiClients;
+using FamilyHubs.Referral.Web.Pages.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 [Authorize]
-public partial class SearchModel : PageModel
+public partial class SearchModel : HeaderPageModel
 {
     [BindProperty]
     public string Postcode { get; set; } = default!;
