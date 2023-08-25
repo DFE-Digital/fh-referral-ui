@@ -7,13 +7,20 @@ namespace FamilyHubs.Referral.Web.Pages.Shared;
 
 public class HeaderPageModel : PageModel, IFamilyHubsHeader
 {
+    private readonly bool _highlightSearchForService;
+
+    public HeaderPageModel(bool highlightSearchForService = true)
+    {
+        _highlightSearchForService = highlightSearchForService;
+    }
+
     public bool ShowActionLinks => User.Identity?.IsAuthenticated == true;
     public bool ShowNavigationMenu => true;
 
     LinkStatus IFamilyHubsHeader.GetStatus(FhLinkOptions link)
     {
-        //todo: no active if home page
-        return link.Text == "Search for service" ? LinkStatus.Active : LinkStatus.Visible;
+        return _highlightSearchForService
+        && link.Text == "Search for service" ? LinkStatus.Active : LinkStatus.Visible;
     }
 
     IEnumerable<FhLinkOptions> IFamilyHubsHeader.NavigationLinks(FhLinkOptions[] navigationLinks)
