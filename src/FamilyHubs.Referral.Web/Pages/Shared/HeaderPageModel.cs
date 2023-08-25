@@ -15,7 +15,7 @@ public class HeaderPageModel : PageModel, IFamilyHubsHeader
     }
 
     public bool ShowActionLinks => User.Identity?.IsAuthenticated == true;
-    public bool ShowNavigationMenu => true;
+    public bool ShowNavigationMenu => User.Identity?.IsAuthenticated == true;
 
     LinkStatus IFamilyHubsHeader.GetStatus(FhLinkOptions link)
     {
