@@ -55,7 +55,7 @@ public class WhenUsingConnectTelemetryPiiRedactor
         var traceTelemetry = new TraceTelemetry
         {
             Message = "latitude=12.345&other=message",
-            Properties = { { "property1", "postcode=12345" }, { "property2", "longitude=78.901" } }
+            Properties = { { "Scope", "postcode=12345" }, { "QueryString", "latitude=3.1&longitude=78.901" } }
         };
 
         // Act
@@ -73,10 +73,10 @@ public class WhenUsingConnectTelemetryPiiRedactor
         // Assert
         modifiedTraceTelemetry.Message.Should().Be("latitude=REDACTED&other=message");
         modifiedTraceTelemetry.Properties.Should().HaveCount(2)
-            .And.ContainKey("property1").WhoseValue.Should().Be("postcode=REDACTED");
+            .And.ContainKey("Scope").WhoseValue.Should().Be("postcode=REDACTED");
 
         modifiedTraceTelemetry.Properties.Should().HaveCount(2)
-            .And.ContainKey("property2").WhoseValue.Should().Be("longitude=REDACTED");
+            .And.ContainKey("QueryString").WhoseValue.Should().Be("latitude=REDACTED&longitude=REDACTED");
 
 
     }

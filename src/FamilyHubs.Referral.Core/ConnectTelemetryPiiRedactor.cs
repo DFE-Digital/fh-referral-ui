@@ -32,6 +32,7 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
     private static readonly Regex ApiQueryStringRegex = new(@"(?<=latitude=)([-+]?[0-9]*\.?[0-9]+)(?=&)|(?<=longitude=)([-+]?[0-9]*\.?[0-9]+)(?=&)");
     private static readonly Regex PathRegex = new(@"(?<=postcodes\/)[\w% ]+", RegexOptions.Compiled);
     private static readonly string[] TraceItemsToRedact = { "postcode", "latitude", "longitude" };
+    private static readonly string[] TracePropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog", "HostingRequestFinishedLog" };
 
 
     public void Initialize(ITelemetry telemetry)
@@ -58,24 +59,23 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
                 }
                 break;
             case TraceTelemetry traceTelemetry:
-                foreach (var item in TraceItemsToRedact)
+                if (traceTelemetry.Message.IndexOf("postcode") > -1 || traceTelemetry.Message.IndexOf("latitude") > -1)
                 {
-                    if (traceTelemetry.Message.IndexOf(item) > -1)
-                    {
-                        traceTelemetry.Message = Sanitize(PathRegex, traceTelemetry.Message);
-                        traceTelemetry.Message = Sanitize(SiteQueryStringRegex, traceTelemetry.Message);
-                    }
-                    var list = traceTelemetry.Properties.Where(x => x.Value.Contains(item)).ToList();
-                    if (list.Any())
-                    {
-                        foreach (var key in list.Select(x => x.Key))
-                        {
-                            SanitizeProperty(SiteQueryStringRegex, traceTelemetry.Properties, key);
-                            SanitizeProperty(PathRegex, traceTelemetry.Properties, key);
-                        }
-                    }
+                    traceTelemetry.Message = Sanitize(PathRegex, traceTelemetry.Message);
+                    traceTelemetry.Message = Sanitize(SiteQueryStringRegex, traceTelemetry.Message);
                 }
                 
+                var list = traceTelemetry.Properties
+                    .Where(x => (x.Value.Contains("postcode") || x.Value.Contains("latitude")) && TracePropertiesToRedact.Contains(x.Key))
+                    .ToList();
+                if (list.Any())
+                {
+                    foreach (var key in list.Select(x => x.Key))
+                    {
+                        SanitizeProperty(SiteQueryStringRegex, traceTelemetry.Properties, key);
+                        SanitizeProperty(PathRegex, traceTelemetry.Properties, key);
+                    }
+                }
                 break;
             case RequestTelemetry requestTelemetry:
                 foreach (var item in TraceItemsToRedact)
