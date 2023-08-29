@@ -13,6 +13,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class LocalOfferDetailModel : PageModel
 {
     private readonly IOrganisationClientService _organisationClientService;
+    private readonly IIdamsClient _idamsClient;
     public ServiceDto LocalOffer { get; set; } = default!;
 
     public string? ReturnUrl { get; set; }
@@ -29,10 +30,12 @@ public class LocalOfferDetailModel : PageModel
     public string Phone { get; set; } = default!;
     public string Website { get; set; } = default!;
     public string Email { get; set; } = default!;
+    public bool ShowRequestForConnectButton { get; set; } = true;
 
-    public LocalOfferDetailModel(IOrganisationClientService organisationClientService)
+    public LocalOfferDetailModel(IOrganisationClientService organisationClientService, IIdamsClient idamsClient)
     {
         _organisationClientService = organisationClientService;
+        _idamsClient = idamsClient;
     }
 
     public async Task<IActionResult> OnGetAsync(string serviceId)
@@ -43,6 +46,8 @@ public class LocalOfferDetailModel : PageModel
         LocalOffer = await _organisationClientService.GetLocalOfferById(serviceId);
         Name = LocalOffer.Name;
         if (LocalOffer.Locations != null && LocalOffer.Locations.Any()) ExtractAddressParts(LocalOffer.Locations.First());
+        var list = await _idamsClient.GetVcsProfessionalsEmailsAsync(LocalOffer.OrganisationId);
+        ShowRequestForConnectButton = list.Any();
         GetContactDetails();
 
         return Page();
