@@ -31,7 +31,6 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
     private static readonly Regex SiteQueryStringRegex = new(@"(?<=(postcode|latitude|longitude|longtitude)=)[^&]+", RegexOptions.Compiled);
     private static readonly Regex ApiQueryStringRegex = new(@"(?<=latitude=)([-+]?[0-9]*\.?[0-9]+)(?=&)|(?<=longitude=)([-+]?[0-9]*\.?[0-9]+)(?=&)");
     private static readonly Regex PathRegex = new(@"(?<=postcodes\/)[\w% ]+", RegexOptions.Compiled);
-    private static readonly string[] TraceItemsToRedact = { "postcode", "latitude" };
     private static readonly string[] TracePropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog", "HostingRequestFinishedLog" };
 
 
@@ -64,26 +63,26 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
                     traceTelemetry.Message = Sanitize(PathRegex, traceTelemetry.Message);
                     traceTelemetry.Message = Sanitize(SiteQueryStringRegex, traceTelemetry.Message);
                 }
-                
-                var list = traceTelemetry.Properties
-                    .Where(x => (x.Value.Contains("postcode") || x.Value.Contains("latitude")) && TracePropertiesToRedact.Contains(x.Key))
-                    .ToList();
+
+                var list = traceTelemetry.Properties.Where(x => TracePropertiesToRedact.Contains(x.Key));
                 if (list.Any())
                 {
-                    foreach (var key in list.Select(x => x.Key))
+                    list = list.Where(x => x.Value.Contains("postcode") || x.Value.Contains("latitude")).ToList();
+                    if (list.Any())
                     {
-                        SanitizeProperty(SiteQueryStringRegex, traceTelemetry.Properties, key);
-                        SanitizeProperty(PathRegex, traceTelemetry.Properties, key);
+                        foreach (var key in list.Select(x => x.Key))
+                        {
+                            SanitizeProperty(SiteQueryStringRegex, traceTelemetry.Properties, key);
+                            SanitizeProperty(PathRegex, traceTelemetry.Properties, key);
+                        }
                     }
                 }
+                    
                 break;
             case RequestTelemetry requestTelemetry:
-                foreach (var item in TraceItemsToRedact)
+                if (requestTelemetry.Url.ToString().IndexOf("postcode") > -1 || requestTelemetry.Url.ToString().IndexOf("latitude") > -1)
                 {
-                    if (requestTelemetry.Url.ToString().IndexOf(item) > -1)
-                    {
-                        requestTelemetry.Url = Sanitize(SiteQueryStringRegex, requestTelemetry.Url);
-                    }
+                    requestTelemetry.Url = Sanitize(SiteQueryStringRegex, requestTelemetry.Url);
                 }
                 break;
         }
