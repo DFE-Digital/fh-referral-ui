@@ -1,5 +1,5 @@
 ﻿// define DEBUG_REDACTOR to enable debug checks for unredacted data
-#define DEBUG_REDACTOR
+//#define DEBUG_REDACTOR
 
 using System.Diagnostics;
 using System.Text.RegularExpressions;
