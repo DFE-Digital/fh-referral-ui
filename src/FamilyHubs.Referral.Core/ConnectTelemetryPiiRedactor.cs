@@ -64,17 +64,13 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
                     traceTelemetry.Message = Sanitize(SiteQueryStringRegex, traceTelemetry.Message);
                 }
 
-                var list = traceTelemetry.Properties.Where(x => TracePropertiesToRedact.Contains(x.Key));
+                var list = traceTelemetry.Properties.Where(x => TracePropertiesToRedact.Contains(x.Key) && (x.Value.Contains("postcode") || x.Value.Contains("latitude")));
                 if (list.Any())
                 {
-                    list = list.Where(x => x.Value.Contains("postcode") || x.Value.Contains("latitude")).ToList();
-                    if (list.Any())
+                    foreach (var key in list.Select(x => x.Key))
                     {
-                        foreach (var key in list.Select(x => x.Key))
-                        {
-                            SanitizeProperty(SiteQueryStringRegex, traceTelemetry.Properties, key);
-                            SanitizeProperty(PathRegex, traceTelemetry.Properties, key);
-                        }
+                        SanitizeProperty(SiteQueryStringRegex, traceTelemetry.Properties, key);
+                        SanitizeProperty(PathRegex, traceTelemetry.Properties, key);
                     }
                 }
                     
