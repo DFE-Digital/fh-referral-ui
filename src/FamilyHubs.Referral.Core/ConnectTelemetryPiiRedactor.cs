@@ -31,7 +31,7 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
     private static readonly Regex SiteQueryStringRegex = new(@"(?<=(postcode|latitude|longitude|longtitude)=)[^&]+", RegexOptions.Compiled);
     private static readonly Regex ApiQueryStringRegex = new(@"(?<=latitude=)([-+]?[0-9]*\.?[0-9]+)(?=&)|(?<=longitude=)([-+]?[0-9]*\.?[0-9]+)(?=&)");
     private static readonly Regex PathRegex = new(@"(?<=postcodes\/)[\w% ]+", RegexOptions.Compiled);
-    private static readonly string[] TraceItemsToRedact = { "postcode", "latitude", "longitude" };
+    private static readonly string[] TraceItemsToRedact = { "postcode", "latitude" };
     private static readonly string[] TracePropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog", "HostingRequestFinishedLog" };
 
 
