@@ -72,8 +72,6 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
                             SanitizeProperty(SiteQueryStringRegex, traceTelemetry.Properties, key);
                             SanitizeProperty(PathRegex, traceTelemetry.Properties, key);
                         }
-
-                        System.Diagnostics.Debug.WriteLine(traceTelemetry.Message);
                     }
                 }
                 
