@@ -30,6 +30,24 @@ public class WhenUsingConnectTelemetryPiiRedactor
     }
 
     [Fact]
+    public void ThenCallingPostcodesRedactDependencyTelemetry_ApiQueryString_ShouldRedact()
+    {
+        // Arrange
+        var redactor = new ConnectTelemetryPiiRedactor();
+        var dependencyTelemetry = new DependencyTelemetry
+        {
+            Name = "GET /postcodes/",
+            Data = "latitude=12.345&longitude=-67.890&other=data"
+        };
+
+        // Act
+        redactor.Initialize(dependencyTelemetry);
+
+        // Assert
+        dependencyTelemetry.Data.Should().Be("latitude=REDACTED&longitude=REDACTED&other=data");
+    }
+
+    [Fact]
     public void RedactTraceTelemetry_MessageAndProperties_ShouldRedact()
     {
         // Arrange

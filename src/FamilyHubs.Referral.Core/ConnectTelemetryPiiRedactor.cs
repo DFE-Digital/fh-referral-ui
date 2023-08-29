@@ -54,6 +54,7 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
                         dependencyTelemetry.Data = Sanitize(PathRegex, dependencyTelemetry.Data);
 #pragma warning restore CS0618
                     dependencyTelemetry.Name = Sanitize(PathRegex, dependencyTelemetry.Name);
+                    dependencyTelemetry.Data = Sanitize(ApiQueryStringRegex, dependencyTelemetry.Data);
                 }
                 break;
             case TraceTelemetry traceTelemetry:
