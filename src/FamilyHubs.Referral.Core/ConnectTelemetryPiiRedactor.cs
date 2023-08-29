@@ -63,7 +63,7 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
                     traceTelemetry.Message = Sanitize(PathRegex, traceTelemetry.Message);
                     traceTelemetry.Message = Sanitize(SiteQueryStringRegex, traceTelemetry.Message);
                 }
-
+                //todo consider further optimisation
                 var list = traceTelemetry.Properties.Where(x => TracePropertiesToRedact.Contains(x.Key) && (x.Value.Contains("postcode") || x.Value.Contains("latitude")));
                 if (list.Any())
                 {
