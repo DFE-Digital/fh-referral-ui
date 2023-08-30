@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 
-namespace FamilyHubs.Referral.Web.Pages.start_now;
+namespace FamilyHubs.Referral.Web.Pages.pro_redirect;
 
 [Authorize]
 public class IndexModel : PageModel
