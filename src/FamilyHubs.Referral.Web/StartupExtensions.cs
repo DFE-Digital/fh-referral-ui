@@ -14,6 +14,7 @@ using FamilyHubs.Referral.Core;
 using FamilyHubs.Referral.Infrastructure.Notifications;
 using FamilyHubs.SharedKernel.Security;
 using FamilyHubs.SharedKernel.DataProtection;
+using FamilyHubs.SharedKernel.Telemetry;
 
 namespace FamilyHubs.Referral.Web;
 
@@ -42,6 +43,7 @@ public static class StartupExtensions
 
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSingleton<ITelemetryInitializer, ConnectTelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
 
         // Add services to the container.
