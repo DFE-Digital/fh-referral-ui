@@ -175,8 +175,11 @@
                 </div>
             }
         </dl>
-
-        <a asp-page="/ProfessionalReferral/Safeguarding" role="button" draggable="false" class="govuk-button" data-module="govuk-button"
-           asp-route-serviceId="@Model.ServiceId">Request a connection</a>
+        
+        @if (Model.ShowConnectionRequestButton)
+        {
+            <a asp-page="/ProfessionalReferral/Safeguarding" role="button" draggable="false" class="govuk-button" data-module="govuk-button"
+               asp-route-serviceId="@Model.ServiceId">Request a connection</a>
+        }
     </div>
 </div>

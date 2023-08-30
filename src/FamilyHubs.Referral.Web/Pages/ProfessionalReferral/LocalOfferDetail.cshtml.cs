@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.Referral.Web.Pages.Shared;
+using FamilyHubs.SharedKernel.Identity;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -30,6 +31,8 @@ public class LocalOfferDetailModel : HeaderPageModel
     public string Website { get; set; } = default!;
     public string Email { get; set; } = default!;
 
+    public bool ShowConnectionRequestButton { get; set; }
+
     public LocalOfferDetailModel(IOrganisationClientService organisationClientService)
     {
         _organisationClientService = organisationClientService;
@@ -42,8 +45,14 @@ public class LocalOfferDetailModel : HeaderPageModel
         ReturnUrl = StringValues.IsNullOrEmpty(referer) ? Url.Page("Search") : referer.ToString();
         LocalOffer = await _organisationClientService.GetLocalOfferById(serviceId);
         Name = LocalOffer.Name;
-        if (LocalOffer.Locations != null && LocalOffer.Locations.Any()) ExtractAddressParts(LocalOffer.Locations.First());
+        if (LocalOffer.Locations != null && LocalOffer.Locations.Any())
+        {
+            ExtractAddressParts(LocalOffer.Locations.First());
+        }
         GetContactDetails();
+
+        ShowConnectionRequestButton = HttpContext.GetRole() is
+            RoleTypes.LaProfessional or RoleTypes.LaDualRole;
 
         return Page();
     }
