@@ -51,7 +51,7 @@ public class LocalOfferDetailModel : HeaderPageModel
         }
         GetContactDetails();
 
-        ShowConnectionRequestButton = HttpContext.GetRole()is
+        ShowConnectionRequestButton = HttpContext.GetRole() is
             RoleTypes.LaProfessional or RoleTypes.LaDualRole;
 
         return Page();
