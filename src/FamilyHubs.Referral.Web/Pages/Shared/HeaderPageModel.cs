@@ -29,8 +29,9 @@ public class HeaderPageModel : PageModel, IFamilyHubsHeader
         IFamilyHubsUiOptions familyHubsUiOptions)
     {
         string role = HttpContext.GetRole();
+
         return role is RoleTypes.VcsProfessional or RoleTypes.VcsDualRole
-               ? navigationLinks.Reverse()
-               : navigationLinks;
+            ? familyHubsUiOptions.GetAlternative("VcsHeader").Header.NavigationLinks
+            : navigationLinks;
     }
 }
