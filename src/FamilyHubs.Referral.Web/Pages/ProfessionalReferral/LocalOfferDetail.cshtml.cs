@@ -60,7 +60,7 @@ public class LocalOfferDetailModel : HeaderPageModel
         return Page();
     }
 
-    public async Task<bool> ShouldShowConnectionRequestButton()
+    private async Task<bool> ShouldShowConnectionRequestButton()
     {
         bool showConnectionRequestButton = HttpContext.GetRole() is
             RoleTypes.LaProfessional or RoleTypes.LaDualRole;
