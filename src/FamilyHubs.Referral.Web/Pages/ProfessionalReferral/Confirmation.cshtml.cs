@@ -1,7 +1,7 @@
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.SharedKernel.Identity;
-using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
-using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
+using FamilyHubs.SharedKernel.Razor.Header;
+using FamilyHubs.SharedKernel.Razor.Links;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -27,7 +27,7 @@ public class ConfirmationModel : PageModel, IFamilyHubsHeader
         RequestNumber = requestNumber;
     }
 
-    LinkStatus IFamilyHubsHeader.GetStatus(FhLinkOptions link)
+    LinkStatus IFamilyHubsHeader.GetStatus(IFhRenderLink link)
     {
         return link.Text == "Search for service" ? LinkStatus.Active : LinkStatus.Visible;
     }

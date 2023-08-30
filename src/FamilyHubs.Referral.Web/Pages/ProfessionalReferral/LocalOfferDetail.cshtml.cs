@@ -1,16 +1,16 @@
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Primitives;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
+using FamilyHubs.Referral.Web.Pages.Shared;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 [Authorize]
-public class LocalOfferDetailModel : PageModel
+public class LocalOfferDetailModel : HeaderPageModel
 {
     private readonly IOrganisationClientService _organisationClientService;
     public ServiceDto LocalOffer { get; set; } = default!;
