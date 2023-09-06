@@ -33,7 +33,7 @@ public class IdamsClient : IIdamsClient //todo: , IHealthCheckUrlGroup
     }
 
     /// <summary>
-    /// Gets the email addresses of all users associated with the given VCS organsiation,
+    /// Gets the email addresses of all users associated with the given VCS organisation,
     /// that have either the VCS Professional or VCS Dual role.
     /// </summary>
     public async Task<IEnumerable<string>> GetVcsProfessionalsEmailsAsync(
