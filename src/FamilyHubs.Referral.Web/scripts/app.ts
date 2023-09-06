@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function initializeBackButtons() {
 
     // Check if the page wasn't opened in a new tab or a standalone window
-    if (window.opener === null || typeof window.opener === "undefined") {
+    if (history.length > 1) {
 
         // Select all elements with the data-model attribute set to "fh-back-button"
         const backButtonElements = document.querySelectorAll('[data-model="fh-back-button"]');
