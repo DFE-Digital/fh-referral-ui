@@ -1,12 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using FamilyHubs.Referral.Web.Pages.Shared;
 
-namespace FamilyHubs.Referral.Web.Pages.privacy
+namespace FamilyHubs.Referral.Web.Pages.privacy;
+
+public class IndexModel : HeaderPageModel
 {
-    public class IndexModel : PageModel
-    {
-        public void OnGet()
-        {
-        }
-    }
 }
