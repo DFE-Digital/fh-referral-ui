@@ -4,10 +4,6 @@
     ViewData["Title"] = "Search page";
 }
 
-@section Back {
-    <a href="/" class="govuk-back-link" data-testid="back-button">Back</a>
-}
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         @if (!Model.ValidationValid || !Model.PostcodeValid)
