@@ -1,9 +1,9 @@
+using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Razor.Cookies;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.Referral.Web.Pages.cookies;
 
-public class IndexModel : PageModel
+public class IndexModel : HeaderPageModel
 {
     public readonly ICookiePage CookiePage;
 

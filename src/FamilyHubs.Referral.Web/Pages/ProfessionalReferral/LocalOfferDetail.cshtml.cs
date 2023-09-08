@@ -129,12 +129,12 @@ public class LocalOfferDetailModel : HeaderPageModel
                 return;
             var location = LocalOffer.Locations.FirstOrDefault();
 
-            if (location?.Contacts == null || location?.Contacts.Count == 0)
+            if (location?.Contacts == null || location.Contacts.Count == 0)
                 return;
-            var contact = location?.Contacts.FirstOrDefault();
-            Phone = contact?.Telephone!;
-            Website = contact?.Url!;
-            Email = contact?.Email!;
+            var contact = location.Contacts.First();
+            Phone = contact.Telephone;
+            Website = contact.Url!;
+            Email = contact.Email!;
         }
         else
         {
