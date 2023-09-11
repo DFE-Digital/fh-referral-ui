@@ -14,6 +14,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class LocalOfferDetailModel : HeaderPageModel
 {
     private readonly IOrganisationClientService _organisationClientService;
+    private readonly IIdamsClient _idamsClient;
     public ServiceDto LocalOffer { get; set; } = default!;
 
     public string? ReturnUrl { get; set; }
@@ -33,9 +34,10 @@ public class LocalOfferDetailModel : HeaderPageModel
 
     public bool ShowConnectionRequestButton { get; set; }
 
-    public LocalOfferDetailModel(IOrganisationClientService organisationClientService)
+    public LocalOfferDetailModel(IOrganisationClientService organisationClientService, IIdamsClient idamsClient)
     {
         _organisationClientService = organisationClientService;
+        _idamsClient = idamsClient;
     }
 
     public async Task<IActionResult> OnGetAsync(string serviceId)
@@ -50,6 +52,10 @@ public class LocalOfferDetailModel : HeaderPageModel
             ExtractAddressParts(LocalOffer.Locations.First());
         }
         GetContactDetails();
+
+        var rt = await _idamsClient.GetVcsProfessionalsEmailsAsync(1);
+        ArgumentNullException.ThrowIfNull(rt);
+
 
         ShowConnectionRequestButton = HttpContext.GetRole() is
             RoleTypes.LaProfessional or RoleTypes.LaDualRole;

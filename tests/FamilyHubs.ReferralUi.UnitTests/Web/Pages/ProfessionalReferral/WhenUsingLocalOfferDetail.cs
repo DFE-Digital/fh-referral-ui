@@ -40,7 +40,7 @@ public class WhenUsingLocalOfferDetail
         if (serviceDto != null)
             MockIOrganisationClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
 
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, new Mock<IdamsClient>().Object);
         DefaultHttpContext httpContext = new DefaultHttpContext
         {
             Request =
@@ -75,7 +75,7 @@ public class WhenUsingLocalOfferDetail
         serviceDto.Contacts = default!;
         MockIOrganisationClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
 
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, new Mock<IdamsClient>().Object);
         DefaultHttpContext httpContext = new DefaultHttpContext();
         httpContext.Request.Scheme = "http";
         httpContext.Request.Host = new HostString("localhost");
@@ -100,7 +100,7 @@ public class WhenUsingLocalOfferDetail
         ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(1);
         MockIOrganisationClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
 
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, new Mock<IdamsClient>().Object);
         DefaultHttpContext httpContext = new DefaultHttpContext();
         httpContext.Request.Scheme = "http";
         httpContext.Request.Host = new HostString("localhost");
@@ -117,38 +117,13 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.Website.Should().Be("https://www.google.com");
         localOfferDetailModel.Email.Should().Be("Contact@email.com");
 
-    }
-
-    [Fact]
-    public async Task ThenOnGetAsync_LocalOfferDetailWithReferralEnabled()
-    {
-        //Arrange
-        ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(1);
-        MockIOrganisationClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);
-
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object);
-        DefaultHttpContext httpContext = new DefaultHttpContext();
-        httpContext.Request.Scheme = "http";
-        httpContext.Request.Host = new HostString("localhost");
-        httpContext.Request.Headers["Referer"] = "Referer";
-        localOfferDetailModel.PageContext.HttpContext = httpContext;
-
-        //Act 
-        var result = await localOfferDetailModel.OnGetAsync(serviceDto.Id.ToString()) as PageResult;
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().BeOfType<PageResult>();
-        localOfferDetailModel.Phone.Should().Be("01827 65777");
-        localOfferDetailModel.Website.Should().Be("https://www.google.com");
-        localOfferDetailModel.Email.Should().Be("Contact@email.com");
     }
 
     [Fact]
     public void ThenGetDeliveryMethodsAsString_WithNullCollection()
     {
         //Arrange
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, new Mock<IdamsClient>().Object);
 
         //Act
         string result = localOfferDetailModel.GetDeliveryMethodsAsString(default!);
@@ -161,7 +136,7 @@ public class WhenUsingLocalOfferDetail
     public void ThenGetLanguagesAsString_WithNullCollection()
     {
         //Arrange
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, new Mock<IdamsClient>().Object);
 
         //Act
         string result = localOfferDetailModel.GetLanguagesAsString(default!);
@@ -174,7 +149,7 @@ public class WhenUsingLocalOfferDetail
     public void ThenGetLanguagesAsString_ShouldReturnLanguages()
     {
         //Arrange
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, new Mock<IdamsClient>().Object);
         List<LanguageDto> languageDtos = new List<LanguageDto>
         {
             new() { Id = 1, Name = "English", ServiceId = 1 },
@@ -193,7 +168,7 @@ public class WhenUsingLocalOfferDetail
     public void ThenExtractAddressParts_ShouldJustReturn()
     {
         //Arrange
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object);
+        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, new Mock<IdamsClient>().Object);
         LocationDto locationDto = new LocationDto { Address1 = default!, Address2 = default!, City = default!, Country = default!, Latitude = default!, Longitude = default!, LocationType = LocationType.NotSet, Name = default!, PostCode = default!, StateProvince = default! };
 
         //Act
