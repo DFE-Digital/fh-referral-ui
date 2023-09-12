@@ -147,10 +147,17 @@ js-enabled .panel-component__content {
     padding-left: 10px;
 }
 
-.searchable-collection-component .govuk-form-group {
-    margin-bottom: 0;
+.searchable-collection-component {
+    margin-bottom: 20px;
+
+    .govuk-form-group {
+        margin-bottom: 0;
+    }
 }
 
+.moj-filter__heading-action p {
+    font-size: 16px;
+}
 
 //Mobile view
 .app-results-filter-overlay--show-filters {
