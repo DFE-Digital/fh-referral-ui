@@ -43,7 +43,7 @@ else
         <div class="govuk-grid-column-one-third">
             <div class="moj-filter filters-component panel-component__content" id="filters-component" data-controller="filters" data-testid="filtersoverlay">
 
-                <div class="moj-filter__header" style="padding: 0;">
+                <div class="moj-filter__header">
                     <div class="moj-filter__header-action"></div>
                 </div>
 
@@ -53,13 +53,13 @@ else
 
                 <div class="moj-filter__content">
                     <div class="moj-filter__selected">
-                        <div class="govuk-!-padding-bottom-4" style="border-bottom: 1px solid #b1b4b6;">
+                        <div id="filter-results" class="govuk-!-padding-bottom-4">
                             <div class="moj-filter__selected-heading">
                                 <div class="moj-filter__heading-title">
                                     <h2 class="govuk-heading-m">Filter results</h2>
                                 </div>
                                 <div class="moj-filter__heading-action">
-                                    <p style="font-size: 16px">
+                                    <p>
                                         <a asp-page-handler="ClearFilters" class="govuk-link govuk-link--no-visited-state" data-testid="clearfilters">Clear filters</a>
                                     </p>
                                 </div>
@@ -186,7 +186,7 @@ else
                                         <h3 class="govuk-fieldset__heading">Category</h3>
                                     </legend>
                                     <div>
-                                        <div class="searchable-collection-component" style="margin-bottom: 20px;">
+                                        <div class="searchable-collection-component">
                                             <div class="searchable-collection-component--only-scrollable">
 
                                                 @foreach (var categoryKv in Model.NestedCategories)
