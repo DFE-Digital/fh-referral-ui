@@ -14,10 +14,10 @@
 
 	<ItemGroup>
 	  <PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.0.15" />
-	  <PackageReference Include="FamilyHubs.SharedKernel" Version="2.0.41" />
-	  <PackageReference Include="libphonenumber-csharp" Version="8.13.19" />
+	  <PackageReference Include="FamilyHubs.SharedKernel" Version="2.0.42" />
+	  <PackageReference Include="libphonenumber-csharp" Version="8.13.20" />
     <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="2.0.6" />
-    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="7.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="7.0.11" />
     <PackageReference Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="9.9.0.77355">
       <PrivateAssets>all</PrivateAssets>
