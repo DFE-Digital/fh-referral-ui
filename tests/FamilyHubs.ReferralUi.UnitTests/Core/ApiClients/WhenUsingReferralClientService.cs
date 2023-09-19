@@ -13,15 +13,12 @@ namespace FamilyHubs.ReferralUi.UnitTests.Core.ApiClients;
 public class WhenUsingReferralClientService
 {
     private readonly ReferralDto _referralDto;
-    private readonly Mock<ICrypto> _cryptoMock;
     private HttpClient? _httpClient;
     private ReferralClientService? _referralClientService;
 
     public WhenUsingReferralClientService()
     {
         _referralDto = ClientHelper.GetReferralDto();
-        _cryptoMock = new Mock<ICrypto>();
-        _cryptoMock.Setup(c => c.EncryptData(It.IsAny<string>())).Returns((string s) => Task.FromResult("encrypted_" + s));
     }
 
     [Fact]
@@ -36,7 +33,7 @@ public class WhenUsingReferralClientService
         });
 
         _httpClient = ClientHelper.GetMockClient(jsonString);
-        _referralClientService = new ReferralClientService(_httpClient, _cryptoMock.Object);
+        _referralClientService = new ReferralClientService(_httpClient);
         _httpClient.DefaultRequestHeaders.Clear();
         _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer token");
         _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
@@ -46,7 +43,6 @@ public class WhenUsingReferralClientService
 
         // Assert
         result.Id.Should().Be(123);
-        _cryptoMock.Verify(c => c.EncryptData(It.IsAny<string>()), Times.Exactly(11));
     }
 
     [Fact]
@@ -54,7 +50,7 @@ public class WhenUsingReferralClientService
     {
         // Arrange
         _httpClient = new HttpClient();
-        _referralClientService = new ReferralClientService(_httpClient, _cryptoMock.Object);
+        _referralClientService = new ReferralClientService(_httpClient);
 
         var responseContent = "Invalid request";
 
@@ -75,9 +71,7 @@ public class WhenUsingReferralClientService
         _httpClient = new HttpClient(httpMessageHandlerMock.Object);
 
         // Act and Assert
-        await Assert.ThrowsAsync<ReferralClientServiceException>(() => _referralClientService.CreateReferral(_referralDto));
-        _cryptoMock.Verify(c => c.EncryptData(It.IsAny<string>()), Times.Exactly(11));
-        
+        await Assert.ThrowsAsync<ReferralClientServiceException>(() => _referralClientService.CreateReferral(_referralDto)); 
     }
 
 }

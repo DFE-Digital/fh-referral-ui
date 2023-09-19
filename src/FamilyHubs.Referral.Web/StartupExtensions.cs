@@ -66,9 +66,6 @@ public static class StartupExtensions
         const string dataProtectionAppName = "Connect";
         services.AddFamilyHubsDataProtection(configuration, dataProtectionAppName);
 
-        services.AddSingleton<IKeyProvider, KeyProvider>();
-        services.AddSingleton<ICrypto, Crypto>();
-
         services.AddHttpContextAccessor();
 
         services.AddNotificationsApiClient(configuration);
