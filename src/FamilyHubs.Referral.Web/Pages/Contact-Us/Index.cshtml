@@ -8,12 +8,4 @@
     <a class="govuk-back-link fh-back-link">Back</a>
 }
 
-@* todo: looks like this could go in the components*@
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-l govuk-!-margin-bottom-5 govuk-!-margin-top-2">Contact us</h1>
-
-        <p>You can contact us by email at <a href="mailto:@(Model.FamilyHubsUiOptions.SupportEmail)">@(Model.FamilyHubsUiOptions.SupportEmail)</a>. We will aim to respond within 5 working days.
-        <p>You can also <a href="@(Model.FamilyHubsUiOptions.FeedbackUrl)">give us feedback using our survey</a>.</p>
-    </div>
-</div>
+<partial name="_ContactUs" model="Model.FamilyHubsUiOptions" />
