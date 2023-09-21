@@ -1,5 +1,5 @@
 ﻿@page
-@model FamilyHubs.Referral.Web.Pages.Shared.HeaderPageModel
+@model FamilyHubs.Referral.Web.Pages.Shared.FamilyHubsUiPageModel
 @{
     ViewData["Title"] = "Terms and conditions";
 }
@@ -36,7 +36,7 @@
             <li>You must not share your account details with anyone, and you must keep your account details confidential and secure.</li>
             <li>You must not request an account for a shared email address (for example, team@vcs-support.co.uk).</li>
             <li>You accept responsibility for all activities associated with your account.</li>
-            <li>You must contact us by emailing <a href="mailto:Connect-Family-Support.service@education.gov.uk">Connect-Family-Support.service@education.gov.uk</a> as soon as you become aware of any security breach.</li>
+            <li>You must contact us by emailing <a href="mailto:@Model.FamilyHubsUiOptions.SupportEmail">@Model.FamilyHubsUiOptions.SupportEmail</a> as soon as you become aware of any security breach.</li>
             <li>You agree to respond to requests in your organisation’s normal time period.</li>
             <li>You agree to indemnify the DfE against any losses, expenses, damages or claims we may incur as a result of any failure by you to comply with the obligations set out in these terms. </li>
         </ol>
@@ -60,7 +60,7 @@
         <p>The DfE can change these terms and conditions at any time. We’ll tell you about any changes by email at least 10 days before the change happens. We will specify the date that the change will happen in the message.</p>
         <p>If you continue to use our service once the terms and conditions are updated, you agree to any of the changes we’ve made.</p>
         <p>If you do not accept the change, you must stop using Connect families to support.</p>
-        <p>You can make a complaint or give feedback about this service by emailing <a href="mailto:Connect-Family-Support.service@education.gov.uk">Connect-Family-Support.service@education.gov.uk</a></p>
+        <p>You can make a complaint or give feedback about this service by emailing <a href="mailto:@Model.FamilyHubsUiOptions.SupportEmail">@Model.FamilyHubsUiOptions.SupportEmail</a></p>
 
         <p>Last updated: 28 July 2023.</p>
     </div>
