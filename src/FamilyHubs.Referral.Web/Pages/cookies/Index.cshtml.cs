@@ -7,7 +7,8 @@ public class IndexModel : HeaderPageModel
 {
     public readonly ICookiePage CookiePage;
 
-    public IndexModel(ICookiePage cookiePage)
+    public IndexModel(ICookiePage cookiePage, IConfiguration configuration)
+        : base(configuration)
     {
         CookiePage = cookiePage;
     }

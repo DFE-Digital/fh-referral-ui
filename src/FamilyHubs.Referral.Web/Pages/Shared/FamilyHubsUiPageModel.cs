@@ -7,7 +7,10 @@ public class FamilyHubsUiPageModel : HeaderPageModel
 {
     public IFamilyHubsUiOptions FamilyHubsUiOptions { get; }
 
-    public FamilyHubsUiPageModel(IOptions<FamilyHubsUiOptions> familyHubsUiOptions)
+    public FamilyHubsUiPageModel(
+        IOptions<FamilyHubsUiOptions> familyHubsUiOptions,
+        IConfiguration configuration)
+    : base(configuration)
     {
         FamilyHubsUiOptions = familyHubsUiOptions.Value;
     }

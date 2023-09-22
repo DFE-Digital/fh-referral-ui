@@ -36,7 +36,9 @@ public class LocalOfferDetailModel : HeaderPageModel
 
     public LocalOfferDetailModel(
         IOrganisationClientService organisationClientService,
-        IIdamsClient idamsClient)
+        IIdamsClient idamsClient,
+        IConfiguration configuration)
+    : base(configuration)
     {
         _organisationClientService = organisationClientService;
         _idamsClient = idamsClient;

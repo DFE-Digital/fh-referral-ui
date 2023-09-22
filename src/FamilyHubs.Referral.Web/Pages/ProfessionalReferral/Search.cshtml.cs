@@ -17,7 +17,10 @@ public partial class SearchModel : HeaderPageModel
 
     private readonly IPostcodeLocationClientService _postcodeLocationClientService;
 
-    public SearchModel(IPostcodeLocationClientService postcodeLocationClientService)
+    public SearchModel(
+        IPostcodeLocationClientService postcodeLocationClientService,
+        IConfiguration configuration)
+    : base(configuration)
     {
         _postcodeLocationClientService = postcodeLocationClientService;
     }

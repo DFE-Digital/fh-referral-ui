@@ -176,7 +176,11 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     public bool InitialLoad { get; set; } = true;
 
-    public LocalOfferResultsModel(IPostcodeLocationClientService postcodeLocationClientService, IOrganisationClientService organisationClientService)
+    public LocalOfferResultsModel(
+        IPostcodeLocationClientService postcodeLocationClientService,
+        IOrganisationClientService organisationClientService,
+        IConfiguration configuration)
+    : base(configuration)
     {
         DictServiceDelivery = new();
         _postcodeLocationClientService = postcodeLocationClientService;

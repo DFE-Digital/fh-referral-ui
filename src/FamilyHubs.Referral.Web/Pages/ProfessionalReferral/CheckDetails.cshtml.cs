@@ -19,8 +19,9 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     public CheckDetailsModel(
         IConnectionRequestDistributedCache connectionRequestCache,
         IReferralClientService referralClientService,
-        IReferralNotificationService referralNotificationService)
-        : base(ConnectJourneyPage.CheckDetails, connectionRequestCache)
+        IReferralNotificationService referralNotificationService,
+        IConfiguration configuration)
+        : base(ConnectJourneyPage.CheckDetails, connectionRequestCache, configuration)
     {
         _referralClientService = referralClientService;
         _referralNotificationService = referralNotificationService;
