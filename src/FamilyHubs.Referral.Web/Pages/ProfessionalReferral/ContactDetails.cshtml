@@ -17,8 +17,8 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <form method="post">
-            <div class="govuk-form-group  @(error != null ? "govuk-form-group--error" : "")">
-                <fieldset class="govuk-fieldset" aria-describedby="hint @(error != null ? "error" : "")">
+            <div class="govuk-form-group @error?.FormGroupClass">
+                <fieldset class="govuk-fieldset" aria-describedby="hint @error?.InputErrorMessageParaId">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <h1 class="govuk-fieldset__heading">
                             How can the service contact @Model.FullName?
@@ -27,12 +27,7 @@
                     <div id="hint" class="govuk-hint">
                         Select all that apply.
                     </div>
-                    @if (error != null)
-                    {
-                        <p id="error" class="govuk-error-message">
-                            <span class="govuk-visually-hidden">Error:</span> @error.ErrorMessage
-                        </p>
-                    }
+                    <partial name="_ErrorMessage" model="error" />
                     <div id="contact-methods" class="govuk-checkboxes" data-module="govuk-checkboxes">
                         @{
                             // we can either have the names here, or add Display attributes on the enum values.
