@@ -26,6 +26,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "familyhubs-frontend": "5.0.0"
+    "familyhubs-frontend": "5.2.0"
   }
 }
