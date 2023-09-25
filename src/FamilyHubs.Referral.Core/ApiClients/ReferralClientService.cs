@@ -1,8 +1,6 @@
-﻿using System.Net.Http.Json;
-using FamilyHubs.ReferralService.Shared.Dto;
-using FamilyHubs.SharedKernel.Security;
+﻿using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Models;
-using FamilyHubs.Referral.Core.Helper;
+using System.Net.Http.Json;
 
 namespace FamilyHubs.Referral.Core.ApiClients;
 
@@ -14,17 +12,12 @@ public interface IReferralClientService
 //todo: have single combined client (in referralshared)?
 public class ReferralClientService : ApiService, IReferralClientService
 {
-    private readonly ICrypto _crypto;
-
-    public ReferralClientService(HttpClient client, ICrypto crypto) : base(client)
+    public ReferralClientService(HttpClient client) : base(client)
     {
-        _crypto = crypto;
     }
 
     public async Task<ReferralResponse> CreateReferral(ReferralDto referralDto, CancellationToken cancellationToken = default)
     {
-        referralDto = await referralDto.EncrptReferralAsync(_crypto);
-
         using var response = await Client.PostAsJsonAsync($"{Client.BaseAddress}api/referrals", referralDto, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
