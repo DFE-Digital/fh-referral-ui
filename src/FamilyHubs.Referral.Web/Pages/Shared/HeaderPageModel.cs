@@ -15,9 +15,13 @@ public class HeaderPageModel : PageModel, IFamilyHubsHeader
         _highlightSearchForService = highlightSearchForService;
     }
 
-    public bool ShowActionLinks => User.Identity?.IsAuthenticated == true;
-    public bool ShowNavigationMenu => User.Identity?.IsAuthenticated == true;
+    public bool ShowActionLinks => IsAuthenticatedAndTermsAccepted;
+    public bool ShowNavigationMenu => IsAuthenticatedAndTermsAccepted;
 
+    private bool IsAuthenticatedAndTermsAccepted =>
+        User.Identity?.IsAuthenticated == true
+        && HttpContext.TermsAndConditionsAccepted();
+ 
     LinkStatus IFamilyHubsHeader.GetStatus(IFhRenderLink link)
     {
         return _highlightSearchForService
