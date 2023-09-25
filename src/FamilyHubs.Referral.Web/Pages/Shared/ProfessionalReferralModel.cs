@@ -31,8 +31,8 @@ public class ProfessionalReferralModel : HeaderPageModel
     public FamilyHubsUser ProfessionalUser { get; set; } = default!;
 
     public ProfessionalReferralModel(
-        IConnectionRequestDistributedCache connectionRequestDistributedCache,
-        ConnectJourneyPage page)
+        ConnectJourneyPage page,
+        IConnectionRequestDistributedCache connectionRequestDistributedCache)
     {
         ConnectionRequestCache = connectionRequestDistributedCache;
         CurrentPage = page;

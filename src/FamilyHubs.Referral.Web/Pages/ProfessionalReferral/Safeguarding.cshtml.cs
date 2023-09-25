@@ -8,7 +8,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class SafeguardingModel : ProfessionalReferralModel
 {
     public SafeguardingModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
-        : base(connectionRequestDistributedCache, ConnectJourneyPage.Safeguarding)
+        : base(ConnectJourneyPage.Safeguarding, connectionRequestDistributedCache)
     {
     }
 

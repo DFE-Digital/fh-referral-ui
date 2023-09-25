@@ -16,7 +16,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
     protected ProfessionalReferralCacheModel(
         ConnectJourneyPage page,
         IConnectionRequestDistributedCache connectionRequestCache)
-        : base(connectionRequestCache, page)
+        : base(page, connectionRequestCache)
     {
         ErrorState = SharedKernel.Razor.Errors.ErrorState.Empty;
     }
