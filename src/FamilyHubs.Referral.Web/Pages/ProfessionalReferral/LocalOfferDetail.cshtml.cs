@@ -10,7 +10,7 @@ using FamilyHubs.SharedKernel.Identity;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-[Authorize]
+[Authorize(Roles = RoleGroups.LaOrVcsProfessionalOrDualRole)]
 public class LocalOfferDetailModel : HeaderPageModel
 {
     private readonly IOrganisationClientService _organisationClientService;
