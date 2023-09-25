@@ -1,12 +1,13 @@
 using System.Text.RegularExpressions;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Web.Pages.Shared;
+using FamilyHubs.SharedKernel.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-[Authorize]
+[Authorize(Roles = RoleGroups.LaOrVcsProfessionalOrDualRole)]
 public partial class SearchModel : HeaderPageModel
 {
     [BindProperty]

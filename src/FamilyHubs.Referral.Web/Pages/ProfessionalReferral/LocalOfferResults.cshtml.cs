@@ -7,6 +7,7 @@ using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
+using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-[Authorize]
+[Authorize(Roles = RoleGroups.LaOrVcsProfessionalOrDualRole)]
 public class LocalOfferResultsModel : HeaderPageModel
 {
     private readonly IPostcodeLocationClientService _postcodeLocationClientService;
