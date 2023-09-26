@@ -12,7 +12,6 @@ using FamilyHubs.Notification.Api.Client.Extensions;
 using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.Referral.Core;
 using FamilyHubs.Referral.Infrastructure.Notifications;
-using FamilyHubs.SharedKernel.Security;
 using FamilyHubs.SharedKernel.DataProtection;
 using FamilyHubs.SharedKernel.Telemetry;
 
