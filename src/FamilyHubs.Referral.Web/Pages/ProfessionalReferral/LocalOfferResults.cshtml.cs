@@ -204,6 +204,7 @@ public class LocalOfferResultsModel : HeaderPageModel
 
         await GetLocationDetails(this.postcode);
 
+        //todo: it does this every request!
         await GetCategoriesTreeAsync();
 
         CreateServiceDeliveryDictionary();
