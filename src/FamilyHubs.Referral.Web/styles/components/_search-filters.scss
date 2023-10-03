@@ -30,10 +30,6 @@ js-enabled .panel-component__content {
     }
 }
 
-/*.moj-filter__heading-action p {
-    font-size: 16px;
-}*/
-
 #filters {
     @include govuk-media-query($from: tablet) {
         display: block !important;
@@ -42,41 +38,10 @@ js-enabled .panel-component__content {
 
 // Filters
 
-/*.filters-component__remove-tags__tag {
-    -webkit-font-smoothing: antialiased;
-    background-color: #fff;
-    border: 1px solid #0b0c0c;
-    cursor: pointer;
-    font-weight: 400;
-    line-height: 1.5;
-    margin-top: 5px;
-    padding-bottom: 5px;
-    padding-right: 5px;
-    padding-top: 5px;
-    text-align: left;
-    border-radius: 0;
-    background-position: 5px center;
-    padding-left: 25px;
-
-    &:after {
-        display: none;
-    }
-}
-*/
 .border-bottom {
     border-bottom: 1px solid #b1b4b6
 }
 
-/*.moj-filter__options {
-    background-color: #f3f2f1;
-    box-shadow: none;
-}*/
-
-/*.moj-filter__content .moj-filter__selected {
-    box-shadow: none;
-    padding-bottom: 1px;
-}
-*/
 .govuk-checkboxes__label::before,
 .govuk-radios__label::before {
     background-color: #ffffff;
@@ -85,10 +50,6 @@ js-enabled .panel-component__content {
 .filters-component {
     padding: 0;
 }
-
-/*.moj-filter {
-    box-shadow: none;
-}*/
 
 .no-border {
     border: none;
