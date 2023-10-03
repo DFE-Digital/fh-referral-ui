@@ -37,7 +37,7 @@ else
         </div>
     </div>
 
-    <button id="open-close-filters" class="govuk-button govuk-button--secondary app-open-close-filters" data-module="govuk-button" type="button">Open / close filters</button>
+    <button data-toggle-visibility-id="filters" id="open-close-filters" class="govuk-button govuk-button--secondary app-open-close-filters" data-module="govuk-button" type="button">Open / close filters</button>
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-third">
@@ -45,10 +45,6 @@ else
 
                 <div class="moj-filter__header">
                     <div class="moj-filter__header-action"></div>
-                </div>
-
-                <div class="app-results-filter-overlay--heading-right">
-                    <a href="#" class="govuk-link govuk-link--no-underline js-show-hide-filters filters-show-hide-mobile" data-module="return-to-results-link" data-testid="return-to-results-link">Return to results</a>
                 </div>
 
                 <div class="moj-filter__content">
@@ -169,7 +165,7 @@ else
                             }
                         </div>
                     </div>
-                    <div class="moj-filter__options" id="myFilter">
+                    <div id="filters" class="moj-filter__options">
 
                         <button class="govuk-button govuk-!-margin-bottom-4" type="submit" data-module="govuk-button" data-prevent-double-click="true" asp-route-removeFilter=false data-testid="button-apply-filters">
                             Apply filters
