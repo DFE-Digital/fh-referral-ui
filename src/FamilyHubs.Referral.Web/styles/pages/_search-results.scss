@@ -45,6 +45,33 @@
     border-bottom: 1px solid #b1b4b6;
 }*/
 
-.moj-filter__header {
+/*.moj-filter__header {
     padding: 0;
+}*/
+
+.moj-filter__options {
+    background-color: govuk-colour("light-grey");
+}
+
+.moj-filter__tag {
+    line-height: 1.5;
+    padding-left: 25px;
+    background-position: 5px center;
+    border: 2px solid $govuk-link-active-colour;
+    text-align: left;
+
+    &:hover {
+        @include govuk-text-colour;
+        background-color: govuk-colour("white");
+        border: 2px solid $govuk-link-hover-colour;
+        cursor: pointer;
+    }
+
+    &:after {
+        all: unset;
+    }
+
+    &:hover:after {
+        background-image: none;
+    }
 }
