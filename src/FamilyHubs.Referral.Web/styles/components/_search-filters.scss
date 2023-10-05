@@ -1,10 +1,4 @@
 ﻿
-#filters {
-    @include govuk-media-query($from: tablet) {
-        display: block !important;
-    }
-}
-
 .app-filter-group {
     border-bottom: 1px solid $govuk-border-colour;
     @include govuk-responsive-padding(5, "bottom");
