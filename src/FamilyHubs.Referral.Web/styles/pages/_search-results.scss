@@ -31,3 +31,18 @@
 .vacancies_index .search-results dl dt {
     flex-basis: 30%;
 }
+
+.app-open-close-filters {
+    display: none;
+
+    @include govuk-media-query($until: tablet) {
+        display: block;
+        @include govuk-responsive-margin(3, "bottom");
+    }
+}
+
+#filters {
+    @include govuk-media-query($from: tablet) {
+        display: block !important;
+    }
+}
