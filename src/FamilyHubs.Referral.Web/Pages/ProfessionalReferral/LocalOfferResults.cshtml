@@ -171,12 +171,50 @@ else
                             Apply filters
                         </button>
 
-                        <div class="govuk-form-group">
+                        <div class="govuk-form-group app-filter-group">
 
                             <!-- Categories -->
-                            <fieldset class="govuk-fieldset"> </fieldset>
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                    Category
+                                </legend>
+                                <div class="app-sub-filters">
+                                    <div class="app-sub-filters-scrollable">
+                                        @foreach (var categoryKv in Model.NestedCategories)
+                                        {
+                                            <div class="govuk-form-group">
+                                                <fieldset class="govuk-fieldset">
+                                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                                        @categoryKv.Key.Name
+                                                    </legend>
+                                                    <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
 
-                            <div class="filters-component__groups result-filters">
+                                                        @foreach (var subcategory in categoryKv.Value)
+                                                        {
+                                                            <!-- Start sub-category -->
+                                                            <div class="govuk-checkboxes__item">
+                                                                <input class="govuk-checkboxes__input" id="@subcategory.Name.ToLower().Replace(" ", "")"
+                                                                       name="SubcategorySelection" data-testid="@subcategory.Name.ToLower().Replace(" ", "")"
+                                                                       type="checkbox"
+                                                                       value="@subcategory.Id"
+                                                                       @(Model.SubcategorySelection != null && Model.SubcategorySelection.Any(x => x == subcategory.Id.ToString()) ? "checked" : "")>
+                                                                <label class="govuk-label govuk-checkboxes__label" for="@subcategory.Name.ToLower().Replace(" ", "")">
+                                                                    @subcategory.Name
+                                                                </label>
+                                                            </div>
+                                                            <!-- End sub-category -->
+                                                        }
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </div>
+
+                            @*                             <div class="filters-component__groups result-filters">
                                 <div class="filters-component__groups__group" data-filters-target="group" data-group="subjects">
                                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                         <h3 class="govuk-fieldset__heading">Category</h3>
@@ -220,13 +258,14 @@ else
                                     </div>
                                 </div>
                             </div>
-                            <!-- DONE - COST -->
-                            <div class="filters-component__groups__group border-bottom govuk-!-padding-bottom-3 govuk-!-padding-top-3">
-                                <div>
-                                    <div class="govuk-form-group">
+
+ *@                            <!-- DONE - COST -->
+@*                             <div class="filters-component__groups__group border-bottom govuk-!-padding-bottom-3 govuk-!-padding-top-3">
+                                <div> *@
+                                    <div class="govuk-form-group app-filter-group">
                                         <fieldset class="govuk-fieldset">
                                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                                <h3 class="govuk-fieldset__heading">Cost</h3>
+                                                Cost
                                             </legend>
                                             <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                                                 <div class="govuk-checkboxes__item">
@@ -256,15 +295,15 @@ else
                                             </div>
                                         </fieldset>
                                     </div>
-                                </div>
+@*                                 </div>
                             </div>
-                            <!-- DONE - Children and young people -->
-                            <div class="filters-component__groups__group border-bottom govuk-!-padding-bottom-3">
-                                <div>
-                                    <div class="govuk-form-group">
+ *@                            <!-- DONE - Children and young people -->
+@*                             <div class="filters-component__groups__group border-bottom govuk-!-padding-bottom-3">
+                                <div> *@
+                                    <div class="govuk-form-group app-filter-group">
                                         <fieldset class="govuk-fieldset">
                                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                                <h3 class="govuk-fieldset__heading">Children and young people</h3>
+                                                Children and young people
                                             </legend>
                                             <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                                                 <div class="govuk-checkboxes__item">
@@ -296,15 +335,15 @@ else
                                             </div>
                                         </fieldset>
                                     </div>
-                                </div>
-                            </div>
+@*                                 </div>
+                            </div> *@
                             <!-- DONE - Delivery method -->
-                            <div class="filters-component__groups__group">
-                                <div>
-                                    <div class="govuk-form-group">
+@*                             <div class="filters-component__groups__group">
+                                <div> *@
+                            <div class="govuk-form-group app-filter-group">
                                         <fieldset class="govuk-fieldset">
                                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                                <h3 class="govuk-fieldset__heading">Delivery method</h3>
+                                                Delivery method
                                             </legend>
                                             <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                                                 @foreach (var item in Model.DictServiceDelivery)
@@ -326,31 +365,31 @@ else
                                             </div>
                                         </fieldset>
                                     </div>
-                                </div>
-                            </div>
+@*                                 </div>
+                            </div> *@
 
                             <!-- DONE - Language -->
-                            <div class="filters-component__groups__group no-border">
-                                <div>
-                                    <div class="govuk-form-group">
+@*                             <div class="filters-component__groups__group no-border">
+                                <div> *@
+                            <div class="govuk-form-group app-filter-group">
                                         <fieldset class="govuk-fieldset">
                                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                                <h3 class="govuk-fieldset__heading">
+                                                @* <h3 class="govuk-fieldset__heading"> *@
                                                     <label for="SelectedLanguage">Language</label>
-                                                </h3>
+@*                                                 </h3> *@
                                             </legend>
                                             <select asp-for="SelectedLanguage" id="SelectedLanguage" asp-items="Model.Languages" class="govuk-select" data-testid="select-language">
                                                 <option value="" selected disabled>Select language</option>
                                             </select>
                                         </fieldset>
                                     </div>
-                                </div>
-                            </div>
+@*                                 </div>
+                            </div> *@
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+@*         </div> *@
 
         <!-- DONE - Search Results -->
         <div class="govuk-grid-column-two-thirds vacancies_index">
