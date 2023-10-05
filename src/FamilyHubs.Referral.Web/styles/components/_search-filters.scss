@@ -5,16 +5,6 @@
     }
 }
 
-.filters-component {
-    padding: 0;
-}
-
-.no-border {
-    border: none;
-}
-
-//todo: categories filter has border at the bottom of the scroll region, rather than static
-
 .app-filter-group {
     border-bottom: 1px solid $govuk-border-colour;
     @include govuk-responsive-padding(5, "bottom");
@@ -38,4 +28,31 @@
     padding-left: govuk-spacing(2);
     max-height: 400px;
     overflow-y: auto;
+}
+
+.moj-filter__options {
+    background-color: govuk-colour("light-grey");
+}
+
+.moj-filter__tag {
+    line-height: 1.5;
+    padding-left: 25px;
+    background-position: 5px center;
+    border: 2px solid $govuk-link-active-colour;
+    text-align: left;
+
+    &:hover {
+        @include govuk-text-colour;
+        background-color: govuk-colour("white");
+        border: 2px solid $govuk-link-hover-colour;
+        cursor: pointer;
+    }
+
+    &:after {
+        all: unset;
+    }
+
+    &:hover:after {
+        background-image: none;
+    }
 }
