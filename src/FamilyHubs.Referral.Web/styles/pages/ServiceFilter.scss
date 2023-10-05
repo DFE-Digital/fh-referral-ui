@@ -8,16 +8,6 @@
     }
 }
 
-.app-filter-group {
-    border-bottom: 1px solid $govuk-border-colour;
-    &:last-child
-
-{
-    border-bottom: none;
-}
-
-}
-
 .app-family-hub {
     background-color: rgba($govuk-brand-colour, 0.1);
     /*note: we can't use "all" and "top", as that doesn't produce the correct css*/

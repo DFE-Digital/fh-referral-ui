@@ -1,50 +1,8 @@
 ﻿
-js-enabled .panel-component__content {
-    background-color: #f3f2f1;
-    overflow: hidden;
-}
-
-.filters-component {
-    background-color: #f3f2f1;
-    padding: 15px;
-}
-
-.filters-component__groups {
-    padding: 5px 0;
-}
-
-.filters-component__groups .govuk-form-group {
-    margin-bottom: 10px;
-}
-
-.filters-component__groups__group {
-    border-bottom: 1px solid #b1b4b6;
-    margin-bottom: 25px;
-}
-
-.searchable-collection-component {
-    margin-bottom: 20px;
-
-    .govuk-form-group {
-        margin-bottom: 0;
-    }
-}
-
 #filters {
     @include govuk-media-query($from: tablet) {
         display: block !important;
     }
-}
-
-// Filters
-
-.border-bottom {
-    border-bottom: 1px solid #b1b4b6
-}
-
-.govuk-checkboxes__label::before,
-.govuk-radios__label::before {
-    background-color: #ffffff;
 }
 
 .filters-component {
