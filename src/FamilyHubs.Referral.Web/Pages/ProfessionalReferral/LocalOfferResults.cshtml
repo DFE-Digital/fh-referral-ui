@@ -45,10 +45,6 @@ else
     <div class="govuk-grid-column-one-third">
     <div class="moj-filter" id="filters-component" data-controller="filters" data-testid="filtersoverlay">
 
-    <div class="moj-filter__header">
-        <div class="moj-filter__header-action"></div>
-    </div>
-
     <div class="moj-filter__content">
     <div class="moj-filter__selected">
         <div id="filter-results" class="govuk-!-padding-bottom-4">
@@ -57,7 +53,7 @@ else
                     <h2 class="govuk-heading-m">Filter results</h2>
                 </div>
                 <div class="moj-filter__heading-action">
-                    <p>
+                    <p class="govuk-!-font-size-16">
                         <a asp-page="/ProfessionalReferral/LocalOfferResults" asp-route-postcode="@Model.postcode" class="govuk-link govuk-link--no-visited-state" data-testid="clearfilters">Clear filters</a>
                     </p>
                 </div>
