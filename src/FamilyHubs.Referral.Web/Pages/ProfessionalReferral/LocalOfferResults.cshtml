@@ -63,76 +63,72 @@ else
             @if (Model.SubcategorySelection?.Count > 0)
             {
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Category</h3>
+                <ul class="moj-filter-tags">
                 @foreach (var subcategorySelection in Model.SubcategorySelection)
                 {
-                    <ul class="moj-filter-tags">
-                        <li>
-                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removesubcategorySelection" value="@subcategorySelection" data-testid="@subcategorySelection-remove">
-                                <span class="govuk-visually-hidden">Remove this filter</span>
-                                @Model.Categories.FirstOrDefault(c => c.Id.ToString() == subcategorySelection)?.Name
-                            </button>
-                        </li>
-                    </ul>
+                    <li>
+                        <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removesubcategorySelection" value="@subcategorySelection" data-testid="@subcategorySelection-remove">
+                            <span class="govuk-visually-hidden">Remove this filter</span>
+                            @Model.Categories.FirstOrDefault(c => c.Id.ToString() == subcategorySelection)?.Name
+                        </button>
+                    </li>
                 }
+                </ul>
             }
 
             <!-- Remove filter - cost -->
             @if (Model.CostSelection?.Count > 0)
             {
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Cost</h3>
-                @foreach (var costSelected in Model.CostSelection)
-                {
-                    <ul class="moj-filter-tags">
+                <ul class="moj-filter-tags">
+                    @foreach (var costSelected in Model.CostSelection)
+                    {
                         <li>
                             <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeCostSelection" value="@costSelected" data-testid="@costSelected-remove">
                                 <span class="govuk-visually-hidden">Remove this filter</span>
                                 @(costSelected == "paid" ? "Pay to use" : costSelected.ToSentenceCase())
                             </button>
                         </li>
-                    </ul>
-                }
+                    }
+                </ul>
             }
 
             <!-- Remove filter - ServiceDeliverySelection -->
             @if (Model.ServiceDeliverySelection?.Count > 0)
             {
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Delivery method</h3>
+                <ul class="moj-filter-tags">
                 @foreach (var serviceDeliverySelectionSelected in Model.ServiceDeliverySelection)
                 {
                     @if (serviceDeliverySelectionSelected == "1")
                     {
-                        <ul class="moj-filter-tags">
-                            <li>
-                                <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
-                                    <span class="govuk-visually-hidden">Remove this filter</span>
-                                    In Person
-                                </button>
-                            </li>
-                        </ul>
+                        <li>
+                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
+                                <span class="govuk-visually-hidden">Remove this filter</span>
+                                In Person
+                            </button>
+                        </li>
                     }
                     @if (serviceDeliverySelectionSelected == "2")
                     {
-                        <ul class="moj-filter-tags">
-                            <li>
-                                <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
-                                    <span class="govuk-visually-hidden">Remove this filter</span>
-                                    Online
-                                </button>
-                            </li>
-                        </ul>
+                        <li>
+                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
+                                <span class="govuk-visually-hidden">Remove this filter</span>
+                                Online
+                            </button>
+                        </li>
                     }
                     @if (serviceDeliverySelectionSelected == "3")
                     {
-                        <ul class="moj-filter-tags">
-                            <li>
-                                <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
-                                    <span class="govuk-visually-hidden">Remove this filter</span>
-                                    Telephone
-                                </button>
-                            </li>
-                        </ul>
+                        <li>
+                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
+                                <span class="govuk-visually-hidden">Remove this filter</span>
+                                Telephone
+                            </button>
+                        </li>
                     }
                 }
+                </ul>
             }
 
             <!-- Remove filter - SelectedLanguage -->
