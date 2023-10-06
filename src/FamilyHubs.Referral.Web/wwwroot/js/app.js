@@ -1,2 +1,3 @@
-function fhgov(){this.init=function(){e()};let e=function(){const e=document.querySelector(".js-show-hide-filters"),t=document.querySelector(".filters-component"),n=document.querySelector("body");e&&e.addEventListener("click",(function(e){e.preventDefault(),t.classList.toggle("app-results-filter-overlay"),n.classList.toggle("app-results-filter-overlay-active")}))}}window.fhgov=new fhgov,document.addEventListener("DOMContentLoaded",(function(){window.fhgov.init()}));
+
+
 //# sourceMappingURL=app.js.map

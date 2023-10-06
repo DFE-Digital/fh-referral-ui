@@ -32,19 +32,17 @@
     flex-basis: 30%;
 }
 
-.filters-mobile {
+.app-open-close-filters {
     display: none;
+
+    @include govuk-media-query($until: tablet) {
+        display: block;
+        @include govuk-responsive-margin(3, "bottom");
+    }
 }
 
-.filters-component__groups.result-filters {
-    padding-left: 10px;
-    margin-left: -10px;
-}
-
-#filter-results {
-    border-bottom: 1px solid #b1b4b6;
-}
-
-.moj-filter__header {
-    padding: 0;
+#filters {
+    @include govuk-media-query($from: tablet) {
+        display: block !important;
+    }
 }

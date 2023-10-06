@@ -2,6 +2,8 @@
 @using FamilyHubs.Referral.Core.Helper
 @model LocalOfferResultsModel
 @{
+    //todo: if paginated results, should have (page x of n) appended
+    //todo: if no results, should be "No results found"
     ViewData["Title"] = "Search results";
 }
 
@@ -33,397 +35,358 @@ else
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Services, groups and activities in this area</h1>
-                <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/ProfessionalReferral/Search">@Model.postcode</a></span>
+            <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/ProfessionalReferral/Search">@Model.postcode</a></span>
         </div>
     </div>
 
-    <button id="open-close-filters" class="govuk-button govuk-button--secondary app-open-close-filters" data-module="govuk-button" type="button">Open / close filters</button>
+    <button data-toggle-visibility-id="filters" id="open-close-filters" class="govuk-button govuk-button--secondary app-open-close-filters" data-module="govuk-button" type="button">Open / close filters</button>
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-third">
-            <div class="moj-filter filters-component panel-component__content" id="filters-component" data-controller="filters" data-testid="filtersoverlay">
+    <div class="govuk-grid-column-one-third">
+    <div class="moj-filter" id="filters-component" data-controller="filters" data-testid="filtersoverlay">
 
-                <div class="moj-filter__header">
-                    <div class="moj-filter__header-action"></div>
+    <div class="moj-filter__content">
+    <div class="moj-filter__selected">
+        <div id="filter-results" class="govuk-!-padding-bottom-4">
+            <div class="moj-filter__selected-heading">
+                <div class="moj-filter__heading-title">
+                    <h2 class="govuk-heading-m">Filter results</h2>
                 </div>
-
-                <div class="app-results-filter-overlay--heading-right">
-                    <a href="#" class="govuk-link govuk-link--no-underline js-show-hide-filters filters-show-hide-mobile" data-module="return-to-results-link" data-testid="return-to-results-link">Return to results</a>
-                </div>
-
-                <div class="moj-filter__content">
-                    <div class="moj-filter__selected">
-                        <div id="filter-results" class="govuk-!-padding-bottom-4">
-                            <div class="moj-filter__selected-heading">
-                                <div class="moj-filter__heading-title">
-                                    <h2 class="govuk-heading-m">Filter results</h2>
-                                </div>
-                                <div class="moj-filter__heading-action">
-                                    <p>
-                                        <a asp-page="/ProfessionalReferral/LocalOfferResults" asp-route-postcode="@Model.postcode" class="govuk-link govuk-link--no-visited-state" data-testid="clearfilters">Clear filters</a>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Remove filter - SubcategorySelection -->
-                            @if (Model.SubcategorySelection?.Count > 0)
-                            {
-                                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Category</h3>
-                                @foreach (var subcategorySelection in Model.SubcategorySelection)
-                                {
-                                    <ul class="moj-filter-tags filters-component__remove-tags">
-                                        <li>
-                                            <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removesubcategorySelection" value="@subcategorySelection" data-testid="@subcategorySelection-remove">
-                                                <span class="govuk-visually-hidden">Remove this filter</span>
-                                                @Model.Categories.FirstOrDefault(c => c.Id.ToString() == subcategorySelection)?.Name
-                                            </button>
-                                        </li>
-                                    </ul>
-                                }
-                            }
-
-                            <!-- Remove filter - cost -->
-                            @if (Model.CostSelection?.Count > 0)
-                            {
-                                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Cost</h3>
-                                @foreach (var costSelected in Model.CostSelection)
-                                {
-                                    <ul class="moj-filter-tags filters-component__remove-tags">
-                                        <li>
-                                            <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeCostSelection" value="@costSelected" data-testid="@costSelected-remove">
-                                                <span class="govuk-visually-hidden">Remove this filter</span>
-                                                @(costSelected == "paid" ? "Pay to use" : costSelected.ToSentenceCase())
-                                            </button>
-                                        </li>
-                                    </ul>
-                                }
-                            }
-
-                            <!-- Remove filter - ServiceDeliverySelection -->
-                            @if (Model.ServiceDeliverySelection?.Count > 0)
-                            {
-                                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Delivery method</h3>
-                                @foreach (var serviceDeliverySelectionSelected in Model.ServiceDeliverySelection)
-                                {
-                                    @if (serviceDeliverySelectionSelected == "1")
-                                    {
-                                        <ul class="moj-filter-tags filters-component__remove-tags">
-                                            <li>
-                                                <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
-                                                    <span class="govuk-visually-hidden">Remove this filter</span>
-                                                    In Person
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    }
-                                    @if (serviceDeliverySelectionSelected == "2")
-                                    {
-                                        <ul class="moj-filter-tags filters-component__remove-tags">
-                                            <li>
-                                                <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
-                                                    <span class="govuk-visually-hidden">Remove this filter</span>
-                                                    Online
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    }
-                                    @if (serviceDeliverySelectionSelected == "3")
-                                    {
-                                        <ul class="moj-filter-tags filters-component__remove-tags">
-                                            <li>
-                                                <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
-                                                    <span class="govuk-visually-hidden">Remove this filter</span>
-                                                    Telephone
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    }
-                                }
-                            }
-
-                            <!-- Remove filter - SelectedLanguage -->
-                            @if (Model.SelectedLanguage != null)
-                            {
-                                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Language</h3>
-                                <ul class="moj-filter-tags filters-component__remove-tags">
-                                    <li>
-                                        <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeSelectedLanguage" value="@Model.SelectedLanguage" data-testid="@Model.SelectedLanguage-remove">
-                                            <span class="govuk-visually-hidden">Remove this filter</span>
-                                            @Model.SelectedLanguage
-                                        </button>
-                                    </li>
-                                </ul>
-                            }
-
-                            <!-- Remove filter - ForChildrenAndYoungPeople -->
-                            @if (Model.ForChildrenAndYoungPeople && Model.SearchAge != null && int.Parse(Model.SearchAge) >= 0)
-                            {
-                                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">For children and young people</h3>
-                                <ul class="moj-filter-tags filters-component__remove-tags">
-                                    <li>
-                                        <button type="submit" class="moj-filter__tag app-icon-cross filters-component__remove-tags__tag" asp-route-removeFilter=true name="removeSearchAge" value="@Model.SearchAge" data-testid="@Model.SearchAge-remove">
-                                            <span class="govuk-visually-hidden">Remove this filter</span>Age @Model.SearchAge
-                                        </button>
-                                    </li>
-                                </ul>
-                            }
-                        </div>
-                    </div>
-                    <div class="moj-filter__options" id="myFilter">
-
-                        <button class="govuk-button govuk-!-margin-bottom-4" type="submit" data-module="govuk-button" data-prevent-double-click="true" asp-route-removeFilter=false data-testid="button-apply-filters">
-                            Apply filters
-                        </button>
-
-                        <div class="govuk-form-group">
-
-                            <!-- Categories -->
-                            <fieldset class="govuk-fieldset"> </fieldset>
-
-                            <div class="filters-component__groups result-filters">
-                                <div class="filters-component__groups__group" data-filters-target="group" data-group="subjects">
-                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                        <h3 class="govuk-fieldset__heading">Category</h3>
-                                    </legend>
-                                    <div>
-                                        <div class="searchable-collection-component">
-                                            <div class="searchable-collection-component--only-scrollable">
-
-                                                @foreach (var categoryKv in Model.NestedCategories)
-                                                {
-                                                    <!-- Start category -->
-                                                    <div class="govuk-form-group">
-                                                        <fieldset class="govuk-fieldset">
-                                                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                                                @categoryKv.Key.Name
-                                                            </legend>
-                                                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-
-                                                                @foreach (var subcategory in categoryKv.Value)
-                                                                {
-                                                                    <!-- Start sub-category -->
-                                                                    <div class="govuk-checkboxes__item">
-                                                                        <input class="govuk-checkboxes__input" id="@subcategory.Name.ToLower().Replace(" ", "")"
-                                                                               name="SubcategorySelection" data-testid="@subcategory.Name.ToLower().Replace(" ", "")"
-                                                                               type="checkbox"
-                                                                               value="@subcategory.Id"
-                                                                               @(Model.SubcategorySelection != null && Model.SubcategorySelection.Any(x => x == subcategory.Id.ToString()) ? "checked" : "")>
-                                                                        <label class="govuk-label govuk-checkboxes__label" for="@subcategory.Name.ToLower().Replace(" ", "")">
-                                                                            @subcategory.Name
-                                                                        </label>
-                                                                    </div>
-                                                                    <!-- End sub-category -->
-                                                                }
-                                                            </div>
-                                                        </fieldset>
-                                                    </div>
-                                                    <!-- End category -->
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- DONE - COST -->
-                            <div class="filters-component__groups__group border-bottom govuk-!-padding-bottom-3 govuk-!-padding-top-3">
-                                <div>
-                                    <div class="govuk-form-group">
-                                        <fieldset class="govuk-fieldset">
-                                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                                <h3 class="govuk-fieldset__heading">Cost</h3>
-                                            </legend>
-                                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input"
-                                                           id="cost"
-                                                           name="CostSelection"
-                                                           type="checkbox"
-                                                           value="free"
-                                                           @(Model.CostSelection?.Any(x => x == "free") == true ? "checked" : "")
-                                                           data-testid="checkbox-free">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="cost">
-                                                        Free
-                                                    </label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input"
-                                                           id="cost-2"
-                                                           name="CostSelection"
-                                                           type="checkbox"
-                                                           value="paid"
-                                                           @(Model.CostSelection?.Any(x => x == "paid") == true ? "checked" : "")
-                                                           data-testid="checkbox-paid">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="cost-2">
-                                                        Pay to use
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- DONE - Children and young people -->
-                            <div class="filters-component__groups__group border-bottom govuk-!-padding-bottom-3">
-                                <div>
-                                    <div class="govuk-form-group">
-                                        <fieldset class="govuk-fieldset">
-                                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                                <h3 class="govuk-fieldset__heading">Children and young people</h3>
-                                            </legend>
-                                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input"
-                                                           id="ForChildrenAndYoungPeople"
-                                                           name="ForChildrenAndYoungPeople"
-                                                           type="checkbox"
-                                                           value="true"
-                                                           role="button"
-                                                           aria-controls="ExpandForChildrenAndYoungPeopleLabel"
-                                                           aria-expanded="false"
-                                                           ria-labelledby="ForChildrenAndYoungPeopleLabel"
-                                                           @(Model.ForChildrenAndYoungPeople ? "checked" : "")
-                                                           data-testid="checkbox-children">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="ForChildrenAndYoungPeople" id="ForChildrenAndYoungPeopleLabel">
-                                                        For children and young people
-                                                    </label>
-                                                </div>
-                                                <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="ExpandForChildrenAndYoungPeopleLabel">
-                                                    <div class="govuk-form-group">
-                                                        <label class="govuk-label" for="SearchAge">
-                                                            Age
-                                                        </label>
-                                                        <select asp-for="SearchAge" id="SearchAge" asp-items="Model.AgeRange" class="govuk-select" data-testid="select-children">
-                                                            <option value="" selected disabled>Select age</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- DONE - Delivery method -->
-                            <div class="filters-component__groups__group">
-                                <div>
-                                    <div class="govuk-form-group">
-                                        <fieldset class="govuk-fieldset">
-                                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                                <h3 class="govuk-fieldset__heading">Delivery method</h3>
-                                            </legend>
-                                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                                                @foreach (var item in Model.DictServiceDelivery)
-                                                {
-                                                    <div class="govuk-checkboxes__item">
-                                                        <input class="govuk-checkboxes__input"
-                                                               role="checkbox"
-                                                               id="@item.Value.ToLower().Replace(" ", "")"
-                                                               name="ServiceDeliverySelection"
-                                                               data-testid=@($"checkbox-{item.Value.ToLower().Replace(" ", "")}")
-                                                               type="checkbox"
-                                                               value="@item.Key"
-                                                               @(Model.ServiceDeliverySelection != null && Model.ServiceDeliverySelection.Any(x => x == item.Key.ToString()) ? "checked" : "")>
-                                                        <label class="govuk-label govuk-checkboxes__label" for="@item.Value.ToLower().Replace(" ", "")">
-                                                            @item.Value.ToSentenceCase()
-                                                        </label>
-                                                    </div>
-                                                }
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- DONE - Language -->
-                            <div class="filters-component__groups__group no-border">
-                                <div>
-                                    <div class="govuk-form-group">
-                                        <fieldset class="govuk-fieldset">
-                                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                                <h3 class="govuk-fieldset__heading">
-                                                    <label for="SelectedLanguage">Language</label>
-                                                </h3>
-                                            </legend>
-                                            <select asp-for="SelectedLanguage" id="SelectedLanguage" asp-items="Model.Languages" class="govuk-select" data-testid="select-language">
-                                                <option value="" selected disabled>Select language</option>
-                                            </select>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="moj-filter__heading-action">
+                    <p class="govuk-!-font-size-16">
+                        <a asp-page="/ProfessionalReferral/LocalOfferResults" asp-route-postcode="@Model.postcode" class="govuk-link govuk-link--no-visited-state" data-testid="clearfilters">Clear filters</a>
+                    </p>
                 </div>
             </div>
-        </div>
 
-        <!-- DONE - Search Results -->
-        <div class="govuk-grid-column-two-thirds vacancies_index">
-            @if (Model.SearchResults.TotalCount == 0)
+            <!-- Remove filter - SubcategorySelection -->
+            @if (Model.SubcategorySelection?.Count > 0)
             {
-                <h2 class="govuk-heading-m" data-testid="noservicesfound">No services found</h2>
-                <p data-testid="trysearchingagain">Try searching again by changing or removing filters you applied.</p>
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Category</h3>
+                <ul class="moj-filter-tags">
+                @foreach (var subcategorySelection in Model.SubcategorySelection)
+                {
+                    <li>
+                        <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removesubcategorySelection" value="@subcategorySelection" data-testid="@subcategorySelection-remove">
+                            <span class="govuk-visually-hidden">Remove this filter</span>
+                            @Model.Categories.FirstOrDefault(c => c.Id.ToString() == subcategorySelection)?.Name
+                        </button>
+                    </li>
+                }
+                </ul>
             }
-            else
-            {
-                <ul class="search-results" role="list">
-                    @foreach (var item in Model.SearchResults.Items)
-                    {
-                        <li role="listitem" tab-index="0">
-                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-                                <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-serviceid="@item.Id" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
-                            </h2>
-                            <p class="govuk-caption-m">
-                                @if (item.Locations.FirstOrDefault() != null)
-                                {
-                                    @Model.GetAddressAsString(item.Locations.FirstOrDefault())
-                                }
-                            </p>
-                            @if(item.Taxonomies.Any())
-                            {
-                                <dl class="govuk-body-s dtmargins">
-                                    <dt class="govuk-!-font-weight-bold">Category</dt>
-                                    <dd>
-                                        <ul class="govuk-list govuk-list--bullet govuk-body-s">
-                                            @foreach (var serviceTaxonomy in item.Taxonomies)
-                                            {
-                                                <li>@serviceTaxonomy.Name</li>
-                                            }
-                                        </ul>
-                                    </dd>
-                                </dl>
-                            }
-                            <dl class="govuk-body-s dtmargins">
-                                <dt class="govuk-!-font-weight-bold">Cost</dt>
-                                @if (item.CostOptions.FirstOrDefault()?.Amount != null && item.CostOptions.FirstOrDefault()?.Amount > 0)
-                                {
-                                    <dd>£@item.CostOptions.FirstOrDefault()?.Amount every @item.CostOptions.FirstOrDefault()?.AmountDescription?.ToLower()</dd>
-                                }
-                                else
-                                {
-                                    <dd>Free</dd>
-                                }
-                            </dl>
 
-                            @if (item.ServiceDeliveries.Count > 0)
-                            {
-                                <dl class="govuk-body-s dtmargins">
-                                    <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-                                    <dd>@Model.GetDeliveryMethodsAsString(item.ServiceDeliveries)</dd>
-                                </dl>
-                            }
-                            @if (item.Languages.Any(l => !string.IsNullOrWhiteSpace(l.Name)))
-                            {
-                                <dl class="govuk-body-s dtmargins">
-                                    <dt class="govuk-!-font-weight-bold">Language</dt>
-                                    <dd>@Model.GetLanguagesAsString(item.Languages)</dd>
-                                </dl>
-                            }
+            <!-- Remove filter - cost -->
+            @if (Model.CostSelection?.Count > 0)
+            {
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Cost</h3>
+                <ul class="moj-filter-tags">
+                    @foreach (var costSelected in Model.CostSelection)
+                    {
+                        <li>
+                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeCostSelection" value="@costSelected" data-testid="@costSelected-remove">
+                                <span class="govuk-visually-hidden">Remove this filter</span>
+                                @(costSelected == "paid" ? "Pay to use" : costSelected.ToSentenceCase())
+                            </button>
                         </li>
                     }
                 </ul>
-                <partial name="_LargeSetPaginationForm" model='Model.Pagination'/>
+            }
+
+            <!-- Remove filter - ServiceDeliverySelection -->
+            @if (Model.ServiceDeliverySelection?.Count > 0)
+            {
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Delivery method</h3>
+                <ul class="moj-filter-tags">
+                @foreach (var serviceDeliverySelectionSelected in Model.ServiceDeliverySelection)
+                {
+                    @if (serviceDeliverySelectionSelected == "1")
+                    {
+                        <li>
+                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
+                                <span class="govuk-visually-hidden">Remove this filter</span>
+                                In Person
+                            </button>
+                        </li>
+                    }
+                    @if (serviceDeliverySelectionSelected == "2")
+                    {
+                        <li>
+                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
+                                <span class="govuk-visually-hidden">Remove this filter</span>
+                                Online
+                            </button>
+                        </li>
+                    }
+                    @if (serviceDeliverySelectionSelected == "3")
+                    {
+                        <li>
+                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
+                                <span class="govuk-visually-hidden">Remove this filter</span>
+                                Telephone
+                            </button>
+                        </li>
+                    }
+                }
+                </ul>
+            }
+
+            <!-- Remove filter - SelectedLanguage -->
+            @if (Model.SelectedLanguage != null)
+            {
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Language</h3>
+                <ul class="moj-filter-tags">
+                    <li>
+                        <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeSelectedLanguage" value="@Model.SelectedLanguage" data-testid="@Model.SelectedLanguage-remove">
+                            <span class="govuk-visually-hidden">Remove this filter</span>
+                            @Model.SelectedLanguage
+                        </button>
+                    </li>
+                </ul>
+            }
+
+            <!-- Remove filter - ForChildrenAndYoungPeople -->
+            @if (Model.ForChildrenAndYoungPeople && Model.SearchAge != null && int.Parse(Model.SearchAge) >= 0)
+            {
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">For children and young people</h3>
+                <ul class="moj-filter-tags">
+                    <li>
+                        <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeSearchAge" value="@Model.SearchAge" data-testid="@Model.SearchAge-remove">
+                            <span class="govuk-visually-hidden">Remove this filter</span>Age @Model.SearchAge
+                        </button>
+                    </li>
+                </ul>
             }
         </div>
+    </div>
+    <div id="filters" class="moj-filter__options">
+
+        <button class="govuk-button govuk-!-margin-bottom-4" type="submit" data-module="govuk-button" data-prevent-double-click="true" asp-route-removeFilter=false data-testid="button-apply-filters">
+            Apply filters
+        </button>
+
+        <div class="govuk-form-group fh-filter-group">
+
+            <!-- Categories -->
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    Category
+                </legend>
+                <div class="fh-sub-filters">
+                    <div class="fh-sub-filters-scrollable">
+                        @foreach (var categoryKv in Model.NestedCategories)
+                        {
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                        @categoryKv.Key.Name
+                                    </legend>
+                                    <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+
+                                        @foreach (var subcategory in categoryKv.Value)
+                                        {
+                                            <!-- Start sub-category -->
+                                            <div class="govuk-checkboxes__item">
+                                                <input class="govuk-checkboxes__input" id="@subcategory.Name.ToLower().Replace(" ", "")"
+                                                       name="SubcategorySelection" data-testid="@subcategory.Name.ToLower().Replace(" ", "")"
+                                                       type="checkbox"
+                                                       value="@subcategory.Id"
+                                                       @(Model.SubcategorySelection != null && Model.SubcategorySelection.Any(x => x == subcategory.Id.ToString()) ? "checked" : "")>
+                                                <label class="govuk-label govuk-checkboxes__label" for="@subcategory.Name.ToLower().Replace(" ", "")">
+                                                    @subcategory.Name
+                                                </label>
+                                            </div>
+                                            <!-- End sub-category -->
+                                        }
+                                    </div>
+                                </fieldset>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </fieldset>
+        </div>
+
+        <div class="govuk-form-group fh-filter-group">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    Cost
+                </legend>
+                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input"
+                               id="cost"
+                               name="CostSelection"
+                               type="checkbox"
+                               value="free"
+                               @(Model.CostSelection?.Any(x => x == "free") == true ? "checked" : "")
+                               data-testid="checkbox-free">
+                        <label class="govuk-label govuk-checkboxes__label" for="cost">
+                            Free
+                        </label>
+                    </div>
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input"
+                               id="cost-2"
+                               name="CostSelection"
+                               type="checkbox"
+                               value="paid"
+                               @(Model.CostSelection?.Any(x => x == "paid") == true ? "checked" : "")
+                               data-testid="checkbox-paid">
+                        <label class="govuk-label govuk-checkboxes__label" for="cost-2">
+                            Pay to use
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="govuk-form-group fh-filter-group">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    Children and young people
+                </legend>
+                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input"
+                               id="ForChildrenAndYoungPeople"
+                               name="ForChildrenAndYoungPeople"
+                               type="checkbox"
+                               value="true"
+                               role="button"
+                               aria-controls="ExpandForChildrenAndYoungPeopleLabel"
+                               aria-expanded="false"
+                               ria-labelledby="ForChildrenAndYoungPeopleLabel"
+                               @(Model.ForChildrenAndYoungPeople ? "checked" : "")
+                               data-testid="checkbox-children">
+                        <label class="govuk-label govuk-checkboxes__label" for="ForChildrenAndYoungPeople" id="ForChildrenAndYoungPeopleLabel">
+                            For children and young people
+                        </label>
+                    </div>
+                    <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="ExpandForChildrenAndYoungPeopleLabel">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="SearchAge">
+                                Age
+                            </label>
+                            <select asp-for="SearchAge" id="SearchAge" asp-items="Model.AgeRange" class="govuk-select" data-testid="select-children">
+                                <option value="" selected disabled>Select age</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="govuk-form-group fh-filter-group">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    Delivery method
+                </legend>
+                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                    @foreach (var item in Model.DictServiceDelivery)
+                    {
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input"
+                                   role="checkbox"
+                                   id="@item.Value.ToLower().Replace(" ", "")"
+                                   name="ServiceDeliverySelection"
+                                   data-testid=@($"checkbox-{item.Value.ToLower().Replace(" ", "")}")
+                                   type="checkbox"
+                                   value="@item.Key"
+                                   @(Model.ServiceDeliverySelection != null && Model.ServiceDeliverySelection.Any(x => x == item.Key.ToString()) ? "checked" : "")>
+                            <label class="govuk-label govuk-checkboxes__label" for="@item.Value.ToLower().Replace(" ", "")">
+                                @item.Value.ToSentenceCase()
+                            </label>
+                        </div>
+                    }
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="govuk-form-group fh-filter-group">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    <label for="SelectedLanguage">Language</label>
+                </legend>
+                <select asp-for="SelectedLanguage" id="SelectedLanguage" asp-items="Model.Languages" class="govuk-select" data-testid="select-language">
+                    <option value="" selected disabled>Select language</option>
+                </select>
+            </fieldset>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- DONE - Search Results -->
+    <div class="govuk-grid-column-two-thirds vacancies_index">
+        @if (Model.SearchResults.TotalCount == 0)
+        {
+            <h2 class="govuk-heading-m" data-testid="noservicesfound">No services found</h2>
+            <p data-testid="trysearchingagain">Try searching again by changing or removing filters you applied.</p>
+        }
+        else
+        {
+            <ul class="search-results" role="list">
+                @foreach (var item in Model.SearchResults.Items)
+                {
+                    <li role="listitem" tab-index="0">
+                        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+                            <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-serviceid="@item.Id" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
+                        </h2>
+                        <p class="govuk-caption-m">
+                            @if (item.Locations.FirstOrDefault() != null)
+                            {
+                                @Model.GetAddressAsString(item.Locations.FirstOrDefault())
+                            }
+                        </p>
+                        @if(item.Taxonomies.Any())
+                        {
+                            <dl class="govuk-body-s dtmargins">
+                                <dt class="govuk-!-font-weight-bold">Category</dt>
+                                <dd>
+                                    <ul class="govuk-list govuk-list--bullet govuk-body-s">
+                                        @foreach (var serviceTaxonomy in item.Taxonomies)
+                                        {
+                                            <li>@serviceTaxonomy.Name</li>
+                                        }
+                                    </ul>
+                                </dd>
+                            </dl>
+                        }
+                        <dl class="govuk-body-s dtmargins">
+                            <dt class="govuk-!-font-weight-bold">Cost</dt>
+                            @if (item.CostOptions.FirstOrDefault()?.Amount != null && item.CostOptions.FirstOrDefault()?.Amount > 0)
+                            {
+                                <dd>£@item.CostOptions.FirstOrDefault()?.Amount every @item.CostOptions.FirstOrDefault()?.AmountDescription?.ToLower()</dd>
+                            }
+                            else
+                            {
+                                <dd>Free</dd>
+                            }
+                        </dl>
+
+                        @if (item.ServiceDeliveries.Count > 0)
+                        {
+                            <dl class="govuk-body-s dtmargins">
+                                <dt class="govuk-!-font-weight-bold">Delivery method</dt>
+                                <dd>@Model.GetDeliveryMethodsAsString(item.ServiceDeliveries)</dd>
+                            </dl>
+                        }
+                        @if (item.Languages.Any(l => !string.IsNullOrWhiteSpace(l.Name)))
+                        {
+                            <dl class="govuk-body-s dtmargins">
+                                <dt class="govuk-!-font-weight-bold">Language</dt>
+                                <dd>@Model.GetLanguagesAsString(item.Languages)</dd>
+                            </dl>
+                        }
+                    </li>
+                }
+            </ul>
+            <partial name="_LargeSetPaginationForm" model='Model.Pagination'/>
+        }
+    </div>
     </div>
 }
 </form>
