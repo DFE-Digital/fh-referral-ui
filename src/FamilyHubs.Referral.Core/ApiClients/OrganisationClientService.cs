@@ -114,7 +114,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
 
     private static string GetPositionUrl(string? serviceType, double? latitude, double? longitude, double? proximity, string status, int pageNumber, int pageSize)
     {
-        return $"api/services?serviceType={serviceType}&status={status}&pageNumber={pageNumber}&pageSize={pageSize}&isFamilyHub=false{(
+        return $"api/services-simple?serviceType={serviceType}&status={status}&pageNumber={pageNumber}&pageSize={pageSize}&isFamilyHub=false{(
                 latitude != null ? $"&latitude={latitude}" : string.Empty)}{(
                 longitude != null ? $"&longitude={longitude}" : string.Empty)}{(
                 proximity != null ? $"&proximity={proximity}" : string.Empty)}";
@@ -151,7 +151,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/services/{id}"),
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple/{id}"),
         };
 
         using var response = await Client.SendAsync(request);
