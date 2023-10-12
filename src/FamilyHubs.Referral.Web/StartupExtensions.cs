@@ -81,9 +81,17 @@ public static class StartupExtensions
             .AddUrlGroup(new Uri(notificationApiUrl!), "NotificationAPI", HealthStatus.Degraded, new[] {"InternalAPI"})
             .AddUrlGroup(new Uri(idamsApiUrl!), "IdamsAPI", HealthStatus.Degraded, new[] {"InternalAPI"})
             .AddSqlServer(sqlServerCacheConnectionString!, failureStatus: HealthStatus.Degraded, tags: new[] {"Database"});
-            //todo: check sql health too, as we have a direct dependency on it
-            //todo: check for one login, if we can
-            //todo: check feedback link?
+        //todo: check sql health too, as we have a direct dependency on it
+        //todo: check for one login, if we can
+        //todo: check feedback link?
+
+        // health check UI
+        //services
+        //    .AddHealthChecksUI()
+        //    .AddInMemoryStorage();
+
+        //services.AddInMemoryStorage();
+        //.AddInMemoryStorage();
 
         services.AddFamilyHubs(configuration);
     }
@@ -182,6 +190,8 @@ public static class StartupExtensions
         app.UseStaticFiles();
 
         app.UseRouting();
+            // health check UI
+            //.UseEndpoints(config => config.MapHealthChecksUI());
 
         app.UseGovLoginAuthentication();
 
