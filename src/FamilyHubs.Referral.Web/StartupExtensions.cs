@@ -69,6 +69,7 @@ public static class StartupExtensions
 #pragma warning disable S1075
         const string postcodesIoUrl = "http://api.postcodes.io";
 #pragma warning restore S1075
+        var sqlServerCacheConnectionString = configuration.GetValue<string>("SqlServerCache:Connection");
 
         //todo: null handling. use config exception?
 
@@ -78,7 +79,8 @@ public static class StartupExtensions
             .AddUrlGroup(new Uri(serviceDirectoryApiUrl!), "ServiceDirectoryAPI", HealthStatus.Degraded, new[] {"InternalAPI"})
             .AddUrlGroup(new Uri(referralApiUrl!), "ReferralAPI", HealthStatus.Degraded, new[] {"InternalAPI"})
             .AddUrlGroup(new Uri(notificationApiUrl!), "NotificationAPI", HealthStatus.Degraded, new[] {"InternalAPI"})
-            .AddUrlGroup(new Uri(idamsApiUrl!), "IdamsAPI", HealthStatus.Degraded, new[] {"InternalAPI"});
+            .AddUrlGroup(new Uri(idamsApiUrl!), "IdamsAPI", HealthStatus.Degraded, new[] {"InternalAPI"})
+            .AddSqlServer(sqlServerCacheConnectionString!, failureStatus: HealthStatus.Degraded, tags: new[] {"Database"});
             //todo: check sql health too, as we have a direct dependency on it
             //todo: check for one login, if we can
             //todo: check feedback link?
