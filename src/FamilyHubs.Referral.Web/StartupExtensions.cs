@@ -12,9 +12,11 @@ using FamilyHubs.Notification.Api.Client.Extensions;
 using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.Referral.Core;
 using FamilyHubs.Referral.Infrastructure.Notifications;
-using FamilyHubs.SharedKernel.Security;
 using FamilyHubs.SharedKernel.DataProtection;
 using FamilyHubs.SharedKernel.Telemetry;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace FamilyHubs.Referral.Web;
 
@@ -57,6 +59,29 @@ public static class StartupExtensions
             {
                 options.HtmlHelperOptions.ClientValidationEnabled = false;
             });
+
+        //todo: move this out to its own extension method
+        var serviceDirectoryApiUrl = configuration.GetValue<string>("ServiceDirectoryUrl");
+        var referralApiUrl = configuration.GetValue<string>("ReferralApiUrl");
+        var notificationApiUrl = configuration.GetValue<string>("Notification:Endpoint");
+        var idamsApiUrl = configuration.GetValue<string>("Idams:Endpoint");
+        //todo: postcodes io url is hardcoded! switch to find's postcodes io client
+#pragma warning disable S1075
+        const string postcodesIoUrl = "http://api.postcodes.io";
+#pragma warning restore S1075
+
+        //todo: null handling. use config exception?
+
+        // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
+        services.AddHealthChecks()
+            .AddUrlGroup(new Uri(postcodesIoUrl), "PostcodesIo", HealthStatus.Degraded, new[] {"ExternalAPI"})
+            .AddUrlGroup(new Uri(serviceDirectoryApiUrl!), "ServiceDirectoryAPI", HealthStatus.Degraded, new[] {"InternalAPI"})
+            .AddUrlGroup(new Uri(referralApiUrl!), "ReferralAPI", HealthStatus.Degraded, new[] {"InternalAPI"})
+            .AddUrlGroup(new Uri(notificationApiUrl!), "NotificationAPI", HealthStatus.Degraded, new[] {"InternalAPI"})
+            .AddUrlGroup(new Uri(idamsApiUrl!), "IdamsAPI", HealthStatus.Degraded, new[] {"InternalAPI"});
+            //todo: check sql health too, as we have a direct dependency on it
+            //todo: check for one login, if we can
+            //todo: check feedback link?
 
         services.AddFamilyHubs(configuration);
     }
@@ -159,6 +184,12 @@ public static class StartupExtensions
         app.UseGovLoginAuthentication();
 
         app.MapRazorPages();
+
+        app.MapHealthChecks("/health", new HealthCheckOptions
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
 
         return app.Services;
     }
