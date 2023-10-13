@@ -53,7 +53,6 @@ public static class HealthCheck
 #pragma warning restore S1075
         var oneLoginUrl = configuration.GetValue<string>("GovUkOidcConfiguration:Oidc:BaseUrl");
         var sqlServerCacheConnectionString = configuration.GetValue<string>("SqlServerCache:Connection");
-        string? feedbackUrl = configuration.GetValue<string>("FamilyHubsUi:FeedbackUrl");
 
         var keyVaultKey = configuration.GetValue<string>("DataProtection:KeyIdentifier");
         int keysIndex = keyVaultKey!.IndexOf("/keys/");
@@ -75,7 +74,8 @@ public static class HealthCheck
         var healthCheckBuilder = services.AddHealthChecks()
             .AddIdentityServer(new Uri(oneLoginUrl!), name: "One Login", failureStatus: HealthStatus.Degraded, tags: new[] { "ExternalAPI" })
             .AddUrlGroup(new Uri(postcodesIoUrl), "PostcodesIo", HealthStatus.Degraded, new[] { "ExternalAPI" })
-            .AddUrlGroup(new Uri(feedbackUrl!), "Feedback", HealthStatus.Degraded, new[] { "ExternalSite" })
+            //todo: family hubs helper?
+            .AddApi("Feedback Site", "FamilyHubsUi:FeedbackUrl", configuration)
             .AddApi("Service Directory API", "ServiceDirectoryUrl", configuration)
             .AddApi("Referral API", "ReferralApiUrl", configuration)
             .AddApi("Notification API", "Notification:Endpoint", configuration)
