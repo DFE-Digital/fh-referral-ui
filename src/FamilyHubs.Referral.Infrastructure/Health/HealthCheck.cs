@@ -11,10 +11,12 @@ namespace FamilyHubs.Referral.Infrastructure.Health;
 
 public static class HealthCheck
 {
-    public enum ApiType
+    public enum UrlType
     {
-        Internal,
-        External
+        InternalApi,
+        ExternalApi,
+        InternalSite,
+        ExternalSite
     }
 
     public static IHealthChecksBuilder AddApi(
@@ -22,7 +24,7 @@ public static class HealthCheck
         string name,
         string configKey,
         IConfiguration configuration,
-        ApiType apiType = ApiType.Internal)
+        UrlType urlType = UrlType.InternalApi)
     {
         string? apiUrl = configuration.GetValue<string>(configKey);
 
@@ -35,7 +37,7 @@ public static class HealthCheck
         {
             // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
             builder.AddUrlGroup(new Uri(apiUrl), name, HealthStatus.Degraded,
-                new[] {apiType == ApiType.External ? "ExternalAPI" : "InternalAPI"});
+                new[] {urlType.ToString()});
         }
 
         return builder;
@@ -45,9 +47,6 @@ public static class HealthCheck
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var referralApiUrl = configuration.GetValue<string>("ReferralApiUrl");
-        var notificationApiUrl = configuration.GetValue<string>("Notification:Endpoint");
-        var idamsApiUrl = configuration.GetValue<string>("Idams:Endpoint");
         //todo: postcodes io url is hardcoded! switch to find's postcodes io client? strategic switch coming
 #pragma warning disable S1075
         const string postcodesIoUrl = "http://api.postcodes.io";
@@ -78,9 +77,9 @@ public static class HealthCheck
             .AddUrlGroup(new Uri(postcodesIoUrl), "PostcodesIo", HealthStatus.Degraded, new[] { "ExternalAPI" })
             .AddUrlGroup(new Uri(feedbackUrl!), "Feedback", HealthStatus.Degraded, new[] { "ExternalSite" })
             .AddApi("Service Directory API", "ServiceDirectoryUrl", configuration)
-            .AddUrlGroup(new Uri(referralApiUrl!), "ReferralAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
-            .AddUrlGroup(new Uri(notificationApiUrl!), "NotificationAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
-            .AddUrlGroup(new Uri(idamsApiUrl!), "IdamsAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
+            .AddApi("Referral API", "ReferralApiUrl", configuration)
+            .AddApi("Notification API", "Notification:Endpoint", configuration)
+            .AddApi("Idams API", "Idams:Endpoint", configuration)
             .AddSqlServer(sqlServerCacheConnectionString!, failureStatus: HealthStatus.Degraded, tags: new[] { "Database" })
             //todo: tag as AKV, name as Data Protection Key?
             .AddAzureKeyVault(new Uri(keyVaultUrl!), keyVaultCredentials, s => s.AddKey(keyName), name:"Azure Key Vault", failureStatus: HealthStatus.Degraded, tags: new[] { "Infrastructure" });
