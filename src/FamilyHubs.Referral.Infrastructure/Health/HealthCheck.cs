@@ -11,7 +11,6 @@ namespace FamilyHubs.Referral.Infrastructure.Health;
 
 public static class HealthCheck
 {
-    // extension method to add health checks
     public static IServiceCollection AddSiteHealthChecks(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -20,12 +19,14 @@ public static class HealthCheck
         var referralApiUrl = configuration.GetValue<string>("ReferralApiUrl");
         var notificationApiUrl = configuration.GetValue<string>("Notification:Endpoint");
         var idamsApiUrl = configuration.GetValue<string>("Idams:Endpoint");
-        //todo: postcodes io url is hardcoded! switch to find's postcodes io client
+        //todo: postcodes io url is hardcoded! switch to find's postcodes io client? strategic switch coming
 #pragma warning disable S1075
         const string postcodesIoUrl = "http://api.postcodes.io";
 #pragma warning restore S1075
         var oneLoginUrl = configuration.GetValue<string>("GovUkOidcConfiguration:Oidc:BaseUrl");
         var sqlServerCacheConnectionString = configuration.GetValue<string>("SqlServerCache:Connection");
+        string? feedbackUrl = configuration.GetValue<string>("FamilyHubsUi:FeedbackUrl");
+
         var keyVaultKey = configuration.GetValue<string>("DataProtection:KeyIdentifier");
         int keysIndex = keyVaultKey!.IndexOf("/keys/");
         string keyVaultUrl = keyVaultKey[..keysIndex];
@@ -46,6 +47,7 @@ public static class HealthCheck
         var healthCheckBuilder = services.AddHealthChecks()
             .AddIdentityServer(new Uri(oneLoginUrl!), name: "One Login", failureStatus: HealthStatus.Degraded, tags: new[] { "ExternalAPI" })
             .AddUrlGroup(new Uri(postcodesIoUrl), "PostcodesIo", HealthStatus.Degraded, new[] { "ExternalAPI" })
+            .AddUrlGroup(new Uri(feedbackUrl!), "Feedback", HealthStatus.Degraded, new[] { "ExternalSite" })
             .AddUrlGroup(new Uri(serviceDirectoryApiUrl!), "ServiceDirectoryAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
             .AddUrlGroup(new Uri(referralApiUrl!), "ReferralAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
             .AddUrlGroup(new Uri(notificationApiUrl!), "NotificationAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
