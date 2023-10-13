@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
+using FamilyHubs.SharedKernel.GovLogin.Configuration;
 
 namespace FamilyHubs.Referral.Infrastructure.Health;
 
@@ -22,19 +23,20 @@ public static class HealthCheck
 #pragma warning disable S1075
         const string postcodesIoUrl = "http://api.postcodes.io";
 #pragma warning restore S1075
+        var oneLoginUrl = configuration.GetValue<string>("GovUkOidcConfiguration:Oidc:BaseUrl");
         var sqlServerCacheConnectionString = configuration.GetValue<string>("SqlServerCache:Connection");
 
         //todo: null handling. use config exception?
 
         // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
         services.AddHealthChecks()
+            .AddIdentityServer(new Uri(oneLoginUrl!), name: "One Login", failureStatus: HealthStatus.Degraded, tags: new[] { "ExternalAPI" })
             .AddUrlGroup(new Uri(postcodesIoUrl), "PostcodesIo", HealthStatus.Degraded, new[] { "ExternalAPI" })
             .AddUrlGroup(new Uri(serviceDirectoryApiUrl!), "ServiceDirectoryAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
             .AddUrlGroup(new Uri(referralApiUrl!), "ReferralAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
             .AddUrlGroup(new Uri(notificationApiUrl!), "NotificationAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
             .AddUrlGroup(new Uri(idamsApiUrl!), "IdamsAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
             .AddSqlServer(sqlServerCacheConnectionString!, failureStatus: HealthStatus.Degraded, tags: new[] { "Database" });
-        //todo: check for one login, if we can
         //todo: check feedback link?
 
 #pragma warning disable S125
