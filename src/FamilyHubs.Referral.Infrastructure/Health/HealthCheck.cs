@@ -11,11 +11,40 @@ namespace FamilyHubs.Referral.Infrastructure.Health;
 
 public static class HealthCheck
 {
+    public enum ApiType
+    {
+        Internal,
+        External
+    }
+
+    public static IHealthChecksBuilder AddApi(
+        this IHealthChecksBuilder builder,
+        string name,
+        string configKey,
+        IConfiguration configuration,
+        ApiType apiType = ApiType.Internal)
+    {
+        string? apiUrl = configuration.GetValue<string>(configKey);
+
+        // Only add the health check if the config key is set.
+        // Either the API is optional (or not used locally) and missing intentionally,
+        // in which case there's no need to add the health check,
+        // or it's required, but in that case, the real consumer of the API should
+        // continue to throw it's own relevant exception
+        if (!string.IsNullOrEmpty(apiUrl))
+        {
+            // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
+            builder.AddUrlGroup(new Uri(apiUrl), name, HealthStatus.Degraded,
+                new[] {apiType == ApiType.External ? "ExternalAPI" : "InternalAPI"});
+        }
+
+        return builder;
+    }
+
     public static IServiceCollection AddSiteHealthChecks(
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var serviceDirectoryApiUrl = configuration.GetValue<string>("ServiceDirectoryUrl");
         var referralApiUrl = configuration.GetValue<string>("ReferralApiUrl");
         var notificationApiUrl = configuration.GetValue<string>("Notification:Endpoint");
         var idamsApiUrl = configuration.GetValue<string>("Idams:Endpoint");
@@ -48,14 +77,13 @@ public static class HealthCheck
             .AddIdentityServer(new Uri(oneLoginUrl!), name: "One Login", failureStatus: HealthStatus.Degraded, tags: new[] { "ExternalAPI" })
             .AddUrlGroup(new Uri(postcodesIoUrl), "PostcodesIo", HealthStatus.Degraded, new[] { "ExternalAPI" })
             .AddUrlGroup(new Uri(feedbackUrl!), "Feedback", HealthStatus.Degraded, new[] { "ExternalSite" })
-            .AddUrlGroup(new Uri(serviceDirectoryApiUrl!), "ServiceDirectoryAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
+            .AddApi("Service Directory API", "ServiceDirectoryUrl", configuration)
             .AddUrlGroup(new Uri(referralApiUrl!), "ReferralAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
             .AddUrlGroup(new Uri(notificationApiUrl!), "NotificationAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
             .AddUrlGroup(new Uri(idamsApiUrl!), "IdamsAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
             .AddSqlServer(sqlServerCacheConnectionString!, failureStatus: HealthStatus.Degraded, tags: new[] { "Database" })
             //todo: tag as AKV, name as Data Protection Key?
             .AddAzureKeyVault(new Uri(keyVaultUrl!), keyVaultCredentials, s => s.AddKey(keyName), name:"Azure Key Vault", failureStatus: HealthStatus.Degraded, tags: new[] { "Infrastructure" });
-        //todo: check feedback link?
 
         // not usually set running locally
         string? aiInstrumentationKey = configuration.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY");
