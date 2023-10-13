@@ -25,7 +25,6 @@
     <PackageReference Include="Enums.NET" Version="4.0.1" />
     <PackageReference Include="FamilyHubs.Notification.Api.Client" Version="1.1.1" />
     <PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.0.15" />
-    <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="2.0.7" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
