@@ -63,20 +63,6 @@ public static class HealthCheck
             healthCheckBuilder.AddAzureApplicationInsights(aiInstrumentationKey!, "App Insights", HealthStatus.Degraded, new[] {"Infrastructure"});
         }
 
-#pragma warning disable S125
-        // health check UI
-        services
-            .AddHealthChecksUI(setupSettings: setup =>
-                {
-                    setup.AddHealthCheckEndpoint("endpoint1", "/health");
-                }
-            )
-           .AddInMemoryStorage();
-
-        //services.AddInMemoryStorage();
-        // .AddInMemoryStorage();
-#pragma warning restore S125
-
         return services;
     }
 
