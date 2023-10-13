@@ -80,7 +80,7 @@ public static class HealthCheck
             .AddUrlGroup(new Uri("http://api.postcodes.io"), "PostcodesIo", HealthStatus.Degraded, new[] { "ExternalAPI" })
 #pragma warning restore S1075
             //todo: family hubs helper?
-            .AddApi("Feedback Site", "FamilyHubsUi:FeedbackUrl", config)
+            .AddApi("Feedback Site", "FamilyHubsUi:FeedbackUrl", config, UrlType.ExternalSite)
             .AddApi("Service Directory API", "ServiceDirectoryUrl", config)
             .AddApi("Referral API", "ReferralApiUrl", config)
             .AddApi("Notification API", "Notification:Endpoint", config)
