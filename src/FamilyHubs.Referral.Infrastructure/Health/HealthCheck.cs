@@ -84,7 +84,7 @@ public static class HealthCheck
             .AddApi("Service Directory API", "ServiceDirectoryUrl", config)
             .AddApi("Referral API", "ReferralApiUrl", config)
             .AddApi("Notification API", "Notification:Endpoint", config)
-            .AddApi("Idams API", "Idams:Endpoint", config)
+            .AddApi("Idams API", "GovUkOidcConfiguration:IdamsApiBaseUrl", config)
             .AddSqlServer(sqlServerCacheConnectionString!, failureStatus: HealthStatus.Degraded, tags: new[] { "Database" })
             //todo: tag as AKV, name as Data Protection Key?
             .AddAzureKeyVault(new Uri(keyVaultUrl), keyVaultCredentials, s => s.AddKey(keyName), name:"Azure Key Vault", failureStatus: HealthStatus.Degraded, tags: new[] { "Infrastructure" });
