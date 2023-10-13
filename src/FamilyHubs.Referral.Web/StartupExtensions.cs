@@ -156,9 +156,9 @@ public static class StartupExtensions
 
         app.UseStaticFiles();
 
-        app.UseRouting();
+        app.UseRouting()
             // health check UI
-            //.UseEndpoints(config => config.MapHealthChecksUI());
+            .UseEndpoints(config => config.MapHealthChecksUI());
 
         app.UseGovLoginAuthentication();
 

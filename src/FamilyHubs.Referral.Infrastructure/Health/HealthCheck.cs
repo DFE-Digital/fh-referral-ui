@@ -6,9 +6,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using Azure.Core;
 using Azure.Identity;
-using Microsoft.AspNetCore.DataProtection;
-using FamilyHubs.SharedKernel.DataProtection;
-using Azure.Security.KeyVault.Keys;
 
 namespace FamilyHubs.Referral.Infrastructure.Health;
 
@@ -45,9 +42,6 @@ public static class HealthCheck
             configuration.GetValue<string>("DataProtection:ClientId"),
             configuration.GetValue<string>("DataProtection:ClientSecret"));
 
-        string? aiInstrumentationKey = configuration.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY");
-        
-
         // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
         var healthCheckBuilder = services.AddHealthChecks()
             .AddIdentityServer(new Uri(oneLoginUrl!), name: "One Login", failureStatus: HealthStatus.Degraded, tags: new[] { "ExternalAPI" })
@@ -62,6 +56,7 @@ public static class HealthCheck
         //todo: check feedback link?
 
         // not usually set running locally
+        string? aiInstrumentationKey = configuration.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY");
         if (!string.IsNullOrEmpty(aiInstrumentationKey))
         {
             //todo: check in dev env
@@ -70,11 +65,15 @@ public static class HealthCheck
 
 #pragma warning disable S125
         // health check UI
-        // services
-        //     .AddHealthChecksUI()
-        //    .AddInMemoryStorage();
+        services
+            .AddHealthChecksUI(setupSettings: setup =>
+                {
+                    setup.AddHealthCheckEndpoint("endpoint1", "/health");
+                }
+            )
+           .AddInMemoryStorage();
 
-        // services.AddInMemoryStorage();
+        //services.AddInMemoryStorage();
         // .AddInMemoryStorage();
 #pragma warning restore S125
 
