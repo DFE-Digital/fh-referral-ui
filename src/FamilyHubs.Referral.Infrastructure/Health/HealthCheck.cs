@@ -94,7 +94,7 @@ public static class HealthCheck
         if (!string.IsNullOrEmpty(aiInstrumentationKey))
         {
             //todo: check in dev env
-            healthCheckBuilder.AddAzureApplicationInsights(aiInstrumentationKey!, "App Insights", HealthStatus.Degraded, new[] {"Infrastructure"});
+            healthCheckBuilder.AddAzureApplicationInsights(aiInstrumentationKey, "App Insights", HealthStatus.Degraded, new[] {"Infrastructure"});
         }
 
         return services;
