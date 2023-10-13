@@ -4,7 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
-using FamilyHubs.SharedKernel.GovLogin.Configuration;
+using Azure.Core;
+using Azure.Identity;
+using Microsoft.AspNetCore.DataProtection;
+using FamilyHubs.SharedKernel.DataProtection;
+using Azure.Security.KeyVault.Keys;
 
 namespace FamilyHubs.Referral.Infrastructure.Health;
 
@@ -25,8 +29,21 @@ public static class HealthCheck
 #pragma warning restore S1075
         var oneLoginUrl = configuration.GetValue<string>("GovUkOidcConfiguration:Oidc:BaseUrl");
         var sqlServerCacheConnectionString = configuration.GetValue<string>("SqlServerCache:Connection");
+        var keyVaultKey = configuration.GetValue<string>("DataProtection:KeyIdentifier");
+        int keysIndex = keyVaultKey!.IndexOf("/keys/");
+        string keyVaultUrl = keyVaultKey[..keysIndex];
+        string keyName = keyVaultKey[(keysIndex + 6)..];
+
+        //todo: dataprotectionoptions is internal and clashes with a MS class
+        // add extension to IHealthChecksBuilder to add health checks for keyvault (and sql) for dataprotection. single call to add DataProtection health checks, with overridable tag defaulting to DataProtection
+        // add extension to common clients etc. that way centralise where config comes from and config exceptions
 
         //todo: null handling. use config exception?
+
+        TokenCredential keyVaultCredentials = new ClientSecretCredential(
+            configuration.GetValue<string>("DataProtection:TenantId"),
+            configuration.GetValue<string>("DataProtection:ClientId"),
+            configuration.GetValue<string>("DataProtection:ClientSecret"));
 
         // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
         services.AddHealthChecks()
@@ -36,7 +53,8 @@ public static class HealthCheck
             .AddUrlGroup(new Uri(referralApiUrl!), "ReferralAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
             .AddUrlGroup(new Uri(notificationApiUrl!), "NotificationAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
             .AddUrlGroup(new Uri(idamsApiUrl!), "IdamsAPI", HealthStatus.Degraded, new[] { "InternalAPI" })
-            .AddSqlServer(sqlServerCacheConnectionString!, failureStatus: HealthStatus.Degraded, tags: new[] { "Database" });
+            .AddSqlServer(sqlServerCacheConnectionString!, failureStatus: HealthStatus.Degraded, tags: new[] { "Database" })
+            .AddAzureKeyVault(new Uri(keyVaultUrl!), keyVaultCredentials, s => s.AddKey(keyName), name:"Azure Key Vault", failureStatus: HealthStatus.Degraded, tags: new[] { "Infrastructure" });
         //todo: check feedback link?
 
 #pragma warning disable S125

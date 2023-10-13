@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+	  <PackageReference Include="AspNetCore.HealthChecks.AzureApplicationInsights" Version="7.0.0" />
+	  <PackageReference Include="AspNetCore.HealthChecks.AzureKeyVault" Version="7.0.0" />
 	  <PackageReference Include="AspNetCore.HealthChecks.OpenIdConnectServer" Version="7.0.0" />
 	  <PackageReference Include="AspNetCore.HealthChecks.UI" Version="7.0.2" />
 	  <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="7.1.0" />
