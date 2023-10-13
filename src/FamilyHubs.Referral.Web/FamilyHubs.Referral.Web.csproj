@@ -22,11 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="7.0.2" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="7.1.0" />
-    <!--<PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="7.0.0" />-->
-    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="7.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="7.0.0" />
     <PackageReference Include="Enums.NET" Version="4.0.1" />
     <PackageReference Include="FamilyHubs.Notification.Api.Client" Version="1.1.1" />
     <PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.0.15" />
