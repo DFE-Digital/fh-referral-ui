@@ -65,7 +65,7 @@ public static class HealthCheck
         // add extension to IHealthChecksBuilder to add health checks for keyvault (and sql) for dataprotection. single call to add DataProtection health checks, with overridable tag defaulting to DataProtection
         // add extension to common clients etc. that way centralise where config comes from and config exceptions
 
-        //todo: null handling. use config exception?
+        //todo: do we want to health check each instance of e.g. sql server connection, in case are different?
 
         TokenCredential keyVaultCredentials = new ClientSecretCredential(
             config.GetValue<string>("DataProtection:TenantId"),
