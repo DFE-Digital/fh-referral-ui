@@ -38,7 +38,8 @@ public static class HealthCheck
             if (urlType == UrlType.InternalApi)
             {
                 //todo: add "/health" endpoints to all APIs
-                apiUrl += "/api/info";
+
+                apiUrl = apiUrl.TrimEnd('/') + "/api/info";
             }
 
             // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
@@ -79,15 +80,24 @@ public static class HealthCheck
             //todo: postcodes io url is hardcoded! switch to find's postcodes io client? strategic switch coming
             .AddUrlGroup(new Uri("http://api.postcodes.io"), "PostcodesIo", HealthStatus.Degraded, new[] { "ExternalAPI" })
 #pragma warning restore S1075
-            //todo: family hubs helper?
+            //todo: family hubs helper? pick up from config?
             .AddApi("Feedback Site", "FamilyHubsUi:FeedbackUrl", config, UrlType.ExternalSite)
             .AddApi("Service Directory API", "ServiceDirectoryUrl", config)
             .AddApi("Referral API", "ReferralApiUrl", config)
-            .AddApi("Notification API", "Notification:Endpoint", config)
             .AddApi("Idams API", "GovUkOidcConfiguration:IdamsApiBaseUrl", config)
             .AddSqlServer(sqlServerCacheConnectionString!, failureStatus: HealthStatus.Degraded, tags: new[] { "Database" })
             //todo: tag as AKV, name as Data Protection Key?
             .AddAzureKeyVault(new Uri(keyVaultUrl), keyVaultCredentials, s => s.AddKey(keyName), name:"Azure Key Vault", failureStatus: HealthStatus.Degraded, tags: new[] { "Infrastructure" });
+
+        string? notificationApiUrl = config.GetValue<string>("Notification:Endpoint");
+        if (!string.IsNullOrEmpty(notificationApiUrl))
+        {
+            // special case as Url contains path
+            //todo: change notifications client to use host and append path
+            notificationApiUrl = notificationApiUrl.Replace("/api/notify", "/api/info");
+            healthCheckBuilder.AddUrlGroup(new Uri(notificationApiUrl), "Notification API", HealthStatus.Degraded,
+                new[] { UrlType.InternalApi.ToString() });
+        }
 
         // not usually set running locally
         string? aiInstrumentationKey = config.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY");
