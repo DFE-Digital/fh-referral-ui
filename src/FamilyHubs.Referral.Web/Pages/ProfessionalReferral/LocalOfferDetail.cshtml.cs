@@ -14,7 +14,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class LocalOfferDetailModel : HeaderPageModel
 {
     private readonly IOrganisationClientService _organisationClientService;
-    private readonly IIdamsClient _idamsClient;
+    //private readonly IIdamsClient _idamsClient;
     public ServiceDto LocalOffer { get; set; } = default!;
 
     public string? ReturnUrl { get; set; }
@@ -32,14 +32,14 @@ public class LocalOfferDetailModel : HeaderPageModel
     public string Website { get; set; } = default!;
     public string Email { get; set; } = default!;
 
-    public bool ShowConnectionRequestButton { get; set; }
+    //public bool ShowConnectionRequestButton { get; set; }
 
     public LocalOfferDetailModel(
-        IOrganisationClientService organisationClientService,
-        IIdamsClient idamsClient)
+        IOrganisationClientService organisationClientService)
+//        IIdamsClient idamsClient)
     {
         _organisationClientService = organisationClientService;
-        _idamsClient = idamsClient;
+        //_idamsClient = idamsClient;
     }
 
     public async Task<IActionResult> OnGetAsync(string serviceId)
@@ -55,24 +55,24 @@ public class LocalOfferDetailModel : HeaderPageModel
         }
         GetContactDetails();
 
-        ShowConnectionRequestButton = await ShouldShowConnectionRequestButton();
+        //ShowConnectionRequestButton = await ShouldShowConnectionRequestButton();
 
         return Page();
     }
 
-    private async Task<bool> ShouldShowConnectionRequestButton()
-    {
-        bool showConnectionRequestButton = HttpContext.GetRole() is
-            RoleTypes.LaProfessional or RoleTypes.LaDualRole;
-        if (showConnectionRequestButton)
-        {
-            var vcsProEmails = await _idamsClient
-                .GetVcsProfessionalsEmailsAsync(LocalOffer.OrganisationId);
-            showConnectionRequestButton = vcsProEmails.Any();
-        }
+    //private async Task<bool> ShouldShowConnectionRequestButton()
+    //{
+    //    bool showConnectionRequestButton = HttpContext.GetRole() is
+    //        RoleTypes.LaProfessional or RoleTypes.LaDualRole;
+    //    if (showConnectionRequestButton)
+    //    {
+    //        var vcsProEmails = await _idamsClient
+    //            .GetVcsProfessionalsEmailsAsync(LocalOffer.OrganisationId);
+    //        showConnectionRequestButton = vcsProEmails.Any();
+    //    }
 
-        return showConnectionRequestButton;
-    }
+    //    return showConnectionRequestButton;
+    //}
 
     public string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto>? serviceDeliveries)
     {
