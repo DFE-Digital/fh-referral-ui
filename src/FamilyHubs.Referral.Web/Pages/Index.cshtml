@@ -10,15 +10,30 @@
             Connect families to support
         </h1>
 
-        <p>Connect children, young people, parents and carers with support services in their local area.</p>
-        <p>Professionals working with families and young people can search for activities, groups and services run by voluntary and community organisations. They can also make a request for an organisation to engage with an individual or family to offer support.</p>
-        <p>Voluntary and community professionals can sign in to view and respond to requests sent to their organisation. They can also search for services.</p>
+        <p class="govuk-body">
+            This is for people working with children, young people and families.
+        </p>
+        <p class="govuk-body">
+            Use this service to find voluntary and community services to support the families you work with.
+        </p>
 
-        <div class="govuk-inset-text">   
-            This service uses GOV.UK One Login which is managed by the Government Digital Service. You will be asked to sign in to your account, or create a One Login account, in this service.
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">Warning</span>
+                Do not use this service<a class="govuk-link" href="https://www.gov.uk/report-child-abuse" data-testid="child-abuse-link"> if you're worried that a child or young person is at risk or is being abused.</a>
+            </strong>
         </div>
+        <p>You can use this service to find:</p>
+        <ul class="govuk-list govuk-list--bullet" data-testid="list-id">
+            <li>support services local to a family</li>
+            <li>contact details to contact a support service on a family' s behalf</li>
+            <li>contact details to share with a family to contact a support service themselves</li>
+        </ul>
 
-        <a asp-page="/pro-redirect/index" class="govuk-button govuk-button--start" data-testid="button-start">
+        <p class="govuk-!-margin-bottom-5">The service will contact the family if they can help.</p>
+
+        <a class="govuk-button govuk-button--start" data-testid="button-start" href="/ProfessionalReferral/Search">
             Start now
             <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
                 <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
