@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-[Authorize(Roles = RoleGroups.LaOrVcsProfessionalOrDualRole)]
+//[Authorize(Roles = RoleGroups.LaOrVcsProfessionalOrDualRole)]
 public partial class SearchModel : HeaderPageModel
 {
     [BindProperty]

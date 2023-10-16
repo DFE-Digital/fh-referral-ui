@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-[Authorize(Roles = RoleGroups.LaOrVcsProfessionalOrDualRole)]
+//[Authorize(Roles = RoleGroups.LaOrVcsProfessionalOrDualRole)]
 public class LocalOfferResultsModel : HeaderPageModel
 {
     private readonly IPostcodeLocationClientService _postcodeLocationClientService;
