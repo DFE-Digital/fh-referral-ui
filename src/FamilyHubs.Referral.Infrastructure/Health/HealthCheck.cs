@@ -78,7 +78,7 @@ public static class HealthCheck
             .AddIdentityServer(new Uri(oneLoginUrl!), name: "One Login", failureStatus: HealthStatus.Degraded, tags: new[] { "ExternalAPI" })
 #pragma warning disable S1075
             //todo: postcodes io url is hardcoded! switch to find's postcodes io client? strategic switch coming
-            .AddUrlGroup(new Uri("http://api.postcodes.io"), "PostcodesIo", HealthStatus.Degraded, new[] { "ExternalAPI" })
+            .AddUrlGroup(new Uri("http://api.postcodes.io/postcodes/SW1A2AA"), "PostcodesIo", HealthStatus.Degraded, new[] { "ExternalAPI" })
 #pragma warning restore S1075
             //todo: family hubs helper? pick up from config?
             .AddApi("Feedback Site", "FamilyHubsUi:FeedbackUrl", config, UrlType.ExternalSite)
