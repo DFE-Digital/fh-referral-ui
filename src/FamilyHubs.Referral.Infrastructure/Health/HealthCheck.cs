@@ -1,62 +1,18 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using HealthChecks.UI.Client;
 using Azure.Core;
 using Azure.Identity;
+using FamilyHubs.SharedKernel.Razor.Health;
 
 namespace FamilyHubs.Referral.Infrastructure.Health;
 
 public static class HealthCheck
 {
-    public enum UrlType
-    {
-        InternalApi,
-        ExternalApi,
-        InternalSite,
-        ExternalSite
-    }
-
-    public static IHealthChecksBuilder AddApi(
-        this IHealthChecksBuilder builder,
-        string name,
-        string configKey,
-        IConfiguration configuration,
-        UrlType urlType = UrlType.InternalApi)
-    {
-        string? apiUrl = configuration.GetValue<string>(configKey);
-
-        // Only add the health check if the config key is set.
-        // Either the API is optional (or not used locally) and missing intentionally,
-        // in which case there's no need to add the health check,
-        // or it's required, but in that case, the real consumer of the API should
-        // continue to throw it's own relevant exception
-        if (!string.IsNullOrEmpty(apiUrl))
-        {
-            if (urlType == UrlType.InternalApi)
-            {
-                //todo: add "/health" endpoints to all APIs
-
-                apiUrl = apiUrl.TrimEnd('/') + "/api/info";
-            }
-
-            // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
-            builder.AddUrlGroup(new Uri(apiUrl), name, HealthStatus.Degraded,
-                new[] {urlType.ToString()});
-        }
-
-        return builder;
-    }
-
     public static IServiceCollection AddSiteHealthChecks(
         this IServiceCollection services,
         IConfiguration config)
     {
-        var oneLoginUrl = config.GetValue<string>("GovUkOidcConfiguration:Oidc:BaseUrl");
-        var sqlServerCacheConnectionString = config.GetValue<string>("SqlServerCache:Connection");
-
         var keyVaultKey = config.GetValue<string>("DataProtection:KeyIdentifier");
         int keysIndex = keyVaultKey!.IndexOf("/keys/");
         string keyVaultUrl = keyVaultKey[..keysIndex];
@@ -73,22 +29,15 @@ public static class HealthCheck
             config.GetValue<string>("DataProtection:ClientId"),
             config.GetValue<string>("DataProtection:ClientSecret"));
 
+        var oneLoginUrl = config.GetValue<string>("GovUkOidcConfiguration:Oidc:BaseUrl");
+
         // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
-        var healthCheckBuilder = services.AddHealthChecks()
+        var healthCheckBuilder = services.AddFamilyHubsHealthChecks(config)
             .AddIdentityServer(new Uri(oneLoginUrl!), name: "One Login", failureStatus: HealthStatus.Degraded, tags: new[] { "ExternalAPI" })
-#pragma warning disable S1075
-            //todo: postcodes io url is hardcoded! switch to find's postcodes io client? strategic switch coming
-            .AddUrlGroup(new Uri("http://api.postcodes.io/postcodes/SW1A2AA"), "PostcodesIo", HealthStatus.Degraded, new[] { "ExternalAPI" })
-#pragma warning restore S1075
-            //todo: family hubs helper? pick up from config?
-            .AddApi("Feedback Site", "FamilyHubsUi:FeedbackUrl", config, UrlType.ExternalSite)
-            .AddApi("Service Directory API", "ServiceDirectoryUrl", config)
-            .AddApi("Referral API", "ReferralApiUrl", config)
-            .AddApi("Idams API", "GovUkOidcConfiguration:IdamsApiBaseUrl", config)
-            .AddSqlServer(sqlServerCacheConnectionString!, failureStatus: HealthStatus.Degraded, tags: new[] { "Database" })
             //todo: tag as AKV, name as Data Protection Key?
             .AddAzureKeyVault(new Uri(keyVaultUrl), keyVaultCredentials, s => s.AddKey(keyName), name:"Azure Key Vault", failureStatus: HealthStatus.Degraded, tags: new[] { "Infrastructure" });
 
+        //todo: add helper to notification client
         string? notificationApiUrl = config.GetValue<string>("Notification:Endpoint");
         if (!string.IsNullOrEmpty(notificationApiUrl))
         {
@@ -96,28 +45,9 @@ public static class HealthCheck
             //todo: change notifications client to use host and append path
             notificationApiUrl = notificationApiUrl.Replace("/api/notify", "/api/info");
             healthCheckBuilder.AddUrlGroup(new Uri(notificationApiUrl), "Notification API", HealthStatus.Degraded,
-                new[] { UrlType.InternalApi.ToString() });
-        }
-
-        // not usually set running locally
-        string? aiInstrumentationKey = config.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY");
-        if (!string.IsNullOrEmpty(aiInstrumentationKey))
-        {
-            //todo: check in dev env
-            healthCheckBuilder.AddAzureApplicationInsights(aiInstrumentationKey, "App Insights", HealthStatus.Degraded, new[] {"Infrastructure"});
+                new[] { FhHealthChecksBuilder.UrlType.InternalApi.ToString() });
         }
 
         return services;
-    }
-
-    public static WebApplication MapSiteHealthChecks(this WebApplication app)
-    {
-        app.MapHealthChecks("/health", new HealthCheckOptions
-        {
-            Predicate = _ => true,
-            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-        });
-
-        return app;
     }
 }
