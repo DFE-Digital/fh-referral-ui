@@ -11,8 +11,8 @@ using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.Notification.Api.Client.Extensions;
 using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.Referral.Core;
+using FamilyHubs.Referral.Infrastructure.Health;
 using FamilyHubs.Referral.Infrastructure.Notifications;
-using FamilyHubs.SharedKernel.Security;
 using FamilyHubs.SharedKernel.DataProtection;
 using FamilyHubs.SharedKernel.Telemetry;
 
@@ -57,6 +57,8 @@ public static class StartupExtensions
             {
                 options.HtmlHelperOptions.ClientValidationEnabled = false;
             });
+
+        services.AddSiteHealthChecks(configuration);
 
         services.AddFamilyHubs(configuration);
     }
@@ -159,6 +161,8 @@ public static class StartupExtensions
         app.UseGovLoginAuthentication();
 
         app.MapRazorPages();
+
+        app.MapFamilyHubsHealthChecks();
 
         return app.Services;
     }
