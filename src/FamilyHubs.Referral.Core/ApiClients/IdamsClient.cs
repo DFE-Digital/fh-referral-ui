@@ -20,6 +20,12 @@ public class AccountClaimDto
     public string Value { get; set; } = string.Empty;
 }
 
+public class UpdateAccountSelfServiceDto
+{
+    public required long AccountId { get; set; }
+    public required string Name { get; set; }
+}
+
 #pragma warning disable S125
 public class IdamsClient : IIdamsClient //todo: , IHealthCheckUrlGroup
 {
@@ -57,6 +63,17 @@ public class IdamsClient : IIdamsClient //todo: , IHealthCheckUrlGroup
         }
 
         return accounts.Select(a => a.Email);
+    }
+
+    public async Task UpdateAccountSelfService(UpdateAccountSelfServiceDto accountSelfServiceDto, CancellationToken cancellationToken = default)
+    {
+        var httpClient = _httpClientFactory.CreateClient(HttpClientName);
+
+        using var response = await httpClient.PutAsJsonAsync("api/account/self-service", accountSelfServiceDto, cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new IdamsClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
+        }
     }
 
     internal static string GetEndpoint(IConfiguration configuration)
