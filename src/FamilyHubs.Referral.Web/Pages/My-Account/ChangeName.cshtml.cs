@@ -1,5 +1,7 @@
 using System.Collections.Immutable;
 using FamilyHubs.Referral.Core.ApiClients;
+using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Errors;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.Errors;
@@ -10,15 +12,6 @@ namespace FamilyHubs.Referral.Web.Pages.My_Account;
 
 public class ChangeNameModel : HeaderPageModel
 {
-    public enum ErrorId
-    {
-        EnterAName
-    }
-
-    public static readonly ErrorDictionary AllErrors = ImmutableDictionary
-        .Create<int, SharedKernel.Razor.Errors.Error>()
-        .Add(ErrorId.EnterAName, "new-name", "Enter a name");
-
     private readonly IIdamsClient _idamsClient;
 
     public IErrorState ErrorState { get; private set; }
@@ -59,7 +52,7 @@ public class ChangeNameModel : HeaderPageModel
         }
 
         //todo: overload/replace with params version
-        ErrorState = SharedKernel.Razor.Errors.ErrorState.Create(AllErrors, new[] { ErrorId.EnterAName });
+        ErrorState = SharedKernel.Razor.Errors.ErrorState.Create(PossibleErrors.All, new[] { ErrorId.ChangeName_EnterAName });
 
         return Page();
     }

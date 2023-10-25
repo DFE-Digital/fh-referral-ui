@@ -2,7 +2,7 @@
 @model ChangeNameModel
 @{
     ViewData["Title"] = "Change your name";
-    var error = Model.ErrorState.GetErrorIfTriggered((int)ChangeNameModel.ErrorId.EnterAName);
+    var error = Model.ErrorState.GetErrorIfTriggered((int)ErrorId.ChangeName_EnterAName);
 }
 
 @section Back {
