@@ -1,16 +1,19 @@
+using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
+using Microsoft.Extensions.Options;
 
 namespace FamilyHubs.Referral.Web.Pages.My_Account;
 
 public class IndexModel : HeaderPageModel
 {
     public string? FullName { get; set; }
-    public string? GovOneLoginAccountPage { get; set; }
+    public Uri? GovOneLoginAccountPage { get; set; }
 
-    public IndexModel(IConfiguration configuration)
+    public IndexModel(IOptions<FamilyHubsUiOptions> familyHubsUiOptions)
     {
-        GovOneLoginAccountPage = configuration.GetValue<string>("GovUkLoginAccountPage")!;
+        GovOneLoginAccountPage = familyHubsUiOptions.Value.Url(UrlKeys.GovUkLoginAccountPage);
     }
 
     public void OnGet()
