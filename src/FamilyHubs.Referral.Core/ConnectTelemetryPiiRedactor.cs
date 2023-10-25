@@ -28,8 +28,8 @@ namespace FamilyHubs.SharedKernel.Telemetry;
 public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
 {
     // longtitude is due to the spelling error in the API. at some point, we should fix that (and all the consumers)
-    private static readonly Regex SiteQueryStringRegex = new(@"(?<=(postcode|latitude|longitude|longtitude)=)[^&]+", RegexOptions.Compiled);
-    private static readonly Regex ApiQueryStringRegex = new(@"(?<=latitude=)([-+]?[0-9]*\.?[0-9]+)(?=&)|(?<=longitude=)([-+]?[0-9]*\.?[0-9]+)(?=&)");
+    private static readonly Regex SiteQueryStringRegex = new(@"(?<=(email|postcode|latitude|longitude|longtitude)=)[^&]+", RegexOptions.Compiled);
+    private static readonly Regex ApiQueryStringRegex = new(@"(?<=email=)([-+]?[0-9]*\.?[0-9]+)(?=&)|(?<=latitude=)([-+]?[0-9]*\.?[0-9]+)(?=&)|(?<=longitude=)([-+]?[0-9]*\.?[0-9]+)(?=&)");
     private static readonly Regex PathRegex = new(@"(?<=postcodes\/)[\w% ]+", RegexOptions.Compiled);
     private static readonly string[] TracePropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog", "HostingRequestFinishedLog" };
 
@@ -47,24 +47,25 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
                         Sanitize(ApiQueryStringRegex, dependencyTelemetry.Data);
 #pragma warning restore CS0618
                 }
-                else if (dependencyTelemetry.Name.StartsWith("GET /postcodes/"))
+                else if (dependencyTelemetry.Name.StartsWith("GET /postcodes/") || dependencyTelemetry.Name.StartsWith("GET /api/AccountClaims/GetAccountClaimsByEmail") || dependencyTelemetry.Name.StartsWith("GET /api/services-simple"))
                 {
 #pragma warning disable CS0618
                     dependencyTelemetry.CommandName =
                         dependencyTelemetry.Data = Sanitize(PathRegex, dependencyTelemetry.Data);
 #pragma warning restore CS0618
                     dependencyTelemetry.Name = Sanitize(PathRegex, dependencyTelemetry.Name);
+                    dependencyTelemetry.Data = Sanitize(SiteQueryStringRegex, dependencyTelemetry.Data);
                     dependencyTelemetry.Data = Sanitize(ApiQueryStringRegex, dependencyTelemetry.Data);
                 }
                 break;
             case TraceTelemetry traceTelemetry:
-                if (traceTelemetry.Message.IndexOf("postcode") > -1 || traceTelemetry.Message.IndexOf("latitude") > -1)
+                if (traceTelemetry.Message.IndexOf("email") > -1 || traceTelemetry.Message.IndexOf("postcode") > -1 || traceTelemetry.Message.IndexOf("latitude") > -1)
                 {
                     traceTelemetry.Message = Sanitize(PathRegex, traceTelemetry.Message);
                     traceTelemetry.Message = Sanitize(SiteQueryStringRegex, traceTelemetry.Message);
                 }
                 //todo consider further optimisation
-                var list = traceTelemetry.Properties.Where(x => TracePropertiesToRedact.Contains(x.Key) && (x.Value.Contains("postcode") || x.Value.Contains("latitude")));
+                var list = traceTelemetry.Properties.Where(x => TracePropertiesToRedact.Contains(x.Key) && (x.Value.Contains("postcode") || x.Value.Contains("latitude") || x.Value.Contains("email")));
                 if (list.Any())
                 {
                     foreach (var key in list.Select(x => x.Key))
@@ -169,6 +170,12 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
     {
         if ((value.Contains("postcode=") || value.Contains("postcodes/"))
             && !(value.Contains("postcode=REDACTED") || value.Contains("postcodes/REDACTED")))
+        {
+            Debugger.Break();
+        }
+
+        if ((value.Contains("email=") || value.Contains("email/"))
+            && !(value.Contains("email=REDACTED") || value.Contains("emails/REDACTED")))
         {
             Debugger.Break();
         }
