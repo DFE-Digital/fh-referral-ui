@@ -61,7 +61,7 @@ public class IdamsClient : IIdamsClient //todo: , IHealthCheckUrlGroup
 
     internal static string GetEndpoint(IConfiguration configuration)
     {
-        const string endpointConfigKey = "Idams:Endpoint";
+        const string endpointConfigKey = "GovUkOidcConfiguration:IdamsApiBaseUrl";
 
         // as long as the config isn't changed, the worst that can happen is we fetch more than once
         return _endpoint ??= ConfigurationException.ThrowIfNotUrl(
