@@ -2,6 +2,5 @@
 
 public enum UrlKeys
 {
-    DashboardWeb,
-    ManageWeb
+    DashboardWeb
 }
