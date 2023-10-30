@@ -3,5 +3,6 @@
 public enum UrlKeys
 {
     DashboardWeb,
+    ManageWeb,
     GovUkLoginAccountPage
 }
