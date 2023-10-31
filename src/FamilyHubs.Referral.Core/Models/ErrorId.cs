@@ -19,5 +19,6 @@ public enum ErrorId
     Email_NotValid,
     ContactByPhone_NoContactSelected,
     ContactByPhone_NoTelephoneNumber,
-    ContactByPhone_InvalidTelephoneNumber
+    ContactByPhone_InvalidTelephoneNumber,
+    ChangeName_EnterAName
 }

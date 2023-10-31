@@ -14,7 +14,7 @@ public class IndexModel : PageModel
         _connectionRequestCache = connectionRequestCache;
     }
 
-    public async Task<IActionResult> OnGetAsync(int requestNumber)
+    public async Task<IActionResult> OnGetAsync()
     {
         var professionalUser = HttpContext.GetFamilyHubsUser();
         await _connectionRequestCache.RemoveAsync(professionalUser.Email);
