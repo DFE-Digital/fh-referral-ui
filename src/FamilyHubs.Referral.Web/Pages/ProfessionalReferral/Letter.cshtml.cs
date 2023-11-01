@@ -13,21 +13,21 @@ public class LetterModel : ProfessionalReferralCacheModel
 {
     //todo: consistency with nullable
     [BindProperty]
-    [Required(ErrorMessage = "You must enter an address")]
+    [Required(ErrorMessage = "Enter the first line of the address")]
     public string? AddressLine1 { get; set; } = "";
 
     [BindProperty]
     public string? AddressLine2 { get; set; } = "";
 
     [BindProperty]
-    [Required(ErrorMessage = "You must enter a town or city")]
+    [Required(ErrorMessage = "Enter a town or city")]
     public string? TownOrCity { get; set; } = "";
 
     [BindProperty]
     public string? County { get; set; } = "";
 
     [BindProperty]
-    [Required(ErrorMessage = "You must enter a postcode")]
+    [Required(ErrorMessage = "Enter a postcode")]
     [UkGdsPostcode]
     public string? Postcode { get; set; } = "";
 
