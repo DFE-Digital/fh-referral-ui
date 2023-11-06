@@ -23,7 +23,7 @@
                         @if (Model.ValidationValid == false)
                         {
                             <li>
-                                <a href="#Postcode">Enter a valid postcode, for example SW1A 2AA. </a>
+                                <a href="#Postcode">Enter a valid postcode, for example SW1A 2AA.</a>
                             </li>
                         }
                     </ul>
@@ -33,7 +33,7 @@
         <div class="@(Model.PostcodeValid == false || Model.ValidationValid == false ? "govuk-form-group--error" : "")">
             <h1 class="govuk-heading-l">Search for services by postcode</h1>
             <p class="govuk-details">
-                We will use the postcode you enter to find services in that local authority area.
+                Use the postcode of the people who need support to find services local to them.
             </p>
             @if (Model.PostcodeValid == false)
             {
