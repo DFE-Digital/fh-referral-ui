@@ -11,7 +11,7 @@ public static class PossibleErrors
     public static readonly ErrorDictionary All = ImmutableDictionary
         .Create<int, Error>()
         .Add(ErrorId.Consent_NoConsentSelected, "consent-yes", "Select whether you have permission from the family to share details")
-        .Add(ErrorId.SharePrivacy_NoSelection, "shared-privacy-yes", "Select whether you have shared our privacy statement with the family")
+        .Add(ErrorId.SharePrivacy_NoSelection, "shared-privacy-yes", "Select whether you have shared our privacy statement")
         .Add(ErrorId.ContactByPhone_NoContactSelected, "email", "Select how the service can contact you")
         .Add(ErrorId.ContactByPhone_NoTelephoneNumber, "contact-by-phone", "Enter a UK telephone number")
         .Add(ErrorId.ContactByPhone_InvalidTelephoneNumber, "contact-by-phone", "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192")
