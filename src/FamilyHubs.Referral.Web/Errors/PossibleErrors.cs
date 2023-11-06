@@ -17,7 +17,7 @@ public static class PossibleErrors
         .Add(ErrorId.ContactByPhone_InvalidTelephoneNumber, "contact-by-phone", "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192")
         .Add(ErrorId.WhySupport_NothingEntered, "reason", "Enter details about the people who need support")
         .Add(ErrorId.WhySupport_TooLong, "reason", "Reason for the connection request must be 500 characters or less")
-        .Add(ErrorId.ContactMethods_NothingEntered, "reason", "Enter how best to engage with this family")
+        .Add(ErrorId.ContactMethods_NothingEntered, "reason", "Enter details about the people who need support")
         .Add(ErrorId.ContactMethods_TooLong, "reason", "How the service can engage with the family must be 500 characters or less")
         .Add(ErrorId.ContactDetails_NoContactMethodsSelected, "ContactMethods_0_", "Select a contact method")
         .Add(ErrorId.ChangeName_EnterAName, "new-name", "Enter a name")
