@@ -10,7 +10,7 @@ public static class PossibleErrors
     //todo: use a tag helper for the error summary, and pass the htmlelementid to the tag helper (so that details of the view don't leak)
     public static readonly ErrorDictionary All = ImmutableDictionary
         .Create<int, Error>()
-        .Add(ErrorId.Consent_NoConsentSelected, "consent-yes", "Select whether you have permission from the family to share details")
+        .Add(ErrorId.Consent_NoConsentSelected, "consent-yes", "Select whether you have permission to share details")
         .Add(ErrorId.SharePrivacy_NoSelection, "shared-privacy-yes", "Select whether you have shared our privacy statement")
         .Add(ErrorId.ContactByPhone_NoContactSelected, "email", "Select how the service can contact you")
         .Add(ErrorId.ContactByPhone_NoTelephoneNumber, "contact-by-phone", "Enter a UK telephone number")
