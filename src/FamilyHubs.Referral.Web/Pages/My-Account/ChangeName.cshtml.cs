@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Errors;
@@ -6,7 +5,6 @@ using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.Errors;
 using Microsoft.AspNetCore.Mvc;
-using ErrorDictionary = System.Collections.Immutable.ImmutableDictionary<int, FamilyHubs.SharedKernel.Razor.Errors.Error>;
 
 namespace FamilyHubs.Referral.Web.Pages.My_Account;
 
