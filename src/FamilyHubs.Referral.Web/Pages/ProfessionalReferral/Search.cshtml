@@ -1,7 +1,7 @@
 ﻿@page
 @model SearchModel
 @{
-    ViewData["Title"] = "Search page";
+    ViewData["Title"] = "Search for services by postcode";
 }
 
 <div class="govuk-grid-row">
@@ -17,13 +17,13 @@
                         @if (Model.PostcodeValid == false)
                         {
                             <li>
-                                <a href="#Postcode">There is a problem. Enter a valid postcode, for example SW1A 2AA.</a>
+                                <a href="#Postcode">Enter a valid postcode, for example SW1A 2AA.</a>
                             </li>
                         }
                         @if (Model.ValidationValid == false)
                         {
                             <li>
-                                <a href="#Postcode">There is a problem. Enter a valid postcode, for example SW1A 2AA. </a>
+                                <a href="#Postcode">Enter a valid postcode, for example SW1A 2AA.</a>
                             </li>
                         }
                     </ul>
@@ -38,13 +38,13 @@
             @if (Model.PostcodeValid == false)
             {
                 <p class="govuk-error-message" data-testid="empty-error">
-                    <span class="govuk-visually-hidden">Error:</span> There is a problem. Enter a valid postcode, for example SW1A 2AA.
+                    <span class="govuk-visually-hidden">Error:</span> Enter a valid postcode, for example SW1A 2AA.
                 </p>
             }
             @if (Model.ValidationValid == false)
             {
                 <p class="govuk-error-message" data-testid="invalid-error">
-                    <span class="govuk-visually-hidden">Error:</span> There is a problem. Enter a valid postcode, for example SW1A 2AA.
+                    <span class="govuk-visually-hidden">Error:</span> Enter a valid postcode, for example SW1A 2AA.
                 </p>
             }
             <form method="post">

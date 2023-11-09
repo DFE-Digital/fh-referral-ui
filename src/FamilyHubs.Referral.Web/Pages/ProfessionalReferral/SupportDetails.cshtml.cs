@@ -11,7 +11,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 public class SupportDetailsModel : ProfessionalReferralCacheModel, ISingleTextboxPageModel
 {
     public string HeadingText { get; set; } = "Who should the service contact?";
-    public string? HintText { get; set; } = "This must be 16 or over.";
+    public string? HintText { get; set; } = "This person must be 16 or over.";
     public string TextBoxLabel { get; set; } = "Full name";
     public string ErrorText { get; set; } = "Enter a full name";
 
