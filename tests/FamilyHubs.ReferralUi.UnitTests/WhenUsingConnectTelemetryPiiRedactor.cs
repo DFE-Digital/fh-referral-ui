@@ -18,7 +18,7 @@ public class WhenUsingConnectTelemetryPiiRedactor
         var redactor = new ConnectTelemetryPiiRedactor();
         var dependencyTelemetry = new DependencyTelemetry
         {
-            Name = "GET /api/services",
+            Name = "GET /api/services-simple",
             Data = "latitude=12.345&longitude=-67.890&other=data"
         };
 

@@ -39,7 +39,7 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
         switch (telemetry)
         {
             case DependencyTelemetry dependencyTelemetry:
-                if (dependencyTelemetry.Name is "GET /api/services")
+                if (dependencyTelemetry.Name is "GET /api/services-simple")
                 {
                     // command name is obsolete and has been replaced by Data, but should contain the same as Data
 #pragma warning disable CS0618
