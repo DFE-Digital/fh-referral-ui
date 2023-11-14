@@ -178,6 +178,10 @@
         
 @*         @if (Model.ShowConnectionRequestButton)
         {
+            <h2 class="govuk-heading-m">Request a connection</h2>
+
+            <p>Request a connection between the people who need support and this service. The service will accept or decline the request.</p>
+
             <a asp-page="/ProfessionalReferral/Safeguarding" role="button" draggable="false" class="govuk-button" data-module="govuk-button"
                asp-route-serviceId="@Model.ServiceId">Request a connection</a>
         } *@
