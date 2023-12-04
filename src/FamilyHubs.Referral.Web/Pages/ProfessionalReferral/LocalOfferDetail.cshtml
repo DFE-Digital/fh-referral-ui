@@ -1,4 +1,5 @@
 ﻿@page
+@using Microsoft.EntityFrameworkCore.Storage.ValueConversion
 @model LocalOfferDetailModel
 @{
     ViewData["Title"] = Model.LocalOffer.Name;
@@ -63,21 +64,16 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">For children and young people</th>
-                    @if (Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.EligibilityType != null)
-                    {
-                        @if (Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MaximumAge > 100)
-                        {
-                            <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MinimumAge to 25+ years old</td>
+                    <td class="govuk-table__cell" data-testid="eligibilities-value">
+                        @{
+                            var eligibility = Model.LocalOffer?.Eligibilities?.FirstOrDefault();
+                            if (eligibility != null)
+                            {
+                                // todo: magic number
+                                <text>@eligibility.MinimumAge to @(eligibility.MaximumAge == 127 ? "25+" : eligibility.MaximumAge) years old</text>
+                            }
                         }
-                        else
-                        {
-                            <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MinimumAge to @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MaximumAge years old</td>
-                        }
-                    }
-                    else
-                    {
-                        <td class="govuk-table__cell" data-testid="eligibilities-value"></td>
-                    }
+                    </td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Families can choose location</th>
