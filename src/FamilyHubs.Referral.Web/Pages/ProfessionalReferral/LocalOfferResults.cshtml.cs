@@ -274,14 +274,15 @@ public class LocalOfferResultsModel : HeaderPageModel
     public IActionResult OnPostAsync(
         bool removeFilter,
         string? removeCostSelection, string? removeServiceDeliverySelection,
-        string? removeSelectedLanguage, string? removeSearchAge,
-        string? removecategorySelection, string? removesubcategorySelection)
+        string? removeSelectedLanguage, string? removeForChildrenAndYoungPeople,
+        string? removeSearchAge, string? removecategorySelection,
+        string? removesubcategorySelection)
     {
         var routeValues = ToRouteValuesWithRemovedFilters(
             removeFilter,
             removeCostSelection, removeServiceDeliverySelection,
-            removeSelectedLanguage, removeSearchAge,
-            removecategorySelection, removesubcategorySelection);
+            removeSelectedLanguage, removeForChildrenAndYoungPeople,
+            removeSearchAge, removecategorySelection, removesubcategorySelection);
 
         InitialLoad = false;
         ModelState.Clear();
@@ -291,8 +292,9 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     private dynamic ToRouteValuesWithRemovedFilters(bool removeFilter,
         string? removeCostSelection, string? removeServiceDeliverySelection,
-        string? removeSelectedLanguage, string? removeSearchAge,
-        string? removecategorySelection, string? removesubcategorySelection)
+        string? removeSelectedLanguage, string? removeForChildrenAndYoungPeople,
+        string? removeSearchAge, string? removecategorySelection,
+        string? removesubcategorySelection)
     {
         dynamic routeValues = new ExpandoObject();
         var routeValuesDictionary = (IDictionary<string, object>)routeValues;
@@ -301,8 +303,21 @@ public class LocalOfferResultsModel : HeaderPageModel
         {
             if (removeFilter)
             {
-                if (removeSelectedLanguage != null && keyValuePair.Key is nameof(SelectedLanguage)) continue;
-                if (removeSearchAge != null && keyValuePair.Key is nameof(SearchAge) or nameof(ForChildrenAndYoungPeople)) continue;
+                if (removeSelectedLanguage != null && keyValuePair.Key is nameof(SelectedLanguage))
+                {
+                    continue;
+                }
+
+                if (removeForChildrenAndYoungPeople != null && keyValuePair.Key is nameof(ForChildrenAndYoungPeople))
+                {
+                    continue;
+                }
+
+                if ((removeSearchAge != null || removeForChildrenAndYoungPeople != null)
+                    && keyValuePair.Key is nameof(SearchAge))
+                {
+                    continue;
+                }
 
                 if (removeCostSelection != null && keyValuePair.Key is nameof(CostSelection))
                 {
