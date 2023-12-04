@@ -228,13 +228,27 @@ public class LocalOfferResultsModel : HeaderPageModel
             };
         }
 
+        bool? allChildrenYoungPeople = null;
+        int? givenAge = null;
+        if (int.TryParse(SearchAge, out int searchAge))
+        {
+            if (searchAge == -1)
+            {
+                allChildrenYoungPeople = ForChildrenAndYoungPeople;
+            }
+            else
+            {
+                givenAge = searchAge;
+            }
+        }
+
+        //todo: need to add if children to current filter tags
+        
         var localOfferFilter = new LocalOfferFilter
         {
             CanFamilyChooseLocation = CanFamilyChooseLocation,
             ServiceType = "InformationSharing",
             Status = "Active",
-            MinimumAge = null,
-            MaximumAge = null,
             PageSize = PageSize,
             IsPaidFor = isPaidFor,
             PageNumber = PageNum,
@@ -242,7 +256,8 @@ public class LocalOfferResultsModel : HeaderPageModel
             DistrictCode = DistrictCode ?? null,
             Latitude = CurrentLatitude != 0.0D ? CurrentLatitude : null,
             Longitude = CurrentLongitude != 0.0D ? CurrentLongitude : null,
-            GivenAge = ForChildrenAndYoungPeople && int.TryParse(SearchAge, out var searchAgeResult) ? searchAgeResult : null,
+            AllChildrenYoungPeople = allChildrenYoungPeople,
+            GivenAge = givenAge,
             Proximity = double.TryParse(SelectedDistance, out var distanceParsed) && distanceParsed > 0.00d ? distanceParsed : null,
             ServiceDeliveries = ServiceDeliverySelection is not null && ServiceDeliverySelection.Any() ? string.Join(',', ServiceDeliverySelection) : null,
             TaxonomyIds = SubcategorySelection is not null && SubcategorySelection.Any() ? string.Join(",", SubcategorySelection) : null,
