@@ -146,15 +146,26 @@ else
             }
 
             <!-- Remove filter - ForChildrenAndYoungPeople -->
-            @if (Model.ForChildrenAndYoungPeople && Model.SearchAge != null && int.Parse(Model.SearchAge) >= 0)
+            @if (Model.ForChildrenAndYoungPeople)
             {
-                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">For children and young people</h3>
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Children and young people</h3>
                 <ul class="moj-filter-tags">
                     <li>
-                        <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeSearchAge" value="@Model.SearchAge" data-testid="@Model.SearchAge-remove">
-                            <span class="govuk-visually-hidden">Remove this filter</span>Age @Model.SearchAge
+                        @* todo: remove check and age *@
+                        <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeForChildrenAndYoungPeople" value="@Model.ForChildrenAndYoungPeople" data-testid="@Model.ForChildrenAndYoungPeople-remove">
+                            <span class="govuk-visually-hidden">Remove this filter</span>For children and young people
                         </button>
                     </li>
+
+                    @if (Model.SearchAge != null && int.Parse(Model.SearchAge) >= 0)
+                    {
+                        @* todo: just remove age on remove *@
+                        <li>
+                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeSearchAge" value="@Model.SearchAge" data-testid="@Model.SearchAge-remove">
+                                <span class="govuk-visually-hidden">Remove this filter</span>Age @Model.SearchAge
+                            </button>
+                        </li>
+                    }
                 </ul>
             }
         </div>
