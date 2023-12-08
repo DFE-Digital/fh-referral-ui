@@ -80,7 +80,7 @@ public class BaseClientService
                 {
                     Id = 4,
                     ServiceId = 1,
-                    EligibilityType = EligibilityType.NotSet,
+                    EligibilityType = null,
                     MinimumAge = 1,
                     MaximumAge = 13,
                 }

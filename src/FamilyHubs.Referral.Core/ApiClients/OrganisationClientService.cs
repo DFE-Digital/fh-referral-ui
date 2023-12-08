@@ -66,7 +66,13 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
 
         urlBuilder.Append(url);
         AddTextToUrl(urlBuilder, filter.Text);
-        AddAgeToUrl(urlBuilder, filter.MinimumAge, filter.MaximumAge, filter.GivenAge);
+
+        if (filter.AllChildrenYoungPeople == true)
+        {
+            urlBuilder.Append("&allChildrenYoungPeople=true");
+        }
+        
+        AddAgeToUrl(urlBuilder, filter.GivenAge);
 
         if (filter.ServiceDeliveries != null)
         {
@@ -120,18 +126,8 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
                 proximity != null ? $"&proximity={proximity}" : string.Empty)}";
     }
 
-    public void AddAgeToUrl(StringBuilder url, int? minimumAge, int? maximumAge, int? givenAge)
+    public void AddAgeToUrl(StringBuilder url, int? givenAge)
     {
-        if (minimumAge != null)
-        {
-            url.AppendLine($"&minimumAge={minimumAge}");
-        }
-
-        if (maximumAge != null)
-        {
-            url.AppendLine($"&maximumAge={maximumAge}");
-        }
-
         if (givenAge != null)
         {
             url.AppendLine($"&givenAge={givenAge}");

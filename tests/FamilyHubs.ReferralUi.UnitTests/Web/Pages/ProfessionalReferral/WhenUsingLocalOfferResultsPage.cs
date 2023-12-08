@@ -173,10 +173,9 @@ public class WhenUsingLocalOfferResultsPage
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Scheme = "http";
         httpContext.Request.Host = new HostString("localhost");
-        var formCol = new FormCollection(new Dictionary<string,
-        StringValues>
+        var formCol = new FormCollection(new Dictionary<string, StringValues>
         {
-                    { "SearchText", "Test" }
+            { "SearchText", "Test" }
         });
         httpContext.Request.ContentType = "application/x-www-form-urlencoded";
         httpContext.Request.Form = formCol;
@@ -193,6 +192,7 @@ public class WhenUsingLocalOfferResultsPage
             removeFilter: true,
             removeServiceDeliverySelection: "yes",
             removeSelectedLanguage: "yes",
+            removeForChildrenAndYoungPeople: "yes",
             removeSearchAge: "yes",
             removecategorySelection: "yes",
             removesubcategorySelection: "yes") as RedirectToPageResult;
@@ -271,10 +271,9 @@ public class WhenUsingLocalOfferResultsPage
                 Host = new HostString("localhost")
             }
         };
-        var formCol = new FormCollection(new Dictionary<string,
-        StringValues>
+        var formCol = new FormCollection(new Dictionary<string, StringValues>
         {
-                    { "SearchText", "Test" }
+            { "SearchText", "Test" }
         });
         httpContext.Request.ContentType = "application/x-www-form-urlencoded";
         httpContext.Request.Form = formCol;
@@ -292,6 +291,7 @@ public class WhenUsingLocalOfferResultsPage
             removeFilter: true,
             removeServiceDeliverySelection: "yes",
             removeSelectedLanguage: "yes",
+            removeForChildrenAndYoungPeople: "yes",
             removeSearchAge: "yes",
             removecategorySelection: "yes",
             removesubcategorySelection: "yes") as RedirectToPageResult;

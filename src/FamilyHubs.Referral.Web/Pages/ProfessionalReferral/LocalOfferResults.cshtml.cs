@@ -228,13 +228,25 @@ public class LocalOfferResultsModel : HeaderPageModel
             };
         }
 
+        bool? allChildrenYoungPeople = null;
+        int? givenAge = null;
+        if (int.TryParse(SearchAge, out int searchAge))
+        {
+            if (searchAge == -1)
+            {
+                allChildrenYoungPeople = ForChildrenAndYoungPeople;
+            }
+            else
+            {
+                givenAge = searchAge;
+            }
+        }
+        
         var localOfferFilter = new LocalOfferFilter
         {
             CanFamilyChooseLocation = CanFamilyChooseLocation,
             ServiceType = "InformationSharing",
             Status = "Active",
-            MinimumAge = null,
-            MaximumAge = null,
             PageSize = PageSize,
             IsPaidFor = isPaidFor,
             PageNumber = PageNum,
@@ -242,7 +254,8 @@ public class LocalOfferResultsModel : HeaderPageModel
             DistrictCode = DistrictCode ?? null,
             Latitude = CurrentLatitude != 0.0D ? CurrentLatitude : null,
             Longitude = CurrentLongitude != 0.0D ? CurrentLongitude : null,
-            GivenAge = ForChildrenAndYoungPeople && int.TryParse(SearchAge, out var searchAgeResult) ? searchAgeResult : null,
+            AllChildrenYoungPeople = allChildrenYoungPeople,
+            GivenAge = givenAge,
             Proximity = double.TryParse(SelectedDistance, out var distanceParsed) && distanceParsed > 0.00d ? distanceParsed : null,
             ServiceDeliveries = ServiceDeliverySelection is not null && ServiceDeliverySelection.Any() ? string.Join(',', ServiceDeliverySelection) : null,
             TaxonomyIds = SubcategorySelection is not null && SubcategorySelection.Any() ? string.Join(",", SubcategorySelection) : null,
@@ -259,14 +272,15 @@ public class LocalOfferResultsModel : HeaderPageModel
     public IActionResult OnPostAsync(
         bool removeFilter,
         string? removeCostSelection, string? removeServiceDeliverySelection,
-        string? removeSelectedLanguage, string? removeSearchAge,
-        string? removecategorySelection, string? removesubcategorySelection)
+        string? removeSelectedLanguage, string? removeForChildrenAndYoungPeople,
+        string? removeSearchAge, string? removecategorySelection,
+        string? removesubcategorySelection)
     {
         var routeValues = ToRouteValuesWithRemovedFilters(
             removeFilter,
             removeCostSelection, removeServiceDeliverySelection,
-            removeSelectedLanguage, removeSearchAge,
-            removecategorySelection, removesubcategorySelection);
+            removeSelectedLanguage, removeForChildrenAndYoungPeople,
+            removeSearchAge, removecategorySelection, removesubcategorySelection);
 
         InitialLoad = false;
         ModelState.Clear();
@@ -276,8 +290,9 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     private dynamic ToRouteValuesWithRemovedFilters(bool removeFilter,
         string? removeCostSelection, string? removeServiceDeliverySelection,
-        string? removeSelectedLanguage, string? removeSearchAge,
-        string? removecategorySelection, string? removesubcategorySelection)
+        string? removeSelectedLanguage, string? removeForChildrenAndYoungPeople,
+        string? removeSearchAge, string? removecategorySelection,
+        string? removesubcategorySelection)
     {
         dynamic routeValues = new ExpandoObject();
         var routeValuesDictionary = (IDictionary<string, object>)routeValues;
@@ -286,8 +301,21 @@ public class LocalOfferResultsModel : HeaderPageModel
         {
             if (removeFilter)
             {
-                if (removeSelectedLanguage != null && keyValuePair.Key is nameof(SelectedLanguage)) continue;
-                if (removeSearchAge != null && keyValuePair.Key is nameof(SearchAge) or nameof(ForChildrenAndYoungPeople)) continue;
+                if (removeSelectedLanguage != null && keyValuePair.Key is nameof(SelectedLanguage))
+                {
+                    continue;
+                }
+
+                if (removeForChildrenAndYoungPeople != null && keyValuePair.Key is nameof(ForChildrenAndYoungPeople))
+                {
+                    continue;
+                }
+
+                if ((removeSearchAge != null || removeForChildrenAndYoungPeople != null)
+                    && keyValuePair.Key is nameof(SearchAge))
+                {
+                    continue;
+                }
 
                 if (removeCostSelection != null && keyValuePair.Key is nameof(CostSelection))
                 {

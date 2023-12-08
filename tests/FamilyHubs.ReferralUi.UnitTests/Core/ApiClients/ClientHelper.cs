@@ -177,7 +177,6 @@ public static class ClientHelper
                     Description = "Organisation Description",
                 }
             }
-
         };
     }
 
@@ -190,7 +189,7 @@ public static class ClientHelper
             ServiceType = ServiceType.InformationSharing,
             Status = ServiceStatusType.Active,
             Name = "Unit Test Service",
-            Description = @"Unit Test Service Description",
+            Description = "Unit Test Service Description",
             CanFamilyChooseDeliveryLocation = true,
             ServiceDeliveries = new List<ServiceDeliveryDto>
             {
@@ -203,7 +202,7 @@ public static class ClientHelper
             {
                 new EligibilityDto
                 {
-                    EligibilityType = EligibilityType.NotSet,
+                    EligibilityType = null,
                     MinimumAge = 0,
                     MaximumAge = 13,
                 }
