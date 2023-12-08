@@ -159,7 +159,6 @@ else
 
                     @if (Model.SearchAge != null && int.Parse(Model.SearchAge) >= 0)
                     {
-                        @* todo: just remove age on remove *@
                         <li>
                             <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeSearchAge" value="@Model.SearchAge" data-testid="@Model.SearchAge-remove">
                                 <span class="govuk-visually-hidden">Remove this filter</span>Age @Model.SearchAge
