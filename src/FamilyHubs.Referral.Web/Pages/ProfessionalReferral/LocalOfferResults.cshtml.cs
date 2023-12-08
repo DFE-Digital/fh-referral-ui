@@ -241,8 +241,6 @@ public class LocalOfferResultsModel : HeaderPageModel
                 givenAge = searchAge;
             }
         }
-
-        //todo: need to add if children to current filter tags
         
         var localOfferFilter = new LocalOfferFilter
         {
