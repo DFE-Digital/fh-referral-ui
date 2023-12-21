@@ -54,7 +54,7 @@ public class WhenUsingOrganisationClientService
             ServiceDeliveries = ServiceDeliveryType.Online.ToString(),
             IsPaidFor = true,
             TaxonomyIds = "1,2",
-            Languages = "English",
+            LanguageCode = "English",
             CanFamilyChooseLocation = true,
             DistrictCode = "ABC"
         };

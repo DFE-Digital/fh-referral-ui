@@ -364,9 +364,9 @@ public class WhenUsingLocalOfferResultsPage
         //Arrange
         var languages = new List<LanguageDto>
         {
-            new LanguageDto{ Id= 1, Name = "English"},
-             new LanguageDto{ Id= 2, Name = "French"},
-              new LanguageDto{ Id= 3, Name = "German"}
+            new() { Id= 1, Name = "English", Code = "en" },
+            new() { Id= 2, Name = "French", Code = "fr" },
+            new() { Id= 3, Name = "German", Code = "de" }
         };
 
         //Act

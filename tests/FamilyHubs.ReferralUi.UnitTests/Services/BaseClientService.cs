@@ -93,6 +93,7 @@ public class BaseClientService
                     Id = 5,
                     ServiceId = 1,
                     Name = "English",
+                    Code = "en"
                 }
             },
             ServiceDeliveries = new List<ServiceDeliveryDto>(),

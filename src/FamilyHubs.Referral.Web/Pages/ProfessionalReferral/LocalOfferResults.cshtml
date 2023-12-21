@@ -319,7 +319,7 @@ else
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                     <label for="SelectedLanguage">Language</label>
                 </legend>
-                <select asp-for="SelectedLanguage" id="SelectedLanguage" asp-items="Model.Languages" class="govuk-select" data-testid="select-language">
+                <select asp-for="SelectedLanguage" id="SelectedLanguage" asp-items="Model.LanguageOptions" class="govuk-select" data-testid="select-language">
                     <option value="" selected disabled>Select language</option>
                 </select>
             </fieldset>

@@ -60,11 +60,10 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         if (string.IsNullOrEmpty(filter.Status))
             filter.Status = "Active";
 
-        var urlBuilder = new StringBuilder();
+        var urlBuilder = new StringBuilder(
+            GetPositionUrl(filter.ServiceType, filter.Latitude, filter.Longitude, filter.Proximity,
+                filter.Status, filter.PageNumber, filter.PageSize));
 
-        var url = GetPositionUrl(filter.ServiceType, filter.Latitude, filter.Longitude, filter.Proximity, filter.Status, filter.PageNumber, filter.PageSize);
-
-        urlBuilder.Append(url);
         AddTextToUrl(urlBuilder, filter.Text);
 
         if (filter.AllChildrenYoungPeople == true)
@@ -94,9 +93,9 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
             urlBuilder.Append($"&districtCode={filter.DistrictCode}");
         }
 
-        if (filter.Languages != null)
+        if (filter.LanguageCode != null)
         {
-            urlBuilder.Append($"&languages={filter.Languages}");
+            urlBuilder.Append($"&languages={filter.LanguageCode}");
         }
 
         if (filter.CanFamilyChooseLocation != null && filter.CanFamilyChooseLocation == true)
