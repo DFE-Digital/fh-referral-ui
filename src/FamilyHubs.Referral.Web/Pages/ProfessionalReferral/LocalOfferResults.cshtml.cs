@@ -16,8 +16,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-//todo: filter tag: show name, not code
-
 [Authorize(Roles = RoleGroups.LaOrVcsProfessionalOrDualRole)]
 public class LocalOfferResultsModel : HeaderPageModel
 {
