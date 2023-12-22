@@ -16,6 +16,6 @@ public record LocalOfferFilter
     public string? ServiceDeliveries { get; init; }
     public bool? IsPaidFor { get; init; }
     public string? TaxonomyIds { get; init; }
-    public string? Languages { get; init; }
+    public string? LanguageCode { get; init; }
     public bool? CanFamilyChooseLocation { get; init; }
 }

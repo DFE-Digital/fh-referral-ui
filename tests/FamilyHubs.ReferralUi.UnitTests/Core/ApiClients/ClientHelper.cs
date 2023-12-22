@@ -233,6 +233,7 @@ public static class ClientHelper
                 new LanguageDto
                 {
                     Name = "English",
+                    Code = "en"
                 }
             },
             ServiceAreas = new List<ServiceAreaDto>

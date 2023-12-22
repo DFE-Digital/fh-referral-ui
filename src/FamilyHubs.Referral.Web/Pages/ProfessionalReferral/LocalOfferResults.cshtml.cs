@@ -7,6 +7,7 @@ using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
+using FamilyHubs.ServiceDirectory.Shared.ReferenceData;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +29,7 @@ public class LocalOfferResultsModel : HeaderPageModel
     public double CurrentLongitude { get; set; }
     public PaginatedList<ServiceDto> SearchResults { get; set; } = new();
     public string SelectedDistance { get; set; } = "212892";
+
     public List<SelectListItem> AgeRange { get; set; } = new()
     {
         new() { Value="-1", Text="All ages" , Selected = true},
@@ -58,83 +60,20 @@ public class LocalOfferResultsModel : HeaderPageModel
         new() { Value="24", Text="24 years old"},
         new() { Value="25", Text="25 years old"},
     };
-    public List<SelectListItem> Languages { get; set; } = new()
+
+    public const string AllLanguagesValue = "all";
+
+    public static SelectListItem[] StaticLanguageOptions { get; set; }
+    public IEnumerable<SelectListItem> LanguageOptions => StaticLanguageOptions;
+
+    static LocalOfferResultsModel()
     {
-        new() { Value = "All languages", Text="All languages" , Selected = true},
-        new() { Value = "Afrikaans", Text = "Afrikaans" },
-        new() { Value = "Albanian", Text = "Albanian" },
-        new() { Value = "Arabic", Text = "Arabic" },
-        new() { Value = "Armenian", Text = "Armenian" },
-        new() { Value = "Basque", Text = "Basque" },
-        new() { Value = "Bengali", Text = "Bengali" },
-        new() { Value = "Bulgarian", Text = "Bulgarian" },
-        new() { Value = "Catalan", Text = "Catalan" },
-        new() { Value = "Cambodian", Text = "Cambodian" },
-        new() { Value = "Chinese (Mandarin)", Text = "Chinese (Mandarin)" },
-        new() { Value = "Croatian", Text = "Croatian" },
-        new() { Value = "Czech", Text = "Czech" },
-        new() { Value = "Danish", Text = "Danish" },
-        new() { Value = "Dutch", Text = "Dutch" },
-        new() { Value = "English", Text = "English"},
-        new() { Value = "Estonian", Text = "Estonian" },
-        new() { Value = "Fiji", Text = "Fiji" },
-        new() { Value = "Finnish", Text = "Finnish" },
-        new() { Value = "French", Text = "French" },
-        new() { Value = "Georgian", Text = "Georgian" },
-        new() { Value = "German", Text = "German" },
-        new() { Value = "Greek", Text = "Greek" },
-        new() { Value = "Gujarati", Text = "Gujarati" },
-        new() { Value = "Hebrew", Text = "Hebrew" },
-        new() { Value = "Hindi", Text = "Hindi" },
-        new() { Value = "Hungarian", Text = "Hungarian" },
-        new() { Value = "Icelandic", Text = "Icelandic" },
-        new() { Value = "Indonesian", Text = "Indonesian" },
-        new() { Value = "Irish", Text = "Irish" },
-        new() { Value = "Italian", Text = "Italian" },
-        new() { Value = "Japanese", Text = "Japanese" },
-        new() { Value = "Javanese", Text = "Javanese" },
-        new() { Value = "Korean", Text = "Korean" },
-        new() { Value = "Latin", Text = "Latin" },
-        new() { Value = "Latvian", Text = "Latvian" },
-        new() { Value = "Lithuanian", Text = "Lithuanian" },
-        new() { Value = "Macedonian", Text = "Macedonian" },
-        new() { Value = "Malay", Text = "Malay" },
-        new() { Value = "Malayalam", Text = "Malayalam" },
-        new() { Value = "Maltese", Text = "Maltese" },
-        new() { Value = "Maori", Text = "Maori" },
-        new() { Value = "Marathi", Text = "Marathi" },
-        new() { Value = "Mongolian", Text = "Mongolian" },
-        new() { Value = "Nepali", Text = "Nepali" },
-        new() { Value = "Norwegian", Text = "Norwegian" },
-        new() { Value = "Persian", Text = "Persian" },
-        new() { Value = "Polish", Text = "Polish" },
-        new() { Value = "Portuguese", Text = "Portuguese" },
-        new() { Value = "Punjabi", Text = "Punjabi" },
-        new() { Value = "Quechua", Text = "Quechua" },
-        new() { Value = "Romanian", Text = "Romanian" },
-        new() { Value = "Russian", Text = "Russian" },
-        new() { Value = "Samoan", Text = "Samoan" },
-        new() { Value = "Serbian", Text = "Serbian" },
-        new() { Value = "Slovak", Text = "Slovak" },
-        new() { Value = "Slovenian", Text = "Slovenian" },
-        new() { Value = "Somali", Text = "Somali" },
-        new() { Value = "Spanish", Text = "Spanish" },
-        new() { Value = "Swahili", Text = "Swahili" },
-        new() { Value = "Swedish ", Text = "Swedish " },
-        new() { Value = "Tamil", Text = "Tamil" },
-        new() { Value = "Tatar", Text = "Tatar" },
-        new() { Value = "Telugu", Text = "Telugu" },
-        new() { Value = "Thai", Text = "Thai" },
-        new() { Value = "Tibetan", Text = "Tibetan" },
-        new() { Value = "Tonga", Text = "Tonga" },
-        new() { Value = "Turkish", Text = "Turkish" },
-        new() { Value = "Ukrainian", Text = "Ukrainian" },
-        new() { Value = "Urdu", Text = "Urdu" },
-        new() { Value = "Uzbek", Text = "Uzbek" },
-        new() { Value = "Vietnamese", Text = "Vietnamese" },
-        new() { Value = "Welsh", Text = "Welsh" },
-        new() { Value = "Xhosa", Text = "Xhosa" },
-    };
+        StaticLanguageOptions = Languages.FilterCodes
+            .Select(c => new SelectListItem(Languages.CodeToName[c], c))
+            .OrderBy(kv => kv.Text)
+            .Prepend(new SelectListItem("All languages", AllLanguagesValue, true))
+            .ToArray();
+    }
 
     [BindProperty]
     public List<string>? ServiceDeliverySelection { get; set; }
@@ -195,7 +134,7 @@ public class LocalOfferResultsModel : HeaderPageModel
         this.postcode = postcode;
         SearchText = searchText;
         SearchAge = searchAge;
-        SelectedLanguage = selectedLanguage == "All languages" ? null : selectedLanguage;
+        SelectedLanguage = selectedLanguage == AllLanguagesValue ? null : selectedLanguage;
         PageNum = pageNum ?? 1;
         ForChildrenAndYoungPeople = forChildrenAndYoungPeople;
         SubcategorySelection = subcategorySelection?.Split(",").ToList();
@@ -259,7 +198,7 @@ public class LocalOfferResultsModel : HeaderPageModel
             Proximity = double.TryParse(SelectedDistance, out var distanceParsed) && distanceParsed > 0.00d ? distanceParsed : null,
             ServiceDeliveries = ServiceDeliverySelection is not null && ServiceDeliverySelection.Any() ? string.Join(',', ServiceDeliverySelection) : null,
             TaxonomyIds = SubcategorySelection is not null && SubcategorySelection.Any() ? string.Join(",", SubcategorySelection) : null,
-            Languages = SelectedLanguage is not null && SelectedLanguage is not "All languages" ? SelectedLanguage : null
+            LanguageCode = SelectedLanguage != null && SelectedLanguage != AllLanguagesValue ? SelectedLanguage : null
         };
 
         SearchResults = await _organisationClientService.GetLocalOffers(localOfferFilter);

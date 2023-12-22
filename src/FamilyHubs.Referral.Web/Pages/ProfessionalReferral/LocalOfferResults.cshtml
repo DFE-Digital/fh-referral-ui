@@ -1,5 +1,6 @@
 ﻿@page
 @using FamilyHubs.Referral.Core.Helper
+@using FamilyHubs.ServiceDirectory.Shared.ReferenceData
 @model LocalOfferResultsModel
 @{
     //todo: if paginated results, should have (page x of n) appended
@@ -139,7 +140,7 @@ else
                     <li>
                         <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeSelectedLanguage" value="@Model.SelectedLanguage" data-testid="@Model.SelectedLanguage-remove">
                             <span class="govuk-visually-hidden">Remove this filter</span>
-                            @Model.SelectedLanguage
+                            @Languages.CodeToName[Model.SelectedLanguage]
                         </button>
                     </li>
                 </ul>
@@ -319,7 +320,7 @@ else
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                     <label for="SelectedLanguage">Language</label>
                 </legend>
-                <select asp-for="SelectedLanguage" id="SelectedLanguage" asp-items="Model.Languages" class="govuk-select" data-testid="select-language">
+                <select asp-for="SelectedLanguage" id="SelectedLanguage" asp-items="Model.LanguageOptions" class="govuk-select" data-testid="select-language">
                     <option value="" selected disabled>Select language</option>
                 </select>
             </fieldset>

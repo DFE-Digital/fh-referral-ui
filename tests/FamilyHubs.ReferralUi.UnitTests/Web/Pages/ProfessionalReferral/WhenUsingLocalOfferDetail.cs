@@ -179,8 +179,8 @@ public class WhenUsingLocalOfferDetail
         LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockIIdamsClient.Object);
         List<LanguageDto> languageDtos = new List<LanguageDto>
         {
-            new() { Id = 1, Name = "English", ServiceId = 1 },
-            new() { Id = 2, Name = "French", ServiceId = 1 }
+            new() { Id = 1, Name = "English", Code = "en", ServiceId = 1 },
+            new() { Id = 2, Name = "French", Code = "fr", ServiceId = 1 }
         };
 
         //Act
