@@ -41,10 +41,10 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Cost</th>
-                    @if (Model.LocalOffer?.CostOptions?.FirstOrDefault()?.Amount != null && Model.LocalOffer?.CostOptions?.FirstOrDefault()?.Amount > 0)
+                    @if (Model.LocalOffer?.CostOptions?.Count > 0 )
                     {
                         <td class="govuk-table__cell" data-testid="cost-value">
-                            £@Model.LocalOffer?.CostOptions?.FirstOrDefault()?.Amount every @Model.LocalOffer?.CostOptions?.FirstOrDefault()?.AmountDescription?.ToLower()
+                            Yes, it costs money to use. @Model.LocalOffer?.CostOptions?.FirstOrDefault()?.AmountDescription
                         </td>
                     }
                     else

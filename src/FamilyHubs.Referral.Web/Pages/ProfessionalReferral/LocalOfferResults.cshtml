@@ -368,9 +368,9 @@ else
                         }
                         <dl class="govuk-body-s dtmargins">
                             <dt class="govuk-!-font-weight-bold">Cost</dt>
-                            @if (item.CostOptions.FirstOrDefault()?.Amount != null && item.CostOptions.FirstOrDefault()?.Amount > 0)
+                            @if (item.CostOptions.Count > 0)
                             {
-                                <dd>£@item.CostOptions.FirstOrDefault()?.Amount every @item.CostOptions.FirstOrDefault()?.AmountDescription?.ToLower()</dd>
+                                <dd>Yes, it costs money to use. @item.CostOptions.FirstOrDefault()?.AmountDescription</dd>
                             }
                             else
                             {
