@@ -1,7 +1,7 @@
 ﻿using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Errors;
-using FamilyHubs.SharedKernel.Razor.Errors;
+using FamilyHubs.SharedKernel.Razor.ErrorNext;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
@@ -10,7 +10,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
 {
     // we could stop passing this to get/set
     public ConnectionRequestModel? ConnectionRequestModel { get; set; }
-    public IErrorState ErrorState { get; private set; }
+    public IErrorState Errors { get; private set; }
     private bool _redirectingToSelf;
 
     protected ProfessionalReferralCacheModel(
@@ -18,7 +18,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
         IConnectionRequestDistributedCache connectionRequestCache)
         : base(page, connectionRequestCache)
     {
-        ErrorState = SharedKernel.Razor.Errors.ErrorState.Empty;
+        Errors = ErrorState.Empty;
     }
 
     //todo: change to private set
@@ -69,7 +69,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
             ConnectionRequestModel.ErrorState = null;
         }
 
-        ErrorState = SharedKernel.Razor.Errors.ErrorState.Create(PossibleErrors.All, ConnectionRequestModel.ErrorState?.Errors);
+        Errors = ErrorState.Create(PossibleErrors.All, ConnectionRequestModel.ErrorState?.Errors ?? Array.Empty<ErrorId>());
 
         await OnGetWithModelAsync(ConnectionRequestModel);
 

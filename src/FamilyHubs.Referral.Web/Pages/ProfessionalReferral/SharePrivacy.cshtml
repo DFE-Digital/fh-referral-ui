@@ -2,6 +2,8 @@
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.SharePrivacyModel
 @{
     ViewData["Title"] = "Share our privacy statement";
+
+    Model.Errors.ErrorIdToHtmlElementId = errorId => "shared-privacy-yes";
 }
 
 @section Back {
@@ -36,12 +38,17 @@
                         </h2>
                     </legend>
                     <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
-                        @if (Model.HasErrors)
+                        @{
+                            var error = Model.Errors.GetErrorIfTriggered();
+                        }
+                        @* todo: add aria-described-by to error *@
+                        <partial name="_ErrorMessageNext" model="error" />
+@*                         @if (Model.HasErrors)
                         {
                             <p class="govuk-error-message">
                                 <span class="govuk-visually-hidden">Error:</span> @Model.ErrorState.GetErrorIfTriggered()?.ErrorMessage
                             </p>
-                        }
+                        } *@
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="shared-privacy-yes" name="SharedPrivacy" type="radio" value="true" @(Model.SharedPrivacy == true ? "checked" : "")>
                             <label class="govuk-label govuk-radios__label" for="shared-privacy-yes">

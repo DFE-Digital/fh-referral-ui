@@ -8,8 +8,8 @@ public static class PossibleErrors
 {
     public static readonly ImmutableDictionary<int, PossibleError> All = ImmutableDictionary
         .Create<int, PossibleError>()
-        .Add(ErrorId.Consent_NoConsentSelected, "consent-yes", "Select whether you have permission to share details")
-        .Add(ErrorId.SharePrivacy_NoSelection, "shared-privacy-yes", "Select whether you have shared our privacy statement")
+        .Add(ErrorId.Consent_NoConsentSelected, "Select whether you have permission to share details")
+        .Add(ErrorId.SharePrivacy_NoSelection, "Select whether you have shared our privacy statement")
         .Add(ErrorId.ContactByPhone_NoContactSelected, "email", "Select how the service can contact you")
         .Add(ErrorId.ContactByPhone_NoTelephoneNumber, "contact-by-phone", "Enter a UK telephone number")
         .Add(ErrorId.ContactByPhone_InvalidTelephoneNumber, "contact-by-phone", "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192")
