@@ -22,7 +22,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
     }
 
     //todo: change to private set
-    //todo: remove this and reference ErrorState directly
+    //todo: remove this and reference Errors directly
     public bool HasErrors { get; set; }
 
     protected virtual void OnGetWithModel(ConnectionRequestModel model)

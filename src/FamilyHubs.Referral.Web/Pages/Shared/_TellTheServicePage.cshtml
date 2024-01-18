@@ -1,6 +1,6 @@
 ﻿@model ITellTheServicePageModel
 
-<partial name="_ErrorSummaryNext" for="@Model.ErrorState"/>
+<partial name="_ErrorSummaryNext" for="@Model.Errors"/>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -10,7 +10,7 @@
 
         <form method="post">
 
-            @{ Error? error = Model.ErrorState.GetErrorIfTriggered();}
+            @{ Error? error = Model.Errors.GetErrorIfTriggered();}
 
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
                 <div class="govuk-form-group error?.FormGroupClass">

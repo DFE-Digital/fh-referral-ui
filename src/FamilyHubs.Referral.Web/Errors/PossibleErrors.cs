@@ -17,7 +17,7 @@ public static class PossibleErrors
         .Add(ErrorId.WhySupport_TooLong, "Reason for the connection request must be 500 characters or less")
         .Add(ErrorId.ContactMethods_NothingEntered, "Enter details about the people who need support")
         .Add(ErrorId.ContactMethods_TooLong, "How the service can engage with the family must be 500 characters or less")
-        .Add(ErrorId.ContactDetails_NoContactMethodsSelected, "ContactMethods_0_", "Select a contact method")
+        .Add(ErrorId.ContactDetails_NoContactMethodsSelected, "Select a contact method")
         .Add(ErrorId.ChangeName_EnterAName, "Enter a name")
         ;
 }

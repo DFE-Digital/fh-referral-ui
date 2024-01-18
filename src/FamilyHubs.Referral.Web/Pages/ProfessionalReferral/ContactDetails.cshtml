@@ -2,7 +2,10 @@
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.ContactDetailsModel
 @{
     ViewData["Title"] = $"How can the service contact {Model.FullName}?";
-    Error? error = Model.ErrorState.GetErrorIfTriggered();
+
+    Model.Errors.ErrorIdToHtmlElementId = errorId => "ContactMethods_0_";
+
+    Error? error = Model.Errors.GetErrorIfTriggered();
 }
 
 @section Back {
@@ -12,7 +15,7 @@
     }
 }
 
-<partial name="_ErrorSummaryNext" for="@Model.ErrorState"/>
+<partial name="_ErrorSummaryNext" for="@Model.Errors"/>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
