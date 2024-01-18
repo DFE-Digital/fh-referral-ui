@@ -1,9 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿//using System.ComponentModel.DataAnnotations;
 
-namespace FamilyHubs.Referral.Web.Models;
+//namespace FamilyHubs.Referral.Web.Models;
 
-public interface ISingleEmailTextboxPageModel : ISingleTextboxPageModel
-{
-    [EmailAddress]
-    new string? TextBoxValue { get; set; }
-}
+//public interface ISingleEmailTextboxPageModel : ISingleTextboxPageModel
+//{
+//    [EmailAddress]
+//    new string? TextBoxValue { get; set; }
+//}

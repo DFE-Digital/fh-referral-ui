@@ -10,7 +10,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel
 {
     // we could stop passing this to get/set
     public ConnectionRequestModel? ConnectionRequestModel { get; set; }
-    public IErrorState Errors { get; private set; }
+    public IErrorState Errors { get; protected set; }
     private bool _redirectingToSelf;
 
     protected ProfessionalReferralCacheModel(

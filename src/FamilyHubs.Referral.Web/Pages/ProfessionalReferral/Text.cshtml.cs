@@ -1,11 +1,13 @@
+using System.Collections.Immutable;
 using FamilyHubs.Referral.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.Referral.Core.DistributedCache;
-using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Core.ValidationAttributes;
 using System.Web;
+using FamilyHubs.SharedKernel.Razor.ErrorNext;
+using FamilyHubs.SharedKernel.Razor.FullPages;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -14,7 +16,7 @@ public class TextModel : ProfessionalReferralCacheModel, ISingleTelephoneTextbox
     public string HeadingText { get; set; } = "";
     public string? HintText { get; set; }
     public string TextBoxLabel { get; set; } = "UK telephone number";
-    public string ErrorText { get; set; } = "";
+    public int? MaxLength => 64;
 
     [Required(ErrorMessage = "Enter a UK telephone number", AllowEmptyStrings = false)]
     [UkGdsTelephoneNumber]
@@ -41,7 +43,13 @@ public class TextModel : ProfessionalReferralCacheModel, ISingleTelephoneTextbox
         if (!ModelState.IsValid)
         {
             HasErrors = true;
-            ErrorText = ModelState["TextBoxValue"]!.Errors[0].ErrorMessage;
+            //ErrorText = ModelState["TextBoxValue"]!.Errors[0].ErrorMessage;
+
+            var errors = ImmutableDictionary
+                .Create<int, PossibleError>()
+                .Add(AdHocErrorId.Error1, ModelState["TextBoxValue"]!.Errors[0].ErrorMessage);
+
+            Errors = ErrorState.Create(errors, AdHocErrorId.Error1);
 
             SetPageProperties(model);
             return Page();
