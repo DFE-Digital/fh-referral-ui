@@ -40,12 +40,6 @@
                             var error = Model.Errors.GetErrorIfTriggered();
                         }
                         <partial name="_ErrorMessageNext" model="error"/>
-                        @*                         @if (Model.HasErrors)
-                        {
-                            <p class="govuk-error-message">
-                                <span class="govuk-visually-hidden">Error:</span> @Model.ErrorState.GetErrorIfTriggered()?.ErrorMessage
-                            </p>
-                        } *@
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="consent-yes" name="Consent" type="radio" value="true" @(Model.Consent == true ? "checked" : "")>
                             <label class="govuk-label govuk-radios__label" for="consent-yes">
