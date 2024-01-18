@@ -1,4 +1,4 @@
-﻿using FamilyHubs.SharedKernel.Razor.Errors;
+﻿using FamilyHubs.SharedKernel.Razor.ErrorNext;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Models;
@@ -10,5 +10,5 @@ public interface ITellTheServicePageModel
     [BindProperty]
     string? TextAreaValue { get; set; }
 
-    public IErrorState ErrorState { get; }
+    public IErrorState Errors { get; }
 }

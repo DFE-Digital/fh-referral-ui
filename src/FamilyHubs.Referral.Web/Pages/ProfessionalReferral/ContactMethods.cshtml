@@ -3,6 +3,8 @@
 @{
     //todo: get h1 from model
     ViewData["Title"] = "How can the service engage with the people who need support?";
+
+    Model.Errors.ErrorIdToHtmlElementId = errorId => "reason";
 }
 
 @section Back {
