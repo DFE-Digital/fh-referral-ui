@@ -13,23 +13,24 @@
             @{ Error? error = Model.ErrorState.GetErrorIfTriggered();}
 
             <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
-                <div class="govuk-form-group @(error != null ? "govuk-form-group--error" : "")">
+                <div class="govuk-form-group error?.FormGroupClass">
 
                     <h2 class="govuk-label-wrapper">
                         <label class="govuk-label govuk-label--m" for="reason">
                             Enter details
                         </label>
                     </h2>
-
-                    @if (error != null)
+                    
+                    <partial name="_ErrorMessageNext" model="error"/>
+@*                     @if (error != null)
                     {
                         <p class="govuk-error-message" id="reason-error">
                             <span class="govuk-visually-hidden">Error:</span> @error.ErrorMessage
                         </p>
-                    }
+                    } *@
 
-                    <textarea asp-for="TextAreaValue" class="govuk-textarea govuk-js-character-count @(error != null ? "govuk-textarea--error" : "")"
-                              rows="10" id="reason" aria-describedby="reason-info @(error != null ? "reason-error" : "")"></textarea>
+                    <textarea asp-for="TextAreaValue" class="govuk-textarea govuk-js-character-count error?.TextAreaClass"
+                              rows="10" id="reason" aria-describedby="reason-info error?.InputErrorMessageParaId"></textarea>
                 </div>
 
                 <div id="reason-info" class="govuk-hint govuk-character-count__message">
