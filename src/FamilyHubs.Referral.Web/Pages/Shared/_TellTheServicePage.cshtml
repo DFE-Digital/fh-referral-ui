@@ -22,12 +22,6 @@
                     </h2>
                     
                     <partial name="_ErrorMessageNext" model="error"/>
-@*                     @if (error != null)
-                    {
-                        <p class="govuk-error-message" id="reason-error">
-                            <span class="govuk-visually-hidden">Error:</span> @error.ErrorMessage
-                        </p>
-                    } *@
 
                     <textarea asp-for="TextAreaValue" class="govuk-textarea govuk-js-character-count error?.TextAreaClass"
                               rows="10" id="reason" aria-describedby="reason-info error?.InputErrorMessageParaId"></textarea>
