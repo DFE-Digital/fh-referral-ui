@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
+using Microsoft.AspNetCore.Html;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -86,10 +88,57 @@ public class LocalOfferDetailModel : HeaderPageModel
         return result;
     }
 
+    //todo: don't show languages if there are none
     public string GetLanguagesAsString(ICollection<LanguageDto>? languageDtos)
     {
         // they should already be sorted by name, but for safety we do it again
         return string.Join(", ", languageDtos?.Select(d => d.Name).Order() ?? Enumerable.Empty<string>());
+    }
+    
+    public HtmlString? GetServiceAvailabilityAsString(ICollection<ScheduleDto>? schedules)
+    {
+        if (schedules == null || schedules.Count == 0)
+            return null;
+        
+        //todo: only wrap in <p> if there is content
+        return new HtmlString($"<p>{GetWhen(schedules)}</p><p></p>{GetTimeDescription(schedules)}");
+    }
+
+    private string GetTimeDescription(ICollection<ScheduleDto> schedules)
+    {
+        return schedules.FirstOrDefault(x => x.Description != null)?.Description ?? "";
+    }
+
+    private HtmlString GetWhen(ICollection<ScheduleDto> schedules)
+    {
+        return new HtmlString(schedules.Any()
+            ? string.Join("<br>", schedules.Select(ScheduleDescription).Where(d => !string.IsNullOrEmpty(d)))
+            : "");
+    }
+
+    private string ScheduleDescription(ScheduleDto schedule)
+    {
+        if (schedule.Freq != FrequencyType.Weekly)
+        {
+            return "";
+        }
+
+        StringBuilder description = new();
+        if (schedule.ByDay == "MO,TU,WE,TH,FR")
+        {
+            description.Append("Weekdays: ");
+        }
+        else if (schedule.ByDay == "SA,SU")
+        {
+            description.Append("Weekends: ");
+        }
+        else
+        {
+            return "";
+        }
+
+        description.Append($"{schedule.OpensAt:h:mmtt} to {schedule.ClosesAt:h:mmtt}");
+        return description.ToString();
     }
 
     public void ExtractAddressParts(LocationDto addressDto)

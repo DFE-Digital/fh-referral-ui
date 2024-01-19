@@ -84,12 +84,18 @@
                     }
                 </td>
             </tr>
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Service availability</th>
-                <td class="govuk-table__cell" data-testid="service-availability-value">
-                    Todo
-                </td>
-            </tr>
+            @{
+                var serviceAvailability = Model.GetServiceAvailabilityAsString(Model.LocalOffer?.Schedules);
+                if (serviceAvailability != null)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Service availability</th>
+                        <td class="govuk-table__cell" data-testid="service-availability-value">
+                            @serviceAvailability
+                        </td>
+                    </tr>
+                }
+            }
             </tbody>
         </table>
         <h2 class="govuk-heading-m">More details</h2>
