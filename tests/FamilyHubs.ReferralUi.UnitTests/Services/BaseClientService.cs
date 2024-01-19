@@ -97,15 +97,13 @@ public class BaseClientService
                 }
             },
             ServiceDeliveries = new List<ServiceDeliveryDto>(),
-            HolidaySchedules = new List<HolidayScheduleDto>(),
-            RegularSchedules = new List<RegularScheduleDto>(),
+            Schedules = new List<ScheduleDto>(),
             Locations = new List<LocationDto>()
             {
                 new LocationDto
                 {
                     Id = 6,
-                    HolidaySchedules = new List<HolidayScheduleDto>(),
-                    RegularSchedules = new List<RegularScheduleDto>(),
+                    Schedules = new List<ScheduleDto>(),
                     Name = "Shepcoat",
                     Address1 = "77 Sheepcote Lane",
                     Address2 = "Stathe",
