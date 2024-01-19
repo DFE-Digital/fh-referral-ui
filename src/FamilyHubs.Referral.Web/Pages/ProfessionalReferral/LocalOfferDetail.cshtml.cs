@@ -86,27 +86,10 @@ public class LocalOfferDetailModel : HeaderPageModel
         return result;
     }
 
-    //todo: looks like a custom implementation of string.Join
     public string GetLanguagesAsString(ICollection<LanguageDto>? languageDtos)
     {
-        var result = string.Empty;
-
-        if (languageDtos == null || languageDtos.Count == 0)
-            return result;
-
-        var stringBuilder = new StringBuilder();
-        foreach (var language in languageDtos)
-            stringBuilder.Append(language.Name + ",");
-
-        result = stringBuilder.ToString();
-
-        //Remove last comma if present
-        if (result.EndsWith(','))
-        {
-            result = result.Remove(result.Length - 1);
-        }
-
-        return result;
+        // they should already be sorted by name, but for safety we do it again
+        return string.Join(", ", languageDtos?.Select(d => d.Name).Order() ?? Enumerable.Empty<string>());
     }
 
     public void ExtractAddressParts(LocationDto addressDto)

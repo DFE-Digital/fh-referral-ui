@@ -187,8 +187,7 @@ public class WhenUsingLocalOfferDetail
         string result = localOfferDetailModel.GetLanguagesAsString(languageDtos);
 
         //Assert
-        result.Should().Be("English,French");
-
+        result.Should().Be("English, French");
     }
 
     [Fact]
