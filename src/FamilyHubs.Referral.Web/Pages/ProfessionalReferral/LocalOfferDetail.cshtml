@@ -90,7 +90,7 @@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Service availability</th>
                         <td class="govuk-table__cell" data-testid="service-availability-value">
-                            @string.Join("<br>", serviceAvailability)
+                            @Html.Raw(string.Join("<br>", serviceAvailability))
                         </td>
                     </tr>
                 }
