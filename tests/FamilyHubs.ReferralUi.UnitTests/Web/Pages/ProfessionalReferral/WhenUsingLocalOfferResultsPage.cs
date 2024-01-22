@@ -40,7 +40,7 @@ public class WhenUsingLocalOfferResultsPage
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public async Task ThenOnGetAsync_WhenSearchPostCodeIsNullOrEmpty_ThenNoResultsShouldBeReturned(string postCode)
+    public async Task ThenOnGetAsync_WhenSearchPostCodeIsNullOrEmpty_ThenNoResultsShouldBeReturned(string? postCode)
     {
         // Act
         var searchResults = await _pageModel.OnGetAsync(postCode, "", "", "", "", "", "", 1, false) as PageResult;

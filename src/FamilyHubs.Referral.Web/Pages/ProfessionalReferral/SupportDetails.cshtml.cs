@@ -2,8 +2,8 @@ using System.ComponentModel.DataAnnotations;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Helper;
 using FamilyHubs.Referral.Core.Models;
-using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
+using FamilyHubs.SharedKernel.Razor.FullPages;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
@@ -13,7 +13,7 @@ public class SupportDetailsModel : ProfessionalReferralCacheModel, ISingleTextbo
     public string HeadingText { get; set; } = "Who should the service contact?";
     public string? HintText { get; set; } = "This person must be 16 or over.";
     public string TextBoxLabel { get; set; } = "Full name";
-    public string ErrorText { get; set; } = "Enter a full name";
+    public int? MaxLength => 255;
 
     [Required]
     [BindProperty]
@@ -39,9 +39,9 @@ public class SupportDetailsModel : ProfessionalReferralCacheModel, ISingleTextbo
             return RedirectToSelf(null, ErrorId.SupportDetails_Invalid);
         }
 
-        if (TextBoxValue!.Length > 255)
+        if (TextBoxValue!.Length > MaxLength)
         {
-            TextBoxValue = TextBoxValue.Truncate(252);
+            TextBoxValue = TextBoxValue.Truncate(MaxLength.Value-3);
         }
 
         model.FamilyContactFullName = TextBoxValue;

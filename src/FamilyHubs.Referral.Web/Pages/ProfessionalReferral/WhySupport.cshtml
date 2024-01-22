@@ -3,6 +3,8 @@
 @{
     //todo: get h1 from model
     ViewData["Title"] = "Why are you requesting a connection?";
+
+    Model.Errors.ErrorIdToHtmlElementId = errorId => "reason";
 }
 
 @section Back {

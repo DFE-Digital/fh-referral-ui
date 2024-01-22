@@ -271,9 +271,9 @@ public static class ClientHelper
                             Email = "support@unittestservice.com"
                         }
                     },
-                    RegularSchedules = new List<RegularScheduleDto>
+                    Schedules = new List<ScheduleDto>
                     {
-                        new RegularScheduleDto
+                        new ScheduleDto
                         {
                             Description = "Description",
                             ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -282,20 +282,9 @@ public static class ClientHelper
                             ByMonthDay = "byMonth",
                             DtStart = "dtStart",
                             Freq = FrequencyType.NotSet,
-                            Interval = "interval",
+                            Interval = 1,
                             OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                             ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
-                        }
-                    },
-                    HolidaySchedules = new List<HolidayScheduleDto>
-                    {
-                        new HolidayScheduleDto
-                        {
-                            Closed = false,
-                            ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                            OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                            StartDate = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(5) ,
-                            EndDate = new DateTime(2023, 1, 1).ToUniversalTime()
                         }
                     }
                 }
@@ -332,9 +321,9 @@ public static class ClientHelper
                     ParentId = null
                 }
             },
-            RegularSchedules = new List<RegularScheduleDto>
+            Schedules = new List<ScheduleDto>
             {
-                new RegularScheduleDto
+                new ScheduleDto
                 {
                     Description = "Description",
                     OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -343,20 +332,9 @@ public static class ClientHelper
                     ByMonthDay = "byMonth",
                     DtStart = "dtStart",
                     Freq = FrequencyType.NotSet,
-                    Interval = "interval",
+                    Interval = 1,
                     ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                     ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
-                }
-            },
-            HolidaySchedules = new List<HolidayScheduleDto>
-            {
-                new HolidayScheduleDto
-                {
-                    Closed = true,
-                    ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    StartDate = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(5),
-                    EndDate = new DateTime(2023, 1, 1).ToUniversalTime()
                 }
             }
         };
@@ -364,9 +342,9 @@ public static class ClientHelper
         return service;
     }
 
-    public static FamilyHubs.ServiceDirectory.Shared.Dto.OrganisationDto GetTestCountyCouncilWithoutAnyServices()
+    public static ServiceDirectory.Shared.Dto.OrganisationDto GetTestCountyCouncilWithoutAnyServices()
     {
-        var testCountyCouncil = new FamilyHubs.ServiceDirectory.Shared.Dto.OrganisationDto
+        var testCountyCouncil = new ServiceDirectory.Shared.Dto.OrganisationDto
         {
             OrganisationType = OrganisationType.LA,
             Name = "Unit Test A County Council",

@@ -28,7 +28,7 @@ public class ContactMethodsModel : ProfessionalReferralCacheModel, ITellTheServi
             return;
         }
 
-        if (ErrorState.HasError((int)ErrorId.ContactMethods_TooLong))
+        if (Errors.HasTriggeredError((int)ErrorId.ContactMethods_TooLong))
         {
             TextAreaValue = model.ErrorState!.InvalidUserInput![0];
         }

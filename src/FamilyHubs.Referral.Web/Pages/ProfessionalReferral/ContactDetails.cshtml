@@ -2,7 +2,10 @@
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.ContactDetailsModel
 @{
     ViewData["Title"] = $"How can the service contact {Model.FullName}?";
-    Error? error = Model.ErrorState.GetErrorIfTriggered();
+
+    Model.Errors.ErrorIdToHtmlElementId = errorId => "ContactMethods_0_";
+
+    Error? error = Model.Errors.GetErrorIfTriggered();
 }
 
 @section Back {
@@ -12,7 +15,7 @@
     }
 }
 
-<partial name="Shared/_ErrorSummary" for="@Model.ErrorState"/>
+<partial name="_ErrorSummaryNext" for="@Model.Errors"/>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -27,7 +30,7 @@
                     <div id="hint" class="govuk-hint">
                         Select all that apply.
                     </div>
-                    <partial name="_ErrorMessage" model="error" />
+                    <partial name="_ErrorMessageNext" model="error" />
                     <div id="contact-methods" class="govuk-checkboxes" data-module="govuk-checkboxes">
                         @{
                             // we can either have the names here, or add Display attributes on the enum values.
