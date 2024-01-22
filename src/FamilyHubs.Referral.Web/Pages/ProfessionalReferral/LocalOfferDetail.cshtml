@@ -85,7 +85,7 @@
                 </td>
             </tr>
             @{
-                var serviceAvailability = Model.GetServiceAvailabilityAsString(Model.LocalOffer?.Schedules);
+                var serviceAvailability = Model.GetServiceAvailability(Model.LocalOffer?.Schedules);
                 if (serviceAvailability != null)
                 {
                     <tr class="govuk-table__row">

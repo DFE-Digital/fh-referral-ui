@@ -95,7 +95,7 @@ public class LocalOfferDetailModel : HeaderPageModel
         return string.Join(", ", languageDtos?.Select(d => d.Name).Order() ?? Enumerable.Empty<string>());
     }
     
-    public HtmlString? GetServiceAvailabilityAsString(ICollection<ScheduleDto>? schedules)
+    public HtmlString? GetServiceAvailability(ICollection<ScheduleDto>? schedules)
     {
         if (schedules == null || schedules.Count == 0)
             return null;
