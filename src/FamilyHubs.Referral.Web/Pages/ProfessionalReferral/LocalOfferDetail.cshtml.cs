@@ -17,7 +17,7 @@ public static class ServiceDisplayExtensions
     {
         return service.Schedules.GetServiceAvailability();
     }
-    
+
     public static IEnumerable<string> GetServiceAvailability(this ICollection<ScheduleDto>? schedules)
     {
         if (schedules == null || schedules.Count == 0)
@@ -39,12 +39,12 @@ public static class ServiceDisplayExtensions
         return hasWeekdaysAndWeekends ? weekdaysAndWeekends : new[] { timeDescription! };
     }
 
-    private static string? GetTimeDescription(this ICollection<ScheduleDto> schedules)
+    public static IEnumerable<string> GetWeekdaysAndWeekends(this ServiceDto service)
     {
-        return schedules.FirstOrDefault(x => x.Description != null)?.Description;
+        return service.Schedules.GetWeekdaysAndWeekends();
     }
 
-    private static IEnumerable<string> GetWeekdaysAndWeekends(this ICollection<ScheduleDto> schedules)
+    public static IEnumerable<string> GetWeekdaysAndWeekends(this ICollection<ScheduleDto> schedules)
     {
         return schedules
             .Select(ScheduleDescription)
@@ -72,6 +72,16 @@ public static class ServiceDisplayExtensions
         }
 
         return $"{dayType}: {schedule.OpensAt:h:mmtt} to {schedule.ClosesAt:h:mmtt}";
+    }
+
+    public static string? GetTimeDescription(this ServiceDto service)
+    {
+        return service.Schedules.GetTimeDescription();
+    }
+
+    public static string? GetTimeDescription(this ICollection<ScheduleDto> schedules)
+    {
+        return schedules.FirstOrDefault(x => x.Description != null)?.Description;
     }
 }
 
