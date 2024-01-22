@@ -86,12 +86,12 @@
             </tr>
             @{
                 var serviceAvailability = Model.GetServiceAvailability(Model.LocalOffer?.Schedules);
-                if (serviceAvailability != null)
+                if (serviceAvailability.Any())
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Service availability</th>
                         <td class="govuk-table__cell" data-testid="service-availability-value">
-                            @serviceAvailability
+                            @string.Join("<br>", serviceAvailability)
                         </td>
                     </tr>
                 }

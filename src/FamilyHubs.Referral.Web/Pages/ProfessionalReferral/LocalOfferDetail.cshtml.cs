@@ -95,41 +95,37 @@ public class LocalOfferDetailModel : HeaderPageModel
         return string.Join(", ", languageDtos?.Select(d => d.Name).Order() ?? Enumerable.Empty<string>());
     }
     
-    public HtmlString? GetServiceAvailability(ICollection<ScheduleDto>? schedules)
+    public IEnumerable<string> GetServiceAvailability(ICollection<ScheduleDto>? schedules)
     {
         if (schedules == null || schedules.Count == 0)
-            return null;
+            return Enumerable.Empty<string>();
 
-        var weekdaysAndWeekends = GetWeekdaysAndWeekends(schedules);
+        var weekdaysAndWeekends = GetWeekdaysAndWeekends(schedules).ToArray();
         var timeDescription = GetTimeDescription(schedules);
 
-        if (weekdaysAndWeekends == null && timeDescription == null)
-            return null;
+        bool hasWeekdaysAndWeekends = weekdaysAndWeekends.Length > 0;
+        
+        if (!hasWeekdaysAndWeekends && timeDescription == null)
+            return Enumerable.Empty<string>();
 
-        if (weekdaysAndWeekends != null && timeDescription != null)
+        if (hasWeekdaysAndWeekends && timeDescription != null)
         {
-            return new HtmlString($"{weekdaysAndWeekends}<br><br>{timeDescription}");
+            return weekdaysAndWeekends.Append("").Append(timeDescription);
         }
 
-        return weekdaysAndWeekends ?? timeDescription;
+        return hasWeekdaysAndWeekends ? weekdaysAndWeekends : new [] {timeDescription!};
     }
 
-    private HtmlString? GetTimeDescription(ICollection<ScheduleDto> schedules)
+    private string? GetTimeDescription(ICollection<ScheduleDto> schedules)
     {
-        string? description = schedules.FirstOrDefault(x => x.Description != null)?.Description;
-        return description != null ? new HtmlString(description) : null;
+        return schedules.FirstOrDefault(x => x.Description != null)?.Description;
     }
 
-    private HtmlString? GetWeekdaysAndWeekends(ICollection<ScheduleDto> schedules)
+    private IEnumerable<string> GetWeekdaysAndWeekends(ICollection<ScheduleDto> schedules)
     {
-        var weekdaysAndWeekends = schedules
+        return schedules
             .Select(ScheduleDescription)
-            .Where(d => !string.IsNullOrEmpty(d))
-            .ToArray();
-
-        return weekdaysAndWeekends.Any()
-            ? new HtmlString(string.Join("<br>", weekdaysAndWeekends))
-            : null;
+            .Where(d => !string.IsNullOrEmpty(d))!;
     }
 
     private string? ScheduleDescription(ScheduleDto schedule)
@@ -139,22 +135,20 @@ public class LocalOfferDetailModel : HeaderPageModel
             return null;
         }
 
-        StringBuilder description = new();
-        if (schedule.ByDay == "MO,TU,WE,TH,FR")
+        string dayType;
+        switch (schedule.ByDay)
         {
-            description.Append("Weekdays: ");
-        }
-        else if (schedule.ByDay == "SA,SU")
-        {
-            description.Append("Weekends: ");
-        }
-        else
-        {
-            return null;
+            case "MO,TU,WE,TH,FR":
+                dayType = "Weekdays";
+                break;
+            case "SA,SU":
+                dayType = "Weekends";
+                break;
+            default:
+                return null;
         }
 
-        description.Append($"{schedule.OpensAt:h:mmtt} to {schedule.ClosesAt:h:mmtt}");
-        return description.ToString();
+        return $"{dayType}: {schedule.OpensAt:h:mmtt} to {schedule.ClosesAt:h:mmtt}";
     }
 
     public void ExtractAddressParts(LocationDto addressDto)
