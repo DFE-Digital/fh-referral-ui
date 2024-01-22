@@ -80,9 +80,6 @@
                                 @if (telephoneError)
                                 {
                                     <partial name="_ErrorMessageNext" model="triggeredError" />
-                                    // <p id="contact-by-phone-error" class="govuk-error-message">
-                                    //     <span class="govuk-visually-hidden">Error:</span> @triggeredError!.ErrorMessage
-                                    // </p>
                                 }
                                 @* makes sense to have autocomplete on for this telephone number, as it will be the user's (same) tel number each time *@
                                 <input asp-for="TelephoneNumber" id="contact-by-phone" class="govuk-input govuk-!-width-one-third" type="tel" autocomplete="tel" spellcheck="false"
