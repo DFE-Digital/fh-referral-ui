@@ -13,6 +13,11 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 //todo: this is going to be moved to service directory common for reuse
 public static class ServiceDisplayExtensions
 {
+    public static IEnumerable<string> GetServiceAvailability(this ServiceDto service)
+    {
+        return service.Schedules.GetServiceAvailability();
+    }
+    
     public static IEnumerable<string> GetServiceAvailability(this ICollection<ScheduleDto>? schedules)
     {
         if (schedules == null || schedules.Count == 0)

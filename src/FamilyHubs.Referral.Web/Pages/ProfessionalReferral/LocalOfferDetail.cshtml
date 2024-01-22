@@ -1,5 +1,4 @@
 ﻿@page
-@using Microsoft.EntityFrameworkCore.Storage.ValueConversion
 @model LocalOfferDetailModel
 @{
     ViewData["Title"] = Model.LocalOffer.Name;
@@ -85,8 +84,8 @@
                 </td>
             </tr>
             @{
-                var serviceAvailability = Model.LocalOffer?.Schedules.GetServiceAvailability();
-                if (serviceAvailability?.Any() == true)
+                var serviceAvailability = Model.LocalOffer!.GetServiceAvailability();
+                if (serviceAvailability.Any())
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Service availability</th>
