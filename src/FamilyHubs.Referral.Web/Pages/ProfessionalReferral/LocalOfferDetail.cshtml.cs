@@ -99,28 +99,44 @@ public class LocalOfferDetailModel : HeaderPageModel
     {
         if (schedules == null || schedules.Count == 0)
             return null;
-        
-        //todo: only wrap in <p> if there is content
-        return new HtmlString($"<p>{GetWhen(schedules)}</p><p></p>{GetTimeDescription(schedules)}");
+
+        var weekdaysAndWeekends = GetWeekdaysAndWeekends(schedules);
+        var timeDescription = GetTimeDescription(schedules);
+
+        if (weekdaysAndWeekends == null && timeDescription == null)
+            return null;
+
+        if (weekdaysAndWeekends != null && timeDescription != null)
+        {
+            return new HtmlString($"{weekdaysAndWeekends}<br><br>{timeDescription}");
+        }
+
+        return weekdaysAndWeekends ?? timeDescription;
     }
 
-    private string GetTimeDescription(ICollection<ScheduleDto> schedules)
+    private HtmlString? GetTimeDescription(ICollection<ScheduleDto> schedules)
     {
-        return schedules.FirstOrDefault(x => x.Description != null)?.Description ?? "";
+        string? description = schedules.FirstOrDefault(x => x.Description != null)?.Description;
+        return description != null ? new HtmlString(description) : null;
     }
 
-    private HtmlString GetWhen(ICollection<ScheduleDto> schedules)
+    private HtmlString? GetWeekdaysAndWeekends(ICollection<ScheduleDto> schedules)
     {
-        return new HtmlString(schedules.Any()
-            ? string.Join("<br>", schedules.Select(ScheduleDescription).Where(d => !string.IsNullOrEmpty(d)))
-            : "");
+        var weekdaysAndWeekends = schedules
+            .Select(ScheduleDescription)
+            .Where(d => !string.IsNullOrEmpty(d))
+            .ToArray();
+
+        return weekdaysAndWeekends.Any()
+            ? new HtmlString(string.Join("<br>", weekdaysAndWeekends))
+            : null;
     }
 
-    private string ScheduleDescription(ScheduleDto schedule)
+    private string? ScheduleDescription(ScheduleDto schedule)
     {
         if (schedule.Freq != FrequencyType.Weekly)
         {
-            return "";
+            return null;
         }
 
         StringBuilder description = new();
@@ -134,7 +150,7 @@ public class LocalOfferDetailModel : HeaderPageModel
         }
         else
         {
-            return "";
+            return null;
         }
 
         description.Append($"{schedule.OpensAt:h:mmtt} to {schedule.ClosesAt:h:mmtt}");
