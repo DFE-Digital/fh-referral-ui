@@ -1,7 +1,6 @@
 ﻿//using System.Text.Json;
-//using FamilyHubs.Referral.Core.ApiClients;
-//using FamilyHubs.Referral.Core.Models;
 //using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
+//using FamilyHubs.SharedKernel.Services.Postcode.Interfaces;
 //using Microsoft.AspNetCore.Mvc.RazorPages;
 //using Moq;
 
@@ -62,17 +61,17 @@
 //        }";
 
 //        var postcodesIoResponse = JsonSerializer.Deserialize<PostcodesIoResponse>(json) ?? new PostcodesIoResponse();
-//        var mockPostcodeLocationCLientService = new Mock<IPostcodeLocationClientService>();
-//        mockPostcodeLocationCLientService
-//            .Setup(action => action.LookupPostcode(It.IsAny<string>()))
+//        var postcodeService = new Mock<IPostcodeLookup>();
+//        postcodeService
+//            .Setup(action => action.Get(It.IsAny<string>(), It.IsAny<CancellationToken>()))
 //            .ReturnsAsync(postcodesIoResponse);
-//        var searchModel = new SearchModel(mockPostcodeLocationCLientService.Object);
+//        var searchModel = new SearchModel(postcodeService.Object);
 
 //        //Act
-//        _ = await searchModel.OnPost() as PageResult;
+//        _ = await searchModel.OnPostAsync() as PageResult;
 
 //        //Assert
-//        Assert.True(searchModel.ValidationValid);
+//        Assert.True(searchModel.PostcodeValid);
 //    }
 
 //    [Fact]
@@ -126,17 +125,18 @@
 //        }";
 
 //        var postcodesIoResponse = JsonSerializer.Deserialize<PostcodesIoResponse>(json) ?? new PostcodesIoResponse();
-//        var mockPostcodeLocationCLientService = new Mock<IPostcodeLocationClientService>();
-//        mockPostcodeLocationCLientService
-//            .Setup(action => action.LookupPostcode(It.IsAny<string>()))
+//        var postcodeService = new Mock<IPostcodeLookup>();
+//        postcodeService
+//            .Setup(action => action.Get(It.IsAny<string>(), It.IsAny<CancellationToken>()))
 //            .ReturnsAsync(postcodesIoResponse);
-//        var searchModel = new SearchModel(mockPostcodeLocationCLientService.Object);
+//        var searchModel = new SearchModel(postcodeService.Object)
+//        {
+//            Postcode = "aaa"
+//        };
 
-//        //Act
-//        searchModel.Postcode = "aaa";
-//        _ = await searchModel.OnPost() as PageResult;
+//        _ = await searchModel.OnPostAsync() as PageResult;
 
 //        //Assert
-//        Assert.False(searchModel.ValidationValid);
+//        Assert.False(searchModel.PostcodeValid);
 //    }
 //}
