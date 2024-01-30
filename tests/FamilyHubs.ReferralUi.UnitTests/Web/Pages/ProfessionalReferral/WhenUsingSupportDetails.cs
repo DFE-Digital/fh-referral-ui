@@ -48,7 +48,5 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
         //Assert
         ArgumentNullException.ThrowIfNull(result);
         result.PageName.Should().Be("/ProfessionalReferral/SupportDetails");
-
-        
     }
 }

@@ -15,6 +15,7 @@ using FamilyHubs.Referral.Infrastructure.Health;
 using FamilyHubs.Referral.Infrastructure.Notifications;
 using FamilyHubs.SharedKernel.DataProtection;
 using FamilyHubs.SharedKernel.Telemetry;
+using FamilyHubs.SharedKernel.Services.PostcodesIo.Extensions;
 
 namespace FamilyHubs.Referral.Web;
 
@@ -73,6 +74,7 @@ public static class StartupExtensions
         services.AddNotificationsApiClient(configuration);
         services.AddSingleton<INotificationTemplates<NotificationType>, NotificationTemplates<NotificationType>>();
         services.AddTransient<IReferralNotificationService, ReferralNotificationService>();
+        services.AddPostcodesIoClient(configuration);
 
         services.AddIdamsClient(configuration);
 
