@@ -303,20 +303,6 @@ public class LocalOfferResultsModel : HeaderPageModel
             .ToDictionary(k => (int)k, v => Utility.GetEnumDescription(v));
     }
 
-    public string GetAddressAsString(LocationDto? addressDto)
-    {
-        if (addressDto == null || addressDto.Address1 == string.Empty) return string.Empty;
-
-        var result = new StringBuilder();
-
-        result.Append(addressDto.Address1.Replace("|", ",") + ",");
-        result.Append(!string.IsNullOrWhiteSpace(addressDto.City) ? addressDto.City + "," : string.Empty);
-        result.Append(!string.IsNullOrWhiteSpace(addressDto.StateProvince) ? addressDto.StateProvince + "," : string.Empty);
-        result.Append(addressDto.PostCode);
-
-        return result.ToString();
-    }
-
     public string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto> serviceDeliveries)
     {
         return serviceDeliveries.Count == 0

@@ -347,10 +347,7 @@ else
                             <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-serviceid="@item.Id" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
                         </h2>
                         <p class="govuk-caption-m">
-                            @if (item.Locations.FirstOrDefault() != null)
-                            {
-                                @Model.GetAddressAsString(item.Locations.FirstOrDefault())
-                            }
+                            @string.Join(", ", item.Locations.FirstOrDefault()?.GetAddress() ?? Enumerable.Empty<string>())
                         </p>
                         @if(item.Taxonomies.Any())
                         {
