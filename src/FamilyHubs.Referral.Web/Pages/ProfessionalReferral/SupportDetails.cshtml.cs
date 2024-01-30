@@ -3,7 +3,7 @@ using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Helper;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
-using FamilyHubs.SharedKernel.Razor.FullPages;
+using FamilyHubs.SharedKernel.Razor.FullPages.SingleTextbox;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;

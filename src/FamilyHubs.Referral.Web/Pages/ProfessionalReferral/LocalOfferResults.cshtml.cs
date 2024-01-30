@@ -10,6 +10,9 @@ using FamilyHubs.ServiceDirectory.Shared.Models;
 using FamilyHubs.ServiceDirectory.Shared.ReferenceData;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.Pagination;
+using FamilyHubs.SharedKernel.Services.Postcode.Interfaces;
+using FamilyHubs.SharedKernel.Services.Postcode.Model;
+using FamilyHubs.SharedKernel.Services.PostcodesIo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,7 +22,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 [Authorize(Roles = RoleGroups.LaOrVcsProfessionalOrDualRole)]
 public class LocalOfferResultsModel : HeaderPageModel
 {
-    private readonly IPostcodeLocationClientService _postcodeLocationClientService;
+    private readonly IPostcodeLookup _postcodeLookup;
     private readonly IOrganisationClientService _organisationClientService;
 
     public Dictionary<int, string> DictServiceDelivery { get; private set; }
@@ -111,15 +114,16 @@ public class LocalOfferResultsModel : HeaderPageModel
     public int PageSize { get; set; } = 10;
     public IPagination Pagination { get; set; }
     public int TotalResults { get; set; }
-    public string? OutCode { get; set; }
     public string? DistrictCode { get; set; }
 
     public bool InitialLoad { get; set; } = true;
 
-    public LocalOfferResultsModel(IPostcodeLocationClientService postcodeLocationClientService, IOrganisationClientService organisationClientService)
+    public LocalOfferResultsModel(
+        IPostcodeLookup postcodeLookup,
+        IOrganisationClientService organisationClientService)
     {
         DictServiceDelivery = new();
-        _postcodeLocationClientService = postcodeLocationClientService;
+        _postcodeLookup = postcodeLookup;
         _organisationClientService = organisationClientService;
         Pagination = new DontShowPagination();
     }
@@ -329,17 +333,15 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     private async Task GetLocationDetails(string postCode)
     {
-        try
+        var (postcodeError, postcodeInfo) = await _postcodeLookup.Get(postCode);
+
+        //todo: we shouldn't ignore the error, but this is what it's always done
+        //todo: what we should really do is pass this info on from the postcode search page
+        if (postcodeError != PostcodeError.None)
         {
-            var postcodesIoResponse = await _postcodeLocationClientService.LookupPostcode(postCode);
-            CurrentLatitude = postcodesIoResponse.Result.Latitude;
-            CurrentLongitude = postcodesIoResponse.Result.Longitude;
-            DistrictCode = postcodesIoResponse.Result.AdminArea;
-            OutCode = postcodesIoResponse.Result.OutCode;
-        }
-        catch
-        {
-            //If post code is not valid then just return
+            CurrentLatitude = postcodeInfo!.Latitude!.Value;
+            CurrentLongitude = postcodeInfo.Longitude!.Value;
+            DistrictCode = postcodeInfo.AdminArea;
         }
     }
 

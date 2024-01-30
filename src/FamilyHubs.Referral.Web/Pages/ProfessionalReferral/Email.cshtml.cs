@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.Referral.Core.DistributedCache;
 using System.Web;
-using FamilyHubs.SharedKernel.Razor.FullPages;
+using FamilyHubs.SharedKernel.Razor.FullPages.SingleTextbox;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 

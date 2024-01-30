@@ -99,12 +99,6 @@ public static class StartupExtensions
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHttpClient<IPostcodeLocationClientService, PostcodeLocationClientService>(client =>
-        {
-            const string PostcodesIo = "http://api.postcodes.io";
-            client.BaseAddress = new Uri(PostcodesIo);
-        });
-
         services.AddHttpClient<IOrganisationClientService, OrganisationClientService>(client =>
         {
             client.BaseAddress = new Uri(configuration.GetValue<string>("ServiceDirectoryUrl")!);
