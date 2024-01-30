@@ -132,33 +132,14 @@
             }
 
             <!--Address-->
-            @if (!string.IsNullOrEmpty(Model.PostalCode))
+            @if (Model.Location != null)
             {
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                         Address
                     </dt>
                     <dd class="govuk-summary-list__value" data-testid="detailsaddress">
-                        @if (!string.IsNullOrEmpty(Model.Address1))
-                        {
-                            @Model.Address1
-                            <br />
-                        }
-                        @if (!string.IsNullOrEmpty(Model.City))
-                        {
-                            @Model.City
-                            <br />
-                        }
-                        @if (!string.IsNullOrEmpty(Model.StateProvince))
-                        {
-                            @Model.StateProvince
-                            <br />
-                        }
-                        @if (!string.IsNullOrEmpty(Model.PostalCode))
-                        {
-                            @Model.PostalCode
-                            <br />
-                        }
+                        @Html.Raw(string.Join("<br>", Model.Location.GetAddress()))
                     </dd>
                 </div>
             }
