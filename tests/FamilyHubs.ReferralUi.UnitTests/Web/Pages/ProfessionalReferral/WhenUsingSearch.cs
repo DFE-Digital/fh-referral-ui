@@ -4,8 +4,6 @@ using FamilyHubs.SharedKernel.Services.Postcode.Model;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Moq;
 
-// ReSharper disable StringLiteralTypo
-
 namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
 public class WhenUsingSearch
