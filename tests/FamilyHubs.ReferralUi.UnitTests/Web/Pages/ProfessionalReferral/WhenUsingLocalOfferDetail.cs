@@ -189,19 +189,4 @@ public class WhenUsingLocalOfferDetail
         //Assert
         result.Should().Be("English, French");
     }
-
-    [Fact]
-    public void ThenExtractAddressParts_ShouldJustReturn()
-    {
-        //Arrange
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockIIdamsClient.Object);
-        LocationDto locationDto = new LocationDto { Address1 = default!, Address2 = default!, City = default!, Country = default!, Latitude = default!, Longitude = default!, LocationType = LocationType.NotSet, Name = default!, PostCode = default!, StateProvince = default! };
-
-        //Act
-        localOfferDetailModel.ExtractAddressParts(locationDto);
-
-        //Assert
-        localOfferDetailModel.Address1.Should().BeNullOrEmpty();
-        localOfferDetailModel.PostalCode.Should().BeNullOrEmpty();
-    }
 }

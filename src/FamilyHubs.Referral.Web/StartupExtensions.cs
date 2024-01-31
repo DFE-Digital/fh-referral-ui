@@ -15,6 +15,7 @@ using FamilyHubs.Referral.Infrastructure.Health;
 using FamilyHubs.Referral.Infrastructure.Notifications;
 using FamilyHubs.SharedKernel.DataProtection;
 using FamilyHubs.SharedKernel.Telemetry;
+using FamilyHubs.SharedKernel.Services.PostcodesIo.Extensions;
 
 namespace FamilyHubs.Referral.Web;
 
@@ -73,6 +74,7 @@ public static class StartupExtensions
         services.AddNotificationsApiClient(configuration);
         services.AddSingleton<INotificationTemplates<NotificationType>, NotificationTemplates<NotificationType>>();
         services.AddTransient<IReferralNotificationService, ReferralNotificationService>();
+        services.AddPostcodesIoClient(configuration);
 
         services.AddIdamsClient(configuration);
 
@@ -99,12 +101,6 @@ public static class StartupExtensions
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHttpClient<IPostcodeLocationClientService, PostcodeLocationClientService>(client =>
-        {
-            const string PostcodesIo = "http://api.postcodes.io";
-            client.BaseAddress = new Uri(PostcodesIo);
-        });
-
         services.AddHttpClient<IOrganisationClientService, OrganisationClientService>(client =>
         {
             client.BaseAddress = new Uri(configuration.GetValue<string>("ServiceDirectoryUrl")!);

@@ -7,7 +7,7 @@ using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.ValidationAttributes;
 using System.Web;
 using FamilyHubs.SharedKernel.Razor.ErrorNext;
-using FamilyHubs.SharedKernel.Razor.FullPages;
+using FamilyHubs.SharedKernel.Razor.FullPages.SingleTextbox;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
