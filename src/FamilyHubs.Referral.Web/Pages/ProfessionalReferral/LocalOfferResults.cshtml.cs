@@ -1,5 +1,4 @@
 using System.Dynamic;
-using System.Text;
 using EnumsNET;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.Models;
@@ -12,7 +11,6 @@ using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 using FamilyHubs.SharedKernel.Services.Postcode.Interfaces;
 using FamilyHubs.SharedKernel.Services.Postcode.Model;
-using FamilyHubs.SharedKernel.Services.PostcodesIo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -323,7 +321,7 @@ public class LocalOfferResultsModel : HeaderPageModel
 
         //todo: we shouldn't ignore the error, but this is what it's always done
         //todo: what we should really do is pass this info on from the postcode search page
-        if (postcodeError != PostcodeError.None)
+        if (postcodeError == PostcodeError.None)
         {
             CurrentLatitude = postcodeInfo!.Latitude!.Value;
             CurrentLongitude = postcodeInfo.Longitude!.Value;
