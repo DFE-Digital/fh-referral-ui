@@ -258,7 +258,8 @@ public static class ClientHelper
                     PostCode = "B77 3JN",
                     Country = "England",
                     StateProvince = "null",
-                    LocationType = LocationType.FamilyHub,
+                    LocationTypeCategory = LocationTypeCategory.FamilyHub,
+                    LocationType = LocationType.Postal,
                     Contacts = new List<ContactDto>
                     {
                         new ContactDto
