@@ -113,7 +113,8 @@ public class BaseClientService
                     Country = "England",
                     Latitude = 52.6312,
                     Longitude = -1.66526,
-                    LocationType = LocationType.NotSet,
+                    LocationTypeCategory = LocationTypeCategory.NotSet,
+                    LocationType = LocationType.Postal
                 }
             },
             Fundings = new List<FundingDto>(),
