@@ -282,7 +282,7 @@ public static class ClientHelper
                             ByDay = "byDay",
                             ByMonthDay = "byMonth",
                             DtStart = "dtStart",
-                            Freq = FrequencyType.NotSet,
+                            Freq = null,
                             Interval = 1,
                             OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                             ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
@@ -332,7 +332,7 @@ public static class ClientHelper
                     ByDay = "byDay1",
                     ByMonthDay = "byMonth",
                     DtStart = "dtStart",
-                    Freq = FrequencyType.NotSet,
+                    Freq = null,
                     Interval = 1,
                     ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                     ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
