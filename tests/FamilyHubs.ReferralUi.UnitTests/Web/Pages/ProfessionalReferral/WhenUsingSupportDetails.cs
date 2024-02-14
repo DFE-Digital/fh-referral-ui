@@ -35,9 +35,9 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
 
     
     [Theory]
-    [InlineData(default!)]
+    [InlineData(default)]
     [InlineData(" ")]
-    public async Task ThenOnPostSupportDetailsWithEmptyFullName(string value)
+    public async Task ThenOnPostSupportDetailsWithEmptyFullName(string? value)
     {
         _supportDetailsModel.TextBoxValue = value;
         _supportDetailsModel.ModelState.AddModelError("FamilyContactFullName", "Enter a full name");
@@ -48,7 +48,5 @@ public class WhenUsingSupportDetails : BaseProfessionalReferralPage
         //Assert
         ArgumentNullException.ThrowIfNull(result);
         result.PageName.Should().Be("/ProfessionalReferral/SupportDetails");
-
-        
     }
 }

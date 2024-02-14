@@ -1,15 +1,25 @@
 ﻿@page
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.ContactByPhoneModel
 @{
     ViewData["Title"] = "How can the service contact you for more details about this request?";
-    Error? triggeredError = Model.ErrorState.GetErrorIfTriggered();
+
+    Model.Errors.ErrorIdToHtmlElementId = errorId => errorId switch
+    {
+        (int)ErrorId.ContactByPhone_NoContactSelected => "email",
+        (int)ErrorId.ContactByPhone_NoTelephoneNumber => "contact-by-phone",
+        (int)ErrorId.ContactByPhone_InvalidTelephoneNumber => "contact-by-phone",
+        _ => throw new SwitchExpressionException(errorId)
+    };
+
+    Error? triggeredError = Model.Errors.GetErrorIfTriggered();
 }
 
 @section Back {
     <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
 }
 
-<partial name="Shared/_ErrorSummary" for="@Model.ErrorState"/>
+<partial name="_ErrorSummaryNext" for="@Model.Errors"/>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -17,7 +27,7 @@
         <form method="post" novalidate>
 
             <div class="govuk-form-group @(triggeredError?.Id == (int)ErrorId.ContactByPhone_NoContactSelected ? "govuk-form-group--error" : "")">
-                <fieldset class="govuk-fieldset" aria-describedby="contact-hint @(triggeredError?.Id == (int)ErrorId.ContactByPhone_NoContactSelected ? "no-contact-selected-error" : "")">
+                <fieldset class="govuk-fieldset" aria-describedby="contact-hint @(triggeredError?.Id == (int)ErrorId.ContactByPhone_NoContactSelected ? triggeredError.InputErrorMessageParaId : "")">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <h1 class="govuk-fieldset__heading">
                             How can the service contact you for more details about this request?
@@ -29,9 +39,7 @@
                     @{
                         if (triggeredError?.Id == (int)ErrorId.ContactByPhone_NoContactSelected)
                         {
-                            <span id="no-contact-selected-error" class="govuk-error-message">
-                                <span class="govuk-visually-hidden">Error:</span> @triggeredError.ErrorMessage
-                            </span>
+                            <partial name="_ErrorMessageNext" model="triggeredError" />
                         }
                     }
                     <div class="govuk-radios" data-module="govuk-radios">
@@ -71,13 +79,11 @@
                                 </label>
                                 @if (telephoneError)
                                 {
-                                    <p id="contact-by-phone-error" class="govuk-error-message">
-                                        <span class="govuk-visually-hidden">Error:</span> @triggeredError!.ErrorMessage
-                                    </p>
+                                    <partial name="_ErrorMessageNext" model="triggeredError" />
                                 }
                                 @* makes sense to have autocomplete on for this telephone number, as it will be the user's (same) tel number each time *@
                                 <input asp-for="TelephoneNumber" id="contact-by-phone" class="govuk-input govuk-!-width-one-third" type="tel" autocomplete="tel" spellcheck="false"
-                                    aria-describedby="@(telephoneError ? "contact-by-phone-error" : "")">
+                                           aria-describedby="@(telephoneError ? triggeredError?.InputErrorMessageParaId : "")">
                             </div>
                         </div>
                     }

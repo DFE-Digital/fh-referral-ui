@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.Referral.Core.DistributedCache;
-using FamilyHubs.Referral.Web.Models;
 using System.Web;
+using FamilyHubs.SharedKernel.Razor.FullPages.SingleTextbox;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -13,7 +13,7 @@ public class EmailModel : ProfessionalReferralCacheModel, ISingleEmailTextboxPag
     public string HeadingText { get; set; } = "";
     public string? HintText { get; set; }
     public string TextBoxLabel { get; set; } = "Email address";
-    public string ErrorText { get; set; } = "Enter an email address in the correct format, like name@example.com";
+    public int? MaxLength => 254;
 
     [Required]
     [EmailAddress]

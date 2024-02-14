@@ -6,7 +6,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        @if (!Model.ValidationValid || !Model.PostcodeValid)
+        @if (!Model.PostcodeValid)
         {
             <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
                 <h2 class="govuk-error-summary__title" id="error-summary-title">
@@ -20,17 +20,11 @@
                                 <a href="#Postcode">Enter a valid postcode, for example SW1A 2AA.</a>
                             </li>
                         }
-                        @if (Model.ValidationValid == false)
-                        {
-                            <li>
-                                <a href="#Postcode">Enter a valid postcode, for example SW1A 2AA.</a>
-                            </li>
-                        }
                     </ul>
                 </div>
             </div>
         }
-        <div class="@(Model.PostcodeValid == false || Model.ValidationValid == false ? "govuk-form-group--error" : "")">
+        <div class="@(Model.PostcodeValid == false ? "govuk-form-group--error" : "")">
             <h1 class="govuk-heading-l">Search for services by postcode</h1>
             <p class="govuk-details">
                 Use the postcode of the people who need support to find services local to them.
@@ -41,13 +35,7 @@
                     <span class="govuk-visually-hidden">Error:</span> Enter a valid postcode, for example SW1A 2AA.
                 </p>
             }
-            @if (Model.ValidationValid == false)
-            {
-                <p class="govuk-error-message" data-testid="invalid-error">
-                    <span class="govuk-visually-hidden">Error:</span> Enter a valid postcode, for example SW1A 2AA.
-                </p>
-            }
-            <form method="post">
+            <form method="post" novalidate>
                 <div class="govuk-form-group" id="search-options">
                     <label class="govuk-label govuk-label--s" for="Postcode">
                         Enter a postcode

@@ -60,13 +60,18 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         if (string.IsNullOrEmpty(filter.Status))
             filter.Status = "Active";
 
-        var urlBuilder = new StringBuilder();
+        var urlBuilder = new StringBuilder(
+            GetPositionUrl(filter.ServiceType, filter.Latitude, filter.Longitude, filter.Proximity,
+                filter.Status, filter.PageNumber, filter.PageSize));
 
-        var url = GetPositionUrl(filter.ServiceType, filter.Latitude, filter.Longitude, filter.Proximity, filter.Status, filter.PageNumber, filter.PageSize);
-
-        urlBuilder.Append(url);
         AddTextToUrl(urlBuilder, filter.Text);
-        AddAgeToUrl(urlBuilder, filter.MinimumAge, filter.MaximumAge, filter.GivenAge);
+
+        if (filter.AllChildrenYoungPeople == true)
+        {
+            urlBuilder.Append("&allChildrenYoungPeople=true");
+        }
+        
+        AddAgeToUrl(urlBuilder, filter.GivenAge);
 
         if (filter.ServiceDeliveries != null)
         {
@@ -88,9 +93,9 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
             urlBuilder.Append($"&districtCode={filter.DistrictCode}");
         }
 
-        if (filter.Languages != null)
+        if (filter.LanguageCode != null)
         {
-            urlBuilder.Append($"&languages={filter.Languages}");
+            urlBuilder.Append($"&languages={filter.LanguageCode}");
         }
 
         if (filter.CanFamilyChooseLocation != null && filter.CanFamilyChooseLocation == true)
@@ -120,18 +125,8 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
                 proximity != null ? $"&proximity={proximity}" : string.Empty)}";
     }
 
-    public void AddAgeToUrl(StringBuilder url, int? minimumAge, int? maximumAge, int? givenAge)
+    public void AddAgeToUrl(StringBuilder url, int? givenAge)
     {
-        if (minimumAge != null)
-        {
-            url.AppendLine($"&minimumAge={minimumAge}");
-        }
-
-        if (maximumAge != null)
-        {
-            url.AppendLine($"&maximumAge={maximumAge}");
-        }
-
         if (givenAge != null)
         {
             url.AppendLine($"&givenAge={givenAge}");

@@ -1,5 +1,4 @@
 using System.Dynamic;
-using System.Text;
 using EnumsNET;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.Models;
@@ -7,8 +6,11 @@ using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
+using FamilyHubs.ServiceDirectory.Shared.ReferenceData;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.Pagination;
+using FamilyHubs.SharedKernel.Services.Postcode.Interfaces;
+using FamilyHubs.SharedKernel.Services.Postcode.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,7 +20,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 [Authorize(Roles = RoleGroups.LaOrVcsProfessionalOrDualRole)]
 public class LocalOfferResultsModel : HeaderPageModel
 {
-    private readonly IPostcodeLocationClientService _postcodeLocationClientService;
+    private readonly IPostcodeLookup _postcodeLookup;
     private readonly IOrganisationClientService _organisationClientService;
 
     public Dictionary<int, string> DictServiceDelivery { get; private set; }
@@ -28,6 +30,7 @@ public class LocalOfferResultsModel : HeaderPageModel
     public double CurrentLongitude { get; set; }
     public PaginatedList<ServiceDto> SearchResults { get; set; } = new();
     public string SelectedDistance { get; set; } = "212892";
+
     public List<SelectListItem> AgeRange { get; set; } = new()
     {
         new() { Value="-1", Text="All ages" , Selected = true},
@@ -58,83 +61,20 @@ public class LocalOfferResultsModel : HeaderPageModel
         new() { Value="24", Text="24 years old"},
         new() { Value="25", Text="25 years old"},
     };
-    public List<SelectListItem> Languages { get; set; } = new()
+
+    public const string AllLanguagesValue = "all";
+
+    public static SelectListItem[] StaticLanguageOptions { get; set; }
+    public IEnumerable<SelectListItem> LanguageOptions => StaticLanguageOptions;
+
+    static LocalOfferResultsModel()
     {
-        new() { Value = "All languages", Text="All languages" , Selected = true},
-        new() { Value = "Afrikaans", Text = "Afrikaans" },
-        new() { Value = "Albanian", Text = "Albanian" },
-        new() { Value = "Arabic", Text = "Arabic" },
-        new() { Value = "Armenian", Text = "Armenian" },
-        new() { Value = "Basque", Text = "Basque" },
-        new() { Value = "Bengali", Text = "Bengali" },
-        new() { Value = "Bulgarian", Text = "Bulgarian" },
-        new() { Value = "Catalan", Text = "Catalan" },
-        new() { Value = "Cambodian", Text = "Cambodian" },
-        new() { Value = "Chinese (Mandarin)", Text = "Chinese (Mandarin)" },
-        new() { Value = "Croatian", Text = "Croatian" },
-        new() { Value = "Czech", Text = "Czech" },
-        new() { Value = "Danish", Text = "Danish" },
-        new() { Value = "Dutch", Text = "Dutch" },
-        new() { Value = "English", Text = "English"},
-        new() { Value = "Estonian", Text = "Estonian" },
-        new() { Value = "Fiji", Text = "Fiji" },
-        new() { Value = "Finnish", Text = "Finnish" },
-        new() { Value = "French", Text = "French" },
-        new() { Value = "Georgian", Text = "Georgian" },
-        new() { Value = "German", Text = "German" },
-        new() { Value = "Greek", Text = "Greek" },
-        new() { Value = "Gujarati", Text = "Gujarati" },
-        new() { Value = "Hebrew", Text = "Hebrew" },
-        new() { Value = "Hindi", Text = "Hindi" },
-        new() { Value = "Hungarian", Text = "Hungarian" },
-        new() { Value = "Icelandic", Text = "Icelandic" },
-        new() { Value = "Indonesian", Text = "Indonesian" },
-        new() { Value = "Irish", Text = "Irish" },
-        new() { Value = "Italian", Text = "Italian" },
-        new() { Value = "Japanese", Text = "Japanese" },
-        new() { Value = "Javanese", Text = "Javanese" },
-        new() { Value = "Korean", Text = "Korean" },
-        new() { Value = "Latin", Text = "Latin" },
-        new() { Value = "Latvian", Text = "Latvian" },
-        new() { Value = "Lithuanian", Text = "Lithuanian" },
-        new() { Value = "Macedonian", Text = "Macedonian" },
-        new() { Value = "Malay", Text = "Malay" },
-        new() { Value = "Malayalam", Text = "Malayalam" },
-        new() { Value = "Maltese", Text = "Maltese" },
-        new() { Value = "Maori", Text = "Maori" },
-        new() { Value = "Marathi", Text = "Marathi" },
-        new() { Value = "Mongolian", Text = "Mongolian" },
-        new() { Value = "Nepali", Text = "Nepali" },
-        new() { Value = "Norwegian", Text = "Norwegian" },
-        new() { Value = "Persian", Text = "Persian" },
-        new() { Value = "Polish", Text = "Polish" },
-        new() { Value = "Portuguese", Text = "Portuguese" },
-        new() { Value = "Punjabi", Text = "Punjabi" },
-        new() { Value = "Quechua", Text = "Quechua" },
-        new() { Value = "Romanian", Text = "Romanian" },
-        new() { Value = "Russian", Text = "Russian" },
-        new() { Value = "Samoan", Text = "Samoan" },
-        new() { Value = "Serbian", Text = "Serbian" },
-        new() { Value = "Slovak", Text = "Slovak" },
-        new() { Value = "Slovenian", Text = "Slovenian" },
-        new() { Value = "Somali", Text = "Somali" },
-        new() { Value = "Spanish", Text = "Spanish" },
-        new() { Value = "Swahili", Text = "Swahili" },
-        new() { Value = "Swedish ", Text = "Swedish " },
-        new() { Value = "Tamil", Text = "Tamil" },
-        new() { Value = "Tatar", Text = "Tatar" },
-        new() { Value = "Telugu", Text = "Telugu" },
-        new() { Value = "Thai", Text = "Thai" },
-        new() { Value = "Tibetan", Text = "Tibetan" },
-        new() { Value = "Tonga", Text = "Tonga" },
-        new() { Value = "Turkish", Text = "Turkish" },
-        new() { Value = "Ukrainian", Text = "Ukrainian" },
-        new() { Value = "Urdu", Text = "Urdu" },
-        new() { Value = "Uzbek", Text = "Uzbek" },
-        new() { Value = "Vietnamese", Text = "Vietnamese" },
-        new() { Value = "Welsh", Text = "Welsh" },
-        new() { Value = "Xhosa", Text = "Xhosa" },
-    };
+        StaticLanguageOptions = Languages.FilterCodes
+            .Select(c => new SelectListItem(Languages.CodeToName[c], c))
+            .OrderBy(kv => kv.Text)
+            .Prepend(new SelectListItem("All languages", AllLanguagesValue, true))
+            .ToArray();
+    }
 
     [BindProperty]
     public List<string>? ServiceDeliverySelection { get; set; }
@@ -172,15 +112,16 @@ public class LocalOfferResultsModel : HeaderPageModel
     public int PageSize { get; set; } = 10;
     public IPagination Pagination { get; set; }
     public int TotalResults { get; set; }
-    public string? OutCode { get; set; }
     public string? DistrictCode { get; set; }
 
     public bool InitialLoad { get; set; } = true;
 
-    public LocalOfferResultsModel(IPostcodeLocationClientService postcodeLocationClientService, IOrganisationClientService organisationClientService)
+    public LocalOfferResultsModel(
+        IPostcodeLookup postcodeLookup,
+        IOrganisationClientService organisationClientService)
     {
         DictServiceDelivery = new();
-        _postcodeLocationClientService = postcodeLocationClientService;
+        _postcodeLookup = postcodeLookup;
         _organisationClientService = organisationClientService;
         Pagination = new DontShowPagination();
     }
@@ -195,7 +136,7 @@ public class LocalOfferResultsModel : HeaderPageModel
         this.postcode = postcode;
         SearchText = searchText;
         SearchAge = searchAge;
-        SelectedLanguage = selectedLanguage == "All languages" ? null : selectedLanguage;
+        SelectedLanguage = selectedLanguage == AllLanguagesValue ? null : selectedLanguage;
         PageNum = pageNum ?? 1;
         ForChildrenAndYoungPeople = forChildrenAndYoungPeople;
         SubcategorySelection = subcategorySelection?.Split(",").ToList();
@@ -228,13 +169,25 @@ public class LocalOfferResultsModel : HeaderPageModel
             };
         }
 
+        bool? allChildrenYoungPeople = null;
+        int? givenAge = null;
+        if (int.TryParse(SearchAge, out int searchAge))
+        {
+            if (searchAge == -1)
+            {
+                allChildrenYoungPeople = ForChildrenAndYoungPeople;
+            }
+            else
+            {
+                givenAge = searchAge;
+            }
+        }
+        
         var localOfferFilter = new LocalOfferFilter
         {
             CanFamilyChooseLocation = CanFamilyChooseLocation,
             ServiceType = "InformationSharing",
             Status = "Active",
-            MinimumAge = null,
-            MaximumAge = null,
             PageSize = PageSize,
             IsPaidFor = isPaidFor,
             PageNumber = PageNum,
@@ -242,11 +195,12 @@ public class LocalOfferResultsModel : HeaderPageModel
             DistrictCode = DistrictCode ?? null,
             Latitude = CurrentLatitude != 0.0D ? CurrentLatitude : null,
             Longitude = CurrentLongitude != 0.0D ? CurrentLongitude : null,
-            GivenAge = ForChildrenAndYoungPeople && int.TryParse(SearchAge, out var searchAgeResult) ? searchAgeResult : null,
+            AllChildrenYoungPeople = allChildrenYoungPeople,
+            GivenAge = givenAge,
             Proximity = double.TryParse(SelectedDistance, out var distanceParsed) && distanceParsed > 0.00d ? distanceParsed : null,
             ServiceDeliveries = ServiceDeliverySelection is not null && ServiceDeliverySelection.Any() ? string.Join(',', ServiceDeliverySelection) : null,
             TaxonomyIds = SubcategorySelection is not null && SubcategorySelection.Any() ? string.Join(",", SubcategorySelection) : null,
-            Languages = SelectedLanguage is not null && SelectedLanguage is not "All languages" ? SelectedLanguage : null
+            LanguageCode = SelectedLanguage != null && SelectedLanguage != AllLanguagesValue ? SelectedLanguage : null
         };
 
         SearchResults = await _organisationClientService.GetLocalOffers(localOfferFilter);
@@ -259,14 +213,15 @@ public class LocalOfferResultsModel : HeaderPageModel
     public IActionResult OnPostAsync(
         bool removeFilter,
         string? removeCostSelection, string? removeServiceDeliverySelection,
-        string? removeSelectedLanguage, string? removeSearchAge,
-        string? removecategorySelection, string? removesubcategorySelection)
+        string? removeSelectedLanguage, string? removeForChildrenAndYoungPeople,
+        string? removeSearchAge, string? removecategorySelection,
+        string? removesubcategorySelection)
     {
         var routeValues = ToRouteValuesWithRemovedFilters(
             removeFilter,
             removeCostSelection, removeServiceDeliverySelection,
-            removeSelectedLanguage, removeSearchAge,
-            removecategorySelection, removesubcategorySelection);
+            removeSelectedLanguage, removeForChildrenAndYoungPeople,
+            removeSearchAge, removecategorySelection, removesubcategorySelection);
 
         InitialLoad = false;
         ModelState.Clear();
@@ -276,8 +231,9 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     private dynamic ToRouteValuesWithRemovedFilters(bool removeFilter,
         string? removeCostSelection, string? removeServiceDeliverySelection,
-        string? removeSelectedLanguage, string? removeSearchAge,
-        string? removecategorySelection, string? removesubcategorySelection)
+        string? removeSelectedLanguage, string? removeForChildrenAndYoungPeople,
+        string? removeSearchAge, string? removecategorySelection,
+        string? removesubcategorySelection)
     {
         dynamic routeValues = new ExpandoObject();
         var routeValuesDictionary = (IDictionary<string, object>)routeValues;
@@ -286,8 +242,21 @@ public class LocalOfferResultsModel : HeaderPageModel
         {
             if (removeFilter)
             {
-                if (removeSelectedLanguage != null && keyValuePair.Key is nameof(SelectedLanguage)) continue;
-                if (removeSearchAge != null && keyValuePair.Key is nameof(SearchAge) or nameof(ForChildrenAndYoungPeople)) continue;
+                if (removeSelectedLanguage != null && keyValuePair.Key is nameof(SelectedLanguage))
+                {
+                    continue;
+                }
+
+                if (removeForChildrenAndYoungPeople != null && keyValuePair.Key is nameof(ForChildrenAndYoungPeople))
+                {
+                    continue;
+                }
+
+                if ((removeSearchAge != null || removeForChildrenAndYoungPeople != null)
+                    && keyValuePair.Key is nameof(SearchAge))
+                {
+                    continue;
+                }
 
                 if (removeCostSelection != null && keyValuePair.Key is nameof(CostSelection))
                 {
@@ -332,20 +301,6 @@ public class LocalOfferResultsModel : HeaderPageModel
             .ToDictionary(k => (int)k, v => Utility.GetEnumDescription(v));
     }
 
-    public string GetAddressAsString(LocationDto? addressDto)
-    {
-        if (addressDto == null || addressDto.Address1 == string.Empty) return string.Empty;
-
-        var result = new StringBuilder();
-
-        result.Append(addressDto.Address1.Replace("|", ",") + ",");
-        result.Append(!string.IsNullOrWhiteSpace(addressDto.City) ? addressDto.City + "," : string.Empty);
-        result.Append(!string.IsNullOrWhiteSpace(addressDto.StateProvince) ? addressDto.StateProvince + "," : string.Empty);
-        result.Append(addressDto.PostCode);
-
-        return result.ToString();
-    }
-
     public string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto> serviceDeliveries)
     {
         return serviceDeliveries.Count == 0
@@ -362,17 +317,15 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     private async Task GetLocationDetails(string postCode)
     {
-        try
+        var (postcodeError, postcodeInfo) = await _postcodeLookup.Get(postCode);
+
+        //todo: we shouldn't ignore the error, but this is what it's always done
+        //todo: what we should really do is pass this info on from the postcode search page
+        if (postcodeError == PostcodeError.None)
         {
-            var postcodesIoResponse = await _postcodeLocationClientService.LookupPostcode(postCode);
-            CurrentLatitude = postcodesIoResponse.Result.Latitude;
-            CurrentLongitude = postcodesIoResponse.Result.Longitude;
-            DistrictCode = postcodesIoResponse.Result.AdminArea;
-            OutCode = postcodesIoResponse.Result.OutCode;
-        }
-        catch
-        {
-            //If post code is not valid then just return
+            CurrentLatitude = postcodeInfo!.Latitude!.Value;
+            CurrentLongitude = postcodeInfo.Longitude!.Value;
+            DistrictCode = postcodeInfo.AdminArea;
         }
     }
 

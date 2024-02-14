@@ -1,5 +1,6 @@
 ﻿@page
 @using FamilyHubs.Referral.Core.Helper
+@using FamilyHubs.ServiceDirectory.Shared.ReferenceData
 @model LocalOfferResultsModel
 @{
     //todo: if paginated results, should have (page x of n) appended
@@ -139,22 +140,32 @@ else
                     <li>
                         <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeSelectedLanguage" value="@Model.SelectedLanguage" data-testid="@Model.SelectedLanguage-remove">
                             <span class="govuk-visually-hidden">Remove this filter</span>
-                            @Model.SelectedLanguage
+                            @Languages.CodeToName[Model.SelectedLanguage]
                         </button>
                     </li>
                 </ul>
             }
 
             <!-- Remove filter - ForChildrenAndYoungPeople -->
-            @if (Model.ForChildrenAndYoungPeople && Model.SearchAge != null && int.Parse(Model.SearchAge) >= 0)
+            @if (Model.ForChildrenAndYoungPeople)
             {
-                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">For children and young people</h3>
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Children and young people</h3>
                 <ul class="moj-filter-tags">
                     <li>
-                        <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeSearchAge" value="@Model.SearchAge" data-testid="@Model.SearchAge-remove">
-                            <span class="govuk-visually-hidden">Remove this filter</span>Age @Model.SearchAge
+                        @* todo: remove check and age *@
+                        <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeForChildrenAndYoungPeople" value="@Model.ForChildrenAndYoungPeople" data-testid="@Model.ForChildrenAndYoungPeople-remove">
+                            <span class="govuk-visually-hidden">Remove this filter</span>For children and young people
                         </button>
                     </li>
+
+                    @if (Model.SearchAge != null && int.Parse(Model.SearchAge) >= 0)
+                    {
+                        <li>
+                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeSearchAge" value="@Model.SearchAge" data-testid="@Model.SearchAge-remove">
+                                <span class="govuk-visually-hidden">Remove this filter</span>Age @Model.SearchAge
+                            </button>
+                        </li>
+                    }
                 </ul>
             }
         </div>
@@ -257,7 +268,7 @@ else
                                role="button"
                                aria-controls="ExpandForChildrenAndYoungPeopleLabel"
                                aria-expanded="false"
-                               ria-labelledby="ForChildrenAndYoungPeopleLabel"
+                               aria-labelledby="ForChildrenAndYoungPeopleLabel"
                                @(Model.ForChildrenAndYoungPeople ? "checked" : "")
                                data-testid="checkbox-children">
                         <label class="govuk-label govuk-checkboxes__label" for="ForChildrenAndYoungPeople" id="ForChildrenAndYoungPeopleLabel">
@@ -309,7 +320,7 @@ else
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                     <label for="SelectedLanguage">Language</label>
                 </legend>
-                <select asp-for="SelectedLanguage" id="SelectedLanguage" asp-items="Model.Languages" class="govuk-select" data-testid="select-language">
+                <select asp-for="SelectedLanguage" id="SelectedLanguage" asp-items="Model.LanguageOptions" class="govuk-select" data-testid="select-language">
                     <option value="" selected disabled>Select language</option>
                 </select>
             </fieldset>
@@ -336,10 +347,7 @@ else
                             <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-serviceid="@item.Id" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
                         </h2>
                         <p class="govuk-caption-m">
-                            @if (item.Locations.FirstOrDefault() != null)
-                            {
-                                @Model.GetAddressAsString(item.Locations.FirstOrDefault())
-                            }
+                            @string.Join(", ", item.Locations.FirstOrDefault()?.GetAddress() ?? Enumerable.Empty<string>())
                         </p>
                         @if(item.Taxonomies.Any())
                         {
@@ -357,9 +365,9 @@ else
                         }
                         <dl class="govuk-body-s dtmargins">
                             <dt class="govuk-!-font-weight-bold">Cost</dt>
-                            @if (item.CostOptions.FirstOrDefault()?.Amount != null && item.CostOptions.FirstOrDefault()?.Amount > 0)
+                            @if (item.CostOptions.Count > 0)
                             {
-                                <dd>£@item.CostOptions.FirstOrDefault()?.Amount every @item.CostOptions.FirstOrDefault()?.AmountDescription?.ToLower()</dd>
+                                <dd>Yes, it costs money to use. @item.CostOptions.FirstOrDefault()?.AmountDescription</dd>
                             }
                             else
                             {

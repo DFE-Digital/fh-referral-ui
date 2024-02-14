@@ -80,7 +80,7 @@ public class BaseClientService
                 {
                     Id = 4,
                     ServiceId = 1,
-                    EligibilityType = EligibilityType.NotSet,
+                    EligibilityType = null,
                     MinimumAge = 1,
                     MaximumAge = 13,
                 }
@@ -93,18 +93,17 @@ public class BaseClientService
                     Id = 5,
                     ServiceId = 1,
                     Name = "English",
+                    Code = "en"
                 }
             },
             ServiceDeliveries = new List<ServiceDeliveryDto>(),
-            HolidaySchedules = new List<HolidayScheduleDto>(),
-            RegularSchedules = new List<RegularScheduleDto>(),
+            Schedules = new List<ScheduleDto>(),
             Locations = new List<LocationDto>()
             {
                 new LocationDto
                 {
                     Id = 6,
-                    HolidaySchedules = new List<HolidayScheduleDto>(),
-                    RegularSchedules = new List<RegularScheduleDto>(),
+                    Schedules = new List<ScheduleDto>(),
                     Name = "Shepcoat",
                     Address1 = "77 Sheepcote Lane",
                     Address2 = "Stathe",
@@ -114,7 +113,8 @@ public class BaseClientService
                     Country = "England",
                     Latitude = 52.6312,
                     Longitude = -1.66526,
-                    LocationType = LocationType.NotSet,
+                    LocationTypeCategory = LocationTypeCategory.NotSet,
+                    LocationType = LocationType.Postal
                 }
             },
             Fundings = new List<FundingDto>(),

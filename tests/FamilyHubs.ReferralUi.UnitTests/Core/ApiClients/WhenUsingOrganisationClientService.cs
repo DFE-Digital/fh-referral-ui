@@ -54,11 +54,10 @@ public class WhenUsingOrganisationClientService
             ServiceDeliveries = ServiceDeliveryType.Online.ToString(),
             IsPaidFor = true,
             TaxonomyIds = "1,2",
-            Languages = "English",
+            LanguageCode = "en",
             CanFamilyChooseLocation = true,
             DistrictCode = "ABC"
         };
-
 
         //Act
         var result = await organisationClientService.GetLocalOffers(filter);
@@ -114,20 +113,16 @@ public class WhenUsingOrganisationClientService
     public void ThenCreateAddAgeToUrl()
     {
         //Arrange
-        string expected = @"&minimumAge=3
-&maximumAge=21
-&givenAge=18";
+        string expected = "&givenAge=18";
         OrganisationClientService organisationClientService = new OrganisationClientService(new HttpClient());
         StringBuilder url = new StringBuilder();
 
-
         //Act 
-        organisationClientService.AddAgeToUrl(url, 3, 21, 18);
+        organisationClientService.AddAgeToUrl(url, 18);
         var result = url.ToString();
 
         //Assert
         result.Trim().Should().Be(expected.Trim());
-
     }
 
     [Fact]
@@ -138,13 +133,11 @@ public class WhenUsingOrganisationClientService
         OrganisationClientService organisationClientService = new OrganisationClientService(new HttpClient());
         StringBuilder url = new StringBuilder();
 
-
         //Act 
         organisationClientService.AddTextToUrl(url,"Test");
         var result = url.ToString();
 
         //Assert
         result.Trim().Should().Be(expected.Trim());
-
     }
 }

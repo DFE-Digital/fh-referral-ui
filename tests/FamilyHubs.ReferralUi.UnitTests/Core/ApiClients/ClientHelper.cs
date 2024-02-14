@@ -177,7 +177,6 @@ public static class ClientHelper
                     Description = "Organisation Description",
                 }
             }
-
         };
     }
 
@@ -190,7 +189,7 @@ public static class ClientHelper
             ServiceType = ServiceType.InformationSharing,
             Status = ServiceStatusType.Active,
             Name = "Unit Test Service",
-            Description = @"Unit Test Service Description",
+            Description = "Unit Test Service Description",
             CanFamilyChooseDeliveryLocation = true,
             ServiceDeliveries = new List<ServiceDeliveryDto>
             {
@@ -203,7 +202,7 @@ public static class ClientHelper
             {
                 new EligibilityDto
                 {
-                    EligibilityType = EligibilityType.NotSet,
+                    EligibilityType = null,
                     MinimumAge = 0,
                     MaximumAge = 13,
                 }
@@ -234,6 +233,7 @@ public static class ClientHelper
                 new LanguageDto
                 {
                     Name = "English",
+                    Code = "en"
                 }
             },
             ServiceAreas = new List<ServiceAreaDto>
@@ -258,7 +258,8 @@ public static class ClientHelper
                     PostCode = "B77 3JN",
                     Country = "England",
                     StateProvince = "null",
-                    LocationType = LocationType.FamilyHub,
+                    LocationTypeCategory = LocationTypeCategory.FamilyHub,
+                    LocationType = LocationType.Postal,
                     Contacts = new List<ContactDto>
                     {
                         new ContactDto
@@ -271,9 +272,9 @@ public static class ClientHelper
                             Email = "support@unittestservice.com"
                         }
                     },
-                    RegularSchedules = new List<RegularScheduleDto>
+                    Schedules = new List<ScheduleDto>
                     {
-                        new RegularScheduleDto
+                        new ScheduleDto
                         {
                             Description = "Description",
                             ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -281,21 +282,10 @@ public static class ClientHelper
                             ByDay = "byDay",
                             ByMonthDay = "byMonth",
                             DtStart = "dtStart",
-                            Freq = FrequencyType.NotSet,
-                            Interval = "interval",
+                            Freq = null,
+                            Interval = 1,
                             OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                             ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
-                        }
-                    },
-                    HolidaySchedules = new List<HolidayScheduleDto>
-                    {
-                        new HolidayScheduleDto
-                        {
-                            Closed = false,
-                            ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                            OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                            StartDate = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(5) ,
-                            EndDate = new DateTime(2023, 1, 1).ToUniversalTime()
                         }
                     }
                 }
@@ -332,9 +322,9 @@ public static class ClientHelper
                     ParentId = null
                 }
             },
-            RegularSchedules = new List<RegularScheduleDto>
+            Schedules = new List<ScheduleDto>
             {
-                new RegularScheduleDto
+                new ScheduleDto
                 {
                     Description = "Description",
                     OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -342,21 +332,10 @@ public static class ClientHelper
                     ByDay = "byDay1",
                     ByMonthDay = "byMonth",
                     DtStart = "dtStart",
-                    Freq = FrequencyType.NotSet,
-                    Interval = "interval",
+                    Freq = null,
+                    Interval = 1,
                     ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                     ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
-                }
-            },
-            HolidaySchedules = new List<HolidayScheduleDto>
-            {
-                new HolidayScheduleDto
-                {
-                    Closed = true,
-                    ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    StartDate = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(5),
-                    EndDate = new DateTime(2023, 1, 1).ToUniversalTime()
                 }
             }
         };
@@ -364,9 +343,9 @@ public static class ClientHelper
         return service;
     }
 
-    public static FamilyHubs.ServiceDirectory.Shared.Dto.OrganisationDto GetTestCountyCouncilWithoutAnyServices()
+    public static ServiceDirectory.Shared.Dto.OrganisationDto GetTestCountyCouncilWithoutAnyServices()
     {
-        var testCountyCouncil = new FamilyHubs.ServiceDirectory.Shared.Dto.OrganisationDto
+        var testCountyCouncil = new ServiceDirectory.Shared.Dto.OrganisationDto
         {
             OrganisationType = OrganisationType.LA,
             Name = "Unit Test A County Council",
@@ -397,27 +376,5 @@ public static class ClientHelper
                 Email = "TestUser2@email.com"
             }
         };
-    }
-
-    public static PostcodesIoResponse FillPostcodesIoResponse(string postcode, string adminArea, double latitude, double longitude, string outCode)
-    {
-        var response = new PostcodesIoResponse
-        {
-            Error = 0,
-            Result = new PostcodeInfo
-            {
-                Postcode = postcode,
-                Latitude = latitude,
-                Longitude = longitude,
-                OutCode = outCode,
-                Codes = new Codes
-                {
-                    AdminCounty = adminArea,
-                    AdminDistrict = "Some Admin District" // Replace with the appropriate value
-                }
-            }
-        };
-
-        return response;
     }
 }

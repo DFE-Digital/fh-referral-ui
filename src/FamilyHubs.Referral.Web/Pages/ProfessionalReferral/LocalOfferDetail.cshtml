@@ -40,10 +40,10 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">Cost</th>
-                    @if (Model.LocalOffer?.CostOptions?.FirstOrDefault()?.Amount != null && Model.LocalOffer?.CostOptions?.FirstOrDefault()?.Amount > 0)
+                    @if (Model.LocalOffer?.CostOptions?.Count > 0 )
                     {
                         <td class="govuk-table__cell" data-testid="cost-value">
-                            £@Model.LocalOffer?.CostOptions?.FirstOrDefault()?.Amount every @Model.LocalOffer?.CostOptions?.FirstOrDefault()?.AmountDescription?.ToLower()
+                            Yes, it costs money to use. @Model.LocalOffer?.CostOptions?.FirstOrDefault()?.AmountDescription
                         </td>
                     }
                     else
@@ -63,35 +63,38 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">For children and young people</th>
-                    @if (Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.EligibilityType != null)
-                    {
-                        @if (Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MaximumAge > 100)
-                        {
-                            <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MinimumAge to 25+ years old</td>
-                        }
-                        else
-                        {
-                            <td class="govuk-table__cell" data-testid="eligibilities-value"> @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MinimumAge to @Model.LocalOffer?.Eligibilities?.FirstOrDefault()?.MaximumAge years old</td>
-                        }
-                    }
-                    else
-                    {
-                        <td class="govuk-table__cell" data-testid="eligibilities-value"></td>
-                    }
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">Families can choose location</th>
-                    <td class="govuk-table__cell">TBD</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">Languages</th>
-                    <td class="govuk-table__cell" data-testid="language-value">
-                        @if (Model.LocalOffer?.Languages != null && Model.LocalOffer?.Languages?.Count > 0)
-                        {
-                            @Model.GetLanguagesAsString(Model.LocalOffer.Languages)
+                    <td class="govuk-table__cell" data-testid="eligibilities-value">
+                        @{
+                            var eligibility = Model.LocalOffer?.Eligibilities?.FirstOrDefault();
+                            if (eligibility != null)
+                            {
+                                // todo: magic number
+                                <text>@eligibility.MinimumAge to @(eligibility.MaximumAge == 127 ? "25+" : eligibility.MaximumAge) years old</text>
+                            }
                         }
                     </td>
                 </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Languages</th>
+                <td class="govuk-table__cell" data-testid="language-value">
+                    @if (Model.LocalOffer?.Languages is { Count: > 0 })
+                    {
+                        @Model.GetLanguagesAsString(Model.LocalOffer.Languages)
+                    }
+                </td>
+            </tr>
+            @{
+                var serviceAvailability = Model.LocalOffer!.GetServiceAvailability();
+                if (serviceAvailability.Any())
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Service availability</th>
+                        <td class="govuk-table__cell" data-testid="service-availability-value">
+                            @Html.Raw(string.Join("<br>", serviceAvailability))
+                        </td>
+                    </tr>
+                }
+            }
             </tbody>
         </table>
         <h2 class="govuk-heading-m">More details</h2>
@@ -129,33 +132,14 @@
             }
 
             <!--Address-->
-            @if (!string.IsNullOrEmpty(Model.PostalCode))
+            @if (Model.Location != null)
             {
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                         Address
                     </dt>
                     <dd class="govuk-summary-list__value" data-testid="detailsaddress">
-                        @if (!string.IsNullOrEmpty(Model.Address1))
-                        {
-                            @Model.Address1
-                            <br />
-                        }
-                        @if (!string.IsNullOrEmpty(Model.City))
-                        {
-                            @Model.City
-                            <br />
-                        }
-                        @if (!string.IsNullOrEmpty(Model.StateProvince))
-                        {
-                            @Model.StateProvince
-                            <br />
-                        }
-                        @if (!string.IsNullOrEmpty(Model.PostalCode))
-                        {
-                            @Model.PostalCode
-                            <br />
-                        }
+                        @Html.Raw(string.Join("<br>", Model.Location.GetAddress()))
                     </dd>
                 </div>
             }

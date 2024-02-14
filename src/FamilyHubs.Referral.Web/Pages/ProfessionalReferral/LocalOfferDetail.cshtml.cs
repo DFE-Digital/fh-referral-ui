@@ -2,7 +2,6 @@ using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.Referral.Web.Pages.Shared;
@@ -24,10 +23,8 @@ public class LocalOfferDetailModel : HeaderPageModel
 
     [BindProperty]
     public string Name { get; set; } = default!;
-    public string Address1 { get; set; } = default!;
-    public string City { get; set; } = default!;
-    public string StateProvince { get; set; } = default!;
-    public string PostalCode { get; set; } = default!;
+
+    public LocationDto? Location { get; set; }
     public string Phone { get; set; } = default!;
     public string Website { get; set; } = default!;
     public string Email { get; set; } = default!;
@@ -49,10 +46,8 @@ public class LocalOfferDetailModel : HeaderPageModel
         ReturnUrl = StringValues.IsNullOrEmpty(referer) ? Url.Page("Search") : referer.ToString();
         LocalOffer = await _organisationClientService.GetLocalOfferById(serviceId);
         Name = LocalOffer.Name;
-        if (LocalOffer.Locations != null && LocalOffer.Locations.Any())
-        {
-            ExtractAddressParts(LocalOffer.Locations.First());
-        }
+        Location = LocalOffer.Locations.FirstOrDefault();
+
         GetContactDetails();
 
         ShowConnectionRequestButton = await ShouldShowConnectionRequestButton();
@@ -86,38 +81,11 @@ public class LocalOfferDetailModel : HeaderPageModel
         return result;
     }
 
-    //todo: looks like a custom implementation of string.Join
+    //todo: don't show languages if there are none
     public string GetLanguagesAsString(ICollection<LanguageDto>? languageDtos)
     {
-        var result = string.Empty;
-
-        if (languageDtos == null || languageDtos.Count == 0)
-            return result;
-
-        var stringBuilder = new StringBuilder();
-        foreach (var language in languageDtos)
-            stringBuilder.Append(language.Name + ",");
-
-        result = stringBuilder.ToString();
-
-        //Remove last comma if present
-        if (result.EndsWith(','))
-        {
-            result = result.Remove(result.Length - 1);
-        }
-
-        return result;
-    }
-
-    public void ExtractAddressParts(LocationDto addressDto)
-    {
-        if (string.IsNullOrEmpty(addressDto.Address1))
-            return;
-
-        Address1 = addressDto.Address1.Replace(",", "") + ",";
-        City = !string.IsNullOrWhiteSpace(addressDto.City) ? addressDto.City.Replace(",", "") + "," : string.Empty;
-        StateProvince = !string.IsNullOrWhiteSpace(addressDto.StateProvince) ? addressDto.StateProvince.Replace(",", "") + "," : string.Empty;
-        PostalCode = addressDto.PostCode;
+        // they should already be sorted by name, but for safety we do it again
+        return string.Join(", ", languageDtos?.Select(d => d.Name).Order() ?? Enumerable.Empty<string>());
     }
 
     private void GetContactDetails()
