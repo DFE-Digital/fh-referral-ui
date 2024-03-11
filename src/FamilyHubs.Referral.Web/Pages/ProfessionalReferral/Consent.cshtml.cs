@@ -23,7 +23,7 @@ public class ConsentModel : ProfessionalReferralCacheModel, IRadiosPageModel
 
     public bool? Consent
     {
-        get => SelectedValue == null ? null : Convert.ToBoolean(SelectedValue);
+        get => bool.TryParse(SelectedValue, out var result) ? result : null;
         set => SelectedValue = value.ToString();
     }
 

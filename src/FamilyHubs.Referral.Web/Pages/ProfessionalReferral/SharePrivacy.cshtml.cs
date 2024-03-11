@@ -23,7 +23,7 @@ public class SharePrivacyModel : ProfessionalReferralCacheModel, IRadiosPageMode
 
     public bool? SharedPrivacy
     {
-        get => SelectedValue == null ? null : Convert.ToBoolean(SelectedValue);
+        get => bool.TryParse(SelectedValue, out var result) ? result : null;
         set => SelectedValue = value.ToString();
     }
     public SharePrivacyModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
