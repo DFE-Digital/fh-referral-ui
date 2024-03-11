@@ -9,8 +9,8 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class ConsentModel : ProfessionalReferralCacheModel, IRadiosPageModel
 {
-    public string? DescriptionPartial => "/Pages/ProfessionalReferral/ConsentContent.cshtml";
-    public string? Legend => "Do you have permission to share their details?";
+    public string DescriptionPartial => "/Pages/ProfessionalReferral/ConsentContent.cshtml";
+    public string Legend => "Do you have permission to share their details?";
 
     public IEnumerable<IRadio> Radios => CommonRadios.YesNo;
 

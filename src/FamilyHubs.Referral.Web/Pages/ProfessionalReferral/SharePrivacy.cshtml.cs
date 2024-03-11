@@ -9,8 +9,8 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class SharePrivacyModel : ProfessionalReferralCacheModel, IRadiosPageModel
 {
-    public string? DescriptionPartial => "/Pages/ProfessionalReferral/SharePrivacyContent.cshtml";
-    public string? Legend => "Have you shared our privacy statement?";
+    public string DescriptionPartial => "/Pages/ProfessionalReferral/SharePrivacyContent.cshtml";
+    public string Legend => "Have you shared our privacy statement?";
 
     public IEnumerable<IRadio> Radios => CommonRadios.YesNo;
 
