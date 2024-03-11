@@ -2,24 +2,21 @@ using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Razor.FullPages.Radios;
+using FamilyHubs.SharedKernel.Razor.FullPages.Radios.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class ConsentModel : ProfessionalReferralCacheModel, IRadiosPageModel
 {
-    public string? DescriptionPartial { get; } = "/Pages/ProfessionalReferral/ConsentContent.cshtml";
-    public string? Legend { get; } = "Do you have permission to share their details?";
+    public string? DescriptionPartial => "/Pages/ProfessionalReferral/ConsentContent.cshtml";
+    public string? Legend => "Do you have permission to share their details?";
 
-    public IEnumerable<IRadio> Radios { get; } = new[]
-    {
-        new Radio("Yes",  bool.TrueString),
-        new Radio("No", bool.FalseString)
-    };
+    public IEnumerable<IRadio> Radios => CommonRadios.YesNo;
 
     [BindProperty]
     public string? SelectedValue { get; set; }
-    public bool AreRadiosInline { get; } = true;
+    public bool AreRadiosInline => true;
 
     public bool? Consent
     {

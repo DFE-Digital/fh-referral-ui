@@ -2,24 +2,21 @@ using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Razor.FullPages.Radios;
+using FamilyHubs.SharedKernel.Razor.FullPages.Radios.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class SharePrivacyModel : ProfessionalReferralCacheModel, IRadiosPageModel
 {
-    public string? DescriptionPartial { get; } = "/Pages/ProfessionalReferral/SharePrivacyContent.cshtml";
-    public string? Legend { get; } = "Have you shared our privacy statement?";
+    public string? DescriptionPartial => "/Pages/ProfessionalReferral/SharePrivacyContent.cshtml";
+    public string? Legend => "Have you shared our privacy statement?";
 
-    public IEnumerable<IRadio> Radios { get; } = new[]
-    {
-        new Radio("Yes",  bool.TrueString),
-        new Radio("No", bool.FalseString)
-    };
+    public IEnumerable<IRadio> Radios => CommonRadios.YesNo;
 
     [BindProperty]
     public string? SelectedValue { get; set; }
-    public bool AreRadiosInline { get; } = true;
+    public bool AreRadiosInline => true;
 
     public bool? SharedPrivacy
     {
