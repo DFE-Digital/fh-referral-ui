@@ -2,66 +2,10 @@
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.SharePrivacyModel
 @{
     ViewData["Title"] = "Share our privacy statement";
-
-    Model.Errors.ErrorIdToHtmlElementId = errorId => "shared-privacy-yes";
 }
 
 @section Back {
     <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
 }
 
-<partial name="_ErrorSummaryNext" for="@Model.Errors" />
-
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-
-        <h1 class="govuk-heading-l">
-            Share our privacy statement
-        </h1>
-        <form method="post">
-            <p>You must <a href="/ProfessionalReferral/PrivacyStatement" new-tab>share our privacy statement</a> with the people who need support.</p>
-            <p>The privacy statement tells them more about:</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>what data we collect about them and why we need it</li>
-                <li>who is responsible for data within the service</li>
-                <li>how we protect, process and store their data</li>
-                <li>how long we keep their data</li>
-                <li>their personal data rights</li>
-            </ul>
-            
-            @* todo: do we want a component/partial for a yes/no binary choice? *@
-            <div class="govuk-form-group @(Model.HasErrors ? "govuk-form-group--error" : "")">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        <h2 class="govuk-fieldset__heading">
-                            Have you shared our privacy statement?
-                        </h2>
-                    </legend>
-                    <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
-                        @{
-                            var error = Model.Errors.GetErrorIfTriggered();
-                        }
-                        @* todo: add aria-described-by to error *@
-                        <partial name="_ErrorMessageNext" model="error" />
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="shared-privacy-yes" name="SharedPrivacy" type="radio" value="true" @(Model.SharedPrivacy == true ? "checked" : "")>
-                            <label class="govuk-label govuk-radios__label" for="shared-privacy-yes">
-                                Yes
-                            </label>
-                        </div>
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="shared-privacy-no" name="SharedPrivacy" type="radio" value="false" @(Model.SharedPrivacy == false ? "checked" : "")>
-                            <label class="govuk-label govuk-radios__label" for="shared-privacy-no">
-                                No
-                            </label>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-            <button type="submit" class="govuk-button" data-module="govuk-button">
-                Continue
-            </button>
-        </form>
-    </div>
-
-</div>
+<partial name="_RadiosPage" Model="@Model" />
