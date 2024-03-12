@@ -1,16 +1,38 @@
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
+using FamilyHubs.SharedKernel.Razor.FullPages.Checkboxes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class ContactDetailsModel : ProfessionalReferralCacheModel
+public class ContactDetailsModel : ProfessionalReferralCacheModel, ICheckboxesPageModel
 {
     public string? FullName { get; set; }
 
     [BindProperty]
-    public bool[] ContactMethods { get; set; } = new bool[(int)ConnectContactDetailsJourneyPage.LastContactMethod+1];
+    public bool[] ContactMethods { get; set; } = new bool[(int)ConnectContactDetailsJourneyPage.LastContactMethod + 1];
+
+    public static readonly Checkbox[] StaticCheckboxes = new Checkbox[]
+    {
+        new("Email", "Email"),
+        new("Telephone", "Telephone"),
+        new("Text message", "Textphone"),
+        new("Letter", "Letter")
+    };
+
+    public IEnumerable<ICheckbox> Checkboxes => StaticCheckboxes;
+
+    [BindProperty]
+    public IEnumerable<string> SelectedValues { get; set; } = Enumerable.Empty<string>();
+
+    public string? DescriptionPartial => "/Pages/ProfessionalReferral/ContactDetails.cshtml";
+
+    public string? Legend { get; private set; }
+
+    public string? Hint => "Select all that apply.";
+
+    public bool ShowSelection { get; set; }
 
     public ContactDetailsModel(IConnectionRequestDistributedCache connectionRequestCache)
         : base(ConnectJourneyPage.ContactDetails, connectionRequestCache)
@@ -25,6 +47,8 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
             ContactMethods = model.ContactMethodsSelected;
         }
 
+        Legend = string.Format("How can the service contact {0}", FullName);
+
         //todo: move this and code from CheckDetails into one place
 
         // handle this edge case:
@@ -33,10 +57,10 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
         // without this, they will have a contact method selected, but without the appropriate contact details.
         // with this, they won't have a back button and will be forced to re-enter contact details.
         if (Flow == JourneyFlow.ChangingContactMethods
-            && ((ContactMethods[(int) ConnectContactDetailsJourneyPage.Telephone] && model.TelephoneNumber == null)
-            || (ContactMethods[(int) ConnectContactDetailsJourneyPage.Textphone] && model.TextphoneNumber == null)
-            || (ContactMethods[(int) ConnectContactDetailsJourneyPage.Email] && model.EmailAddress == null)
-            || (ContactMethods[(int) ConnectContactDetailsJourneyPage.Letter] &&
+            && ((ContactMethods[(int)ConnectContactDetailsJourneyPage.Telephone] && model.TelephoneNumber == null)
+            || (ContactMethods[(int)ConnectContactDetailsJourneyPage.Textphone] && model.TextphoneNumber == null)
+            || (ContactMethods[(int)ConnectContactDetailsJourneyPage.Email] && model.EmailAddress == null)
+            || (ContactMethods[(int)ConnectContactDetailsJourneyPage.Letter] &&
                 (model.AddressLine1 == null || model.TownOrCity == null || model.Postcode == null))))
         {
             BackUrl = null;
@@ -49,10 +73,12 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel
         if (!(ModelState.IsValid && ContactMethods.Any(m => m)))
 #pragma warning restore S6605
         {
-            return RedirectToSelf(null,ErrorId.ContactDetails_NoContactMethodsSelected);
+            return RedirectToSelf(null, ErrorId.ContactDetails_NoContactMethodsSelected);
         }
 
         model.ContactMethodsSelected = ContactMethods;
+
+        ShowSelection = true;
 
         return FirstContactMethodPage(model.ContactMethodsSelected);
     }
