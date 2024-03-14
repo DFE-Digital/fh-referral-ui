@@ -31,10 +31,15 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
         //Act
         await _contactDetailsModel.OnGetAsync("1");
 
-        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Email].Should().Be(email);
-        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Telephone].Should().Be(telephone);
-        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Textphone].Should().Be(textphone);
-        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Letter].Should().Be(letter);
+        Assert.Equal(_contactDetailsModel.SelectedValues.Count(), ConnectionRequestModel.ContactMethodsSelected.Count(selected => selected));
+
+        string[] selectedValues = _contactDetailsModel.SelectedValues.ToArray();
+
+        foreach (string selectedValue in selectedValues)
+        {
+            Assert.True(Enum.TryParse(selectedValue, out ConnectContactDetailsJourneyPage result));
+            Assert.True(ConnectionRequestModel.ContactMethodsSelected[(int)result]);
+        }
     }
 
     [Theory]
@@ -47,10 +52,14 @@ public class WhenUsingContactDetails : BaseProfessionalReferralPage
     [InlineData("/ProfessionalReferral/Text", false, false, true, true)]
     public async Task ThenOnPostSupportDetails(string expectedNextPage, bool email, bool telephone, bool textphone, bool letter)
     {
-        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Email] = email;
-        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Telephone] = telephone;
-        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Textphone] = textphone;
-        _contactDetailsModel.ContactMethods[(int)ConnectContactDetailsJourneyPage.Letter] = letter;
+        List<string> selectedValues = new();
+
+        if (email) selectedValues.Add(ConnectContactDetailsJourneyPage.Email.ToString());
+        if (telephone) selectedValues.Add(ConnectContactDetailsJourneyPage.Telephone.ToString());
+        if (textphone) selectedValues.Add(ConnectContactDetailsJourneyPage.Textphone.ToString());
+        if (letter) selectedValues.Add(ConnectContactDetailsJourneyPage.Letter.ToString());
+
+        _contactDetailsModel.SelectedValues = selectedValues;
 
         //Act
         var result = await _contactDetailsModel.OnPostAsync("1") as RedirectToPageResult;
