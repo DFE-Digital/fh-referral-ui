@@ -13,7 +13,7 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel, ICheckboxesPa
 
     private bool[] SelectedContactMethodMapping { get; init; } = new bool[(int)ConnectContactDetailsJourneyPage.LastContactMethod + 1];
 
-    private static readonly Checkbox[] StaticCheckboxes = new Checkbox[]
+    public static readonly Checkbox[] StaticCheckboxes = new Checkbox[]
     {
         new("Email", "Email"),
         new("Telephone", "Telephone"),

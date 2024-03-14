@@ -16,6 +16,8 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     private readonly IReferralClientService _referralClientService;
     private readonly IReferralNotificationService _referralNotificationService;
 
+    public string ContactMethodDisplayNames { get; private set; } = null!;
+
     public CheckDetailsModel(
         IConnectionRequestDistributedCache connectionRequestCache,
         IReferralClientService referralClientService,
@@ -32,6 +34,20 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         // but don't remove them from the cache yet, in case the user goes back to change the contact details
         // we'll remove them from the cache when the user submits the form
         model.RemoveNonSelectedContactDetails();
+
+        List<string> contactMethodDisplayNames = new();
+
+        // TODO: Convert CheckDetails.cshtml to using the reusable <summary-list> component
+
+        for (int i = 0; i < model.ContactMethodsSelected.Length; i++)
+        {
+            if (model.ContactMethodsSelected[i])
+            {
+                contactMethodDisplayNames.Add(ContactDetailsModel.StaticCheckboxes[i].Label);
+            }
+        }
+
+        ContactMethodDisplayNames = string.Join(", ", contactMethodDisplayNames);
 
         // if the user has gone to change details, errored on the page, then clicked back to here, we need to clear the error state, so that if they go back to the same details page it won't be errored
         model.ErrorState = null;
