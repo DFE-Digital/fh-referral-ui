@@ -1,67 +1,11 @@
 ﻿@page
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.ContactDetailsModel
 @{
-    ViewData["Title"] = $"How can the service contact {Model.FullName}?";
-
-    Model.Errors.ErrorIdToHtmlElementId = errorId => "ContactMethods_0_";
-
-    Error? error = Model.Errors.GetErrorIfTriggered();
+    ViewData["Title"] = Model.Legend;
 }
 
 @section Back {
-    @if (Model.BackUrl != null)
-    {
-        <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
-    }
+    <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
 }
 
-<partial name="_ErrorSummaryNext" for="@Model.Errors"/>
-
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <form method="post">
-            <div class="govuk-form-group @error?.FormGroupClass">
-                <fieldset class="govuk-fieldset" aria-describedby="hint @error?.InputErrorMessageParaId">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                        <h1 class="govuk-fieldset__heading">
-                            How can the service contact @Model.FullName?
-                        </h1>
-                    </legend>
-                    <div id="hint" class="govuk-hint">
-                        Select all that apply.
-                    </div>
-                    <partial name="_ErrorMessageNext" model="error" />
-                    <div id="contact-methods" class="govuk-checkboxes" data-module="govuk-checkboxes">
-                        @{
-                            // we can either have the names here, or add Display attributes on the enum values.
-                            // if the names are here, we have to keep them in sync with the enum values
-                            // but if we use the Display attribute, we have to effectively have display data outside of the view (and use reflection to get the names)
-                            string[] contactMethodDisplayNames =
-                            {
-                                "Email",
-                                "Telephone",
-                                "Text message",
-                                "Letter"
-                            };
-
-                            for (int contactMethod = 0; contactMethod <= (int)ConnectContactDetailsJourneyPage.LastContactMethod; ++contactMethod)
-                            {
-                                // work around captured variable being modified in outside scope
-                                int capturedContactMethod = contactMethod;
-                                <div class="govuk-checkboxes__item">
-                                    <input asp-for="ContactMethods[capturedContactMethod]" class="govuk-checkboxes__input" type="checkbox">
-                                    <label asp-for="ContactMethods[capturedContactMethod]" class="govuk-label govuk-checkboxes__label">
-                                        @contactMethodDisplayNames[capturedContactMethod]
-                                    </label>
-                                </div>
-                            }
-                        }
-                    </div>
-                </fieldset> 
-            </div>
-            <button type="submit" class="govuk-button" data-module="govuk-button">
-                Continue
-            </button>
-        </form>
-    </div>
-</div>
+<partial name="_CheckboxesPage" model="@Model" />

@@ -16,6 +16,10 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     private readonly IReferralClientService _referralClientService;
     private readonly IReferralNotificationService _referralNotificationService;
 
+    public string ContactMethodDisplayNames { get; private set; } = null!;
+
+    public string? Address { get; private set; }
+
     public CheckDetailsModel(
         IConnectionRequestDistributedCache connectionRequestCache,
         IReferralClientService referralClientService,
@@ -32,6 +36,30 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         // but don't remove them from the cache yet, in case the user goes back to change the contact details
         // we'll remove them from the cache when the user submits the form
         model.RemoveNonSelectedContactDetails();
+
+        List<string> contactMethodDisplayNames = new();
+
+        for (int i = 0; i < model.ContactMethodsSelected.Length; i++)
+        {
+            if (model.ContactMethodsSelected[i])
+            {
+                contactMethodDisplayNames.Add(ContactDetailsModel.StaticCheckboxes[i].Label);
+            }
+        }
+
+        ContactMethodDisplayNames = string.Join(", ", contactMethodDisplayNames);
+
+        // AddressLine1 is a proxy for the entire address as it is a mandatory field.
+        if (!string.IsNullOrEmpty(model.AddressLine1))
+        {
+            Address = string.Join("<br>", RemoveEmpty(
+                model.AddressLine1,
+                model.AddressLine2,
+                model.TownOrCity,
+                model.County,
+                model.Postcode
+            ));
+        }
 
         // if the user has gone to change details, errored on the page, then clicked back to here, we need to clear the error state, so that if they go back to the same details page it won't be errored
         model.ErrorState = null;
@@ -117,5 +145,10 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         };
         referralDto.LastModified = referralDto.Created;
         return referralDto;
+    }
+
+    private static IEnumerable<string> RemoveEmpty(params string?[] list)
+    {
+        return list.Where(str => !string.IsNullOrWhiteSpace(str))!;
     }
 }
