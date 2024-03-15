@@ -18,6 +18,8 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
     public string ContactMethodDisplayNames { get; private set; } = null!;
 
+    public string? Address { get; private set; }
+
     public CheckDetailsModel(
         IConnectionRequestDistributedCache connectionRequestCache,
         IReferralClientService referralClientService,
@@ -37,8 +39,6 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         List<string> contactMethodDisplayNames = new();
 
-        // TODO: Convert CheckDetails.cshtml to using the reusable <summary-list> component
-
         for (int i = 0; i < model.ContactMethodsSelected.Length; i++)
         {
             if (model.ContactMethodsSelected[i])
@@ -48,6 +48,18 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         }
 
         ContactMethodDisplayNames = string.Join(", ", contactMethodDisplayNames);
+
+        // AddressLine1 is a proxy for the entire address as it is a mandatory field.
+        if (!string.IsNullOrEmpty(model.AddressLine1))
+        {
+            Address = string.Join("<br>", RemoveEmpty(
+                model.AddressLine1,
+                model.AddressLine2,
+                model.TownOrCity,
+                model.County,
+                model.Postcode
+            ));
+        }
 
         // if the user has gone to change details, errored on the page, then clicked back to here, we need to clear the error state, so that if they go back to the same details page it won't be errored
         model.ErrorState = null;
@@ -133,5 +145,10 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         };
         referralDto.LastModified = referralDto.Created;
         return referralDto;
+    }
+
+    private static IEnumerable<string> RemoveEmpty(params string?[] list)
+    {
+        return list.Where(str => !string.IsNullOrWhiteSpace(str))!;
     }
 }

@@ -40,17 +40,8 @@
                 <summary-row key="Text" action1="Change" action1-href="/ProfessionalReferral/Text?serviceId=@Model.ServiceId&changing=page">@Model.ConnectionRequestModel.TextphoneNumber</summary-row>
             }
 
-            @* AddressLine1 is a proxy for the entire address as it is a mandatory field. *@
-            @* TODO: Look at moving this logic out of frontend *@
-            @if (!string.IsNullOrEmpty(Model.ConnectionRequestModel!.AddressLine1)) {
-                <summary-row key="Address" action1="Change" action1-href="/ProfessionalReferral/Letter?serviceId=@Model.ServiceId&changing=page">
-                    @Html.Raw(string.Join("<br>", RemoveEmpty(
-                        Model.ConnectionRequestModel.AddressLine1,
-                        Model.ConnectionRequestModel.AddressLine2,
-                        Model.ConnectionRequestModel.TownOrCity,
-                        Model.ConnectionRequestModel.County,
-                        Model.ConnectionRequestModel.Postcode)))
-                </summary-row>
+            @if (!string.IsNullOrEmpty(Model.Address)) {
+                <summary-row key="Address" action1="Change" action1-href="/ProfessionalReferral/Letter?serviceId=@Model.ServiceId&changing=page">@Html.Raw(Model.Address)</summary-row>
             }
 
             <summary-row key="How to engage" action1="Change" action1-href="/ProfessionalReferral/ContactMethods?serviceId=@Model.ServiceId&changing=page">@Model.ConnectionRequestModel!.EngageReason</summary-row>
@@ -75,11 +66,3 @@
 
     </div>
 </div>
-
-@functions
-{
-    private static IEnumerable<string> RemoveEmpty(params string?[] list)
-    {
-        return list.Where(x => !string.IsNullOrWhiteSpace(x))!;
-    }
-}
