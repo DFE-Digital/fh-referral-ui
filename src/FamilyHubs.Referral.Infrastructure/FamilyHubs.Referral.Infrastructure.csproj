@@ -13,7 +13,7 @@
 	  <PackageReference Include="AspNetCore.HealthChecks.OpenIdConnectServer" Version="7.0.0" />
 	  <PackageReference Include="FamilyHubs.Notification.Api.Client" Version="1.1.1" />
 	  <PackageReference Include="FamilyHubs.Notification.Api.Contracts" Version="1.0.3" />
-	  <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="9.1.0" />
+	  <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="9.1.3" />
 	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.19.0.84025">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
