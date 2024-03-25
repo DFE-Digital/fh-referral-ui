@@ -7,6 +7,7 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
 using FamilyHubs.ServiceDirectory.Shared.ReferenceData;
+using FamilyHubs.SharedKernel.Enums;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 using FamilyHubs.SharedKernel.Services.Postcode.Interfaces;
@@ -295,10 +296,10 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     private void CreateServiceDeliveryDictionary()
     {
-        DictServiceDelivery = Enum.GetValues(typeof(ServiceDeliveryType))
-            .Cast<ServiceDeliveryType>()
+        DictServiceDelivery = Enum.GetValues(typeof(AttendingType))
+            .Cast<AttendingType>()
             .Where(d => (int)d != 0)
-            .ToDictionary(k => (int)k, v => Utility.GetEnumDescription(v));
+            .ToDictionary(k => (int)k, v => v.ToDescription());
     }
 
     public string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto> serviceDeliveries)

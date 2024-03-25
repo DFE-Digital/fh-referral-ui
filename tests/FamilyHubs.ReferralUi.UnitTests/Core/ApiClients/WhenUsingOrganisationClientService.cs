@@ -51,7 +51,7 @@ public class WhenUsingOrganisationClientService
         LocalOfferFilter filter = new LocalOfferFilter()
         { 
             Status = "active",
-            ServiceDeliveries = ServiceDeliveryType.Online.ToString(),
+            ServiceDeliveries = AttendingType.Online.ToString(),
             IsPaidFor = true,
             TaxonomyIds = "1,2",
             LanguageCode = "en",
