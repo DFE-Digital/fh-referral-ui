@@ -72,7 +72,7 @@ public class WhenUsingLocalOfferDetail
         //Arrange
         ServiceDto serviceDto = BaseClientService.GetTestCountyCouncilServicesDto(1);
         List<ServiceDeliveryDto> deliveryDtoList = new List<ServiceDeliveryDto>(serviceDto.ServiceDeliveries ?? new List<ServiceDeliveryDto>());
-        deliveryDtoList.Add(new ServiceDeliveryDto { Id = 1, Name = ServiceDeliveryType.Online, ServiceId = 1 });
+        deliveryDtoList.Add(new ServiceDeliveryDto { Id = 1, Name = AttendingType.Online, ServiceId = 1 });
         serviceDto.ServiceDeliveries = deliveryDtoList;
         serviceDto.Contacts = default!;
         MockIOrganisationClientService.Setup(x => x.GetLocalOfferById(It.IsAny<string>())).ReturnsAsync(serviceDto);

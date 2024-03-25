@@ -195,7 +195,7 @@ public static class ClientHelper
             {
                 new ServiceDeliveryDto
                 {
-                    Name = ServiceDeliveryType.Online,
+                    Name = AttendingType.Online,
                 }
             },
             Eligibilities = new List<EligibilityDto>

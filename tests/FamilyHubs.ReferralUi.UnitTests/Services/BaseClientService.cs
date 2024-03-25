@@ -24,10 +24,12 @@ public class BaseClientService
         return client;
     }
 
-    protected OrganisationWithServicesDto GetTestCountyCouncilDto()
+    protected OrganisationDetailsDto GetTestCountyCouncilDto()
     {
-        var bristolCountyCouncil = new OrganisationWithServicesDto {
-        OrganisationType = OrganisationType.NotSet, Name = "Unit Test County Council", Description = "Unit Test County Council", AdminAreaCode = ""  };
+        var bristolCountyCouncil = new OrganisationDetailsDto
+        {
+            OrganisationType = OrganisationType.NotSet, Name = "Unit Test County Council", Description = "Unit Test County Council", AdminAreaCode = ""
+        };
         return bristolCountyCouncil;
     }
 
@@ -42,8 +44,6 @@ public class BaseClientService
             Description = "Unit Test Service Description",
             Accreditations = null,
             AssuredDate = DateTime.Now,
-            AttendingAccess = AttendingAccessType.NotSet,
-            AttendingType = AttendingType.NotSet,
             DeliverableType = DeliverableType.NotSet,
             Status = ServiceStatusType.Active,
             Fees = null,
