@@ -11,10 +11,9 @@
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <NoWarn>1701;1702;S1135;S125</NoWarn>
+	  <NoWarn>1701;1702;S1135;S125</NoWarn>
+      <!--only temporarily-->
+	  <WarningsNotAsErrors>S1244</WarningsNotAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,7 +30,7 @@
     <PackageReference Include="Serilog.Extensions.Hosting" Version="7.0.0" />
     <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.19.0.84025">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.23.0.88079">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

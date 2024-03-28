@@ -66,3 +66,4 @@ To debug the JavaScript in Visual Studio, set breakpoints in the JavaScript file
 * add prg to telephone, text & letter & switch to standard ErrorState
 
 * change ErrorId to static const class with const ints?
+
