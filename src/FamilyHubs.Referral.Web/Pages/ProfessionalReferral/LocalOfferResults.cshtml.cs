@@ -194,6 +194,7 @@ public class LocalOfferResultsModel : HeaderPageModel
             PageNumber = PageNum,
             Text = SearchText ?? null,
             DistrictCode = DistrictCode ?? null,
+            //todo: we need to fix this. can we use null instead? does postcodes.io return exact 0's? do we need to use abs & epsilon?
             Latitude = CurrentLatitude != 0.0D ? CurrentLatitude : null,
             Longitude = CurrentLongitude != 0.0D ? CurrentLongitude : null,
             AllChildrenYoungPeople = allChildrenYoungPeople,
