@@ -184,7 +184,6 @@ public static class ClientHelper
     {
         var service = new ServiceDto
         {
-            ServiceOwnerReferenceId = serviceId,
             OrganisationId = 1,
             ServiceType = ServiceType.InformationSharing,
             Status = ServiceStatusType.Active,
