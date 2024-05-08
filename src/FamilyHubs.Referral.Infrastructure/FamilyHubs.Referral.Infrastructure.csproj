@@ -14,7 +14,7 @@
 	  <PackageReference Include="FamilyHubs.Notification.Api.Client" Version="1.1.1" />
 	  <PackageReference Include="FamilyHubs.Notification.Api.Contracts" Version="1.0.3" />
 	  <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="9.1.7" />
-	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.23.0.88079">
+	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.25.0.90414">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
