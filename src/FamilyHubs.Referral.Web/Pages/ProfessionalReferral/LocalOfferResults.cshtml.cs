@@ -15,6 +15,7 @@ using FamilyHubs.SharedKernel.Services.Postcode.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -23,6 +24,7 @@ public class LocalOfferResultsModel : HeaderPageModel
 {
     private readonly IPostcodeLookup _postcodeLookup;
     private readonly IOrganisationClientService _organisationClientService;
+    private readonly ILogger<LocalOfferResultsModel> _logger;
 
     public Dictionary<int, string> DictServiceDelivery { get; private set; }
     public List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>> NestedCategories { get; set; } = default!;
@@ -31,7 +33,8 @@ public class LocalOfferResultsModel : HeaderPageModel
     public double CurrentLongitude { get; set; }
     public PaginatedList<ServiceDto> SearchResults { get; set; } = new();
     public string SelectedDistance { get; set; } = "212892";
-    public Guid CorrelationId { get; set; } = Guid.NewGuid();
+
+    private bool _isInitialSearch = true;
 
     public List<SelectListItem> AgeRange { get; set; } = new()
     {
@@ -106,10 +109,13 @@ public class LocalOfferResultsModel : HeaderPageModel
     public string? SearchText { get; set; }
 
     [BindProperty]
-    public string postcode { get; set; } = string.Empty;
+    public string Postcode { get; set; } = string.Empty;
 
     [BindProperty]
     public int PageNum { get; set; } = 1;
+
+    [BindProperty]
+    public Guid CorrelationId { get; set; }
 
     public int PageSize { get; set; } = 10;
     public IPagination Pagination { get; set; }
@@ -120,11 +126,14 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     public LocalOfferResultsModel(
         IPostcodeLookup postcodeLookup,
-        IOrganisationClientService organisationClientService)
+        IOrganisationClientService organisationClientService,
+        ILogger<LocalOfferResultsModel> logger)
     {
         DictServiceDelivery = new();
         _postcodeLookup = postcodeLookup;
         _organisationClientService = organisationClientService;
+        _logger = logger;
+
         Pagination = new DontShowPagination();
     }
 
@@ -132,10 +141,24 @@ public class LocalOfferResultsModel : HeaderPageModel
         string postcode, string? searchText, string? searchAge,
         string? selectedLanguage, string? subcategorySelection,
         string? costSelection, string? serviceDeliverySelection,
-        int? pageNum, bool forChildrenAndYoungPeople
+        int? pageNum, bool forChildrenAndYoungPeople, Guid? correlationId
         )
     {
-        this.postcode = postcode;
+        Postcode = postcode;
+
+        if (correlationId is null)
+        {
+            CorrelationId = Guid.NewGuid();
+            // If no correlation ID exists, then treat this search as a
+            // new search.
+            _isInitialSearch = true;
+        }
+        else
+        {
+            CorrelationId = correlationId.Value;
+            _isInitialSearch = false;
+        }
+
         SearchText = searchText;
         SearchAge = searchAge;
         SelectedLanguage = selectedLanguage == AllLanguagesValue ? null : selectedLanguage;
@@ -145,19 +168,59 @@ public class LocalOfferResultsModel : HeaderPageModel
         CostSelection = costSelection?.Split(",").ToList();
         ServiceDeliverySelection = serviceDeliverySelection?.Split(",").ToList();
 
-        await GetLocationDetails(this.postcode);
+        await GetLocationDetails(Postcode);
 
         //todo: it does this every request!
         await GetCategoriesTreeAsync();
 
         CreateServiceDeliveryDictionary();
 
-        await SearchServices();
+        DateTime requestTimestamp = DateTime.UtcNow;
+        (
+            SearchResults,
+            Pagination,
+            TotalResults,
+            HttpResponseMessage? response
+        ) = await SearchServices();
+        DateTime? responseTimestamp = DateTime.UtcNow;
+
+        try
+        {
+            if (Postcode is not null)
+            {
+                // If the user is coming from the initial postcode search page,
+                // FromPostCodeSearch will be true, and we can use this to differentiate
+                // between initial searches, and subsequent search query changes.
+                var eventType = _isInitialSearch ? ServiceDirectorySearchEventType.ServiceDirectoryInitialSearch
+                    : ServiceDirectorySearchEventType.ServiceDirectorySearchFilter;
+
+                await _organisationClientService.RecordServiceSearch(
+                    eventType,
+                    Postcode!,
+                    0,
+                    SearchResults.Items,
+                    requestTimestamp,
+                    responseTimestamp,
+                    response?.StatusCode,
+                    CorrelationId
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred storing service search metric. {ExceptionMessage}",
+                ex.Message);
+        }
 
         return Page();
     }
 
-    private async Task SearchServices()
+    private async Task<(
+        PaginatedList<ServiceDto> searchResults,
+        IPagination pagination,
+        int totalResults,
+        HttpResponseMessage? response
+    )> SearchServices()
     {
         bool? isPaidFor = null;
 
@@ -206,11 +269,11 @@ public class LocalOfferResultsModel : HeaderPageModel
             LanguageCode = SelectedLanguage != null && SelectedLanguage != AllLanguagesValue ? SelectedLanguage : null
         };
 
-        SearchResults = await _organisationClientService.GetLocalOffers(localOfferFilter);
+        (PaginatedList<ServiceDto> searchResults, HttpResponseMessage? response) = await _organisationClientService.GetLocalOffers(localOfferFilter);
+        LargeSetPagination pagination =  new LargeSetPagination(SearchResults.TotalPages, PageNum);
+        int totalResults = SearchResults.TotalCount;
 
-        Pagination = new LargeSetPagination(SearchResults.TotalPages, PageNum);
-
-        TotalResults = SearchResults.TotalCount;
+        return (searchResults, pagination, totalResults, response);
     }
 
     public IActionResult OnPostAsync(

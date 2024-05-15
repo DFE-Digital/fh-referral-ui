@@ -13,8 +13,14 @@ namespace FamilyHubs.Referral.Core.ApiClients;
 public interface IOrganisationClientService
 {
     Task<List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>> GetCategories();
-    Task<PaginatedList<ServiceDto>> GetLocalOffers(LocalOfferFilter filter);
+
+    Task<(
+        PaginatedList<ServiceDto> services,
+        HttpResponseMessage? response
+    )> GetLocalOffers(LocalOfferFilter filter);
+
     Task<ServiceDto> GetLocalOfferById(string id);
+
     Task<OrganisationDto?> GetOrganisationDtoByIdAsync(long id);
     
     Task RecordServiceSearch(
@@ -69,7 +75,10 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         return keyValuePairs;
     }
 
-    public async Task<PaginatedList<ServiceDto>> GetLocalOffers(LocalOfferFilter filter)
+    public async Task<(
+        PaginatedList<ServiceDto> services,
+        HttpResponseMessage? response
+    )> GetLocalOffers(LocalOfferFilter filter)
     {
         if (string.IsNullOrEmpty(filter.Status))
             filter.Status = "Active";
@@ -127,8 +136,10 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
 
         response.EnsureSuccessStatusCode();
 
-        return await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+        var services = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
                ?? new PaginatedList<ServiceDto>();
+        
+        return (services, response);
     }
 
     private static string GetPositionUrl(string? serviceType, double? latitude, double? longitude, double? proximity, string status, int pageNumber, int pageSize)
@@ -196,7 +207,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         {
             SearchPostcode = postcode,
             SearchRadiusMiles = searchWithin ?? 0,
-            ServiceSearchTypeId = ServiceType.FamilyExperience,
+            ServiceSearchTypeId = ServiceType.InformationSharing,
             RequestTimestamp = requestTimestamp,
             ResponseTimestamp = responseTimestamp,
             HttpResponseCode = (short?)responseStatusCode,

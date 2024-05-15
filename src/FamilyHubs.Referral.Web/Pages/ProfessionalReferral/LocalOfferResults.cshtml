@@ -15,7 +15,8 @@
 <form method="post">
 
 <!-- Hidden fields -->
-<input asp-for="@Model.postcode" type="hidden"/>
+<input asp-for="@Model.Postcode" type="hidden"/>
+<input asp-for="@Model.CorrelationId" type="hidden"/>
 
 @if (Model.SearchResults.TotalCount == 0 && Model.InitialLoad)
 {
@@ -36,7 +37,7 @@ else
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Services, groups and activities in this area</h1>
-            <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/ProfessionalReferral/Search">@Model.postcode</a></span>
+            <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/ProfessionalReferral/Search">@Model.Postcode</a></span>
         </div>
     </div>
 
@@ -55,7 +56,7 @@ else
                 </div>
                 <div class="moj-filter__heading-action">
                     <p class="govuk-!-font-size-16">
-                        <a asp-page="/ProfessionalReferral/LocalOfferResults" asp-route-postcode="@Model.postcode" class="govuk-link govuk-link--no-visited-state" data-testid="clearfilters">Clear filters</a>
+                        <a asp-page="/ProfessionalReferral/LocalOfferResults" asp-route-postcode="@Model.Postcode" class="govuk-link govuk-link--no-visited-state" data-testid="clearfilters">Clear filters</a>
                     </p>
                 </div>
             </div>
