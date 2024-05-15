@@ -48,7 +48,6 @@ public class BaseClientService
             Status = ServiceStatusType.Active,
             Fees = null,
             CanFamilyChooseDeliveryLocation = false,
-            ServiceOwnerReferenceId = "e4f18752-f4f9-4476-9d4f-a9644c599a53",
             ServiceAreas = new List<ServiceAreaDto>()
             {
                 new ServiceAreaDto
