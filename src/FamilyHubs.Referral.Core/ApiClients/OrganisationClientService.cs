@@ -1,7 +1,10 @@
-﻿using System.Text;
+﻿using System.Net;
+using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Dto.Metrics;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
 
@@ -10,9 +13,26 @@ namespace FamilyHubs.Referral.Core.ApiClients;
 public interface IOrganisationClientService
 {
     Task<List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>> GetCategories();
-    Task<PaginatedList<ServiceDto>> GetLocalOffers(LocalOfferFilter filter);
+
+    Task<(
+        PaginatedList<ServiceDto> services,
+        HttpResponseMessage? response
+    )> GetLocalOffers(LocalOfferFilter filter);
+
     Task<ServiceDto> GetLocalOfferById(string id);
-    Task<OrganisationDto?> GetOrganisationDtobyIdAsync(long id);
+
+    Task<OrganisationDto?> GetOrganisationDtoByIdAsync(long id);
+    
+    Task RecordServiceSearch(
+        ServiceDirectorySearchEventType eventType,
+        string postcode,
+        long userId,
+        IEnumerable<ServiceDto> services,
+        DateTime requestTimestamp,
+        DateTime? responseTimestamp,
+        HttpStatusCode? responseStatusCode,
+        Guid correlationId
+    );
 }
 
 public class OrganisationClientService : ApiService, IOrganisationClientService
@@ -55,7 +75,10 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         return keyValuePairs;
     }
 
-    public async Task<PaginatedList<ServiceDto>> GetLocalOffers(LocalOfferFilter filter)
+    public async Task<(
+        PaginatedList<ServiceDto> services,
+        HttpResponseMessage? response
+    )> GetLocalOffers(LocalOfferFilter filter)
     {
         if (string.IsNullOrEmpty(filter.Status))
             filter.Status = "Active";
@@ -113,8 +136,10 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
 
         response.EnsureSuccessStatusCode();
 
-        return await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+        var services = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
                ?? new PaginatedList<ServiceDto>();
+        
+        return (services, response);
     }
 
     private static string GetPositionUrl(string? serviceType, double? latitude, double? longitude, double? proximity, string status, int pageNumber, int pageSize)
@@ -159,7 +184,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         return retVal;
     }
 
-    public async Task<OrganisationDto?> GetOrganisationDtobyIdAsync(long id)
+    public async Task<OrganisationDto?> GetOrganisationDtoByIdAsync(long id)
     {
         var request = new HttpRequestMessage
         {
@@ -172,5 +197,29 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         response.EnsureSuccessStatusCode();
 
         return await JsonSerializer.DeserializeAsync<OrganisationDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+    }
+
+    public async Task RecordServiceSearch(ServiceDirectorySearchEventType eventType, string postcode, long userId,
+        IEnumerable<ServiceDto> services, DateTime requestTimestamp, DateTime? responseTimestamp, HttpStatusCode? responseStatusCode,
+        Guid correlationId)
+    {
+        var serviceSearch = new ServiceSearchDto
+        {
+            SearchPostcode = postcode,
+            SearchRadiusMiles = 0, // Unable to search by radius in connect
+            ServiceSearchTypeId = ServiceType.InformationSharing,
+            RequestTimestamp = requestTimestamp,
+            ResponseTimestamp = responseTimestamp,
+            HttpResponseCode = (short?)responseStatusCode,
+            SearchTriggerEventId = eventType,
+            CorrelationId = correlationId.ToString(),
+            UserId = userId,
+            ServiceSearchResults = services.Select(s => new ServiceSearchResultDto
+            {
+                ServiceId = s.Id,
+            })
+        };
+
+        await Client.PostAsJsonAsync("/api/metrics/service-search", serviceSearch);
     }
 }

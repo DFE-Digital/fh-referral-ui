@@ -60,11 +60,12 @@ public class WhenUsingOrganisationClientService
         };
 
         //Act
-        var result = await organisationClientService.GetLocalOffers(filter);
+        (var result, var response) = await organisationClientService.GetLocalOffers(filter);
 
         //Assert
         result.Items.Count.Should().Be(1);
         result.Items[0].Should().BeEquivalentTo(expectedPaginatedList.Items[0]);
+        response.Should().NotBeNull();
     }
 
     [Fact]
@@ -102,7 +103,7 @@ public class WhenUsingOrganisationClientService
         IOrganisationClientService organisationClientService = new OrganisationClientService(httpClient);
 
         //Act
-        var result = await organisationClientService.GetOrganisationDtobyIdAsync(expectedOrganisation.Id);
+        var result = await organisationClientService.GetOrganisationDtoByIdAsync(expectedOrganisation.Id);
 
         //Assert
         result.Should().NotBeNull();
