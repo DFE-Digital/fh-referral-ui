@@ -26,7 +26,7 @@ public interface IOrganisationClientService
     Task RecordServiceSearch(
         ServiceDirectorySearchEventType eventType,
         string postcode,
-        byte? searchWithin,
+        long userId,
         IEnumerable<ServiceDto> services,
         DateTime requestTimestamp,
         DateTime? responseTimestamp,
@@ -199,20 +199,21 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         return await JsonSerializer.DeserializeAsync<OrganisationDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     }
 
-    public async Task RecordServiceSearch(ServiceDirectorySearchEventType eventType, string postcode, byte? searchWithin,
+    public async Task RecordServiceSearch(ServiceDirectorySearchEventType eventType, string postcode, long userId,
         IEnumerable<ServiceDto> services, DateTime requestTimestamp, DateTime? responseTimestamp, HttpStatusCode? responseStatusCode,
         Guid correlationId)
     {
         var serviceSearch = new ServiceSearchDto
         {
             SearchPostcode = postcode,
-            SearchRadiusMiles = searchWithin ?? 0,
+            SearchRadiusMiles = 0, // Unable to search by radius in connect
             ServiceSearchTypeId = ServiceType.InformationSharing,
             RequestTimestamp = requestTimestamp,
             ResponseTimestamp = responseTimestamp,
             HttpResponseCode = (short?)responseStatusCode,
             SearchTriggerEventId = eventType,
             CorrelationId = correlationId.ToString(),
+            UserId = userId,
             ServiceSearchResults = services.Select(s => new ServiceSearchResultDto
             {
                 ServiceId = s.Id,

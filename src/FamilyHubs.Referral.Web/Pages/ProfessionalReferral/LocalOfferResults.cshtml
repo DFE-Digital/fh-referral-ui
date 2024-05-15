@@ -56,7 +56,7 @@ else
                 </div>
                 <div class="moj-filter__heading-action">
                     <p class="govuk-!-font-size-16">
-                        <a asp-page="/ProfessionalReferral/LocalOfferResults" asp-route-postcode="@Model.Postcode" class="govuk-link govuk-link--no-visited-state" data-testid="clearfilters">Clear filters</a>
+                        <a asp-page="/ProfessionalReferral/LocalOfferResults" asp-route-postcode="@Model.Postcode" asp-route-correlationid="@Model.CorrelationId" class="govuk-link govuk-link--no-visited-state" data-testid="clearfilters">Clear filters</a>
                     </p>
                 </div>
             </div>

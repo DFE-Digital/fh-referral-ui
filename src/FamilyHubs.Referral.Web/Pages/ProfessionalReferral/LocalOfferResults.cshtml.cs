@@ -9,6 +9,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models;
 using FamilyHubs.ServiceDirectory.Shared.ReferenceData;
 using FamilyHubs.SharedKernel.Enums;
 using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.SharedKernel.Identity.Models;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 using FamilyHubs.SharedKernel.Services.Postcode.Interfaces;
 using FamilyHubs.SharedKernel.Services.Postcode.Model;
@@ -194,10 +195,12 @@ public class LocalOfferResultsModel : HeaderPageModel
                 var eventType = _isInitialSearch ? ServiceDirectorySearchEventType.ServiceDirectoryInitialSearch
                     : ServiceDirectorySearchEventType.ServiceDirectorySearchFilter;
 
+                FamilyHubsUser familyHusUser = HttpContext.GetFamilyHubsUser();
+                
                 await _organisationClientService.RecordServiceSearch(
                     eventType,
                     Postcode!,
-                    0,
+                    long.Parse(familyHusUser.AccountId),
                     SearchResults.Items,
                     requestTimestamp,
                     responseTimestamp,
