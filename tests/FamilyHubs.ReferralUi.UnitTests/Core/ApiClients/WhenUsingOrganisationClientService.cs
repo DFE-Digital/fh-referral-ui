@@ -102,7 +102,7 @@ public class WhenUsingOrganisationClientService
         IOrganisationClientService organisationClientService = new OrganisationClientService(httpClient);
 
         //Act
-        var result = await organisationClientService.GetOrganisationDtobyIdAsync(expectedOrganisation.Id);
+        var result = await organisationClientService.GetOrganisationDtoByIdAsync(expectedOrganisation.Id);
 
         //Assert
         result.Should().NotBeNull();

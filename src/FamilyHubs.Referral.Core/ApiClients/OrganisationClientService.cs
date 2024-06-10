@@ -1,7 +1,10 @@
-﻿using System.Text;
+﻿using System.Net;
+using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Dto.Metrics;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
 
@@ -12,7 +15,18 @@ public interface IOrganisationClientService
     Task<List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>> GetCategories();
     Task<PaginatedList<ServiceDto>> GetLocalOffers(LocalOfferFilter filter);
     Task<ServiceDto> GetLocalOfferById(string id);
-    Task<OrganisationDto?> GetOrganisationDtobyIdAsync(long id);
+    Task<OrganisationDto?> GetOrganisationDtoByIdAsync(long id);
+    
+    Task RecordServiceSearch(
+        ServiceDirectorySearchEventType eventType,
+        string postcode,
+        byte? searchWithin,
+        IEnumerable<ServiceDto> services,
+        DateTime requestTimestamp,
+        DateTime? responseTimestamp,
+        HttpStatusCode? responseStatusCode,
+        Guid correlationId
+    );
 }
 
 public class OrganisationClientService : ApiService, IOrganisationClientService
@@ -159,7 +173,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         return retVal;
     }
 
-    public async Task<OrganisationDto?> GetOrganisationDtobyIdAsync(long id)
+    public async Task<OrganisationDto?> GetOrganisationDtoByIdAsync(long id)
     {
         var request = new HttpRequestMessage
         {
@@ -172,5 +186,28 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         response.EnsureSuccessStatusCode();
 
         return await JsonSerializer.DeserializeAsync<OrganisationDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+    }
+
+    public async Task RecordServiceSearch(ServiceDirectorySearchEventType eventType, string postcode, byte? searchWithin,
+        IEnumerable<ServiceDto> services, DateTime requestTimestamp, DateTime? responseTimestamp, HttpStatusCode? responseStatusCode,
+        Guid correlationId)
+    {
+        var serviceSearch = new ServiceSearchDto
+        {
+            SearchPostcode = postcode,
+            SearchRadiusMiles = searchWithin ?? 0,
+            ServiceSearchTypeId = ServiceType.FamilyExperience,
+            RequestTimestamp = requestTimestamp,
+            ResponseTimestamp = responseTimestamp,
+            HttpResponseCode = (short?)responseStatusCode,
+            SearchTriggerEventId = eventType,
+            CorrelationId = correlationId.ToString(),
+            ServiceSearchResults = services.Select(s => new ServiceSearchResultDto
+            {
+                ServiceId = s.Id,
+            })
+        };
+
+        await Client.PostAsJsonAsync("/api/metrics/service-search", serviceSearch);
     }
 }

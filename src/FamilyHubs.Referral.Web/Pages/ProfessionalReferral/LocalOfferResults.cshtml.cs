@@ -31,6 +31,7 @@ public class LocalOfferResultsModel : HeaderPageModel
     public double CurrentLongitude { get; set; }
     public PaginatedList<ServiceDto> SearchResults { get; set; } = new();
     public string SelectedDistance { get; set; } = "212892";
+    public Guid CorrelationId { get; set; } = Guid.NewGuid();
 
     public List<SelectListItem> AgeRange { get; set; } = new()
     {
