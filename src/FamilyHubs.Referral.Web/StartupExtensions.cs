@@ -14,6 +14,7 @@ using FamilyHubs.Referral.Core;
 using FamilyHubs.Referral.Infrastructure.Health;
 using FamilyHubs.Referral.Infrastructure.Notifications;
 using FamilyHubs.SharedKernel.DataProtection;
+using FamilyHubs.SharedKernel.Razor.Health;
 using FamilyHubs.SharedKernel.Telemetry;
 using FamilyHubs.SharedKernel.Services.PostcodesIo.Extensions;
 
@@ -158,7 +159,7 @@ public static class StartupExtensions
 
         app.MapRazorPages();
 
-        app.MapFamilyHubsHealthChecks();
+        app.MapFamilyHubsHealthChecks(typeof(StartupExtensions).Assembly);
 
         return app.Services;
     }

@@ -38,7 +38,7 @@ public static class HealthCheck
             .AddAzureKeyVault(new Uri(keyVaultUrl), keyVaultCredentials, s => s.AddKey(keyName), name:"Azure Key Vault", failureStatus: HealthStatus.Degraded, tags: new[] { "Infrastructure" });
 
         //todo: add helper to notification client
-        string? notificationApiUrl = config.GetValue<string>("Notification:Endpoint");
+        var notificationApiUrl = config.GetValue<string>("Notification:Endpoint");
         if (!string.IsNullOrEmpty(notificationApiUrl))
         {
             // special case as Url contains path
