@@ -91,6 +91,11 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         FamilyHubsUser user,
         long serviceId)
     {
+        var userAccount = new UserAccountDto
+        {
+            EmailAddress = user.Email,
+        };
+
         var referralDto = new ReferralDto
         {
             ReasonForSupport = model.Reason!,
@@ -120,13 +125,21 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
                 {
                     new()
                     {
-                        UserAccount = new UserAccountDto
-                        {
-                            EmailAddress = user.Email,
-                        },
+                        UserAccount = userAccount,
                         Role = new RoleDto
                         {
                             Name = user.Role
+                        }
+                    }
+                },
+                OrganisationUserAccounts = new List<UserAccountOrganisationDto>
+                {
+                    new()
+                    {
+                        UserAccount = userAccount,
+                        Organisation = new OrganisationDto
+                        {
+                            Id = long.Parse(user.OrganisationId)
                         }
                     }
                 }
