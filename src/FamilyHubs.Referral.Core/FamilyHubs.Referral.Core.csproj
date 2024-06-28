@@ -13,7 +13,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.1.1" />
+	  <PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.1.2" />
 	  <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="8.11.0" />
 	  <PackageReference Include="FamilyHubs.SharedKernel" Version="2.3.2" />
 	  <PackageReference Include="libphonenumber-csharp" Version="8.13.39" />

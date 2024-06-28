@@ -8,6 +8,7 @@ using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.SharedKernel.Identity.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Net.Mail;
 using ReferralOrganisationDto = FamilyHubs.ReferralService.Shared.Dto.OrganisationDto;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
@@ -72,7 +73,20 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         // remove any previously entered contact details that are no longer selected
         model.RemoveNonSelectedContactDetails();
 
-        var (referralResponse, httpStatusCode) = await CreateConnectionRequest(long.Parse(model.ServiceId!), model);
+        ReferralResponse? referralResponse = null;
+        HttpStatusCode httpStatusCode;
+        try
+        {
+            (referralResponse, httpStatusCode) = await CreateConnectionRequest(long.Parse(model.ServiceId!), model);
+        }
+        catch (ReferralClientServiceException e)
+        {
+            // false positive
+#pragma warning disable S2583
+            await UpdateConnectionRequestsSentMetric(referralResponse?.Id, e.StatusCode!.Value);
+#pragma warning restore S2583
+            throw;
+        }
 
         await _referralNotificationService.OnCreateReferral(
             ProfessionalUser.Email, referralResponse.OrganisationId, referralResponse.ServiceName, referralResponse.Id);
@@ -83,7 +97,7 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     }
 
     //todo: need to catch exception and log status code - add status code to exception if not already there
-    private Task UpdateConnectionRequestsSentMetric(long referralResponseId, HttpStatusCode httpStatusCode)
+    private Task UpdateConnectionRequestsSentMetric(long? referralResponseId, HttpStatusCode httpStatusCode)
     {
         return _referralClientService.UpdateConnectionRequestsSentMetric(
             new UpdateConnectionRequestsSentMetricDto(httpStatusCode, referralResponseId));
