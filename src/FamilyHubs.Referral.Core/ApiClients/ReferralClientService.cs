@@ -1,4 +1,5 @@
-﻿using FamilyHubs.ReferralService.Shared.Dto;
+﻿using System.Net;
+using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Models;
 using System.Net.Http.Json;
 
@@ -6,7 +7,7 @@ namespace FamilyHubs.Referral.Core.ApiClients;
 
 public interface IReferralClientService
 {
-    Task<ReferralResponse> CreateReferral(ReferralDto referralDto, CancellationToken cancellationToken = default);
+    Task<(ReferralResponse, HttpStatusCode)> CreateReferral(ReferralDto referralDto, CancellationToken cancellationToken = default);
     Task UpdateConnectionRequestsSentMetric(UpdateConnectionRequestsSentMetricDto metric, CancellationToken cancellationToken = default);
 }
 
@@ -17,9 +18,9 @@ public class ReferralClientService : ApiService, IReferralClientService
     {
     }
 
-    public async Task<ReferralResponse> CreateReferral(ReferralDto referralDto, CancellationToken cancellationToken = default)
+    public async Task<(ReferralResponse, HttpStatusCode)> CreateReferral(ReferralDto referralDto, CancellationToken cancellationToken = default)
     {
-        using var response = await Client.PostAsJsonAsync($"{Client.BaseAddress}api/referrals", referralDto, cancellationToken);
+        using var response = await Client.PutAsJsonAsync($"{Client.BaseAddress}api/referrals", referralDto, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             throw new ReferralClientServiceException(response, await response.Content.ReadAsStringAsync(cancellationToken));
@@ -36,7 +37,7 @@ public class ReferralClientService : ApiService, IReferralClientService
             throw new ReferralClientServiceException(response, "null");
         }
 
-        return referralResponse;
+        return (referralResponse, response.StatusCode);
     }
 
     public async Task UpdateConnectionRequestsSentMetric(

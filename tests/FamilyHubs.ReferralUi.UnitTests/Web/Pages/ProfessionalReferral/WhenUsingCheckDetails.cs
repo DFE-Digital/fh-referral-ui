@@ -1,4 +1,5 @@
-﻿using FamilyHubs.Referral.Core;
+﻿using System.Net;
+using FamilyHubs.Referral.Core;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
@@ -35,7 +36,7 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
 
         ReferralClientService
             .Setup(s => s.CreateReferral(It.IsAny<ReferralDto>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ReferralResponse);
+            .ReturnsAsync((ReferralResponse,HttpStatusCode.NoContent));
 
         ReferralNotificationService = new Mock<IReferralNotificationService>();
 
