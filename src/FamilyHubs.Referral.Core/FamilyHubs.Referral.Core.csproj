@@ -19,7 +19,7 @@
 	  <PackageReference Include="libphonenumber-csharp" Version="8.13.39" />
     <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="7.0.15" />
     <PackageReference Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.25.0.90414">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.28.0.94264">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

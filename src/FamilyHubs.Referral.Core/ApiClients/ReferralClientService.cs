@@ -20,7 +20,7 @@ public class ReferralClientService : ApiService, IReferralClientService
 
     public async Task<(ReferralResponse, HttpStatusCode)> CreateReferral(ReferralDto referralDto, CancellationToken cancellationToken = default)
     {
-        using var response = await Client.PutAsJsonAsync($"{Client.BaseAddress}api/referrals", referralDto, cancellationToken);
+        using var response = await Client.PostAsJsonAsync($"{Client.BaseAddress}api/referrals", referralDto, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             throw new ReferralClientServiceException(response, await response.Content.ReadAsStringAsync(cancellationToken));
@@ -44,7 +44,7 @@ public class ReferralClientService : ApiService, IReferralClientService
         UpdateConnectionRequestsSentMetricDto metric,
         CancellationToken cancellationToken = default)
     {
-        using var response = await Client.PostAsJsonAsync($"{Client.BaseAddress}api/metrics/connection-request", metric, cancellationToken);
+        using var response = await Client.PutAsJsonAsync($"{Client.BaseAddress}api/metrics/connection-request", metric, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             throw new ReferralClientServiceException(response, "");
