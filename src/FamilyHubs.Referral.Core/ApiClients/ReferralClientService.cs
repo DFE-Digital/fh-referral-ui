@@ -7,6 +7,7 @@ namespace FamilyHubs.Referral.Core.ApiClients;
 public interface IReferralClientService
 {
     Task<ReferralResponse> CreateReferral(ReferralDto referralDto, CancellationToken cancellationToken = default);
+    Task UpdateConnectionRequestsSentMetric(UpdateConnectionRequestsSentMetricDto metric, CancellationToken cancellationToken = default);
 }
 
 //todo: have single combined client (in referralshared)?
@@ -36,5 +37,16 @@ public class ReferralClientService : ApiService, IReferralClientService
         }
 
         return referralResponse;
+    }
+
+    public async Task UpdateConnectionRequestsSentMetric(
+        UpdateConnectionRequestsSentMetricDto metric,
+        CancellationToken cancellationToken = default)
+    {
+        using var response = await Client.PostAsJsonAsync($"{Client.BaseAddress}api/metrics/connection-request", metric, cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new ReferralClientServiceException(response, "");
+        }
     }
 }
