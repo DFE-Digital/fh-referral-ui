@@ -3,6 +3,7 @@ using FamilyHubs.Referral.Core;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
+using FamilyHubs.ReferralService.Shared.CreateUpdateDto;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Models;
 using FluentAssertions;
@@ -35,8 +36,8 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
         };
 
         ReferralClientService
-            .Setup(s => s.CreateReferral(It.IsAny<ReferralDto>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((ReferralResponse,HttpStatusCode.NoContent));
+            .Setup(s => s.CreateReferral(It.IsAny<CreateReferralDto>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((ReferralResponse, HttpStatusCode.NoContent));
 
         ReferralNotificationService = new Mock<IReferralNotificationService>();
 

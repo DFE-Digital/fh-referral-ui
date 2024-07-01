@@ -9,6 +9,7 @@ using FamilyHubs.SharedKernel.Identity.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Net.Mail;
+using FamilyHubs.ReferralService.Shared.CreateUpdateDto;
 using ReferralOrganisationDto = FamilyHubs.ReferralService.Shared.Dto.OrganisationDto;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
@@ -107,7 +108,9 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
     {
         var referralDto = CreateReferralDto(model, ProfessionalUser, serviceId);
 
-        return await _referralClientService.CreateReferral(referralDto);
+        var metric = new ConnectionRequestsSentMetricDto(long.Parse(ProfessionalUser.OrganisationId));
+
+        return await _referralClientService.CreateReferral(new CreateReferralDto(referralDto, metric));
     }
 
     private static ReferralDto CreateReferralDto(
@@ -115,11 +118,6 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         FamilyHubsUser user,
         long serviceId)
     {
-        var userAccount = new UserAccountDto
-        {
-            EmailAddress = user.Email,
-        };
-
         var referralDto = new ReferralDto
         {
             ReasonForSupport = model.Reason!,
@@ -149,21 +147,13 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
                 {
                     new()
                     {
-                        UserAccount = userAccount,
+                        UserAccount = new UserAccountDto
+                        {
+                            EmailAddress = user.Email,
+                        },
                         Role = new RoleDto
                         {
                             Name = user.Role
-                        }
-                    }
-                },
-                OrganisationUserAccounts = new List<UserAccountOrganisationDto>
-                {
-                    new()
-                    {
-                        UserAccount = userAccount,
-                        Organisation = new OrganisationDto
-                        {
-                            Id = long.Parse(user.OrganisationId)
                         }
                     }
                 }
