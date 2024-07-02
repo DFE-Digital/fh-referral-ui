@@ -1,8 +1,8 @@
 ﻿using System.Net;
-using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Models;
 using System.Net.Http.Json;
-using FamilyHubs.ReferralService.Shared.CreateUpdateDto;
+using FamilyHubs.ReferralService.Shared.Dto.CreateUpdate;
+using FamilyHubs.ReferralService.Shared.Dto.Metrics;
 
 namespace FamilyHubs.Referral.Core.ApiClients;
 

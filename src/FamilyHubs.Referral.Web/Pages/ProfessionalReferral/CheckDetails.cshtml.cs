@@ -8,8 +8,8 @@ using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.SharedKernel.Identity.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Net.Mail;
-using FamilyHubs.ReferralService.Shared.CreateUpdateDto;
+using FamilyHubs.ReferralService.Shared.Dto.CreateUpdate;
+using FamilyHubs.ReferralService.Shared.Dto.Metrics;
 using ReferralOrganisationDto = FamilyHubs.ReferralService.Shared.Dto.OrganisationDto;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
@@ -74,41 +74,54 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
         // remove any previously entered contact details that are no longer selected
         model.RemoveNonSelectedContactDetails();
 
+        var requestTimestamp = DateTimeOffset.UtcNow;
+
         ReferralResponse? referralResponse = null;
         HttpStatusCode httpStatusCode;
         try
         {
-            (referralResponse, httpStatusCode) = await CreateConnectionRequest(long.Parse(model.ServiceId!), model);
+            (referralResponse, httpStatusCode) =
+                await CreateConnectionRequest(long.Parse(model.ServiceId!), model, requestTimestamp);
         }
+        // false positives
+#pragma warning disable S2583
         catch (ReferralClientServiceException e)
         {
-            // false positive
-#pragma warning disable S2583
-            await UpdateConnectionRequestsSentMetric(referralResponse?.Id, e.StatusCode!.Value);
-#pragma warning restore S2583
+            await UpdateConnectionRequestsSentMetric(requestTimestamp, referralResponse?.Id, e.StatusCode);
             throw;
         }
+        catch
+        {
+            await UpdateConnectionRequestsSentMetric(requestTimestamp, referralResponse?.Id);
+            throw;
+        }
+#pragma warning restore S2583
 
         await _referralNotificationService.OnCreateReferral(
             ProfessionalUser.Email, referralResponse.OrganisationId, referralResponse.ServiceName, referralResponse.Id);
 
-        await UpdateConnectionRequestsSentMetric(referralResponse.Id, httpStatusCode);
+        await UpdateConnectionRequestsSentMetric(requestTimestamp, referralResponse.Id, httpStatusCode);
 
         return RedirectToPage("/ProfessionalReferral/Confirmation", new { requestNumber = referralResponse.Id });
     }
 
-    //todo: need to catch exception and log status code - add status code to exception if not already there
-    private Task UpdateConnectionRequestsSentMetric(long? referralResponseId, HttpStatusCode httpStatusCode)
+    private Task UpdateConnectionRequestsSentMetric(
+        DateTimeOffset requestTimestamp,
+        long? referralResponseId,
+        HttpStatusCode? httpStatusCode = null)
     {
         return _referralClientService.UpdateConnectionRequestsSentMetric(
-            new UpdateConnectionRequestsSentMetricDto(httpStatusCode, referralResponseId));
+            new UpdateConnectionRequestsSentMetricDto(requestTimestamp, httpStatusCode, referralResponseId));
     }
 
-    private async Task<(ReferralResponse, HttpStatusCode)> CreateConnectionRequest(long serviceId, ConnectionRequestModel model)
+    private async Task<(ReferralResponse, HttpStatusCode)> CreateConnectionRequest(
+        long serviceId,
+        ConnectionRequestModel model,
+        DateTimeOffset requestTimestamp)
     {
         var referralDto = CreateReferralDto(model, ProfessionalUser, serviceId);
 
-        var metric = new ConnectionRequestsSentMetricDto(long.Parse(ProfessionalUser.OrganisationId));
+        var metric = new ConnectionRequestsSentMetricDto(requestTimestamp);
 
         return await _referralClientService.CreateReferral(new CreateReferralDto(referralDto, metric));
     }

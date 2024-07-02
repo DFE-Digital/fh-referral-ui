@@ -1,12 +1,11 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
-using FamilyHubs.ReferralService.Shared.Dto;
-using FamilyHubs.SharedKernel.Security;
 using FluentAssertions;
 using Moq;
 using Moq.Protected;
 using System.Net;
 using System.Text.Json;
-using FamilyHubs.ReferralService.Shared.CreateUpdateDto;
+using FamilyHubs.ReferralService.Shared.Dto.CreateUpdate;
+using FamilyHubs.ReferralService.Shared.Dto.Metrics;
 using FamilyHubs.ReferralService.Shared.Models;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Core.ApiClients;
@@ -20,7 +19,7 @@ public class WhenUsingReferralClientService
 
     public WhenUsingReferralClientService()
     {
-        _createReferralDto = new CreateReferralDto(ClientHelper.GetReferralDto(), new ConnectionRequestsSentMetricDto(123L));
+        _createReferralDto = new CreateReferralDto(ClientHelper.GetReferralDto(), new ConnectionRequestsSentMetricDto(DateTimeOffset.UtcNow));
     }
 
     [Fact]

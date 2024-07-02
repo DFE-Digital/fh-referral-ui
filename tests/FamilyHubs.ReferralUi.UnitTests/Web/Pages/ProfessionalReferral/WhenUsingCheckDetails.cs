@@ -3,8 +3,7 @@ using FamilyHubs.Referral.Core;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
-using FamilyHubs.ReferralService.Shared.CreateUpdateDto;
-using FamilyHubs.ReferralService.Shared.Dto;
+using FamilyHubs.ReferralService.Shared.Dto.CreateUpdate;
 using FamilyHubs.ReferralService.Shared.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -123,6 +122,12 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
         CheckDetailsModel.ConnectionRequestModel!.County.Should().NotBeNull();
         CheckDetailsModel.ConnectionRequestModel!.Postcode.Should().NotBeNull();
     }
+
+    //[Fact]
+    //public async Task ThenOnPostAsync_IfCreateReferralFails()
+    //{
+
+    //}
 
     [Fact]
     public async Task ThenOnPostAsync_NextPageIsConfirmation()
