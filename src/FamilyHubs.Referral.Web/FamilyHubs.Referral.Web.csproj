@@ -23,14 +23,14 @@
   <ItemGroup>
     <PackageReference Include="Enums.NET" Version="4.0.1" />
     <PackageReference Include="FamilyHubs.Notification.Api.Client" Version="1.1.1" />
-    <PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.0.15" />
+    <PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.1.5" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="7.0.0" />
     <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.25.0.90414">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.28.0.94264">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

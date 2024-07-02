@@ -1,24 +1,24 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
-using FamilyHubs.ReferralService.Shared.Dto;
-using FamilyHubs.SharedKernel.Security;
 using FluentAssertions;
 using Moq;
 using Moq.Protected;
 using System.Net;
 using System.Text.Json;
+using FamilyHubs.ReferralService.Shared.Dto.CreateUpdate;
+using FamilyHubs.ReferralService.Shared.Dto.Metrics;
 using FamilyHubs.ReferralService.Shared.Models;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Core.ApiClients;
 
 public class WhenUsingReferralClientService
 {
-    private readonly ReferralDto _referralDto;
+    private readonly CreateReferralDto _createReferralDto;
     private HttpClient? _httpClient;
     private ReferralClientService? _referralClientService;
 
     public WhenUsingReferralClientService()
     {
-        _referralDto = ClientHelper.GetReferralDto();
+        _createReferralDto = new CreateReferralDto(ClientHelper.GetReferralDto(), new ConnectionRequestsSentMetricDto(DateTimeOffset.UtcNow));
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public class WhenUsingReferralClientService
         _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
         // Act
-        var result = await _referralClientService.CreateReferral(_referralDto);
+        var (result, _) = await _referralClientService.CreateReferral(_createReferralDto);
 
         // Assert
         result.Id.Should().Be(123);
@@ -71,7 +71,6 @@ public class WhenUsingReferralClientService
         _httpClient = new HttpClient(httpMessageHandlerMock.Object);
 
         // Act and Assert
-        await Assert.ThrowsAsync<ReferralClientServiceException>(() => _referralClientService.CreateReferral(_referralDto)); 
+        await Assert.ThrowsAsync<ReferralClientServiceException>(() => _referralClientService.CreateReferral(_createReferralDto)); 
     }
-
 }
