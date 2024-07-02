@@ -10,7 +10,7 @@ namespace FamilyHubs.Referral.Web.Pages.pro_redirect;
 
 [Authorize]
 public class IndexModel : PageModel
-{
+{ 
     private readonly FamilyHubsUiOptions _familyHubsUiOptions;
 
     public IndexModel(IOptions<FamilyHubsUiOptions> familyHubsUiOptions)
