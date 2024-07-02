@@ -12,7 +12,6 @@ namespace FamilyHubs.ReferralUi.UnitTests.Core.ApiClients;
 
 public class WhenUsingReferralClientService
 {
-    //private readonly ReferralDto _referralDto;
     private readonly CreateReferralDto _createReferralDto;
     private HttpClient? _httpClient;
     private ReferralClientService? _referralClientService;
