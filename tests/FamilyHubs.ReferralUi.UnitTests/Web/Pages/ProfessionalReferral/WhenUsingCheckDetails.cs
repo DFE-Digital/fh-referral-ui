@@ -1,8 +1,10 @@
-﻿using FamilyHubs.Referral.Core;
+﻿using System.Net;
+using FamilyHubs.Referral.Core;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
-using FamilyHubs.ReferralService.Shared.Dto;
+using FamilyHubs.ReferralService.Shared.Dto.CreateUpdate;
+using FamilyHubs.ReferralService.Shared.Dto.Metrics;
 using FamilyHubs.ReferralService.Shared.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -34,8 +36,8 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
         };
 
         ReferralClientService
-            .Setup(s => s.CreateReferral(It.IsAny<ReferralDto>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ReferralResponse);
+            .Setup(s => s.CreateReferral(It.IsAny<CreateReferralDto>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((ReferralResponse, HttpStatusCode.NoContent));
 
         ReferralNotificationService = new Mock<IReferralNotificationService>();
 
@@ -120,6 +122,26 @@ public class WhenUsingCheckDetails : BaseProfessionalReferralPage
         CheckDetailsModel.ConnectionRequestModel!.TownOrCity.Should().NotBeNull();
         CheckDetailsModel.ConnectionRequestModel!.County.Should().NotBeNull();
         CheckDetailsModel.ConnectionRequestModel!.Postcode.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task ThenOnPostAsync_IfCreateReferralFailsUpdateMetricStillCalled()
+    {
+        var httpResponseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+        httpResponseMessage.RequestMessage = new HttpRequestMessage(HttpMethod.Post, "http://example.com");
+
+        ReferralClientService
+            .Setup(s => s.CreateReferral(It.IsAny<CreateReferralDto>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new ReferralClientServiceException(httpResponseMessage, ""));
+
+        // Act
+        await Assert.ThrowsAsync<ReferralClientServiceException>(async () =>
+        {
+            await CheckDetailsModel.OnPostAsync("1");
+        });
+
+        ReferralClientService.Verify(c => c.UpdateConnectionRequestsSentMetric(
+            It.IsAny<UpdateConnectionRequestsSentMetricDto>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
