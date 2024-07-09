@@ -16,7 +16,6 @@ using FamilyHubs.SharedKernel.Services.Postcode.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -177,12 +176,7 @@ public class LocalOfferResultsModel : HeaderPageModel
         CreateServiceDeliveryDictionary();
 
         DateTime requestTimestamp = DateTime.UtcNow;
-        (
-            SearchResults,
-            Pagination,
-            TotalResults,
-            HttpResponseMessage? response
-        ) = await SearchServices();
+        HttpResponseMessage? response = await SearchServices();
         DateTime? responseTimestamp = DateTime.UtcNow;
 
         try
@@ -218,12 +212,7 @@ public class LocalOfferResultsModel : HeaderPageModel
         return Page();
     }
 
-    private async Task<(
-        PaginatedList<ServiceDto> searchResults,
-        IPagination pagination,
-        int totalResults,
-        HttpResponseMessage? response
-    )> SearchServices()
+    private async Task<HttpResponseMessage?> SearchServices()
     {
         bool? isPaidFor = null;
 
@@ -272,11 +261,11 @@ public class LocalOfferResultsModel : HeaderPageModel
             LanguageCode = SelectedLanguage != null && SelectedLanguage != AllLanguagesValue ? SelectedLanguage : null
         };
 
-        (PaginatedList<ServiceDto> searchResults, HttpResponseMessage? response) = await _organisationClientService.GetLocalOffers(localOfferFilter);
-        LargeSetPagination pagination =  new LargeSetPagination(SearchResults.TotalPages, PageNum);
-        int totalResults = SearchResults.TotalCount;
+        (SearchResults, HttpResponseMessage? response) = await _organisationClientService.GetLocalOffers(localOfferFilter);
+        Pagination = new LargeSetPagination(SearchResults.TotalPages, PageNum);
+        TotalResults = SearchResults.TotalCount;
 
-        return (searchResults, pagination, totalResults, response);
+        return response;
     }
 
     public IActionResult OnPostAsync(
