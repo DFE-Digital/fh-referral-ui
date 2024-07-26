@@ -39,7 +39,7 @@ public class WhenUsingReferralClientService
         _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
         // Act
-        var (result, _) = await _referralClientService.CreateReferral(_createReferralDto);
+        ReferralResponse result= await _referralClientService.CreateReferral(_createReferralDto);
 
         // Assert
         result.Id.Should().Be(123);
