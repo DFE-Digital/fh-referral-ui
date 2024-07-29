@@ -1,15 +1,12 @@
-﻿using System.Net;
-using FamilyHubs.ReferralService.Shared.Models;
+﻿using FamilyHubs.ReferralService.Shared.Models;
 using System.Net.Http.Json;
 using FamilyHubs.ReferralService.Shared.Dto.CreateUpdate;
-using FamilyHubs.ReferralService.Shared.Dto.Metrics;
 
 namespace FamilyHubs.Referral.Core.ApiClients;
 
 public interface IReferralClientService
 {
-    Task<(ReferralResponse, HttpStatusCode)> CreateReferral(CreateReferralDto createReferralDto, CancellationToken cancellationToken = default);
-    Task UpdateConnectionRequestsSentMetric(UpdateConnectionRequestsSentMetricDto metric, CancellationToken cancellationToken = default);
+    Task<ReferralResponse> CreateReferral(CreateReferralDto createReferralDto, CancellationToken cancellationToken = default);
 }
 
 //todo: have single combined client (in referralshared)?
@@ -19,7 +16,7 @@ public class ReferralClientService : ApiService, IReferralClientService
     {
     }
 
-    public async Task<(ReferralResponse, HttpStatusCode)> CreateReferral(CreateReferralDto createReferralDto, CancellationToken cancellationToken = default)
+    public async Task<ReferralResponse> CreateReferral(CreateReferralDto createReferralDto, CancellationToken cancellationToken = default)
     {
         using var response = await Client.PostAsJsonAsync($"{Client.BaseAddress}api/referrals", createReferralDto, cancellationToken);
         if (!response.IsSuccessStatusCode)
@@ -38,17 +35,6 @@ public class ReferralClientService : ApiService, IReferralClientService
             throw new ReferralClientServiceException(response, "null");
         }
 
-        return (referralResponse, response.StatusCode);
-    }
-
-    public async Task UpdateConnectionRequestsSentMetric(
-        UpdateConnectionRequestsSentMetricDto metric,
-        CancellationToken cancellationToken = default)
-    {
-        using var response = await Client.PutAsJsonAsync($"{Client.BaseAddress}api/metrics/connection-request", metric, cancellationToken);
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new ReferralClientServiceException(response, "");
-        }
+        return referralResponse;
     }
 }

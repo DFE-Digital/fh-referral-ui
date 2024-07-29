@@ -7,7 +7,6 @@ using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.SharedKernel.Identity.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 using FamilyHubs.ReferralService.Shared.Dto.CreateUpdate;
 using FamilyHubs.ReferralService.Shared.Dto.Metrics;
 using ReferralOrganisationDto = FamilyHubs.ReferralService.Shared.Dto.OrganisationDto;
@@ -76,45 +75,16 @@ public class CheckDetailsModel : ProfessionalReferralCacheModel
 
         var requestTimestamp = DateTimeOffset.UtcNow;
 
-        ReferralResponse? referralResponse = null;
-        HttpStatusCode httpStatusCode;
-        try
-        {
-            (referralResponse, httpStatusCode) =
-                await CreateConnectionRequest(long.Parse(model.ServiceId!), model, requestTimestamp);
-        }
-        // false positives
-#pragma warning disable S2583
-        catch (ReferralClientServiceException e)
-        {
-            await UpdateConnectionRequestsSentMetric(requestTimestamp, referralResponse?.Id, e.StatusCode);
-            throw;
-        }
-        catch
-        {
-            await UpdateConnectionRequestsSentMetric(requestTimestamp, referralResponse?.Id);
-            throw;
-        }
-#pragma warning restore S2583
+        ReferralResponse referralResponse =
+            await CreateConnectionRequest(long.Parse(model.ServiceId!), model, requestTimestamp);
 
         await _referralNotificationService.OnCreateReferral(
             ProfessionalUser.Email, referralResponse.OrganisationId, referralResponse.ServiceName, referralResponse.Id);
 
-        await UpdateConnectionRequestsSentMetric(requestTimestamp, referralResponse.Id, httpStatusCode);
-
         return RedirectToPage("/ProfessionalReferral/Confirmation", new { requestNumber = referralResponse.Id });
     }
 
-    private Task UpdateConnectionRequestsSentMetric(
-        DateTimeOffset requestTimestamp,
-        long? referralResponseId,
-        HttpStatusCode? httpStatusCode = null)
-    {
-        return _referralClientService.UpdateConnectionRequestsSentMetric(
-            new UpdateConnectionRequestsSentMetricDto(requestTimestamp, httpStatusCode, referralResponseId));
-    }
-
-    private async Task<(ReferralResponse, HttpStatusCode)> CreateConnectionRequest(
+    private async Task<ReferralResponse> CreateConnectionRequest(
         long serviceId,
         ConnectionRequestModel model,
         DateTimeOffset requestTimestamp)
