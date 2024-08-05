@@ -12,7 +12,7 @@ public static class PossibleErrors
         .Add(ErrorId.Email_NotValid, "Enter an email address in the correct format, like name@example.com")
         .Add(ErrorId.Consent_NoConsentSelected, "Select whether you have permission to share details")
         .Add(ErrorId.SharePrivacy_NoSelection, "Select whether you have shared our privacy statement")
-        .Add(ErrorId.ContactByPhone_NoContactSelected, "Select how the service can contact you")
+        .Add(ErrorId.ContactByPhone_NoContactSelected, "Select how this service can contact you")
         .Add(ErrorId.ContactByPhone_NoTelephoneNumber, "Enter a UK telephone number")
         .Add(ErrorId.ContactByPhone_InvalidTelephoneNumber, "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192")
         .Add(ErrorId.WhySupport_NothingEntered, "Enter details about the people who need support")
