@@ -10,7 +10,7 @@ namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class SupportDetailsModel : ProfessionalReferralCacheModel, ISingleTextboxPageModel
 {
-    public string HeadingText { get; set; } = "Who should the service contact?";
+    public string HeadingText { get; set; } = "Who should this service contact?";
     public string? HintText { get; set; } = "This person must be 16 or over.";
     public string TextBoxLabel { get; set; } = "Full name";
     public int? MaxLength => 255;
