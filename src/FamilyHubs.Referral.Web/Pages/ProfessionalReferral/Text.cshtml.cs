@@ -61,7 +61,7 @@ public class TextModel : ProfessionalReferralCacheModel, ISingleTelephoneTextbox
 
     private void SetPageProperties(ConnectionRequestModel model)
     {
-        HeadingText = $"What telephone number should the service use to text {HttpUtility.HtmlEncode(model.FamilyContactFullName)}?";
+        HeadingText = $"What telephone number should this service use to text {HttpUtility.HtmlEncode(model.FamilyContactFullName)}?";
         BackUrl = GenerateBackUrl(ConnectContactDetailsJourneyPage.Textphone, model.ContactMethodsSelected);
     }
 }
