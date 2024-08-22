@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.ContactByPhoneModel
 @{
-    ViewData["Title"] = "How can the service contact you for more details about this request?";
+    ViewData["Title"] = "How can this service contact you for more details about this request?";
 
     Model.Errors.ErrorIdToHtmlElementId = errorId => errorId switch
     {
@@ -30,7 +30,7 @@
                 <fieldset class="govuk-fieldset" aria-describedby="contact-hint @(triggeredError?.Id == (int)ErrorId.ContactByPhone_NoContactSelected ? triggeredError.InputErrorMessageParaId : "")">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <h1 class="govuk-fieldset__heading">
-                            How can the service contact you for more details about this request?
+                            How can this service contact you for more details about this request?
                         </h1>
                     </legend>
                     <div id="contact-hint" class="govuk-hint">
@@ -53,7 +53,7 @@
                         </div>
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-email">
                             <div id="email-hint" class="govuk-hint">
-                                The service can contact me through my account email.
+                                This service can contact me through my account email.
                             </div>
                         </div>
 
@@ -72,7 +72,7 @@
                         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-telephone-and-email">
                                 <div class="govuk-form-group @(telephoneError ? "govuk-form-group--error":"")">
                                 <div id="telephone-and-email-hint" class="govuk-hint">
-                                    The service can contact me by telephone and account email.
+                                    This service can contact me by telephone and my account email.
                                 </div>
                                 <label class="govuk-label" for="contact-by-phone">
                                     Telephone number
