@@ -64,7 +64,7 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel, ICheckboxesPa
             SelectedValues = selectedValues;
         }
 
-        Legend = $"How can the service contact {FullName}?";
+        Legend = $"How can this service contact {FullName}?";
 
         //todo: move this and code from CheckDetails into one place
 
