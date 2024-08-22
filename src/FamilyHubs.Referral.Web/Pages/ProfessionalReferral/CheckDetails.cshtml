@@ -46,7 +46,7 @@
 
             <summary-row key="How to engage" action1="Change" action1-href="/ProfessionalReferral/ContactMethods?serviceId=@Model.ServiceId&changing=page">@Model.ConnectionRequestModel!.EngageReason</summary-row>
 
-            <summary-row key="How the service can contact you" action1="Change" action1-href="/ProfessionalReferral/ContactByPhone?serviceId=@Model.ServiceId&changing=page">
+            <summary-row key="How this service can contact you" action1="Change" action1-href="/ProfessionalReferral/ContactByPhone?serviceId=@Model.ServiceId&changing=page">
                 <p>Email: @Model.ProfessionalUser.Email</p>
                 @if (Model.ConnectionRequestModel!.ReferrerTelephone != null)
                 {
@@ -57,7 +57,7 @@
         </summary-list>
 
         <h2 class="govuk-heading-m">Now request a connection</h2>
-        
+        <p>By submitting this connection request you are confirming that you have permission to share these details and for this service to contact the people who needs support.</p>
         <form method="post">
             <button type="submit" class="govuk-button" data-module="govuk-button">
                 Confirm details and send request
